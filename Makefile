@@ -3,7 +3,7 @@ PIP ?= .venv/bin/pip
 
 .PHONY: install python-install demo-install demo-dev demo-lint demo-test demo-build \
 	ontology-validate shapes-validate mappings-validate contracts-validate competency-test \
-	validate test build release clean
+	alignment-audit validate test build release clean
 
 install: demo-install python-install
 
@@ -36,8 +36,12 @@ shapes-validate:
 mappings-validate:
 	$(PYTHON) scripts/validate_mappings.py
 
+alignment-audit:
+	$(PYTHON) scripts/generate_explorer_alignment_audit.py
+
 contracts-validate:
 	$(PYTHON) scripts/validate_demo_contracts.py
+	$(PYTHON) scripts/generate_explorer_alignment_audit.py --check
 
 competency-test:
 	$(PYTHON) scripts/run_competency_queries.py

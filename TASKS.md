@@ -28,7 +28,7 @@
 
 ## P0-03 Audit Explorer Alignment semantics
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0
 - Dependencies: P0-01
 - Scope: Classify every alignment term and visual/contract field; define migration and deprecation actions without removing compatibility terms.
@@ -41,7 +41,7 @@
 
 ## P1-01 Migrate Semantic Explorer data access
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P0-02, P0-03
 - Scope: Load catalog and search data through `KnowledgeRepository`, with loading, empty, error, payload, and version handling.

@@ -33,7 +33,7 @@ ux:controller a owl:DatatypeProperty .
 ux:controllerType a owl:DatatypeProperty .
 ux:customerId a owl:DatatypeProperty .
 ux:customerName a owl:DatatypeProperty .
-ux:cycleTime a owl:DatatypeProperty .
+ux:cycleTime a owl:DatatypeProperty ; owl:deprecated true ; rdfs:seeAlso <https://example.com/mkg/manufacturing#cycleTimeSeconds> .
 ux:deliveryFrequency a owl:DatatypeProperty .
 ux:demandRate a owl:DatatypeProperty .
 ux:demandVariation a owl:DatatypeProperty .
@@ -110,7 +110,7 @@ ux:routeId a owl:DatatypeProperty .
 ux:routeName a owl:DatatypeProperty .
 ux:rpn a owl:DatatypeProperty .
 ux:severity a owl:DatatypeProperty .
-ux:sourceId a owl:DatatypeProperty .
+ux:sourceId a owl:DatatypeProperty ; owl:deprecated true ; rdfs:seeAlso <https://example.com/mkg/core#sourceSystemId> .
 ux:sourceSystem a owl:DatatypeProperty .
 ux:specId a owl:DatatypeProperty .
 ux:specName a owl:DatatypeProperty .
@@ -123,15 +123,15 @@ ux:syncStatus a owl:DatatypeProperty .
 ux:taktTime a owl:DatatypeProperty .
 ux:tolerance a owl:DatatypeProperty .
 ux:transferBatch a owl:DatatypeProperty .
-ux:unit a owl:DatatypeProperty .
+ux:unit a owl:DatatypeProperty ; owl:deprecated true ; rdfs:seeAlso <https://example.com/mkg/quality#unit> .
 ux:unitOfMeasure a owl:DatatypeProperty .
 ux:upperLimit a owl:DatatypeProperty .
 ux:uptime a owl:DatatypeProperty .
 ux:url a owl:DatatypeProperty .
 ux:value a owl:DatatypeProperty .
 ux:valueAddedTime a owl:DatatypeProperty .
-ux:version a owl:DatatypeProperty .
-ux:versionId a owl:DatatypeProperty .
+ux:version a owl:DatatypeProperty ; owl:deprecated true ; rdfs:seeAlso <https://example.com/mkg/core#versionIdentifier> .
+ux:versionId a owl:DatatypeProperty ; owl:deprecated true ; rdfs:seeAlso <https://example.com/mkg/core#versionIdentifier> .
 ux:waitingTime a owl:DatatypeProperty .
 ux:wipQty a owl:DatatypeProperty .
 ux:wipStatus a owl:DatatypeProperty .

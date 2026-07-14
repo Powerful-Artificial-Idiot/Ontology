@@ -1,0 +1,57 @@
+audit_version: 1.0.0
+allowed_classifications:
+  - enterprise-core
+  - domain-ontology
+  - application-ontology
+  - view-model
+  - contract-only
+  - legacy-mapping
+  - deprecated
+  - unknown
+allowed_actions:
+  - retain
+  - move
+  - rename
+  - deprecate
+  - replace
+  - needs-domain-review
+
+vocabulary_default:
+  classification: application-ontology
+  target_layer: Explorer Application Ontology
+  action: needs-domain-review
+  owner: Ontology Working Group
+  compatibility_risk: medium
+
+deprecated_replacements:
+  cycleTime:
+    replacement: mfg:cycleTimeSeconds
+    target_layer: Manufacturing Domain Ontology
+  sourceId:
+    replacement: core:sourceSystemId
+    target_layer: Enterprise Core Ontology
+  unit:
+    replacement: qual:unit
+    target_layer: Quality Domain Ontology
+  version:
+    replacement: core:versionIdentifier
+    target_layer: Enterprise Core Ontology
+  versionId:
+    replacement: core:versionIdentifier
+    target_layer: Enterprise Core Ontology
+
+contract_fields:
+  GraphNodeView.id: contract-only
+  GraphNodeView.entityId: contract-only
+  GraphNodeView.visualType: view-model
+  GraphNodeView.column: view-model
+  GraphNodeView.stackId: view-model
+  GraphNodeView.thumbnail: view-model
+  GraphNodeView.badges: view-model
+  GraphNodeView.viewMetadata: view-model
+  GraphEdgeView.id: contract-only
+  GraphEdgeView.relationId: contract-only
+  GraphEdgeView.source: contract-only
+  GraphEdgeView.target: contract-only
+  GraphEdgeView.label: view-model
+  GraphEdgeView.viewMetadata: view-model
