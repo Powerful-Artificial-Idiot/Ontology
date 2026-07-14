@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The production Demo is a static React/Vite single-page application. Node.js is used only by the `deploy` user during validation and build; no Node process listens in production. Nginx serves the immutable release selected by the `current` symlink.
+The public site consists of a static management report homepage and the React/Vite Explorer. Node.js is used only by the `deploy` user during Explorer validation and build; no Node process listens in production. Nginx serves both immutable releases selected by their `current` symlinks.
 
 ```text
 GitHub (read-only Deploy Key)
@@ -10,6 +10,9 @@ GitHub (read-only Deploy Key)
   -> npm ci + lint + typecheck + test + build
   -> /var/www/ontology/releases/<timestamp>-<commit>
   -> /var/www/ontology/current
+Local report-web source
+  -> /var/www/report-web/releases/<timestamp>-<content-hash>
+  -> /var/www/report-web/current
   -> Nginx :80
 ```
 
@@ -22,6 +25,7 @@ GitHub (read-only Deploy Key)
 - Git: 2.47.x or a supported distribution package.
 - Repository: `/home/deploy/apps/Ontology`.
 - Release root: `/var/www/ontology`.
+- Report homepage release root: `/var/www/report-web`.
 - Nginx site: `/etc/nginx/conf.d/ontology.conf`.
 - Public port: TCP 80. There is no internal application port or Node service.
 
@@ -34,6 +38,8 @@ sudo dnf install -y git nginx nodejs nodejs-npm
 sudo install -d -o root -g root -m 0755 /var/www
 sudo install -d -o deploy -g deploy -m 0755 /var/www/ontology
 sudo install -d -o deploy -g deploy -m 0755 /var/www/ontology/releases
+sudo install -d -o deploy -g deploy -m 0755 /var/www/report-web
+sudo install -d -o deploy -g deploy -m 0755 /var/www/report-web/releases
 ```
 
 Install the reviewed Nginx site without changing the packaged default server:
@@ -115,12 +121,13 @@ sudo tail -n 100 /var/log/nginx/error.log
 sudo tail -n 100 /var/log/nginx/access.log
 ```
 
-Static release changes do not require an Nginx reload because its root remains `/var/www/ontology/current`.
+Static release changes do not require an Nginx reload because the roots remain `/var/www/ontology/current` and `/var/www/report-web/current`.
 
 ## Health Checks
 
 ```bash
 readlink -f /var/www/ontology/current
+readlink -f /var/www/report-web/current
 curl -fsSI -H 'Host: 139.196.109.86' http://127.0.0.1/
 curl -fsSI -H 'Host: 139.196.109.86' http://127.0.0.1/routes/quality
 curl -fsSI -H 'Host: 139.196.109.86' http://127.0.0.1/ontology/classes/Operation
@@ -129,7 +136,7 @@ curl -fsSI -H 'Host: 139.196.109.86' http://127.0.0.1/assets/<hashed-file>.js
 
 Expected behavior:
 
-- `/`, Route, Ontology, and Semantic deep links return `200` and the SPA entry document.
+- `/` returns the report homepage. Route, Ontology, and Semantic deep links return `200` and the Explorer SPA entry document.
 - Hashed JavaScript and CSS return their correct MIME types with long cache headers.
 - `index.html` uses no-cache headers.
 - Dotfiles, `.env`, `.git`, and source maps are not served.
