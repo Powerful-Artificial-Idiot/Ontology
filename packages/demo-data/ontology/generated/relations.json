@@ -1,0 +1,254 @@
+[
+  {
+    "id": "https://example.com/mkg/application#hasEvidence",
+    "inverseOf": [],
+    "label": "has evidence",
+    "module": "application",
+    "name": "hasEvidence",
+    "predicate": "https://example.com/mkg/application#hasEvidence",
+    "sourceClasses": [
+      "https://example.com/mkg/application#InvestigationCase"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/application#EvidenceItem"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/application#hasPotentialRootCause",
+    "inverseOf": [],
+    "label": "has potential root cause",
+    "module": "application",
+    "name": "hasPotentialRootCause",
+    "predicate": "https://example.com/mkg/application#hasPotentialRootCause",
+    "sourceClasses": [
+      "https://example.com/mkg/application#QualityRisk"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/application#PotentialRootCause"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#hasSource",
+    "inverseOf": [],
+    "label": "has source",
+    "module": "core",
+    "name": "hasSource",
+    "predicate": "https://example.com/mkg/core#hasSource",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#SourceSystem"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#hasVersion",
+    "inverseOf": [],
+    "label": "has version",
+    "module": "core",
+    "name": "hasVersion",
+    "predicate": "https://example.com/mkg/core#hasVersion",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#supersedes",
+    "inverseOf": [],
+    "label": "supersedes",
+    "module": "core",
+    "name": "supersedes",
+    "predicate": "https://example.com/mkg/core#supersedes",
+    "sourceClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/equipment#hasConfiguration",
+    "inverseOf": [],
+    "label": "has configuration",
+    "module": "equipment",
+    "name": "hasConfiguration",
+    "predicate": "https://example.com/mkg/equipment#hasConfiguration",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/equipment#MachineConfiguration"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/equipment#hasConfigurationVersion",
+    "inverseOf": [],
+    "label": "has configuration version",
+    "module": "equipment",
+    "name": "hasConfigurationVersion",
+    "predicate": "https://example.com/mkg/equipment#hasConfigurationVersion",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/equipment#MachineConfigurationVersion"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#executedBy",
+    "inverseOf": [],
+    "label": "executed by",
+    "module": "manufacturing",
+    "name": "executedBy",
+    "predicate": "https://example.com/mkg/manufacturing#executedBy",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#executesDefinition",
+    "inverseOf": [],
+    "label": "executes definition",
+    "module": "manufacturing",
+    "name": "executesDefinition",
+    "predicate": "https://example.com/mkg/manufacturing#executesDefinition",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#OperationExecution"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#OperationDefinition"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#flowsTo",
+    "inverseOf": [],
+    "label": "flows to",
+    "module": "manufacturing",
+    "name": "flowsTo",
+    "predicate": "https://example.com/mkg/manufacturing#flowsTo",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#produces",
+    "inverseOf": [],
+    "label": "produces",
+    "module": "manufacturing",
+    "name": "produces",
+    "predicate": "https://example.com/mkg/manufacturing#produces",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#Asset"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#requiresOperation",
+    "inverseOf": [],
+    "label": "requires operation",
+    "module": "manufacturing",
+    "name": "requiresOperation",
+    "predicate": "https://example.com/mkg/manufacturing#requiresOperation",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Product"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/manufacturing#usesParameter",
+    "inverseOf": [],
+    "label": "uses parameter",
+    "module": "manufacturing",
+    "name": "usesParameter",
+    "predicate": "https://example.com/mkg/manufacturing#usesParameter",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#ProcessParameter"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#associatedFailureMode",
+    "inverseOf": [],
+    "label": "associated failure mode",
+    "module": "quality",
+    "name": "associatedFailureMode",
+    "predicate": "https://example.com/mkg/quality#associatedFailureMode",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#FailureMode"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#controlsCharacteristic",
+    "inverseOf": [],
+    "label": "controls characteristic",
+    "module": "quality",
+    "name": "controlsCharacteristic",
+    "predicate": "https://example.com/mkg/quality#controlsCharacteristic",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasControlPlanVersion",
+    "inverseOf": [],
+    "label": "has control plan version",
+    "module": "quality",
+    "name": "hasControlPlanVersion",
+    "predicate": "https://example.com/mkg/quality#hasControlPlanVersion",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#ControlPlan"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#ControlPlanVersion"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#mayAffect",
+    "inverseOf": [],
+    "label": "may affect",
+    "module": "quality",
+    "name": "mayAffect",
+    "predicate": "https://example.com/mkg/quality#mayAffect",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#FailureMode"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#measuresCharacteristic",
+    "inverseOf": [],
+    "label": "measures characteristic",
+    "module": "quality",
+    "name": "measuresCharacteristic",
+    "predicate": "https://example.com/mkg/quality#measuresCharacteristic",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MeasurementResult"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ]
+  }
+]

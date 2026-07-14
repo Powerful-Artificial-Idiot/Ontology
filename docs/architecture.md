@@ -19,6 +19,8 @@ Source System Layer
 
 The current implementation concentrates on the Experience, Application Service, Semantic Contract, and Ontology-as-Code layers.
 
+Released Turtle modules generate a deterministic, layout-free ontology artifact under `packages/demo-data/ontology/generated`. The release pipeline also exposes it at `dist/generated/ontology`; Explorer-specific positions, lanes, colors, and interaction state remain in separate view configuration.
+
 ## Runtime Data Path
 
 ```text

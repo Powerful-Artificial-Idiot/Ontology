@@ -54,7 +54,7 @@
 
 ## P1-02 Generate Ontology build artifacts
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P0-03
 - Scope: Deterministically generate classes, properties, relations, modules, version, manifest, and checksums from TTL.
@@ -67,7 +67,7 @@
 
 ## P1-03 Drive Ontology Explorer semantic data from artifacts
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-02
 - Scope: Combine generated semantic artifact with separate Ontology View Configuration.

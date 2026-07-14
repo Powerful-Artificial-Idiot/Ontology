@@ -1,0 +1,38 @@
+{
+  "artifactFormatVersion": "1.0.0",
+  "counts": {
+    "classes": 40,
+    "modules": 6,
+    "properties": 154,
+    "relations": 18
+  },
+  "files": [
+    {
+      "bytes": 13949,
+      "path": "classes.json",
+      "sha256": "8ca89856628fc634987a5b75d4ff7bf40621c3c701fda88e8692e219ef79fb3e"
+    },
+    {
+      "bytes": 1798,
+      "path": "modules.json",
+      "sha256": "17df266e1b12acefee22f7e3ae0786c814ba119720cf347bf2c7a8dcaea6e6a7"
+    },
+    {
+      "bytes": 57104,
+      "path": "properties.json",
+      "sha256": "7ffe3a29247694b67d5340f51144d02f16265bfca3375526454c59cc66356f0b"
+    },
+    {
+      "bytes": 7682,
+      "path": "relations.json",
+      "sha256": "166d7501404d18335d2052498384e4b7d94a763f3bc25fbc0f869c6de833513e"
+    },
+    {
+      "bytes": 123,
+      "path": "version.json",
+      "sha256": "a0d7980ef155b4867eb48b43b5cd26918118303f7b8d0acb91b9da21880e9c63"
+    }
+  ],
+  "generator": "scripts/build_ontology_artifacts.py",
+  "ontologyVersion": "1.1.0"
+}

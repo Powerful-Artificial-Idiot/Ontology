@@ -36,6 +36,7 @@ def main() -> int:
     copy_tree(ROOT / "shapes", dist / "ontology-release" / "shapes")
     copy_tree(ROOT / "packages" / "demo-data", dist / "demo-data")
     copy_tree(ROOT / "packages" / "knowledge-contracts", dist / "contracts")
+    copy_tree(ROOT / "packages" / "demo-data" / "ontology" / "generated", dist / "generated" / "ontology")
 
     manifest = {
         **{key: versions[key] for key in ("demoAppVersion", "ontologyVersion", "demoDataVersion", "contractVersion")},

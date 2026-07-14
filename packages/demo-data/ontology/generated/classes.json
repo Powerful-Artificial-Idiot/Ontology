@@ -1,0 +1,518 @@
+[
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/application#EvidenceItem",
+    "label": "Evidence Item",
+    "module": "application",
+    "name": "EvidenceItem",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/application#InvestigationCase",
+    "label": "Investigation Case",
+    "module": "application",
+    "name": "InvestigationCase",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/application#hasEvidence"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/application#PotentialRootCause",
+    "label": "Potential Root Cause",
+    "module": "application",
+    "name": "PotentialRootCause",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/application#QualityRisk",
+    "label": "Quality Risk",
+    "module": "application",
+    "name": "QualityRisk",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/application#hasPotentialRootCause"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/application#RiskAssessment",
+    "label": "Risk Assessment",
+    "module": "application",
+    "name": "RiskAssessment",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#Agent",
+    "label": "Agent",
+    "module": "core",
+    "name": "Agent",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#Asset",
+    "label": "Asset",
+    "module": "core",
+    "name": "Asset",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#Document",
+    "label": "Document",
+    "module": "core",
+    "name": "Document",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#EnterpriseEntity",
+    "label": "Enterprise Entity",
+    "module": "core",
+    "name": "EnterpriseEntity",
+    "parentClasses": [],
+    "properties": [
+      "https://example.com/mkg/core#hasSource",
+      "https://example.com/mkg/core#hasVersion",
+      "https://example.com/mkg/core#recordedAt",
+      "https://example.com/mkg/core#sourceSystemId",
+      "https://example.com/mkg/manufacturing#flowsTo",
+      "https://example.com/mkg/quality#controlsCharacteristic"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#Event",
+    "label": "Event",
+    "module": "core",
+    "name": "Event",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#Process",
+    "label": "Process",
+    "module": "core",
+    "name": "Process",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#SourceSystem",
+    "label": "Source System",
+    "module": "core",
+    "name": "SourceSystem",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/core#VersionedEntity",
+    "label": "Versioned Entity",
+    "module": "core",
+    "name": "VersionedEntity",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/core#supersedes",
+      "https://example.com/mkg/core#validFrom",
+      "https://example.com/mkg/core#validTo",
+      "https://example.com/mkg/core#versionIdentifier"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#AlarmEvent",
+    "label": "Alarm Event",
+    "module": "equipment",
+    "name": "AlarmEvent",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#Equipment",
+    "label": "Equipment",
+    "module": "equipment",
+    "name": "Equipment",
+    "parentClasses": [
+      "https://example.com/mkg/manufacturing#ManufacturingResource"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#MachineConfiguration",
+    "label": "Machine Configuration",
+    "module": "equipment",
+    "name": "MachineConfiguration",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#MachineConfigurationVersion",
+    "label": "Machine Configuration Version",
+    "module": "equipment",
+    "name": "MachineConfigurationVersion",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#MachineState",
+    "label": "Machine State",
+    "module": "equipment",
+    "name": "MachineState",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/equipment#MaintenanceEvent",
+    "label": "Maintenance Event",
+    "module": "equipment",
+    "name": "MaintenanceEvent",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#Machine",
+    "label": "Machine",
+    "module": "manufacturing",
+    "name": "Machine",
+    "parentClasses": [
+      "https://example.com/mkg/manufacturing#ManufacturingResource"
+    ],
+    "properties": [
+      "https://example.com/mkg/equipment#hasConfiguration",
+      "https://example.com/mkg/equipment#hasConfigurationVersion",
+      "https://example.com/mkg/quality#associatedFailureMode"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#ManufacturingResource",
+    "label": "Manufacturing Resource",
+    "module": "manufacturing",
+    "name": "ManufacturingResource",
+    "parentClasses": [
+      "https://example.com/mkg/core#Asset"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#Material",
+    "label": "Material",
+    "module": "manufacturing",
+    "name": "Material",
+    "parentClasses": [
+      "https://example.com/mkg/core#Asset"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#Operation",
+    "label": "Operation",
+    "module": "manufacturing",
+    "name": "Operation",
+    "parentClasses": [
+      "https://example.com/mkg/core#Process"
+    ],
+    "properties": [
+      "https://example.com/mkg/manufacturing#cycleTimeSeconds",
+      "https://example.com/mkg/manufacturing#executedBy",
+      "https://example.com/mkg/manufacturing#produces",
+      "https://example.com/mkg/manufacturing#usesParameter"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#OperationDefinition",
+    "label": "Operation Definition",
+    "module": "manufacturing",
+    "name": "OperationDefinition",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#OperationExecution",
+    "label": "Operation Execution",
+    "module": "manufacturing",
+    "name": "OperationExecution",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [
+      "https://example.com/mkg/manufacturing#eventTime",
+      "https://example.com/mkg/manufacturing#executesDefinition"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#ProcessParameter",
+    "label": "Process Parameter",
+    "module": "manufacturing",
+    "name": "ProcessParameter",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#Product",
+    "label": "Product",
+    "module": "manufacturing",
+    "name": "Product",
+    "parentClasses": [
+      "https://example.com/mkg/core#Asset"
+    ],
+    "properties": [
+      "https://example.com/mkg/manufacturing#requiresOperation"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#ProductDefinition",
+    "label": "Product Definition",
+    "module": "manufacturing",
+    "name": "ProductDefinition",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#ProductInstance",
+    "label": "Product Instance",
+    "module": "manufacturing",
+    "name": "ProductInstance",
+    "parentClasses": [
+      "https://example.com/mkg/manufacturing#Product"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/manufacturing#ProductionOrder",
+    "label": "Production Order",
+    "module": "manufacturing",
+    "name": "ProductionOrder",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#ControlPlan",
+    "label": "Control Plan",
+    "module": "quality",
+    "name": "ControlPlan",
+    "parentClasses": [
+      "https://example.com/mkg/core#Document"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#hasControlPlanVersion"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#ControlPlanVersion",
+    "label": "Control Plan Version",
+    "module": "quality",
+    "name": "ControlPlanVersion",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#CorrectiveAction",
+    "label": "Corrective Action",
+    "module": "quality",
+    "name": "CorrectiveAction",
+    "parentClasses": [
+      "https://example.com/mkg/core#Process"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#CriticalCharacteristic",
+    "label": "Critical Characteristic",
+    "module": "quality",
+    "name": "CriticalCharacteristic",
+    "parentClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#Defect",
+    "label": "Defect",
+    "module": "quality",
+    "name": "Defect",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#FailureMode",
+    "label": "Failure Mode",
+    "module": "quality",
+    "name": "FailureMode",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#mayAffect"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#InspectionMethod",
+    "label": "Inspection Method",
+    "module": "quality",
+    "name": "InspectionMethod",
+    "parentClasses": [
+      "https://example.com/mkg/core#Process"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MeasurementInstrument",
+    "label": "Measurement Instrument",
+    "module": "quality",
+    "name": "MeasurementInstrument",
+    "parentClasses": [
+      "https://example.com/mkg/core#Asset"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MeasurementResult",
+    "label": "Measurement Result",
+    "module": "quality",
+    "name": "MeasurementResult",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#measuresCharacteristic",
+      "https://example.com/mkg/quality#numericValue",
+      "https://example.com/mkg/quality#unit"
+    ],
+    "version": "1.1.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#QualityCharacteristic",
+    "label": "Quality Characteristic",
+    "module": "quality",
+    "name": "QualityCharacteristic",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.1.0"
+  }
+]

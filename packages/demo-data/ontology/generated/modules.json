@@ -1,0 +1,55 @@
+[
+  {
+    "id": "core",
+    "imports": [],
+    "namespace": "https://example.com/mkg/core#",
+    "sourceFile": "ontology/core/core.ttl",
+    "sourceSha256": "72b0d9c138fc6a31432906a920c85601137423668d1970467367701e57c8bcc6"
+  },
+  {
+    "id": "manufacturing",
+    "imports": [
+      "https://example.com/mkg/core"
+    ],
+    "namespace": "https://example.com/mkg/manufacturing#",
+    "sourceFile": "ontology/domains/manufacturing.ttl",
+    "sourceSha256": "046f720d7ebb6d616c212200a03a25b03cb1ef70f761a12564ea1e603c7f77fc"
+  },
+  {
+    "id": "quality",
+    "imports": [
+      "https://example.com/mkg/core",
+      "https://example.com/mkg/manufacturing"
+    ],
+    "namespace": "https://example.com/mkg/quality#",
+    "sourceFile": "ontology/domains/quality.ttl",
+    "sourceSha256": "1c5435a20c3d4370872813841a69b6e326cd91da353751e3a693a70b25b29344"
+  },
+  {
+    "id": "equipment",
+    "imports": [
+      "https://example.com/mkg/core",
+      "https://example.com/mkg/manufacturing"
+    ],
+    "namespace": "https://example.com/mkg/equipment#",
+    "sourceFile": "ontology/domains/equipment.ttl",
+    "sourceSha256": "74157ef630ae6ac5545c29780580d84098be8fb888baf356dc733a65326d4753"
+  },
+  {
+    "id": "application",
+    "imports": [
+      "https://example.com/mkg/core",
+      "https://example.com/mkg/quality"
+    ],
+    "namespace": "https://example.com/mkg/application#",
+    "sourceFile": "ontology/applications/quality-risk.ttl",
+    "sourceSha256": "68f3690dd96b9b28b3e41f3a32b2ee9785e388c9a6747e67c46ccbe316543ff5"
+  },
+  {
+    "id": "explorer-alignment",
+    "imports": [],
+    "namespace": "https://example.com/mkg/explorer#",
+    "sourceFile": "ontology/applications/explorer-alignment.ttl",
+    "sourceSha256": "2319cfc9a34fd2523631bac480f20b201484a71c1cf6a92bb6159ac9e70b123a"
+  }
+]
