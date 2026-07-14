@@ -4,5 +4,6 @@
   "graphView": "engineering",
   "frontendRoute": "/semantic-explorer",
   "seedEntityIds": ["machine:m220", "quality:leak-rate"],
-  "competencyQuestionIds": ["CQ-004", "CQ-005"]
+  "competencyQuestionIds": ["CQ-004", "CQ-005"],
+  "semanticArtifact": "../semantic/generated/cq-004-machine-quality-impact.json"
 }

@@ -34,6 +34,7 @@ export type KnowledgeRelation = {
   validTo?: string;
   confidence?: number;
   evidenceType?: string;
+  assertionType?: "asserted" | "inferred";
 };
 
 export type GraphNode = {

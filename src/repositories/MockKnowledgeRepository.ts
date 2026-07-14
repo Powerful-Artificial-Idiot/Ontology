@@ -11,6 +11,7 @@ import type {
   SemanticSearchRequest,
   SemanticSearchResponse,
 } from "../../packages/knowledge-contracts/src/index";
+import cq004MachineQualityImpact from "../../packages/demo-data/semantic/generated/cq-004-machine-quality-impact.json";
 import { searchSemanticCatalog, semanticLaneDefinitions } from "../features/semantic/semanticUtils";
 import {
   graphEdges,
@@ -90,6 +91,10 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
   }
 
   async searchSemantic(request: SemanticSearchRequest): Promise<SemanticSearchResponse> {
+    const normalizedQuery = request.query.trim().toLowerCase();
+    if (normalizedQuery === "cq-004" || normalizedQuery === "machine quality impact") {
+      return cq004MachineQualityImpact as SemanticSearchResponse;
+    }
     const matches = searchSemanticCatalog(request.query).slice(0, request.limit ?? 25);
     const results = matches.map((match, index) => ({
       entity: { id: match.entity.id, type: entityType(match.entity.type), label: match.entity.label, description: match.entity.description, domain: match.entity.domain, properties: match.entity.attributes ?? {}, source: (match.entity.sourceDocuments ?? []).map((documentName) => ({ sourceType: "document", sourceId: documentName, documentName })) },

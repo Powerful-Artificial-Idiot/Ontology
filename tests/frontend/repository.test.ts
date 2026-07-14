@@ -25,4 +25,13 @@ describe("MockKnowledgeRepository", () => {
     expect(response.entities.length).toBeGreaterThan(response.concepts.length);
     expect(response.mappings.length).toBeGreaterThan(0);
   });
+
+  it("exposes the generated CQ-004 scenario with provenance and inference", async () => {
+    const response = await repository.searchSemantic({ query: "CQ-004" });
+    const relations = response.results[0].matchedRelations ?? [];
+    expect(response.total).toBe(1);
+    expect(new Set(relations.map((relation) => relation.assertionType))).toEqual(new Set(["asserted", "inferred"]));
+    expect(response.results[0].evidence?.length).toBeGreaterThan(0);
+    expect(response.results[0].explanation).toContain("direct machine-to-characteristic impact is inferred");
+  });
 });

@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "contractVersion": "1.1.0",
+    "dataVersion": "0.5.0",
+    "generatedAt": "2026-07-14T00:00:00Z",
+    "ontologyVersion": "1.1.0",
+    "traceId": "generated-cq-004-machine-quality-impact"
+  },
+  "results": [
+    {
+      "entity": {
+        "description": "Quality characteristic that may be affected by M220 through Leakage Failure.",
+        "domain": "quality",
+        "id": "leak-rate-term",
+        "iri": "https://example.com/mkg/demo#LeakRate",
+        "label": "Leak Rate",
+        "properties": {
+          "derivation": "machine -> associatedFailureMode -> mayAffect -> quality characteristic",
+          "failureModeIri": "https://example.com/mkg/demo#LeakageFailure",
+          "machineIri": "https://example.com/mkg/demo#M220"
+        },
+        "source": [
+          {
+            "documentName": "Brake Booster governed example graph",
+            "locator": "CQ-004 row 1",
+            "recordedAt": "2026-07-14T00:00:00Z",
+            "sourceId": "examples/valid/brake-booster.ttl",
+            "sourceType": "rdf-fixture"
+          }
+        ],
+        "status": "active",
+        "type": "qual:QualityCharacteristic"
+      },
+      "evidence": [
+        {
+          "documentName": "Brake Booster governed example graph",
+          "locator": "CQ-004 row 1",
+          "recordedAt": "2026-07-14T00:00:00Z",
+          "sourceId": "examples/valid/brake-booster.ttl",
+          "sourceType": "rdf-fixture"
+        }
+      ],
+      "explanation": "CQ-004 found asserted links from M220 to Leakage Failure and from Leakage Failure to Leak Rate; the direct machine-to-characteristic impact is inferred from that path.",
+      "matchedConcepts": [
+        "leak-rate"
+      ],
+      "matchedRelations": [
+        {
+          "assertionType": "asserted",
+          "confidence": 1.0,
+          "evidenceType": "source triple",
+          "id": "cq004-1-asserted-machine-failure",
+          "label": "associated failure mode",
+          "predicate": "qual:associatedFailureMode",
+          "properties": {},
+          "provenance": [
+            {
+              "documentName": "Brake Booster governed example graph",
+              "locator": "CQ-004 row 1",
+              "recordedAt": "2026-07-14T00:00:00Z",
+              "sourceId": "examples/valid/brake-booster.ttl",
+              "sourceType": "rdf-fixture"
+            }
+          ],
+          "sourceId": "https://example.com/mkg/demo#M220",
+          "targetId": "https://example.com/mkg/demo#LeakageFailure"
+        },
+        {
+          "assertionType": "asserted",
+          "confidence": 1.0,
+          "evidenceType": "source triple",
+          "id": "cq004-1-asserted-failure-characteristic",
+          "label": "may affect",
+          "predicate": "qual:mayAffect",
+          "properties": {},
+          "provenance": [
+            {
+              "documentName": "Brake Booster governed example graph",
+              "locator": "CQ-004 row 1",
+              "recordedAt": "2026-07-14T00:00:00Z",
+              "sourceId": "examples/valid/brake-booster.ttl",
+              "sourceType": "rdf-fixture"
+            }
+          ],
+          "sourceId": "https://example.com/mkg/demo#LeakageFailure",
+          "targetId": "https://example.com/mkg/demo#LeakRate"
+        },
+        {
+          "assertionType": "inferred",
+          "confidence": 1.0,
+          "evidenceType": "SPARQL property path",
+          "id": "cq004-1-inferred-machine-impact",
+          "label": "may impact quality characteristic",
+          "predicate": "derived:machineQualityImpact",
+          "properties": {
+            "competencyQuestion": "CQ-004",
+            "viaFailureMode": "https://example.com/mkg/demo#LeakageFailure"
+          },
+          "provenance": [
+            {
+              "documentName": "Brake Booster governed example graph",
+              "locator": "CQ-004 row 1",
+              "recordedAt": "2026-07-14T00:00:00Z",
+              "sourceId": "examples/valid/brake-booster.ttl",
+              "sourceType": "rdf-fixture"
+            }
+          ],
+          "sourceId": "https://example.com/mkg/demo#M220",
+          "targetId": "https://example.com/mkg/demo#LeakRate"
+        }
+      ],
+      "score": 1.0
+    }
+  ],
+  "total": 1
+}

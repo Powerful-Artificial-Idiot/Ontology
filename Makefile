@@ -3,7 +3,8 @@ PIP ?= .venv/bin/pip
 
 .PHONY: install python-install demo-install demo-dev demo-dev-local demo-dev-http demo-lint demo-test demo-build mock-api-dev mock-api-test \
 	ontology-validate shapes-validate mappings-validate contracts-validate competency-test \
-	alignment-audit ontology-artifacts ontology-artifacts-check validate test build release clean
+	alignment-audit ontology-artifacts ontology-artifacts-check semantic-scenarios semantic-scenarios-check \
+	validate test build release clean
 
 install: demo-install python-install
 
@@ -57,6 +58,12 @@ ontology-artifacts:
 ontology-artifacts-check:
 	$(PYTHON) scripts/build_ontology_artifacts.py --check
 
+semantic-scenarios:
+	$(PYTHON) scripts/build_semantic_scenarios.py
+
+semantic-scenarios-check:
+	$(PYTHON) scripts/build_semantic_scenarios.py --check
+
 contracts-validate:
 	$(PYTHON) scripts/validate_demo_contracts.py
 	$(PYTHON) scripts/generate_explorer_alignment_audit.py --check
@@ -64,7 +71,7 @@ contracts-validate:
 competency-test:
 	$(PYTHON) scripts/run_competency_queries.py
 
-validate: ontology-validate shapes-validate mappings-validate contracts-validate competency-test ontology-artifacts-check
+validate: ontology-validate shapes-validate mappings-validate contracts-validate competency-test ontology-artifacts-check semantic-scenarios-check
 
 test: demo-lint demo-test competency-test
 

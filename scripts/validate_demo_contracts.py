@@ -62,6 +62,11 @@ def main() -> int:
 
     search_payload = json.loads((ROOT / "packages" / "demo-data" / "semantic" / "sample-results.json").read_text())
     validate_json(search_payload, by_title["SemanticSearchResponse"], registry, "semantic sample results")
+    generated_search = json.loads((ROOT / "packages" / "demo-data" / "semantic" / "generated" / "cq-004-machine-quality-impact.json").read_text())
+    validate_json(generated_search, by_title["SemanticSearchResponse"], registry, "generated CQ-004 semantic scenario")
+    assertion_types = {relation.get("assertionType") for result in generated_search["results"] for relation in result.get("matchedRelations", [])}
+    if assertion_types != {"asserted", "inferred"} or any(not result.get("evidence") or not result.get("explanation") for result in generated_search["results"]):
+        raise AssertionError("Generated CQ-004 scenario must preserve asserted, inferred, evidence, and explanation metadata")
 
     alignment = yaml.safe_load((ROOT / "mappings" / "demo-type-mappings.yaml").read_text())
     source = (ROOT / "src" / "data" / "mockGraph.ts").read_text()
@@ -96,7 +101,7 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, semantic search fixture, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, legacy mappings, and ontology alignment.")
     return 0
 
 

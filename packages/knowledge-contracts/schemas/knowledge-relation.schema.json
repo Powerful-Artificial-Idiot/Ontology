@@ -15,7 +15,8 @@
     "validFrom": { "type": "string", "format": "date-time" },
     "validTo": { "type": "string", "format": "date-time" },
     "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-    "evidenceType": { "type": "string" }
+    "evidenceType": { "type": "string" },
+    "assertionType": { "enum": ["asserted", "inferred"] }
   },
   "additionalProperties": false
 }

@@ -106,7 +106,7 @@
 
 ## P1-06 Generate one Semantic scenario from CQ-004
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P1-01
 - Scope: Convert CQ-004 SPARQL results into a provenance-aware `SemanticSearchResponse` artifact.
@@ -119,7 +119,7 @@
 
 ## P1-07 Migrate Ontology Explorer to Repository
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-03, P1-05
 - Scope: Retrieve Ontology graph through the repository in both local and HTTP modes.
