@@ -2,7 +2,7 @@
 
 ## P0-01 Establish a trusted repository baseline
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0
 - Dependencies: None
 - Scope: Review and commit the completed Monorepo foundation, then rebuild a clean release.
@@ -15,7 +15,7 @@
 
 ## P0-02 Automate the frontend regression baseline
 
-- Status: TODO
+- Status: DONE
 - Priority: P0
 - Dependencies: P0-01
 - Scope: Add exact page counts, entry-point smoke checks, repository initialization, schema validation linkage, and console-check limitations.
@@ -28,7 +28,7 @@
 
 ## P0-03 Audit Explorer Alignment semantics
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P0
 - Dependencies: P0-01
 - Scope: Classify every alignment term and visual/contract field; define migration and deprecation actions without removing compatibility terms.
