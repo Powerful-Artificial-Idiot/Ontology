@@ -73,11 +73,23 @@ export default function App() {
 
   if (route.page === "ontology") return (
     <ReactFlowProvider key="ontology-flow">
-        <OntologyExplorer activePage="ontology" onPageChange={handlePageChange} />
+        <OntologyExplorer
+          activePage="ontology"
+          onPageChange={handlePageChange}
+          route={route}
+          onRouteChange={navigate}
+        />
     </ReactFlowProvider>
   );
 
-  return <SemanticExplorerPage activePage="semantic" onPageChange={handlePageChange} />;
+  return (
+    <SemanticExplorerPage
+      activePage="semantic"
+      onPageChange={handlePageChange}
+      route={route}
+      onRouteChange={navigate}
+    />
+  );
 }
 
 function GraphExplorer({

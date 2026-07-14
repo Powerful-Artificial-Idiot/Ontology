@@ -158,7 +158,7 @@
 
 ## P2-02 Add deep-link tests
 
-- Status: TODO
+- Status: DONE
 - Priority: P2
 - Dependencies: P2-01
 - Scope: Test Ontology class, Semantic scenario, and Quality Route deep links plus invalid IDs.

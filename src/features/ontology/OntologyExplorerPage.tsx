@@ -4,6 +4,8 @@ import ReactFlow, { Background, Controls, MiniMap, Panel, useReactFlow } from "r
 import type { KnowledgeRepository } from "../../../packages/knowledge-contracts/src/index";
 import { Header } from "../../components/Header";
 import { knowledgeRepository } from "../../repositories";
+import type { ExplorerRoute } from "../../router/explorerRouter";
+import { resolveOntologyTarget } from "../../router/explorerDeepLinks";
 import type { AppPage, OntologyFilter } from "../../types";
 import { OntologyDetailPanel } from "./components/OntologyDetailPanel";
 import { OntologyDomainDock } from "./components/OntologyDomainDock";
@@ -25,6 +27,8 @@ export interface OntologyExplorerPageProps {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
   repository?: KnowledgeRepository;
+  route?: ExplorerRoute;
+  onRouteChange?: (route: ExplorerRoute, replace?: boolean) => void;
 }
 
 type OntologyLoadState =
@@ -32,7 +36,7 @@ type OntologyLoadState =
   | { status: "ready"; source: OntologySourceData }
   | { status: "error"; message: string };
 
-export function OntologyExplorerPage({ activePage, onPageChange, repository = knowledgeRepository }: OntologyExplorerPageProps) {
+export function OntologyExplorerPage({ activePage, onPageChange, repository = knowledgeRepository, route, onRouteChange }: OntologyExplorerPageProps) {
   const [loadState, setLoadState] = useState<OntologyLoadState>({ status: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
 
@@ -52,13 +56,14 @@ export function OntologyExplorerPage({ activePage, onPageChange, repository = kn
   if (loadState.status !== "ready") {
     return <OntologyRepositoryState activePage={activePage} onPageChange={onPageChange} state={loadState} onRetry={() => setReloadToken((value) => value + 1)} />;
   }
-  return <OntologyExplorerCanvas activePage={activePage} onPageChange={onPageChange} source={loadState.source} />;
+  return <OntologyExplorerCanvas activePage={activePage} onPageChange={onPageChange} source={loadState.source} route={route} onRouteChange={onRouteChange} />;
 }
 
-function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePage: AppPage; onPageChange: (page: AppPage) => void; source: OntologySourceData }) {
+function OntologyExplorerCanvas({ activePage, onPageChange, source, route, onRouteChange }: { activePage: AppPage; onPageChange: (page: AppPage) => void; source: OntologySourceData; route?: ExplorerRoute; onRouteChange?: (route: ExplorerRoute, replace?: boolean) => void }) {
   const reactFlow = useReactFlow();
   const [interaction, dispatch] = useReducer(ontologyInteractionReducer, initialOntologyInteractionState);
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState(route?.query ?? "");
+  const [routeError, setRouteError] = useState<string>();
   const [expandedObjectIds, setExpandedObjectIds] = useState<Set<string>>(() => new Set(["Operation"]));
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
@@ -81,8 +86,27 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePa
 
   const handleHover = useCallback((entity: OntologyEntity) => dispatch({ type: "hover", entity }), []);
   const handleLeave = useCallback((entity: OntologyEntity) => dispatch({ type: "leave", entity }), []);
-  const handleSelect = useCallback((entity: OntologyEntity | null) => dispatch({ type: "select", entity }), []);
-  const handleFocus = useCallback((focus: OntologyFocusState) => dispatch({ type: "focus", focus }), []);
+  const handleSelect = useCallback((entity: OntologyEntity | null) => {
+    dispatch({ type: "select", entity });
+    if (!onRouteChange) return;
+    if (entity?.kind === "node") {
+      onRouteChange({ page: "ontology", ontologyTarget: { kind: "class", id: entity.id }, query: searchKeyword || undefined });
+    } else if (entity?.kind === "property") {
+      onRouteChange({ page: "ontology", ontologyTarget: { kind: "property", id: entity.propertyId }, selectedEntityId: entity.objectTypeId, query: searchKeyword || undefined });
+    } else {
+      onRouteChange({ page: "ontology", selectedEntityId: entity && "id" in entity ? entity.id : undefined, query: searchKeyword || undefined });
+    }
+  }, [onRouteChange, searchKeyword]);
+  const handleFocus = useCallback((focus: OntologyFocusState) => {
+    dispatch({ type: "focus", focus });
+    onRouteChange?.({
+      page: "ontology",
+      ontologyTarget: route?.ontologyTarget,
+      selectedEntityId: route?.selectedEntityId,
+      focusEntityId: focus.mode === "node-focus" ? focus.nodeId : undefined,
+      query: searchKeyword || undefined,
+    });
+  }, [onRouteChange, route?.ontologyTarget, route?.selectedEntityId, searchKeyword]);
   const handleFilter = useCallback((filter: OntologyFilter) => dispatch({ type: "filter", filter }), []);
   const handleHighlightMode = useCallback((mode: OntologyHighlightMode) => dispatch({ type: "highlight-mode", mode }), []);
   const handleToggleExpand = useCallback((id: string) => {
@@ -95,8 +119,27 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePa
   }, []);
   const handleSelectProperty = useCallback((objectTypeId: string, propertyId: string) => {
     setExpandedObjectIds((current) => new Set(current).add(objectTypeId));
-    dispatch({ type: "select", entity: { kind: "property", objectTypeId, propertyId } });
-  }, []);
+    handleSelect({ kind: "property", objectTypeId, propertyId });
+  }, [handleSelect]);
+
+  useEffect(() => {
+    setSearchKeyword(route?.query ?? "");
+    setRouteError(route?.invalidPath ? `Unsupported Ontology URL: ${route.invalidPath}` : undefined);
+    const target = route?.ontologyTarget;
+    if (!target) return;
+    const resolution = resolveOntologyTarget(target, source);
+    if (resolution.status === "invalid") {
+      dispatch({ type: "select", entity: null });
+      setRouteError(resolution.message);
+      return;
+    }
+    const entity = resolution.value;
+    if (entity.kind === "property") {
+      setExpandedObjectIds((current) => new Set(current).add(entity.objectTypeId));
+    }
+    dispatch({ type: "select", entity });
+    setRouteError(undefined);
+  }, [route?.invalidPath, route?.ontologyTarget, route?.query, source]);
 
   const renderParams = useMemo(() => ({
     source,
@@ -138,7 +181,10 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePa
         searchSummary={searchSummary}
         searchPlaceholder="Search ontology type, relation, lane, source system..."
         onPageChange={onPageChange}
-        onSearchChange={setSearchKeyword}
+        onSearchChange={(keyword) => {
+          setSearchKeyword(keyword);
+          onRouteChange?.({ ...route, page: "ontology", query: keyword || undefined }, true);
+        }}
       />
       <div className="flex min-h-0 flex-1">
         {leftPanelOpen ? (
@@ -161,7 +207,7 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePa
           <div className="ontology-status-strip-wrap">
             <div className="canvas-status-strip">
               <div className="min-w-0 truncate text-sm font-bold text-slate-950">Manufacturing Ontology Explorer</div>
-              <div className="min-w-0 truncate text-xs font-semibold text-slate-500">{describeStatus(interaction.selectedEntity, interaction.hoveredEntity)}</div>
+              <div data-route-status className={`min-w-0 truncate text-xs font-semibold ${routeError ? "text-amber-700" : "text-slate-500"}`}>{routeError ?? describeStatus(interaction.selectedEntity, interaction.hoveredEntity)}</div>
               <div className="ml-auto hidden shrink-0 text-[11px] font-bold text-slate-400 min-[1500px]:block">{renderedNodes.length} nodes / {renderedEdges.length} edges</div>
             </div>
           </div>

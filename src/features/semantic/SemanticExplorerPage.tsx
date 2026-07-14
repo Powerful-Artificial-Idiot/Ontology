@@ -3,6 +3,8 @@ import { AlertTriangle, LoaderCircle, PanelLeftClose, PanelLeftOpen, PanelRightC
 import type { KnowledgeRepository } from "../../../packages/knowledge-contracts/src/index";
 import { Header } from "../../components/Header";
 import { knowledgeRepository } from "../../repositories";
+import type { ExplorerRoute } from "../../router/explorerRouter";
+import { resolveSemanticTarget } from "../../router/explorerDeepLinks";
 import { assertSemanticCatalogResponse, assertSemanticSearchResponse } from "../../repositories/semanticCatalogValidation";
 import type { AppPage } from "../../types";
 import { AIContextPreview } from "./components/AIContextPreview";
@@ -22,12 +24,14 @@ type SemanticExplorerPageProps = {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
   repository?: KnowledgeRepository;
+  route?: ExplorerRoute;
+  onRouteChange?: (route: ExplorerRoute, replace?: boolean) => void;
 };
 
-export function SemanticExplorerPage({ activePage, onPageChange, repository = knowledgeRepository }: SemanticExplorerPageProps) {
+export function SemanticExplorerPage({ activePage, onPageChange, repository = knowledgeRepository, route, onRouteChange }: SemanticExplorerPageProps) {
   const [catalogState, setCatalogState] = useState<CatalogState>({ status: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState(route?.query ?? "");
   const [searchMatches, setSearchMatches] = useState<SemanticSearchMatch[]>([]);
   const [searchError, setSearchError] = useState<string>();
   const [domainFilter, setDomainFilter] = useState<SemanticDomainFilter>("all");
@@ -36,6 +40,7 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [contextCollapsed, setContextCollapsed] = useState(false);
+  const [routeError, setRouteError] = useState<string>();
 
   useEffect(() => {
     let active = true;
@@ -61,6 +66,26 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
       });
     return () => { active = false; };
   }, [reloadToken, repository]);
+
+  useEffect(() => {
+    if (!catalogState || catalogState.status !== "ready") return;
+    const catalog = catalogState.catalog;
+    setSearchKeyword(route?.semanticTarget?.kind === "scenario" && route.semanticTarget.id === "machine-impact-analysis" ? route.query ?? "CQ-004" : route?.query ?? "");
+    const target = route?.semanticTarget;
+    if (!target) {
+      setRouteError(route?.invalidPath ? `Unsupported Semantic URL: ${route.invalidPath}` : undefined);
+      return;
+    }
+    const resolution = resolveSemanticTarget(target, catalog);
+    if (resolution.status === "invalid") {
+      setRouteError(resolution.message);
+      return;
+    }
+    setSelectedConceptId(resolution.value.conceptId);
+    setSelectedEntityId(resolution.value.entityId);
+    if (resolution.value.defaultQuery) setSearchKeyword(route?.query ?? resolution.value.defaultQuery);
+    setRouteError(undefined);
+  }, [catalogState, route?.invalidPath, route?.query, route?.semanticTarget]);
 
   const catalog = catalogState.status === "ready" || catalogState.status === "empty" ? catalogState.catalog : undefined;
 
@@ -100,6 +125,7 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
   const selectConcept = (bundle: SemanticConceptBundle) => {
     setSelectedConceptId(bundle.id);
     setSelectedEntityId(bundle.primaryTermId);
+    onRouteChange?.({ page: "semantic", semanticTarget: { kind: "entity", id: bundle.primaryTermId }, query: searchKeyword || undefined });
   };
 
   const changeFilter = (filter: SemanticDomainFilter) => {
@@ -116,6 +142,7 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
     if (domainFilter !== "all" && bundle.domain !== domainFilter) setDomainFilter("all");
     setSelectedConceptId(conceptId);
     setSelectedEntityId(entityId);
+    onRouteChange?.({ page: "semantic", semanticTarget: { kind: "entity", id: entityId }, query: searchKeyword || undefined });
   };
 
   const reset = () => {
@@ -127,7 +154,7 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-slate-100">
-      <Header activePage={activePage} searchKeyword={searchKeyword} searchSummary={searchSummary} searchPlaceholder="Search term, synonym, field, evidence..." onPageChange={onPageChange} onSearchChange={setSearchKeyword} />
+      <Header activePage={activePage} searchKeyword={searchKeyword} searchSummary={searchSummary} searchPlaceholder="Search term, synonym, field, evidence..." onPageChange={onPageChange} onSearchChange={(keyword) => { setSearchKeyword(keyword); onRouteChange?.({ ...route, page: "semantic", query: keyword || undefined }, true); }} />
       {catalogState.status !== "ready" || !catalog ? (
         <SemanticRepositoryState state={catalogState} onRetry={() => setReloadToken((value) => value + 1)} />
       ) : (
@@ -138,12 +165,12 @@ export function SemanticExplorerPage({ activePage, onPageChange, repository = kn
               <main className="relative min-w-0 flex-1 overflow-hidden">
                 <div className="pointer-events-none absolute left-4 right-4 top-3 z-10 flex h-9 items-center rounded-full border border-slate-200 bg-white/95 px-3 shadow-sm backdrop-blur">
                   <div className="truncate text-sm font-bold text-slate-950">Enterprise Semantic Layer</div>
-                  <div className="ml-2 truncate text-xs font-semibold text-slate-500">{selectedBundle?.title ?? "No concept selected"}</div>
+                  <div data-route-status className={`ml-2 truncate text-xs font-semibold ${routeError ? "text-amber-700" : "text-slate-500"}`}>{routeError ?? selectedBundle?.title ?? "No concept selected"}</div>
                   <div className="ml-auto hidden shrink-0 text-[10px] font-bold text-slate-400 min-[1440px]:block">{visibleBundleCount} concepts / {catalog.bundles.length} total</div>
                 </div>
                 <button type="button" title={leftPanelOpen ? "Hide semantic catalog" : "Show semantic catalog"} onClick={() => setLeftPanelOpen((value) => !value)} className="ontology-sidebar-toggle semantic-sidebar-toggle left-3">{leftPanelOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeftOpen className="h-4 w-4" />}</button>
                 <button type="button" title={rightPanelOpen ? "Hide semantic detail" : "Show semantic detail"} onClick={() => setRightPanelOpen((value) => !value)} className="ontology-sidebar-toggle semantic-sidebar-toggle right-3">{rightPanelOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}</button>
-                <div className="h-full pt-[60px]"><SemanticMappingCanvas bundle={selectedBundle} lanes={catalog.lanes} entitiesById={catalog.entityById} mappingsById={catalog.mappingById} selectedEntityId={selectedEntityId} onSelectEntity={setSelectedEntityId} /></div>
+                <div className="h-full pt-[60px]"><SemanticMappingCanvas bundle={selectedBundle} lanes={catalog.lanes} entitiesById={catalog.entityById} mappingsById={catalog.mappingById} selectedEntityId={selectedEntityId} onSelectEntity={(entityId) => { setSelectedEntityId(entityId); onRouteChange?.({ page: "semantic", semanticTarget: { kind: "entity", id: entityId }, query: searchKeyword || undefined }); }} /></div>
               </main>
               {rightPanelOpen ? <SemanticDetailPanel entity={selectedEntity} bundle={selectedBundle} entitiesById={catalog.entityById} mappingsById={catalog.mappingById} domainLabels={catalog.domainLabels} onPageChange={onPageChange} /> : null}
             </div>
