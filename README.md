@@ -205,5 +205,6 @@ The frontend bundle is static and can be served by GitHub Pages, Nginx, an inter
 - [Mapping guidelines](docs/mapping-guidelines.md)
 - [Local development](docs/local-development.md)
 - [Repository audit baseline](docs/repository-audit.md)
+- [Production deployment](DEPLOYMENT.md)
 
 The next production step is not a frontend rewrite. It is a pilot Graph API and semantic search service that implement the shared contracts, preserve provenance and validity time, and pass the same integration validation before replacing the Mock repository.
