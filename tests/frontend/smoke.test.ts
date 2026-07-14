@@ -28,4 +28,12 @@ describe("frontend smoke baseline", () => {
     expect(page).not.toContain("ontologyArtifactAdapter");
     expect(page).not.toContain("ontologySourceData");
   });
+
+  it("keeps Route Explorer behind the repository boundary", () => {
+    const page = readFileSync("src/App.tsx", "utf8");
+    expect(page).toContain("getGraphView");
+    expect(page).toContain("Loading route graph");
+    expect(page).toContain("Route graph unavailable");
+    expect(page).not.toContain("legacyDemoData");
+  });
 });

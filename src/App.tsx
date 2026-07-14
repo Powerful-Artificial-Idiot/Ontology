@@ -17,7 +17,8 @@ import { DetailPanel } from "./components/DetailPanel";
 import { Header } from "./components/Header";
 import { LeftSidebar } from "./components/LeftSidebar";
 import { StackNode as StackNodeComponent } from "./components/StackNode";
-import { graphEdges, stackNodes } from "./repositories/legacyDemoData";
+import { buildRouteGraphFromResponse, type RouteGraphViewModel } from "./features/route/routeRepositoryAdapter";
+import { knowledgeRepository, type KnowledgeRepository } from "./repositories";
 import {
   getFocusedGraphElements,
   getNodeByObjectId,
@@ -25,13 +26,12 @@ import {
   getTopObject,
   getObjectsByType,
   highlightNeighborhood,
-  isVisibleInView,
   searchGraph,
   selectStackObject,
 } from "./lib/graphUtils";
 import { OntologyExplorer } from "./pages/OntologyExplorer";
 import { SemanticExplorerPage } from "./features/semantic/SemanticExplorerPage";
-import type { AppPage, StackNodeRenderData, StackObjectType, ViewMode } from "./types";
+import type { AppPage, StackNode, StackNodeRenderData, StackObjectType, ViewMode } from "./types";
 
 type RouteLaneId = "source" | "process" | "output";
 
@@ -64,9 +64,81 @@ export default function App() {
 function GraphExplorer({
   activePage,
   onPageChange,
+  repository = knowledgeRepository,
 }: {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
+  repository?: KnowledgeRepository;
+}) {
+  const [loadRequest, setLoadRequest] = useState(0);
+  const [routeState, setRouteState] = useState<
+    | { status: "loading" }
+    | { status: "error"; message: string }
+    | { status: "ready"; graphs: Record<ViewMode, RouteGraphViewModel> }
+  >({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    setRouteState({ status: "loading" });
+
+    Promise.all(
+      routeViewModes.map(async (viewMode) => {
+        const response = await repository.getGraphView({ viewId: viewMode });
+        return [viewMode, buildRouteGraphFromResponse(response, viewMode)] as const;
+      }),
+    )
+      .then((entries) => {
+        if (!cancelled) {
+          setRouteState({ status: "ready", graphs: Object.fromEntries(entries) as Record<ViewMode, RouteGraphViewModel> });
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setRouteState({
+            status: "error",
+            message: error instanceof Error ? error.message : "The route graph could not be loaded.",
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadRequest, repository]);
+
+  if (routeState.status === "loading") {
+    return <RouteLoadState title="Loading route graph" message="Connecting the manufacturing route to the knowledge repository." />;
+  }
+  if (routeState.status === "error") {
+    return (
+      <RouteLoadState
+        title="Route graph unavailable"
+        message={routeState.message}
+        actionLabel="Retry"
+        onAction={() => setLoadRequest((request) => request + 1)}
+      />
+    );
+  }
+
+  return (
+    <GraphExplorerCanvas
+      activePage={activePage}
+      onPageChange={onPageChange}
+      routeGraphs={routeState.graphs}
+    />
+  );
+}
+
+const routeViewModes: ViewMode[] = ["production", "quality", "engineering", "valueStream"];
+
+function GraphExplorerCanvas({
+  activePage,
+  onPageChange,
+  routeGraphs,
+}: {
+  activePage: AppPage;
+  onPageChange: (page: AppPage) => void;
+  routeGraphs: Record<ViewMode, RouteGraphViewModel>;
 }) {
   const reactFlow = useReactFlow();
   const [viewMode, setViewMode] = useState<ViewMode>("production");
@@ -79,21 +151,8 @@ function GraphExplorer({
   const [activeRouteLane, setActiveRouteLane] = useState<RouteLaneId | null>(null);
   const [sidebarScrollRequest, setSidebarScrollRequest] = useState(0);
 
-  const viewVisibleNodes = useMemo(
-    () => stackNodes.filter((node) => isVisibleInView(node, viewMode)),
-    [viewMode],
-  );
-  const viewVisibleNodeIds = useMemo(() => new Set(viewVisibleNodes.map((node) => node.id)), [viewVisibleNodes]);
-  const viewVisibleEdges = useMemo(
-    () =>
-      graphEdges.filter(
-        (edge) =>
-          isVisibleInView(edge, viewMode) &&
-          viewVisibleNodeIds.has(edge.source) &&
-          viewVisibleNodeIds.has(edge.target),
-      ),
-    [viewMode, viewVisibleNodeIds],
-  );
+  const viewVisibleNodes = routeGraphs[viewMode].nodes;
+  const viewVisibleEdges = routeGraphs[viewMode].edges;
   const focusedElements = useMemo(
     () =>
       focusMode && expandedNodeId
@@ -204,7 +263,7 @@ function GraphExplorer({
 
   const handleSelectObjectById = useCallback((objectId: string) => {
     const match = selectStackObject(viewVisibleNodes, objectId);
-    if (!match || !isVisibleInView(match.node, viewMode)) {
+    if (!match) {
       return;
     }
 
@@ -212,7 +271,7 @@ function GraphExplorer({
     setActiveRouteLane(null);
     setSelectedNodeId(match.node.id);
     setSelectedObjectId(objectId);
-  }, [exitFocusMode, viewMode, viewVisibleNodes]);
+  }, [exitFocusMode, viewVisibleNodes]);
 
   const handleSearchChange = useCallback((keyword: string) => {
     setSearchKeyword(keyword);
@@ -260,7 +319,7 @@ function GraphExplorer({
   }, [graphVisibleNodes, reactFlow]);
 
   const buildFlowNode = useCallback(
-    (node: (typeof stackNodes)[number], previous?: Node<StackNodeRenderData>): Node<StackNodeRenderData> => {
+    (node: StackNode, previous?: Node<StackNodeRenderData>): Node<StackNodeRenderData> => {
       const isSearchActive = searchKeyword.trim().length > 0 && searchNodeIds.size > 0;
       const isSearchMatch = searchNodeIds.has(node.id);
       const isLaneMatch = activeRouteLane ? getRouteLaneId(node.nodeCategory, viewMode) === activeRouteLane : false;
@@ -387,7 +446,7 @@ function GraphExplorer({
           exitFocusMode();
           setActiveRouteLane(null);
           setViewMode(nextView);
-          const nextVisibleNodes = stackNodes.filter((node) => isVisibleInView(node, nextView));
+          const nextVisibleNodes = routeGraphs[nextView].nodes;
           const nextSelectedNode =
             nextVisibleNodes.find((node) => node.id === selectedNodeId) ?? nextVisibleNodes[0];
           if (nextSelectedNode) {
@@ -471,7 +530,7 @@ function GraphExplorer({
 }
 
 function buildInitialNode(
-  node: (typeof stackNodes)[number],
+  node: StackNode,
   viewMode: ViewMode,
   onToggleExpand: (nodeId: string) => void,
   onSelectStackObject: (nodeId: string, objectId: string) => void,
@@ -552,7 +611,7 @@ function getRouteLaneId(nodeCategory: string, viewMode: ViewMode): RouteLaneId {
 function edgeTouchesRouteLane(
   edge: { source: string; target: string },
   laneId: RouteLaneId,
-  nodes: Array<(typeof stackNodes)[number]>,
+  nodes: StackNode[],
   viewMode: ViewMode,
 ) {
   const sourceNode = nodes.find((node) => node.id === edge.source);
@@ -567,7 +626,7 @@ function edgeTouchesRouteLane(
 function getRouteLaneCategory(
   laneId: RouteLaneId,
   viewMode: ViewMode,
-  nodes: Array<(typeof stackNodes)[number]>,
+  nodes: StackNode[],
 ): StackObjectType | undefined {
   const preferredCategories: Record<ViewMode, Record<RouteLaneId, StackObjectType[]>> = {
     production: {
@@ -644,6 +703,37 @@ function ValueStreamTimeline() {
           <span className="font-bold text-teal-800">{value}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function RouteLoadState({
+  title,
+  message,
+  actionLabel,
+  onAction,
+}: {
+  title: string;
+  message: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  return (
+    <div className="flex h-screen items-center justify-center bg-slate-100 px-6">
+      <div className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm">
+        <div className="mx-auto mb-4 h-2 w-14 rounded-full bg-blue-600" />
+        <h1 className="text-base font-bold text-slate-950">{title}</h1>
+        <p className="mt-2 text-sm leading-6 text-slate-600">{message}</p>
+        {actionLabel && onAction && (
+          <button
+            type="button"
+            onClick={onAction}
+            className="mt-5 rounded-md bg-slate-950 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800"
+          >
+            {actionLabel}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

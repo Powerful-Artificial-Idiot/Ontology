@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { HttpKnowledgeRepository, KnowledgeApiError } from "../../packages/ontology-client/src/index";
 import { createMockKnowledgeApi } from "../../services/mock-knowledge-api/app";
 import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRepository";
+import type { ViewMode } from "../../src/types";
 
 describe("Local and HTTP knowledge repository modes", () => {
   const local = new MockKnowledgeRepository();
@@ -25,16 +26,20 @@ describe("Local and HTTP knowledge repository modes", () => {
   });
 
   it("returns equivalent graph, ontology, and semantic catalog baselines", async () => {
-    const [localGraph, httpGraph, localOntology, httpOntology, localCatalog, httpCatalog] = await Promise.all([
-      local.getGraphView({ viewId: "production" }),
-      http.getGraphView({ viewId: "production" }),
+    const views: ViewMode[] = ["production", "quality", "engineering", "valueStream"];
+    const [localGraphs, httpGraphs, localOntology, httpOntology, localCatalog, httpCatalog] = await Promise.all([
+      Promise.all(views.map((viewId) => local.getGraphView({ viewId }))),
+      Promise.all(views.map((viewId) => http.getGraphView({ viewId }))),
       local.getOntologyGraph({}),
       http.getOntologyGraph({}),
       local.getSemanticCatalog(),
       http.getSemanticCatalog(),
     ]);
 
-    expect(httpGraph.nodes.map((node) => node.id)).toEqual(localGraph.nodes.map((node) => node.id));
+    expect(httpGraphs.map((graph) => graph.nodes.map((node) => node.id)))
+      .toEqual(localGraphs.map((graph) => graph.nodes.map((node) => node.id)));
+    expect(httpGraphs.map((graph) => graph.edges.map((edge) => edge.id)))
+      .toEqual(localGraphs.map((graph) => graph.edges.map((edge) => edge.id)));
     expect(httpOntology.classes.map((item) => item.name)).toEqual(localOntology.classes.map((item) => item.name));
     expect(httpCatalog.concepts.map((item) => item.id)).toEqual(localCatalog.concepts.map((item) => item.id));
   });
