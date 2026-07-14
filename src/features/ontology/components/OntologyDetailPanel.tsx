@@ -1,33 +1,33 @@
 import type { ReactNode } from "react";
 import { Target } from "lucide-react";
 import type { OntologyLinkType, OntologyObjectType, OntologyProperty } from "../../../types";
-import { domainLabel, domainStyles, ontologyLanes, ontologySourceActions, ontologySourceEdges, ontologySourceNodes } from "../ontologyData";
+import { domainLabel, domainStyles } from "../ontologyData";
 import { laneByObjectId } from "../ontologyLayout";
-import type { OntologyEntity, OntologyFocusState, OntologyInteractionState } from "../ontologyTypes";
+import type { OntologyEntity, OntologyFocusState, OntologyInteractionState, OntologySourceData } from "../ontologyTypes";
 import { getPriorityProperties } from "./OntologyNode";
 
-export function OntologyDetailPanel({ interaction, onSelect, onFocus }: { interaction: OntologyInteractionState; onSelect: (entity: OntologyEntity | null) => void; onFocus: (focus: OntologyFocusState) => void }) {
+export function OntologyDetailPanel({ source, interaction, onSelect, onFocus }: { source: OntologySourceData; interaction: OntologyInteractionState; onSelect: (entity: OntologyEntity | null) => void; onFocus: (focus: OntologyFocusState) => void }) {
   const entity = interaction.selectedEntity ?? interaction.hoveredEntity;
   return (
     <aside className="flex w-[420px] shrink-0 flex-col border-l border-slate-200 bg-white">
       <div className="border-b border-slate-200 px-4 py-3">
         <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Ontology Detail</div>
-        <div className="mt-1 truncate text-sm font-bold text-slate-950">{entity ? describeEntity(entity) : "No entity selected"}</div>
+        <div className="mt-1 truncate text-sm font-bold text-slate-950">{entity ? describeEntity(entity, source) : "No entity selected"}</div>
       </div>
       <div className="min-h-0 flex-1 overflow-auto p-4">
-        {!entity ? <EmptyDetail interaction={interaction} /> : null}
-        {entity?.kind === "node" ? <ObjectDetail objectType={findNode(entity.id)} onSelect={onSelect} onFocus={() => onFocus({ mode: "node-focus", nodeId: entity.id })} /> : null}
-        {entity?.kind === "property" ? <PropertyDetail objectType={findNode(entity.objectTypeId)} propertyId={entity.propertyId} /> : null}
-        {entity?.kind === "edge" ? <EdgeDetail edge={findEdge(entity.id)} onFocus={(relationshipType) => onFocus({ mode: "relationship-focus", relationshipType })} /> : null}
-        {entity?.kind === "relationshipType" ? <RelationshipDetail relationshipType={entity.id} onSelect={onSelect} onFocus={() => onFocus({ mode: "relationship-focus", relationshipType: entity.id })} /> : null}
-        {entity?.kind === "lane" ? <LaneDetail laneId={entity.id} onSelect={onSelect} onFocus={() => onFocus({ mode: "lane-focus", laneId: entity.id })} /> : null}
-        {entity?.kind === "action" ? <ActionDetail actionId={entity.id} onSelect={onSelect} /> : null}
+        {!entity ? <EmptyDetail source={source} interaction={interaction} /> : null}
+        {entity?.kind === "node" ? <ObjectDetail source={source} objectType={findNode(source, entity.id)} onSelect={onSelect} onFocus={() => onFocus({ mode: "node-focus", nodeId: entity.id })} /> : null}
+        {entity?.kind === "property" ? <PropertyDetail objectType={findNode(source, entity.objectTypeId)} propertyId={entity.propertyId} /> : null}
+        {entity?.kind === "edge" ? <EdgeDetail edge={findEdge(source, entity.id)} onFocus={(relationshipType) => onFocus({ mode: "relationship-focus", relationshipType })} /> : null}
+        {entity?.kind === "relationshipType" ? <RelationshipDetail source={source} relationshipType={entity.id} onSelect={onSelect} onFocus={() => onFocus({ mode: "relationship-focus", relationshipType: entity.id })} /> : null}
+        {entity?.kind === "lane" ? <LaneDetail source={source} laneId={entity.id} onSelect={onSelect} onFocus={() => onFocus({ mode: "lane-focus", laneId: entity.id })} /> : null}
+        {entity?.kind === "action" ? <ActionDetail source={source} actionId={entity.id} onSelect={onSelect} /> : null}
       </div>
     </aside>
   );
 }
 
-function EmptyDetail({ interaction }: { interaction: OntologyInteractionState }) {
+function EmptyDetail({ source, interaction }: { source: OntologySourceData; interaction: OntologyInteractionState }) {
   return (
     <div className="space-y-5">
       <DetailSection title="Purpose">
@@ -40,15 +40,15 @@ function EmptyDetail({ interaction }: { interaction: OntologyInteractionState })
           <div className="rounded-lg bg-slate-50 p-3">Double click or use a Focus action to isolate an explicit scope.</div>
         </div>
       </DetailSection>
-      <DetailSection title="Current Scope"><KeyValueRows rows={[["Domain Filter", interaction.domainFilter], ["Object Types", String(ontologySourceNodes.length)], ["Relationships", String(ontologySourceEdges.length)], ["Lanes", String(ontologyLanes.length)]]} /></DetailSection>
+      <DetailSection title="Current Scope"><KeyValueRows rows={[["Domain Filter", interaction.domainFilter], ["Object Types", String(source.nodes.length)], ["Relationships", String(source.edges.length)], ["Lanes", String(source.lanes.length)]]} /></DetailSection>
     </div>
   );
 }
 
-function ObjectDetail({ objectType, onSelect, onFocus }: { objectType: OntologyObjectType; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
-  const inbound = ontologySourceEdges.filter((edge) => edge.targetObjectType === objectType.id);
-  const outbound = ontologySourceEdges.filter((edge) => edge.sourceObjectType === objectType.id);
-  const lane = ontologyLanes.find((item) => item.id === laneByObjectId.get(objectType.id));
+function ObjectDetail({ source, objectType, onSelect, onFocus }: { source: OntologySourceData; objectType: OntologyObjectType; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
+  const inbound = source.edges.filter((edge) => edge.targetObjectType === objectType.id);
+  const outbound = source.edges.filter((edge) => edge.sourceObjectType === objectType.id);
+  const lane = source.lanes.find((item) => item.id === laneByObjectId.get(objectType.id));
   return (
     <div className="space-y-5">
       <FocusAction label="Focus Object" onClick={onFocus} />
@@ -91,19 +91,19 @@ function EdgeDetail({ edge, onFocus }: { edge: OntologyLinkType; onFocus: (relat
   );
 }
 
-function RelationshipDetail({ relationshipType, onSelect, onFocus }: { relationshipType: string; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
-  const links = ontologySourceEdges.filter((edge) => edge.label === relationshipType);
+function RelationshipDetail({ source, relationshipType, onSelect, onFocus }: { source: OntologySourceData; relationshipType: string; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
+  const links = source.edges.filter((edge) => edge.label === relationshipType);
   return <div className="space-y-5"><FocusAction label="Focus Relationship" onClick={onFocus} /><DetailSection title="Relationship Type"><KeyValueRows rows={[["Label", relationshipType], ["Definitions", String(links.length)], ["Domains", Array.from(new Set(links.map((edge) => domainLabel[edge.domain]))).join(", ")]]} /></DetailSection><DetailSection title="Definitions"><LinkList links={links} onSelect={onSelect} /></DetailSection></div>;
 }
 
-function LaneDetail({ laneId, onSelect, onFocus }: { laneId: string; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
-  const lane = ontologyLanes.find((item) => item.id === laneId) ?? ontologyLanes[0];
-  const links = ontologySourceEdges.filter((edge) => lane.objectTypeIds.includes(edge.sourceObjectType) || lane.objectTypeIds.includes(edge.targetObjectType));
+function LaneDetail({ source, laneId, onSelect, onFocus }: { source: OntologySourceData; laneId: string; onSelect: (entity: OntologyEntity) => void; onFocus: () => void }) {
+  const lane = source.lanes.find((item) => item.id === laneId) ?? source.lanes[0];
+  const links = source.edges.filter((edge) => lane.objectTypeIds.includes(edge.sourceObjectType) || lane.objectTypeIds.includes(edge.targetObjectType));
   return <div className="space-y-5"><FocusAction label="Focus Lane" onClick={onFocus} /><DetailSection title="Domain"><p className="text-sm leading-6 text-slate-600">{lane.description}</p></DetailSection><DetailSection title="Included Object Types"><ChipList values={lane.objectTypeIds} onClick={(id) => onSelect({ kind: "node", id })} /></DetailSection><DetailSection title="Primary Relationships"><LinkList links={links.slice(0, 10)} onSelect={onSelect} /></DetailSection><DetailSection title="Business Roles"><ChipList values={lane.roles} /></DetailSection><DetailSection title="Typical Questions"><ExampleList values={lane.questions} /></DetailSection><DetailSection title="Source Systems"><ChipList values={lane.sourceSystems} /></DetailSection></div>;
 }
 
-function ActionDetail({ actionId, onSelect }: { actionId: string; onSelect: (entity: OntologyEntity) => void }) {
-  const action = ontologySourceActions.find((item) => item.id === actionId) ?? ontologySourceActions[0];
+function ActionDetail({ source, actionId, onSelect }: { source: OntologySourceData; actionId: string; onSelect: (entity: OntologyEntity) => void }) {
+  const action = source.actions.find((item) => item.id === actionId) ?? source.actions[0];
   return <div className="space-y-5"><DetailSection title="Action"><p className="text-sm leading-6 text-slate-600">{action.description}</p></DetailSection><DetailSection title="Applies To"><ChipList values={action.appliesTo} onClick={(id) => onSelect({ kind: "node", id })} /></DetailSection><DetailSection title="Affected Object Types"><ChipList values={action.affectedObjectTypes} onClick={(id) => onSelect({ kind: "node", id })} /></DetailSection></div>;
 }
 
@@ -143,19 +143,19 @@ function EmptyText({ children }: { children: ReactNode }) {
   return <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 p-3 text-sm text-slate-400">{children}</div>;
 }
 
-function findNode(id: string) {
-  return ontologySourceNodes.find((node) => node.id === id) ?? ontologySourceNodes[0];
+function findNode(source: OntologySourceData, id: string) {
+  return source.nodes.find((node) => node.id === id) ?? source.nodes[0];
 }
 
-function findEdge(id: string) {
-  return ontologySourceEdges.find((edge) => edge.id === id) ?? ontologySourceEdges[0];
+function findEdge(source: OntologySourceData, id: string) {
+  return source.edges.find((edge) => edge.id === id) ?? source.edges[0];
 }
 
-function describeEntity(entity: OntologyEntity) {
+function describeEntity(entity: OntologyEntity, source: OntologySourceData) {
   if (entity.kind === "node") return entity.id;
-  if (entity.kind === "edge") { const edge = findEdge(entity.id); return `${edge.sourceObjectType} ${edge.label} ${edge.targetObjectType}`; }
-  if (entity.kind === "lane") return ontologyLanes.find((lane) => lane.id === entity.id)?.label ?? entity.id;
+  if (entity.kind === "edge") { const edge = findEdge(source, entity.id); return `${edge.sourceObjectType} ${edge.label} ${edge.targetObjectType}`; }
+  if (entity.kind === "lane") return source.lanes.find((lane) => lane.id === entity.id)?.label ?? entity.id;
   if (entity.kind === "relationshipType") return `Relationship: ${entity.id}`;
   if (entity.kind === "property") return `${entity.objectTypeId}.${entity.propertyId.replace(/^prop-/, "")}`;
-  return ontologySourceActions.find((action) => action.id === entity.id)?.label ?? entity.id;
+  return source.actions.find((action) => action.id === entity.id)?.label ?? entity.id;
 }

@@ -1,18 +1,21 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
-import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+import { AlertTriangle, LoaderCircle, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, RefreshCw } from "lucide-react";
 import ReactFlow, { Background, Controls, MiniMap, Panel, useReactFlow } from "reactflow";
+import type { KnowledgeRepository } from "../../../packages/knowledge-contracts/src/index";
 import { Header } from "../../components/Header";
+import { knowledgeRepository } from "../../repositories";
 import type { AppPage, OntologyFilter } from "../../types";
 import { OntologyDetailPanel } from "./components/OntologyDetailPanel";
 import { OntologyDomainDock } from "./components/OntologyDomainDock";
 import { OntologyEdge } from "./components/OntologyEdge";
 import { OntologyNode } from "./components/OntologyNode";
 import { OntologySidebar } from "./components/OntologySidebar";
-import { domainStyles, ontologySourceData } from "./ontologyData";
+import { domainStyles } from "./ontologyData";
 import { getEntityScope, getFocusLabel, initialOntologyInteractionState, ontologyInteractionReducer } from "./ontologyInteraction";
 import { buildRenderedEdges, buildRenderedNodes } from "./ontologyRender";
+import { buildOntologySourceDataFromResponse } from "./ontologyRepositoryAdapter";
 import { searchOntology } from "./ontologySearch";
-import type { OntologyEntity, OntologyFocusState, OntologyHighlightMode } from "./ontologyTypes";
+import type { OntologyEntity, OntologyFocusState, OntologyHighlightMode, OntologySourceData } from "./ontologyTypes";
 import { getBaseVisibleOntologyElements } from "./ontologyVisibility";
 
 const nodeTypes = { ontologyObject: OntologyNode };
@@ -21,9 +24,38 @@ const edgeTypes = { ontologyLink: OntologyEdge };
 export interface OntologyExplorerPageProps {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
+  repository?: KnowledgeRepository;
 }
 
-export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplorerPageProps) {
+type OntologyLoadState =
+  | { status: "loading" }
+  | { status: "ready"; source: OntologySourceData }
+  | { status: "error"; message: string };
+
+export function OntologyExplorerPage({ activePage, onPageChange, repository = knowledgeRepository }: OntologyExplorerPageProps) {
+  const [loadState, setLoadState] = useState<OntologyLoadState>({ status: "loading" });
+  const [reloadToken, setReloadToken] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    setLoadState({ status: "loading" });
+    repository.getOntologyGraph({ version: "1.1.0" })
+      .then((response) => {
+        if (active) setLoadState({ status: "ready", source: buildOntologySourceDataFromResponse(response) });
+      })
+      .catch((error: unknown) => {
+        if (active) setLoadState({ status: "error", message: error instanceof Error ? error.message : "Unknown ontology repository error." });
+      });
+    return () => { active = false; };
+  }, [reloadToken, repository]);
+
+  if (loadState.status !== "ready") {
+    return <OntologyRepositoryState activePage={activePage} onPageChange={onPageChange} state={loadState} onRetry={() => setReloadToken((value) => value + 1)} />;
+  }
+  return <OntologyExplorerCanvas activePage={activePage} onPageChange={onPageChange} source={loadState.source} />;
+}
+
+function OntologyExplorerCanvas({ activePage, onPageChange, source }: { activePage: AppPage; onPageChange: (page: AppPage) => void; source: OntologySourceData }) {
   const reactFlow = useReactFlow();
   const [interaction, dispatch] = useReducer(ontologyInteractionReducer, initialOntologyInteractionState);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -31,20 +63,20 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
 
-  const search = useMemo(() => searchOntology(searchKeyword), [searchKeyword]);
+  const search = useMemo(() => searchOntology(searchKeyword, source), [searchKeyword, source]);
   const baseVisible = useMemo(
     () => getBaseVisibleOntologyElements({
-      nodes: ontologySourceData.nodes,
-      edges: ontologySourceData.edges,
+      nodes: source.nodes,
+      edges: source.edges,
       domainFilter: interaction.domainFilter,
       focusState: interaction.focusState,
     }),
-    [interaction.domainFilter, interaction.focusState],
+    [interaction.domainFilter, interaction.focusState, source],
   );
   const activeEntity = interaction.hoveredEntity ?? interaction.selectedEntity;
   const activeScope = useMemo(
-    () => getEntityScope(activeEntity, interaction.highlightMode, ontologySourceData.nodes, ontologySourceData.edges),
-    [activeEntity, interaction.highlightMode],
+    () => getEntityScope(activeEntity, interaction.highlightMode, source.nodes, source.edges),
+    [activeEntity, interaction.highlightMode, source],
   );
 
   const handleHover = useCallback((entity: OntologyEntity) => dispatch({ type: "hover", entity }), []);
@@ -67,7 +99,7 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
   }, []);
 
   const renderParams = useMemo(() => ({
-    source: ontologySourceData,
+    source,
     baseVisible,
     activeScope,
     interaction,
@@ -78,7 +110,7 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
     onFocus: (nodeId: string) => handleFocus({ mode: "node-focus", nodeId }),
     onHover: handleHover,
     onLeave: handleLeave,
-  }), [activeScope, baseVisible, expandedObjectIds, handleFocus, handleHover, handleLeave, handleSelectProperty, handleToggleExpand, interaction, search]);
+  }), [activeScope, baseVisible, expandedObjectIds, handleFocus, handleHover, handleLeave, handleSelectProperty, handleToggleExpand, interaction, search, source]);
 
   const renderedNodes = useMemo(() => buildRenderedNodes(renderParams), [renderParams]);
   const renderedEdges = useMemo(() => buildRenderedEdges(renderParams), [renderParams]);
@@ -111,6 +143,7 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
       <div className="flex min-h-0 flex-1">
         {leftPanelOpen ? (
           <OntologySidebar
+            source={source}
             interaction={interaction}
             search={search}
             searchKeyword={searchKeyword}
@@ -181,12 +214,13 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
               className="ontology-flow-minimap"
               pannable
               zoomable
-              nodeColor={(node) => domainStyles[ontologySourceData.nodes.find((item) => item.id === node.id)?.domain ?? "shared"].edge}
+              nodeColor={(node) => domainStyles[source.nodes.find((item) => item.id === node.id)?.domain ?? "shared"].edge}
               maskColor="rgba(248, 250, 252, 0.68)"
             />
           </ReactFlow>
 
           <OntologyDomainDock
+            lanes={source.lanes}
             visible={baseVisible}
             interaction={interaction}
             activeScope={activeScope}
@@ -197,8 +231,25 @@ export function OntologyExplorerPage({ activePage, onPageChange }: OntologyExplo
           />
         </main>
 
-        {rightPanelOpen ? <OntologyDetailPanel interaction={interaction} onSelect={handleSelect} onFocus={handleFocus} /> : null}
+        {rightPanelOpen ? <OntologyDetailPanel source={source} interaction={interaction} onSelect={handleSelect} onFocus={handleFocus} /> : null}
       </div>
+    </div>
+  );
+}
+
+function OntologyRepositoryState({ activePage, onPageChange, state, onRetry }: { activePage: AppPage; onPageChange: (page: AppPage) => void; state: Exclude<OntologyLoadState, { status: "ready" }>; onRetry: () => void }) {
+  const loading = state.status === "loading";
+  return (
+    <div className="flex h-screen flex-col overflow-hidden bg-slate-100">
+      <Header activePage={activePage} searchKeyword="" searchSummary="" searchPlaceholder="Search ontology type, relation, lane, source system..." onPageChange={onPageChange} onSearchChange={() => undefined} />
+      <main className="flex min-h-0 flex-1 items-center justify-center bg-slate-50 p-8">
+        <div className="max-w-md rounded-lg border border-slate-200 bg-white px-8 py-7 text-center shadow-sm">
+          {loading ? <LoaderCircle className="mx-auto h-5 w-5 animate-spin text-slate-500" /> : <AlertTriangle className="mx-auto h-5 w-5 text-amber-600" />}
+          <h2 className="mt-3 text-sm font-bold text-slate-950">{loading ? "Loading ontology graph" : "Ontology graph unavailable"}</h2>
+          <p className="mt-2 text-xs font-medium leading-5 text-slate-500">{loading ? "Reading released ontology definitions through the knowledge repository." : state.message}</p>
+          {!loading ? <button type="button" onClick={onRetry} className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:border-slate-500"><RefreshCw className="h-3.5 w-3.5" />Retry</button> : null}
+        </div>
+      </main>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import type {
 } from "../../packages/knowledge-contracts/src/index";
 import cq004MachineQualityImpact from "../../packages/demo-data/semantic/generated/cq-004-machine-quality-impact.json";
 import { searchSemanticCatalog, semanticLaneDefinitions } from "../features/semantic/semanticUtils";
+import { connectOntologyViewToArtifact } from "../features/ontology/ontologyArtifactAdapter";
 import {
   graphEdges,
   ontologyLinkTypes,
@@ -30,6 +31,8 @@ const metadata = (): ContractMetadata => ({
   traceId: `mock-${Date.now()}`,
   generatedAt: new Date().toISOString(),
 });
+
+const connectedOntology = connectOntologyViewToArtifact(ontologyObjectTypes, ontologyLinkTypes);
 
 export class MockKnowledgeRepository implements KnowledgeRepository {
   async getGraphView(request: GraphViewRequest): Promise<GraphViewResponse> {
@@ -72,11 +75,23 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
   }
 
   async getOntologyGraph(_request: OntologyGraphRequest): Promise<OntologyGraphResponse> {
+    const properties = new Map<string, OntologyGraphResponse["properties"][number]>();
+    connectedOntology.nodes.forEach((object) => object.properties.forEach((property) => {
+      if (!property.semanticIri || properties.has(property.semanticIri)) return;
+      properties.set(property.semanticIri, {
+        iri: property.semanticIri,
+        name: property.name,
+        label: property.label,
+        propertyType: "datatype",
+        domain: [object.semanticIri ?? object.id],
+        description: property.description,
+      });
+    }));
     return {
       metadata: metadata(),
-      classes: ontologyObjectTypes.map((object) => ({ iri: `https://example.com/mkg/${object.id}`, name: object.id, label: object.label, description: object.description, module: object.domain, version: "1.1.0", properties: object.properties.map((property) => ({ iri: `https://example.com/mkg/${object.id}/${property.id}`, required: property.required })) })),
-      properties: ontologyObjectTypes.flatMap((object) => object.properties.map((property) => ({ iri: `https://example.com/mkg/${object.id}/${property.id}`, name: property.id, label: property.label, propertyType: property.dataType === "reference" ? "object" as const : "datatype" as const, domain: [`https://example.com/mkg/${object.id}`], description: property.description }))),
-      relations: ontologyLinkTypes.map((edge) => ({ id: edge.id, sourceId: edge.sourceObjectType, targetId: edge.targetObjectType, predicate: edge.id, label: edge.label })),
+      classes: connectedOntology.nodes.map((object) => ({ iri: object.semanticIri ?? object.id, name: object.id, label: object.semanticLabel ?? object.label, description: object.description, module: object.semanticModule ?? object.domain, version: object.semanticVersion, properties: object.properties.map((property) => ({ iri: property.semanticIri ?? property.id, required: property.required })) })),
+      properties: Array.from(properties.values()),
+      relations: connectedOntology.edges.map((edge) => ({ id: edge.id, sourceId: edge.sourceObjectType, targetId: edge.targetObjectType, predicate: edge.semanticIri ?? edge.id, label: edge.label })),
     };
   }
 

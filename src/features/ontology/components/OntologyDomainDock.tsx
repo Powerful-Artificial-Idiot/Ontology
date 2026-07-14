@@ -1,12 +1,12 @@
-import { ontologyLanes, domainStyles } from "../ontologyData";
+import { domainStyles } from "../ontologyData";
 import { getLaneVisualState } from "../ontologyInteraction";
-import type { OntologyEntity, OntologyInteractionState, OntologyScope } from "../ontologyTypes";
+import type { OntologyEntity, OntologyInteractionState, OntologyLane, OntologyScope } from "../ontologyTypes";
 
-export function OntologyDomainDock({ visible, interaction, activeScope, onHover, onLeave, onSelect, onFocusLane }: { visible: OntologyScope; interaction: OntologyInteractionState; activeScope: OntologyScope; onHover: (entity: OntologyEntity) => void; onLeave: (entity: OntologyEntity) => void; onSelect: (entity: OntologyEntity) => void; onFocusLane: (laneId: string) => void }) {
+export function OntologyDomainDock({ lanes, visible, interaction, activeScope, onHover, onLeave, onSelect, onFocusLane }: { lanes: readonly OntologyLane[]; visible: OntologyScope; interaction: OntologyInteractionState; activeScope: OntologyScope; onHover: (entity: OntologyEntity) => void; onLeave: (entity: OntologyEntity) => void; onSelect: (entity: OntologyEntity) => void; onFocusLane: (laneId: string) => void }) {
   return (
     <div className="ontology-domain-dock">
       <div className="scrollbar-none flex h-full min-w-max items-center gap-2 overflow-x-auto px-3">
-        {ontologyLanes.filter((lane) => visible.laneIds.has(lane.id)).map((lane) => {
+        {lanes.filter((lane) => visible.laneIds.has(lane.id)).map((lane) => {
           const state = getLaneVisualState(lane.id, interaction, activeScope);
           const style = domainStyles[lane.domain];
           const entity: OntologyEntity = { kind: "lane", id: lane.id };
@@ -36,4 +36,3 @@ export function OntologyDomainDock({ visible, interaction, activeScope, onHover,
     </div>
   );
 }
-

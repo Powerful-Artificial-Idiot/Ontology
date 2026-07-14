@@ -119,7 +119,7 @@
 
 ## P1-07 Migrate Ontology Explorer to Repository
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P1-03, P1-05
 - Scope: Retrieve Ontology graph through the repository in both local and HTTP modes.
@@ -132,7 +132,7 @@
 
 ## P1-08 Migrate Route Explorer to Repository
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-05, P1-07
 - Scope: Move only the Route data boundary to `getGraphView`; retain all React Flow layout and interaction logic.

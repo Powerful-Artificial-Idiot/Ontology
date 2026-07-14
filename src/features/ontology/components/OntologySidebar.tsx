@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Boxes, ChevronDown, Crosshair, GitBranch, Layers3, PlayCircle, RotateCcw } from "lucide-react";
 import type { OntologyDomain, OntologyFilter } from "../../../types";
-import { domainLabel, domainStyles, ontologyLanes, ontologySourceActions, ontologySourceEdges, ontologySourceNodes, relationshipGroups } from "../ontologyData";
+import { domainLabel, domainStyles, relationshipGroups } from "../ontologyData";
 import { laneByObjectId } from "../ontologyLayout";
-import type { OntologyEntity, OntologyHighlightMode, OntologyInteractionState, OntologySearchResult } from "../ontologyTypes";
+import type { OntologyEntity, OntologyHighlightMode, OntologyInteractionState, OntologySearchResult, OntologySourceData } from "../ontologyTypes";
 
 const filterOptions: Array<{ value: OntologyFilter; label: string }> = [
   { value: "all", label: "All" },
@@ -21,6 +21,7 @@ const highlightOptions: Array<{ value: OntologyHighlightMode; label: string }> =
 ];
 
 interface SidebarProps {
+  source: OntologySourceData;
   interaction: OntologyInteractionState;
   search: OntologySearchResult;
   searchKeyword: string;
@@ -33,7 +34,7 @@ interface SidebarProps {
   onFocusLane: (laneId: string) => void;
 }
 
-export function OntologySidebar({ interaction, search, searchKeyword, onFilter, onHighlightMode, onReset, onHover, onLeave, onSelect, onFocusLane }: SidebarProps) {
+export function OntologySidebar({ source, interaction, search, searchKeyword, onFilter, onHighlightMode, onReset, onHover, onLeave, onSelect, onFocusLane }: SidebarProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const selectedLaneId = getSelectedLaneId(interaction.selectedEntity);
 
@@ -74,16 +75,17 @@ export function OntologySidebar({ interaction, search, searchKeyword, onFilter, 
 
         {hasSearch ? (
           <SidebarSection icon={<Crosshair className="h-4 w-4" />} title="Search Results" count={search.objectIds.size + search.edgeIds.size + search.laneIds.size} defaultOpen>
-            <SearchResults search={search} interaction={interaction} onHover={onHover} onLeave={onLeave} onSelect={onSelect} />
+            <SearchResults source={source} search={search} interaction={interaction} onHover={onHover} onLeave={onLeave} onSelect={onSelect} />
           </SidebarSection>
         ) : null}
 
-        <SidebarSection icon={<Boxes className="h-4 w-4" />} title="Object Type Groups" count={ontologyLanes.length} defaultOpen>
+        <SidebarSection icon={<Boxes className="h-4 w-4" />} title="Object Type Groups" count={source.lanes.length} defaultOpen>
           <div className="space-y-2">
-            {ontologyLanes.map((lane) => (
+            {source.lanes.map((lane) => (
               <LaneGroup
                 key={lane.id}
                 laneId={lane.id}
+                source={source}
                 interaction={interaction}
                 onHover={onHover}
                 onLeave={onLeave}
@@ -94,14 +96,14 @@ export function OntologySidebar({ interaction, search, searchKeyword, onFilter, 
           </div>
         </SidebarSection>
 
-        <SidebarSection icon={<GitBranch className="h-4 w-4" />} title="Relationship Types" count={new Set(ontologySourceEdges.map((edge) => edge.label)).size} defaultOpen>
+        <SidebarSection icon={<GitBranch className="h-4 w-4" />} title="Relationship Types" count={new Set(source.edges.map((edge) => edge.label)).size} defaultOpen>
           <div className="space-y-3">
             {relationshipGroups.map((group) => (
               <div key={group.title}>
                 <div className="mb-1 px-2 text-[10px] font-bold uppercase tracking-wide text-slate-400">{group.title}</div>
                 <div className="space-y-1">
                   {group.relationTypes.map((relationType) => {
-                    const edges = ontologySourceEdges.filter((edge) => edge.label === relationType);
+                    const edges = source.edges.filter((edge) => edge.label === relationType);
                     if (!edges.length) return null;
                     const entity: OntologyEntity = { kind: "relationshipType", id: relationType };
                     return (
@@ -125,9 +127,9 @@ export function OntologySidebar({ interaction, search, searchKeyword, onFilter, 
           </div>
         </SidebarSection>
 
-        <SidebarSection icon={<PlayCircle className="h-4 w-4" />} title="Actions" count={ontologySourceActions.length}>
+        <SidebarSection icon={<PlayCircle className="h-4 w-4" />} title="Actions" count={source.actions.length}>
           <div className="space-y-1">
-            {ontologySourceActions.map((action) => {
+            {source.actions.map((action) => {
               const entity: OntologyEntity = { kind: "action", id: action.id };
               return <SidebarItem key={action.id} label={action.label} meta={action.appliesTo.join(", ")} tone={action.domain} active={isSame(interaction.selectedEntity, entity)} highlighted={isSame(interaction.hoveredEntity, entity) || search.actionIds.has(action.id)} dimmed={false} onMouseEnter={() => onHover(entity)} onMouseLeave={() => onLeave(entity)} onClick={() => onSelect(entity)} />;
             })}
@@ -138,8 +140,8 @@ export function OntologySidebar({ interaction, search, searchKeyword, onFilter, 
   );
 }
 
-function LaneGroup({ laneId, interaction, onHover, onLeave, onSelect, onFocusLane }: Pick<SidebarProps, "interaction" | "onHover" | "onLeave" | "onSelect" | "onFocusLane"> & { laneId: string }) {
-  const lane = ontologyLanes.find((item) => item.id === laneId)!;
+function LaneGroup({ source, laneId, interaction, onHover, onLeave, onSelect, onFocusLane }: Pick<SidebarProps, "source" | "interaction" | "onHover" | "onLeave" | "onSelect" | "onFocusLane"> & { laneId: string }) {
+  const lane = source.lanes.find((item) => item.id === laneId)!;
   const selectedInLane = interaction.selectedEntity?.kind === "node" && lane.objectTypeIds.includes(interaction.selectedEntity.id);
   const laneSelected = interaction.selectedEntity?.kind === "lane" && interaction.selectedEntity.id === lane.id;
   const [open, setOpen] = useState(["product-material", "process", "resource"].includes(lane.id));
@@ -171,7 +173,7 @@ function LaneGroup({ laneId, interaction, onHover, onLeave, onSelect, onFocusLan
       {open ? (
         <div className="space-y-1 border-t border-slate-100 p-2">
           {lane.objectTypeIds.map((nodeId) => {
-            const node = ontologySourceNodes.find((item) => item.id === nodeId);
+            const node = source.nodes.find((item) => item.id === nodeId);
             if (!node) return null;
             const entity: OntologyEntity = { kind: "node", id: node.id };
             return <SidebarItem key={node.id} label={node.label} meta={`${node.properties.length} props`} tone={node.domain} active={isSame(interaction.selectedEntity, entity)} highlighted={isSame(interaction.hoveredEntity, entity)} dimmed={false} onMouseEnter={() => onHover(entity)} onMouseLeave={() => onLeave(entity)} onClick={() => onSelect(entity)} />;
@@ -182,18 +184,18 @@ function LaneGroup({ laneId, interaction, onHover, onLeave, onSelect, onFocusLan
   );
 }
 
-function SearchResults({ search, interaction, onHover, onLeave, onSelect }: Pick<SidebarProps, "search" | "interaction" | "onHover" | "onLeave" | "onSelect">) {
+function SearchResults({ source, search, interaction, onHover, onLeave, onSelect }: Pick<SidebarProps, "source" | "search" | "interaction" | "onHover" | "onLeave" | "onSelect">) {
   const entries: Array<{ entity: OntologyEntity; label: string; meta: string; tone: OntologyDomain }> = [];
   search.objectIds.forEach((id) => {
-    const node = ontologySourceNodes.find((item) => item.id === id);
-    if (node) entries.push({ entity: { kind: "node", id }, label: node.label, meta: ontologyLanes.find((lane) => lane.id === laneByObjectId.get(id))?.label ?? "Object Type", tone: node.domain });
+    const node = source.nodes.find((item) => item.id === id);
+    if (node) entries.push({ entity: { kind: "node", id }, label: node.label, meta: source.lanes.find((lane) => lane.id === laneByObjectId.get(id))?.label ?? "Object Type", tone: node.domain });
   });
   search.edgeIds.forEach((id) => {
-    const edge = ontologySourceEdges.find((item) => item.id === id);
+    const edge = source.edges.find((item) => item.id === id);
     if (edge) entries.push({ entity: { kind: "edge", id }, label: edge.label, meta: `${edge.sourceObjectType} -> ${edge.targetObjectType}`, tone: edge.domain });
   });
   search.laneIds.forEach((id) => {
-    const lane = ontologyLanes.find((item) => item.id === id);
+    const lane = source.lanes.find((item) => item.id === id);
     if (lane) entries.push({ entity: { kind: "lane", id }, label: lane.label, meta: `${lane.objectTypeIds.length} object types`, tone: lane.domain });
   });
   if (!entries.length) return <div className="rounded-lg border border-dashed border-slate-200 p-3 text-xs text-slate-500">No ontology matches.</div>;
@@ -242,4 +244,3 @@ function getSelectedLaneId(entity: OntologyEntity | null) {
   if (entity?.kind === "property") return laneByObjectId.get(entity.objectTypeId);
   return undefined;
 }
-
