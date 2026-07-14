@@ -1,5 +1,6 @@
 import { ontologyActionTypes, ontologyLinkTypes, ontologyObjectTypes } from "../../repositories/legacyDemoData";
 import type { OntologyDomain } from "../../types";
+import { connectOntologyViewToArtifact } from "./ontologyArtifactAdapter";
 import type { OntologyLane, OntologySourceData } from "./ontologyTypes";
 
 export const ontologyLanes: OntologyLane[] = [
@@ -75,9 +76,12 @@ export const ontologyLanes: OntologyLane[] = [
   },
 ];
 
-export const ontologySourceNodes = ontologyObjectTypes;
-export const ontologySourceEdges = ontologyLinkTypes;
+const connectedOntology = connectOntologyViewToArtifact(ontologyObjectTypes, ontologyLinkTypes);
+
+export const ontologySourceNodes = connectedOntology.nodes;
+export const ontologySourceEdges = connectedOntology.edges;
 export const ontologySourceActions = ontologyActionTypes;
+export const ontologyArtifactVersion = connectedOntology.ontologyVersion;
 
 export const ontologySourceData: OntologySourceData = {
   nodes: ontologySourceNodes,

@@ -191,6 +191,10 @@ export interface OntologyProperty {
   sourceSystem?: string;
   example?: string;
   semanticCategory?: string;
+  semanticIri?: string;
+  semanticModule?: string;
+  deprecated?: boolean;
+  replacementIris?: string[];
 }
 
 export interface OntologyObjectType {
@@ -203,6 +207,10 @@ export interface OntologyObjectType {
   examples?: string[];
   status?: "draft" | "active" | "deprecated";
   badges?: string[];
+  semanticIri?: string;
+  semanticLabel?: string;
+  semanticModule?: string;
+  semanticVersion?: string;
 }
 
 export interface OntologyLinkType {
@@ -215,6 +223,9 @@ export interface OntologyLinkType {
   domain: OntologyDomain;
   properties?: OntologyProperty[];
   examples?: string[];
+  semanticIri?: string;
+  semanticLabel?: string;
+  semanticModule?: string;
 }
 
 export interface OntologyActionType {

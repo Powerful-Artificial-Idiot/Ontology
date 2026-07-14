@@ -67,7 +67,7 @@
 
 ## P1-03 Drive Ontology Explorer semantic data from artifacts
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P1-02
 - Scope: Combine generated semantic artifact with separate Ontology View Configuration.
@@ -80,7 +80,7 @@
 
 ## P1-04 Implement Mock Knowledge API
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-01, P1-02
 - Scope: Add a dependency-light Node HTTP service implementing required knowledge endpoints and errors.

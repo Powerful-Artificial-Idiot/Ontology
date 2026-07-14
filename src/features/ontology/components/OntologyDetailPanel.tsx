@@ -54,6 +54,7 @@ function ObjectDetail({ objectType, onSelect, onFocus }: { objectType: OntologyO
       <FocusAction label="Focus Object" onClick={onFocus} />
       <DetailSection title="Object Type"><p className="text-sm leading-6 text-slate-600">{objectType.description}</p></DetailSection>
       <DetailSection title="Definition"><KeyValueRows rows={[["Lane", lane?.label ?? "Unmapped"], ["Domain", domainLabel[objectType.domain]], ["Status", objectType.status ?? "active"], ["Properties", String(objectType.properties.length)]]} /></DetailSection>
+      <DetailSection title="Ontology Artifact"><KeyValueRows rows={[["Semantic IRI", objectType.semanticIri ?? "Unmapped"], ["Formal Label", objectType.semanticLabel ?? objectType.label], ["Module", objectType.semanticModule ?? "Unknown"], ["Version", objectType.semanticVersion ?? "Unknown"]]} /></DetailSection>
       <DetailSection title="Key Attributes">
         <div className="grid gap-2">
           {getPriorityProperties(objectType).slice(0, 8).map((property) => (
@@ -74,7 +75,7 @@ function ObjectDetail({ objectType, onSelect, onFocus }: { objectType: OntologyO
 
 function PropertyDetail({ objectType, propertyId }: { objectType: OntologyObjectType; propertyId: string }) {
   const property = objectType.properties.find((item) => item.id === propertyId) ?? objectType.properties[0];
-  return <div className="space-y-5"><DetailSection title="Property"><KeyValueRows rows={[["Object Type", objectType.label], ["Property", property.name], ["Data Type", property.dataType], ["Required", property.required ? "Yes" : "No"], ["Source System", property.sourceSystem ?? "Inherited"], ["Example", property.example ?? "Not mapped"], ["Semantic Category", property.semanticCategory ?? "General"]]} /></DetailSection><DetailSection title="Description"><p className="text-sm leading-6 text-slate-600">{property.description}</p></DetailSection></div>;
+  return <div className="space-y-5"><DetailSection title="Property"><KeyValueRows rows={[["Object Type", objectType.label], ["Property", property.name], ["Data Type", property.dataType], ["Required", property.required ? "Yes" : "No"], ["Source System", property.sourceSystem ?? "Inherited"], ["Example", property.example ?? "Not mapped"], ["Semantic Category", property.semanticCategory ?? "General"]]} /></DetailSection><DetailSection title="Ontology Artifact"><KeyValueRows rows={[["Semantic IRI", property.semanticIri ?? "Unmapped"], ["Module", property.semanticModule ?? "Unknown"], ["Status", property.deprecated ? "Deprecated compatibility term" : "Active compatibility term"], ["Replacement", property.replacementIris?.join(", ") || "Pending domain review"]]} /></DetailSection><DetailSection title="Description"><p className="text-sm leading-6 text-slate-600">{property.description}</p></DetailSection></div>;
 }
 
 function EdgeDetail({ edge, onFocus }: { edge: OntologyLinkType; onFocus: (relationshipType: string) => void }) {
@@ -83,6 +84,7 @@ function EdgeDetail({ edge, onFocus }: { edge: OntologyLinkType; onFocus: (relat
       <FocusAction label="Focus Relationship" onClick={() => onFocus(edge.label)} />
       <DetailSection title="Relationship Type"><KeyValueRows rows={[["Source", edge.sourceObjectType], ["Relationship", edge.label], ["Target", edge.targetObjectType], ["Cardinality", edge.cardinality], ["Domain", domainLabel[edge.domain]]]} /></DetailSection>
       <DetailSection title="Business Meaning"><p className="text-sm leading-6 text-slate-600">{edge.description}</p></DetailSection>
+      <DetailSection title="Ontology Artifact"><KeyValueRows rows={[["Semantic IRI", edge.semanticIri ?? "Unmapped"], ["Formal Label", edge.semanticLabel ?? edge.label], ["Module", edge.semanticModule ?? "Unknown"]]} /></DetailSection>
       <DetailSection title="Link Properties"><PropertyList properties={edge.properties ?? []} /></DetailSection>
       <DetailSection title="Examples"><ExampleList values={edge.examples ?? []} /></DetailSection>
     </div>
@@ -157,4 +159,3 @@ function describeEntity(entity: OntologyEntity) {
   if (entity.kind === "property") return `${entity.objectTypeId}.${entity.propertyId.replace(/^prop-/, "")}`;
   return ontologySourceActions.find((action) => action.id === entity.id)?.label ?? entity.id;
 }
-
