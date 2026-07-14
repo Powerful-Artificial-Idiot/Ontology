@@ -20,7 +20,33 @@ The current Demo remains the **Management & Validation Experience Layer** and **
 - **Ontology Explorer**: object types, properties, relationships, domains, search, focus, highlighting, and detail inspection.
 - **Semantic Explorer**: business terms, aliases, ontology mappings, system fields, evidence, and agent-ready context across five semantic lanes.
 
-The repository does not use a URL router yet. `AppPage` state switches these pages without changing their existing interaction behavior.
+Page-level URLs preserve the active Explorer and supported view, selection, scenario, query, and focus state. The legacy root entry remains compatible, while routes such as `/routes/quality`, `/ontology/classes/Operation`, and `/semantic/scenarios/machine-impact-analysis` can be opened directly and restored with browser Back/Forward.
+
+## Explorer Screenshots
+
+### Route Explorer
+
+The Route Explorer presents the manufacturing route as a structured left-to-right digital thread. Production, Quality, Engineering, and Value Stream modes reuse the same process topology while changing stack-node priorities and edge metadata. Search, one-hop highlighting, Focus Mode, stack expansion, and the detail panel support investigation without losing process context.
+
+![Route Explorer showing the brake booster manufacturing route, stack nodes, edge metrics, and selected OP30 details](docs/images/route-explorer.jpg)
+
+Direct entry: `/routes/production`
+
+### Ontology Explorer
+
+The Ontology Explorer exposes the governed object model behind the Demo: classes, properties, relationship types, domains, and source-system alignment. Domain filters and direct, upstream/downstream, or domain-context highlighting help users inspect how manufacturing, equipment, quality, value-stream, and governance concepts connect.
+
+![Ontology Explorer showing domain controls, the ontology graph, object type groups, and ontology details](docs/images/ontology-explorer.jpg)
+
+Direct entry: `/ontology` or `/ontology/classes/Operation`
+
+### Semantic Explorer
+
+The Semantic Explorer connects business language to ontology elements, authoritative system fields, source evidence, and agent-ready context. The screenshot shows the CQ-004 machine-impact scenario resolving **Leak Rate** with quality governance, mappings, related objects, evidence, and available AI actions.
+
+![Semantic Explorer showing the CQ-004 Leak Rate scenario across business, ontology, system, evidence, and AI context](docs/images/semantic-explorer.jpg)
+
+Direct entry: `/semantic/scenarios/machine-impact-analysis`
 
 ## Technology
 
