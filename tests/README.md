@@ -5,6 +5,7 @@
 - `frontend/semantic-search.test.ts`: Semantic search and CT ambiguity regression.
 - `frontend/repository.test.ts`: repository contract adaptation.
 - `frontend/smoke.test.ts`: explorer entry-point smoke test.
+- `integration/mock-knowledge-api.test.ts`: independent HTTP service endpoints and error envelopes.
 - `scripts/validate_shapes.py`: ontology instance tests using valid and invalid fixtures.
 - `scripts/run_competency_queries.py`: semantic integration tests.
 

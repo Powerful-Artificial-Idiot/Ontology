@@ -90,6 +90,7 @@ make shapes-validate
 make mappings-validate
 make contracts-validate
 make competency-test
+make mock-api-test
 npm run lint
 npm run typecheck
 npm run test
@@ -102,7 +103,8 @@ SHACL valid fixtures must pass and files under `examples/invalid` must fail. Fro
 - Runtime legacy fixtures: `src/data/` and `src/features/semantic/semanticData.ts`.
 - Unified compatibility entry: `src/repositories/legacyDemoData.ts`.
 - Default adapter: `src/repositories/MockKnowledgeRepository.ts`.
-- Future API adapter: `packages/ontology-client`.
+- HTTP API adapter: `packages/ontology-client`.
+- Independent local service: `services/mock-knowledge-api`.
 - Shared contracts: `packages/knowledge-contracts`.
 - Contract-aligned API fixtures: `packages/demo-data`.
 

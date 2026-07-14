@@ -80,7 +80,7 @@
 
 ## P1-04 Implement Mock Knowledge API
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P1-01, P1-02
 - Scope: Add a dependency-light Node HTTP service implementing required knowledge endpoints and errors.
@@ -93,7 +93,7 @@
 
 ## P1-05 Support local and HTTP repository modes
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-04
 - Scope: Centralize repository creation, source selection, base URL, timeout, version checks, validation, and errors.

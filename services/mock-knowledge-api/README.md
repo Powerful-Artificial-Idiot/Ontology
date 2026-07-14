@@ -1,10 +1,22 @@
-# Mock Knowledge API Boundary
+# Mock Knowledge API
 
-No separate server is started in this phase. A static in-process adapter is safer for the existing Demo:
+A dependency-light Node HTTP service backed by the local `KnowledgeRepository`.
 
-- `src/repositories/MockKnowledgeRepository.ts` provides deterministic local responses.
-- `packages/ontology-client` provides the HTTP implementation for future backend integration.
-- `packages/demo-data` contains contract-aligned response fixtures.
-- `docs/api-contracts.md` defines the endpoint behavior.
+```bash
+npm run api:dev
+```
 
-This avoids a second local process and preserves offline management demonstrations. A pilot service should implement the same repository contract and pass the same JSON Schema tests.
+The default base URL is `http://127.0.0.1:4174/api`. Set `MKG_API_PORT` or `MKG_API_HOST` to override it.
+
+Endpoints:
+
+- `GET /api/meta`
+- `GET /api/entities/:id`
+- `GET /api/entities/:id/relations`
+- `GET /api/relations?entityId=...`
+- `GET /api/graph/views/:viewId`
+- `GET /api/ontology/graph`
+- `GET /api/semantic/catalog`
+- `POST /api/semantic/search`
+
+Errors use the shared `{ error: { code, message, details, traceId } }` envelope and never include local filesystem paths.

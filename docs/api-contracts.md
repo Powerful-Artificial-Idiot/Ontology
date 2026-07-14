@@ -8,6 +8,10 @@ Every response includes `contractVersion`, `ontologyVersion`, `dataVersion`, `tr
 
 ## Endpoints
 
+### `GET /api/meta`
+
+Returns service capabilities and the active Demo, contract, ontology, and dataset versions.
+
 ### `GET /api/entities/:id`
 
 Returns one `KnowledgeEntity`, or `404` when the ID is unknown. Optional query parameter: `asOf` ISO timestamp.
@@ -15,6 +19,8 @@ Returns one `KnowledgeEntity`, or `404` when the ID is unknown. Optional query p
 ### `GET /api/entities/:id/relations`
 
 Returns inbound and outbound `KnowledgeRelation` records. Parameters: `direction`, `predicate`, `asOf`, `cursor`, `limit`.
+
+`GET /api/relations?entityId=...` provides the same direct-neighborhood lookup through a collection endpoint.
 
 ### `GET /api/graph/views/:viewId`
 

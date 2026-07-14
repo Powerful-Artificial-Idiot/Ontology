@@ -1,7 +1,7 @@
 PYTHON ?= .venv/bin/python
 PIP ?= .venv/bin/pip
 
-.PHONY: install python-install demo-install demo-dev demo-lint demo-test demo-build \
+.PHONY: install python-install demo-install demo-dev demo-lint demo-test demo-build mock-api-dev mock-api-test \
 	ontology-validate shapes-validate mappings-validate contracts-validate competency-test \
 	alignment-audit ontology-artifacts ontology-artifacts-check validate test build release clean
 
@@ -26,6 +26,12 @@ demo-test:
 
 demo-build:
 	npm run build
+
+mock-api-dev:
+	npm run api:dev
+
+mock-api-test:
+	npm run api:test
 
 ontology-validate:
 	$(PYTHON) scripts/validate_ontology.py

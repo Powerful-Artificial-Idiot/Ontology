@@ -37,10 +37,19 @@ make competency-test
 make validate
 ```
 
+## Mock Knowledge API
+
+```bash
+make mock-api-dev
+make mock-api-test
+```
+
+The service defaults to `http://127.0.0.1:4174/api` and runs independently from Vite.
+
 ## Full Release
 
 ```bash
 make build
 ```
 
-The release under `dist/` contains `frontend-demo/`, `ontology-release/`, `demo-data/`, `contracts/`, `manifest.json`, and `checksums.txt`.
+The release under `dist/` contains `frontend-demo/`, `ontology-release/`, `generated/ontology/`, `demo-data/`, `contracts/`, `manifest.json`, and `checksums.txt`.
