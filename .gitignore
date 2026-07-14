@@ -35,4 +35,7 @@ test-results/
 
 # cache
 .cache/
-
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/

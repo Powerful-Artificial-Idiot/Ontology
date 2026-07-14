@@ -1,0 +1,4 @@
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+SELECT ?operation ?machine WHERE {
+  ?operation a mfg:Operation ; mfg:executedBy ?machine .
+}

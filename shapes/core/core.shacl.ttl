@@ -1,0 +1,29 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+core:VersionedEntityShape a sh:NodeShape ;
+  sh:targetClass core:VersionedEntity ;
+  sh:property [
+    sh:path core:versionIdentifier ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A versioned entity must have one version identifier." ;
+  ] ;
+  sh:property [
+    sh:path core:validFrom ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:date ;
+    sh:message "A versioned entity must have a valid-from date." ;
+  ] .
+
+core:ProvenanceShape a sh:NodeShape ;
+  sh:targetSubjectsOf core:hasSource ;
+  sh:property [
+    sh:path core:sourceSystemId ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An entity with a source must retain its source-system ID." ;
+  ] .

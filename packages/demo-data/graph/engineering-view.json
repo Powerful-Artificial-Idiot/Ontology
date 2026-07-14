@@ -1,0 +1,14 @@
+{
+  "metadata": { "contractVersion": "1.0.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-engineering-001", "generatedAt": "2026-07-14T00:00:00Z" },
+  "entities": [
+    { "id": "machine:m220", "iri": "https://example.com/mkg/demo#M220", "type": "mfg:Machine", "label": "M220 Leak Test Bench", "domain": "equipment", "properties": { "assetNumber": "M220" }, "status": "active" },
+    { "id": "parameter:test-pressure", "iri": "https://example.com/mkg/demo#TestPressure", "type": "mfg:ProcessParameter", "label": "Test pressure 2.5 bar", "domain": "engineering", "properties": { "value": 2.5, "unit": "bar" }, "version": "PS-030", "status": "approved" }
+  ],
+  "relations": [
+    { "id": "rel:m220-uses-pressure", "sourceId": "machine:m220", "targetId": "parameter:test-pressure", "predicate": "mfg:usesParameter", "label": "uses parameter" }
+  ],
+  "nodes": [
+    { "id": "node:op30-engineering", "entityId": "machine:m220", "visualType": "machine", "column": 3, "stackId": "OP30", "badges": ["FX-002", "V3.4"], "viewMetadata": { "x": 1280, "y": 260 } }
+  ],
+  "edges": []
+}

@@ -1,0 +1,28 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.com/mkg/core> a owl:Ontology ;
+  rdfs:label "Enterprise Knowledge Core Ontology" ;
+  owl:versionIRI <https://example.com/mkg/core/1.1.0> ;
+  owl:versionInfo "1.1.0" .
+
+core:EnterpriseEntity a owl:Class ; rdfs:label "Enterprise Entity" .
+core:Asset a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Asset" .
+core:Process a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Process" .
+core:Event a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Event" .
+core:Document a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Document" .
+core:Agent a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Agent" .
+core:VersionedEntity a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Versioned Entity" .
+core:SourceSystem a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Source System" .
+
+core:hasSource a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:SourceSystem ; rdfs:label "has source" .
+core:supersedes a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range core:VersionedEntity ; rdfs:label "supersedes" .
+core:hasVersion a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:VersionedEntity ; rdfs:label "has version" .
+core:sourceSystemId a owl:DatatypeProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range xsd:string ; rdfs:label "source system ID" .
+core:validFrom a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:date ; rdfs:label "valid from" .
+core:validTo a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:date ; rdfs:label "valid to" .
+core:recordedAt a owl:DatatypeProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range xsd:dateTime ; rdfs:label "recorded at" .
+core:versionIdentifier a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:string ; rdfs:label "version identifier" .

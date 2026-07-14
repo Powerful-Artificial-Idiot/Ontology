@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/mappings/mapping-schema.json",
+  "type": "object",
+  "required": ["mappingId", "version", "sourceSystem", "mappings"],
+  "properties": {
+    "mappingId": { "type": "string" },
+    "version": { "type": "string" },
+    "sourceSystem": { "type": "string" },
+    "effectiveFrom": { "type": "string", "format": "date" },
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sourceField", "ontologyTerm", "mappingType"],
+        "properties": {
+          "sourceField": { "type": "string" },
+          "ontologyTerm": { "type": "string" },
+          "mappingType": { "enum": ["class", "objectProperty", "datatypeProperty"] },
+          "transform": { "type": "string" },
+          "unit": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

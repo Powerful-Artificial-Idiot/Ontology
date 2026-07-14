@@ -1,0 +1,30 @@
+@prefix qual: <https://example.com/mkg/quality#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+qual:MeasurementResultShape a sh:NodeShape ;
+  sh:targetClass qual:MeasurementResult ;
+  sh:property [
+    sh:path qual:numericValue ;
+    sh:minCount 1 ;
+    sh:datatype xsd:decimal ;
+  ] ;
+  sh:property [
+    sh:path qual:unit ;
+    sh:minCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A measurement result must declare its unit." ;
+  ] ;
+  sh:property [
+    sh:path qual:measuresCharacteristic ;
+    sh:minCount 1 ;
+    sh:class qual:QualityCharacteristic ;
+  ] .
+
+qual:ControlPlanVersionShape a sh:NodeShape ;
+  sh:targetClass qual:ControlPlanVersion ;
+  sh:property [
+    sh:path qual:controlsCharacteristic ;
+    sh:minCount 1 ;
+    sh:class qual:QualityCharacteristic ;
+  ] .

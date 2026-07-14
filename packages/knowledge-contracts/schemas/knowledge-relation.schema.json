@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/knowledge-relation.schema.json",
+  "title": "KnowledgeRelation",
+  "type": "object",
+  "required": ["id", "sourceId", "targetId", "predicate"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "sourceId": { "type": "string", "minLength": 1 },
+    "targetId": { "type": "string", "minLength": 1 },
+    "predicate": { "type": "string", "minLength": 1 },
+    "label": { "type": "string" },
+    "properties": { "type": "object" },
+    "provenance": { "type": "array", "items": { "type": "object" } },
+    "validFrom": { "type": "string", "format": "date-time" },
+    "validTo": { "type": "string", "format": "date-time" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "evidenceType": { "type": "string" }
+  },
+  "additionalProperties": false
+}

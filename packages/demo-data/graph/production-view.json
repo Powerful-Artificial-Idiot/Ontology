@@ -1,0 +1,19 @@
+{
+  "metadata": { "contractVersion": "1.0.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-production-001", "generatedAt": "2026-07-14T00:00:00Z" },
+  "entities": [
+    { "id": "product:brake-booster", "iri": "https://example.com/mkg/demo#BrakeBooster", "type": "mfg:Product", "label": "FP-001 Brake Booster Assembly", "domain": "production", "properties": { "partNumber": "FP-001" }, "version": "A", "status": "active" },
+    { "id": "operation:op30", "iri": "https://example.com/mkg/demo#OP30", "type": "mfg:Operation", "label": "OP30 Leak Test", "domain": "production", "properties": { "cycleTimeSeconds": 42 }, "source": [{ "sourceType": "master-data", "sourceId": "OP30", "sourceSystem": "MES", "recordedAt": "2026-07-14T00:00:00Z" }], "version": "3.4", "status": "active" },
+    { "id": "machine:m220", "iri": "https://example.com/mkg/demo#M220", "type": "mfg:Machine", "label": "M220 Leak Test Bench", "domain": "equipment", "properties": { "assetNumber": "M220" }, "status": "active" }
+  ],
+  "relations": [
+    { "id": "rel:product-requires-op30", "sourceId": "product:brake-booster", "targetId": "operation:op30", "predicate": "mfg:requiresOperation", "label": "requires operation" },
+    { "id": "rel:op30-executed-by-m220", "sourceId": "operation:op30", "targetId": "machine:m220", "predicate": "mfg:executedBy", "label": "executed by" }
+  ],
+  "nodes": [
+    { "id": "node:op30", "entityId": "operation:op30", "visualType": "operation", "column": 3, "stackId": "OP30", "badges": ["Leak Test"], "viewMetadata": { "x": 1280, "y": 260 } },
+    { "id": "node:fp001", "entityId": "product:brake-booster", "visualType": "finished-product", "column": 5, "stackId": "FP-001", "viewMetadata": { "x": 1920, "y": 260 } }
+  ],
+  "edges": [
+    { "id": "edge:op30-fp001", "relationId": "rel:product-requires-op30", "source": "node:op30", "target": "node:fp001", "label": "produces", "metrics": { "partsQty": 20, "cycleTimeSeconds": 42 }, "viewMetadata": { "wip": "Tested Booster" } }
+  ]
+}

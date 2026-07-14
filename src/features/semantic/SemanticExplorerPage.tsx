@@ -2,11 +2,11 @@ import { useMemo, useState } from "react";
 import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { Header } from "../../components/Header";
 import type { AppPage } from "../../types";
+import { semanticConceptBundles, semanticConceptById, semanticEntityById } from "../../repositories/legacyDemoData";
 import { AIContextPreview } from "./components/AIContextPreview";
 import { SemanticCatalogSidebar } from "./components/SemanticCatalogSidebar";
 import { SemanticDetailPanel } from "./components/SemanticDetailPanel";
 import { SemanticMappingCanvas } from "./components/SemanticMappingCanvas";
-import { semanticConceptBundles, semanticConceptById, semanticEntityById } from "./semanticData";
 import { searchSemanticCatalog } from "./semanticUtils";
 import type { SemanticConceptBundle, SemanticDomainFilter } from "./semanticTypes";
 
@@ -79,4 +79,3 @@ export function SemanticExplorerPage({ activePage, onPageChange }: { activePage:
     </div>
   );
 }
-

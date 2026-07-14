@@ -1,0 +1,4 @@
+code,label,status
+LEAK,Leakage,active
+VISUAL,Visual defect,active
+POSITION,Assembly position out of tolerance,active

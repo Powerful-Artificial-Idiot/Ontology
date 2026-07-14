@@ -1,0 +1,8 @@
+{
+  "id": "machine-impact-analysis",
+  "title": "M220 Quality and Configuration Impact",
+  "graphView": "engineering",
+  "frontendRoute": "/semantic-explorer",
+  "seedEntityIds": ["machine:m220", "quality:leak-rate"],
+  "competencyQuestionIds": ["CQ-004", "CQ-005"]
+}

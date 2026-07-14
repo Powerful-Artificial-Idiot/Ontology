@@ -1,0 +1,10 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix equip: <https://example.com/mkg/equipment#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+equip:MachineConfigurationVersionShape a sh:NodeShape ;
+  sh:targetClass equip:MachineConfigurationVersion ;
+  sh:property [
+    sh:path core:versionIdentifier ;
+    sh:minCount 1 ;
+  ] .

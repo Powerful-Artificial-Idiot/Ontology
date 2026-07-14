@@ -1,0 +1,5 @@
+code,label,quantity_kind
+s,second,time
+bar,bar,pressure
+sccm,standard cubic centimetres per minute,flow_rate
+pc,piece,count

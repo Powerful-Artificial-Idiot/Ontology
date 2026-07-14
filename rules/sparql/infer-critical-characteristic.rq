@@ -1,0 +1,8 @@
+PREFIX qual: <https://example.com/mkg/quality#>
+CONSTRUCT {
+  ?characteristic a qual:CriticalCharacteristic .
+}
+WHERE {
+  ?version a qual:ControlPlanVersion ;
+    qual:controlsCharacteristic ?characteristic .
+}

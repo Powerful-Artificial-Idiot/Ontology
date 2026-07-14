@@ -1,0 +1,10 @@
+PREFIX core: <https://example.com/mkg/core#>
+PREFIX equip: <https://example.com/mkg/equipment#>
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?machine ?configuration WHERE {
+  ?machine a mfg:Machine ; equip:hasConfigurationVersion ?configuration .
+  ?configuration core:validFrom ?from .
+  OPTIONAL { ?configuration core:validTo ?to }
+  FILTER(?from <= "2026-07-14"^^xsd:date && (!BOUND(?to) || ?to >= "2026-07-14"^^xsd:date))
+}

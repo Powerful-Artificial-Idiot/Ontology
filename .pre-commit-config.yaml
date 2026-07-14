@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: knowledge-validate
+        name: Validate knowledge assets
+        entry: .venv/bin/python scripts/validate_all.py
+        language: system
+        pass_filenames: false
+      - id: frontend-typecheck
+        name: TypeScript typecheck
+        entry: npm run typecheck
+        language: system
+        pass_filenames: false

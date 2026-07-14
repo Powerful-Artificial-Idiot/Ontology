@@ -1,0 +1,6 @@
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+PREFIX qual: <https://example.com/mkg/quality#>
+SELECT ?machine ?failureMode ?characteristic WHERE {
+  ?machine a mfg:Machine ; qual:associatedFailureMode ?failureMode .
+  ?failureMode qual:mayAffect ?characteristic .
+}

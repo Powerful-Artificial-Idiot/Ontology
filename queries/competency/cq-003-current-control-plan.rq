@@ -1,0 +1,11 @@
+PREFIX core: <https://example.com/mkg/core#>
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?characteristic ?version WHERE {
+  ?characteristic a qual:CriticalCharacteristic .
+  ?version a qual:ControlPlanVersion ;
+    qual:controlsCharacteristic ?characteristic ;
+    core:validFrom ?from .
+  OPTIONAL { ?version core:validTo ?to }
+  FILTER(?from <= "2026-07-14"^^xsd:date && (!BOUND(?to) || ?to >= "2026-07-14"^^xsd:date))
+}

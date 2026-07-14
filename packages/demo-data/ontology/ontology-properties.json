@@ -1,0 +1,5 @@
+[
+  { "iri": "https://example.com/mkg/manufacturing#requiresOperation", "name": "requiresOperation", "label": "requires operation", "propertyType": "object", "domain": ["https://example.com/mkg/manufacturing#Product"], "range": ["https://example.com/mkg/manufacturing#Operation"] },
+  { "iri": "https://example.com/mkg/manufacturing#executedBy", "name": "executedBy", "label": "executed by", "propertyType": "object", "domain": ["https://example.com/mkg/manufacturing#Operation"], "range": ["https://example.com/mkg/manufacturing#Machine"] },
+  { "iri": "https://example.com/mkg/quality#controlsCharacteristic", "name": "controlsCharacteristic", "label": "controls characteristic", "propertyType": "object", "domain": ["https://example.com/mkg/quality#ControlPlanVersion"], "range": ["https://example.com/mkg/quality#QualityCharacteristic"] }
+]

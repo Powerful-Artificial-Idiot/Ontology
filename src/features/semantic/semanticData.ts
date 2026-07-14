@@ -15,7 +15,7 @@ interface ConceptDefinition {
   aliases: string[];
   ontology: Array<{ label: string; type?: "ontologyObject" | "ontologyProperty" | "ontologyRelationship"; description?: string }>;
   fields: Array<{ label: string; system: string; dataType: string; unit?: string; refresh?: string }>;
-  evidence: Array<{ label: string; documentType: string; version?: string; system: string }>;
+  evidence: Array<{ label: string; documentType: string; version?: string; system: string; validFrom?: string; validTo?: string }>;
   metric?: string;
   owner: string;
   routeUsage: string[];
@@ -188,7 +188,12 @@ const definitions: ConceptDefinition[] = [
     aliases: ["Quality Control", "Prevention Control", "Detection Control"],
     ontology: [{ label: "ControlMethod", type: "ontologyObject" }, { label: "QualityCharacteristic.controlledBy", type: "ontologyRelationship" }, { label: "PFMEARisk.mitigatedBy", type: "ontologyRelationship" }],
     fields: [{ label: "QMS.control_plan.control_method", system: "QMS", dataType: "string", refresh: "On approval" }, { label: "QMS.pfmea.current_control", system: "QMS", dataType: "string", refresh: "On approval" }],
-    evidence: [{ label: "Control Plan CP-BB01 Rev.A", documentType: "Control Plan", version: "Rev.A", system: "QMS" }, { label: "PFMEA PF-BB01 Rev.B", documentType: "PFMEA", version: "Rev.B", system: "QMS" }, { label: "Inspection Work Instruction", documentType: "Work Instruction", system: "DMS" }],
+    evidence: [
+      { label: "Control Plan CP-001 V2", documentType: "Control Plan", version: "V2", system: "QMS", validFrom: "2025-01-01", validTo: "2026-03-14" },
+      { label: "Control Plan CP-001 V3", documentType: "Control Plan", version: "V3", system: "QMS", validFrom: "2026-03-15" },
+      { label: "PFMEA PF-BB01 Rev.B", documentType: "PFMEA", version: "Rev.B", system: "QMS" },
+      { label: "Inspection Work Instruction", documentType: "Work Instruction", system: "DMS" },
+    ],
     owner: "Quality Engineering",
     routeUsage: ["Quality View detail", "Stacked Control Method object"],
     resolvedMeaning: "Governed prevention or detection control applied to a quality characteristic or process risk.",
@@ -247,7 +252,25 @@ definitions.forEach((definition) => {
 
   const evidenceIds = definition.evidence.map((evidence, index) => {
     const id = `${definition.id}-evidence-${index + 1}`;
-    addEntity({ id, label: evidence.label, type: "sourceEvidence", domain: definition.domain, description: `${evidence.documentType} providing governed evidence for ${definition.title}.`, owner: definition.owner, status: "approved", confidence: "approved", sourceSystems: [evidence.system], sourceDocuments: [evidence.label], attributes: { "Document Type": evidence.documentType, Version: evidence.version ?? "Current", "Approval Status": "Approved" } });
+    addEntity({
+      id,
+      label: evidence.label,
+      type: "sourceEvidence",
+      domain: definition.domain,
+      description: `${evidence.documentType} providing governed evidence for ${definition.title}.`,
+      owner: definition.owner,
+      status: "approved",
+      confidence: "approved",
+      sourceSystems: [evidence.system],
+      sourceDocuments: [evidence.label],
+      attributes: {
+        "Document Type": evidence.documentType,
+        Version: evidence.version ?? "Current",
+        "Approval Status": "Approved",
+        ...(evidence.validFrom ? { "Valid From": evidence.validFrom } : {}),
+        ...(evidence.validTo ? { "Valid To": evidence.validTo } : {}),
+      },
+    });
     addMapping(fieldIds[index % fieldIds.length], id, "evidencedBy", "evidencedBy");
     return id;
   });
@@ -290,4 +313,3 @@ export const semanticDomainLabels: Record<SemanticDomain, string> = {
   valueStream: "Value Stream",
   governance: "Governance",
 };
-

@@ -1,0 +1,30 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix qual: <https://example.com/mkg/quality#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.com/mkg/quality> a owl:Ontology ;
+  owl:imports <https://example.com/mkg/core>, <https://example.com/mkg/manufacturing> ;
+  owl:versionIRI <https://example.com/mkg/quality/1.1.0> ;
+  owl:versionInfo "1.1.0" .
+
+qual:QualityCharacteristic a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Quality Characteristic" .
+qual:CriticalCharacteristic a owl:Class ; rdfs:subClassOf qual:QualityCharacteristic ; rdfs:label "Critical Characteristic" .
+qual:MeasurementResult a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Measurement Result" .
+qual:InspectionMethod a owl:Class ; rdfs:subClassOf core:Process ; rdfs:label "Inspection Method" .
+qual:MeasurementInstrument a owl:Class ; rdfs:subClassOf core:Asset ; rdfs:label "Measurement Instrument" .
+qual:Defect a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Defect" .
+qual:FailureMode a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Failure Mode" .
+qual:ControlPlan a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Control Plan" .
+qual:ControlPlanVersion a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Control Plan Version" .
+qual:CorrectiveAction a owl:Class ; rdfs:subClassOf core:Process ; rdfs:label "Corrective Action" .
+
+qual:controlsCharacteristic a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range qual:QualityCharacteristic ; rdfs:label "controls characteristic" .
+qual:hasControlPlanVersion a owl:ObjectProperty ; rdfs:domain qual:ControlPlan ; rdfs:range qual:ControlPlanVersion ; rdfs:subPropertyOf core:hasVersion ; rdfs:label "has control plan version" .
+qual:measuresCharacteristic a owl:ObjectProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range qual:QualityCharacteristic ; rdfs:label "measures characteristic" .
+qual:associatedFailureMode a owl:ObjectProperty ; rdfs:domain mfg:Machine ; rdfs:range qual:FailureMode ; rdfs:label "associated failure mode" .
+qual:mayAffect a owl:ObjectProperty ; rdfs:domain qual:FailureMode ; rdfs:range qual:QualityCharacteristic ; rdfs:label "may affect" .
+qual:unit a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:string ; rdfs:label "unit" .
+qual:numericValue a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:decimal ; rdfs:label "numeric value" .

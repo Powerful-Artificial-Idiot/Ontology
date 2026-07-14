@@ -1,0 +1,22 @@
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+mfg:OperationExecutionShape a sh:NodeShape ;
+  sh:targetClass mfg:OperationExecution ;
+  sh:property [
+    sh:path mfg:eventTime ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime ;
+    sh:message "An operation execution must have an event time." ;
+  ] .
+
+mfg:ProductRouteShape a sh:NodeShape ;
+  sh:targetClass mfg:Product ;
+  sh:property [
+    sh:path mfg:requiresOperation ;
+    sh:minCount 1 ;
+    sh:class mfg:Operation ;
+    sh:message "A product must require at least one operation." ;
+  ] .

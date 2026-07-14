@@ -1,0 +1,4 @@
+[
+  { "id": "ontology-rel-001", "sourceId": "mfg:Product", "targetId": "mfg:Operation", "predicate": "mfg:requiresOperation", "label": "requires operation" },
+  { "id": "ontology-rel-002", "sourceId": "mfg:Operation", "targetId": "mfg:Machine", "predicate": "mfg:executedBy", "label": "executed by" }
+]

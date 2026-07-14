@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/semantic-search.schema.json",
+  "title": "SemanticSearchResponse",
+  "type": "object",
+  "required": ["metadata", "results", "total"],
+  "properties": {
+    "metadata": { "type": "object", "required": ["contractVersion", "ontologyVersion", "dataVersion", "traceId", "generatedAt"] },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["entity", "score", "matchedConcepts"],
+        "properties": {
+          "entity": { "$ref": "knowledge-entity.schema.json" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "matchedConcepts": { "type": "array", "items": { "type": "string" } },
+          "matchedRelations": { "type": "array", "items": { "$ref": "knowledge-relation.schema.json" } },
+          "explanation": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "object" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

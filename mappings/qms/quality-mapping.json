@@ -1,0 +1,13 @@
+{
+  "mappingId": "QMS-QUALITY-1",
+  "version": "1.0.0",
+  "sourceSystem": "QMS",
+  "effectiveFrom": "2026-07-14",
+  "mappings": [
+    { "sourceField": "QMS.characteristic.characteristic_id", "ontologyTerm": "qual:QualityCharacteristic", "mappingType": "class", "transform": "iri_from('quality-characteristic', value)" },
+    { "sourceField": "QMS.characteristic.is_ctq", "ontologyTerm": "qual:CriticalCharacteristic", "mappingType": "class", "transform": "class_when(value == true)" },
+    { "sourceField": "QMS.inspection_result.leak_rate", "ontologyTerm": "qual:numericValue", "mappingType": "datatypeProperty", "transform": "decimal(value)", "unit": "sccm" },
+    { "sourceField": "QMS.inspection_result.unit", "ontologyTerm": "qual:unit", "mappingType": "datatypeProperty", "transform": "string(value)" },
+    { "sourceField": "QMS.control_plan.characteristic_id", "ontologyTerm": "qual:controlsCharacteristic", "mappingType": "objectProperty", "transform": "iri_from('quality-characteristic', value)" }
+  ]
+}

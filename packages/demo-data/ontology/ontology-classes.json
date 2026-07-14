@@ -1,0 +1,7 @@
+[
+  { "iri": "https://example.com/mkg/manufacturing#Product", "name": "Product", "label": "Product", "parentClasses": ["https://example.com/mkg/core#Asset"], "module": "manufacturing", "version": "1.1.0" },
+  { "iri": "https://example.com/mkg/manufacturing#Operation", "name": "Operation", "label": "Operation", "parentClasses": ["https://example.com/mkg/core#Process"], "module": "manufacturing", "version": "1.1.0" },
+  { "iri": "https://example.com/mkg/manufacturing#Machine", "name": "Machine", "label": "Machine", "parentClasses": ["https://example.com/mkg/manufacturing#ManufacturingResource"], "module": "manufacturing", "version": "1.1.0" },
+  { "iri": "https://example.com/mkg/quality#CriticalCharacteristic", "name": "CriticalCharacteristic", "label": "Critical Characteristic", "parentClasses": ["https://example.com/mkg/quality#QualityCharacteristic"], "module": "quality", "version": "1.1.0" },
+  { "iri": "https://example.com/mkg/quality#ControlPlanVersion", "name": "ControlPlanVersion", "label": "Control Plan Version", "parentClasses": ["https://example.com/mkg/core#VersionedEntity"], "module": "quality", "version": "1.1.0" }
+]

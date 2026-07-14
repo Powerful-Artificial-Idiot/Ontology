@@ -17,7 +17,7 @@ import { DetailPanel } from "./components/DetailPanel";
 import { Header } from "./components/Header";
 import { LeftSidebar } from "./components/LeftSidebar";
 import { StackNode as StackNodeComponent } from "./components/StackNode";
-import { graphEdges, stackNodes } from "./data/mockGraph";
+import { graphEdges, stackNodes } from "./repositories/legacyDemoData";
 import {
   getFocusedGraphElements,
   getNodeByObjectId,

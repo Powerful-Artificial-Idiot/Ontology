@@ -1,0 +1,57 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix demo: <https://example.com/mkg/demo#> .
+@prefix equip: <https://example.com/mkg/equipment#> .
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix qual: <https://example.com/mkg/quality#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+demo:MES a core:SourceSystem .
+
+demo:BrakeBooster a mfg:Product ;
+  mfg:requiresOperation demo:OP30 ;
+  core:hasSource demo:MES ;
+  core:sourceSystemId "FP-001" .
+
+demo:OP30 a mfg:Operation ;
+  mfg:executedBy demo:M220 ;
+  mfg:cycleTimeSeconds 42.0 .
+
+demo:OP30Execution001 a mfg:OperationExecution ;
+  mfg:eventTime "2026-07-14T08:00:00Z"^^xsd:dateTime .
+
+demo:M220 a mfg:Machine ;
+  qual:associatedFailureMode demo:LeakageFailure ;
+  equip:hasConfigurationVersion demo:M220ConfigV2 .
+
+demo:LeakRate a qual:CriticalCharacteristic .
+demo:LeakageFailure a qual:FailureMode ; qual:mayAffect demo:LeakRate .
+
+demo:LeakResult001 a qual:MeasurementResult ;
+  qual:numericValue 2.1 ;
+  qual:unit "sccm" ;
+  qual:measuresCharacteristic demo:LeakRate .
+
+demo:CP001 a qual:ControlPlan ;
+  qual:hasControlPlanVersion demo:CP001V2, demo:CP001V3 .
+
+demo:CP001V2 a qual:ControlPlanVersion ;
+  core:versionIdentifier "2" ;
+  core:validFrom "2025-01-01"^^xsd:date ;
+  core:validTo "2026-03-14"^^xsd:date ;
+  qual:controlsCharacteristic demo:LeakRate .
+
+demo:CP001V3 a qual:ControlPlanVersion ;
+  core:versionIdentifier "3" ;
+  core:validFrom "2026-03-15"^^xsd:date ;
+  core:supersedes demo:CP001V2 ;
+  qual:controlsCharacteristic demo:LeakRate .
+
+demo:M220ConfigV1 a equip:MachineConfigurationVersion ;
+  core:versionIdentifier "1" ;
+  core:validFrom "2025-01-01"^^xsd:date ;
+  core:validTo "2026-05-31"^^xsd:date .
+
+demo:M220ConfigV2 a equip:MachineConfigurationVersion ;
+  core:versionIdentifier "2" ;
+  core:validFrom "2026-06-01"^^xsd:date ;
+  core:supersedes demo:M220ConfigV1 .

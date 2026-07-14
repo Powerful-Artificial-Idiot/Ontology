@@ -1,0 +1,7 @@
+version: 1.0.0
+rules:
+  - id: RULE-QUALITY-001
+    title: Infer critical characteristic from approved control plan
+    file: sparql/infer-critical-characteristic.rq
+    status: candidate
+    output_classification: derived

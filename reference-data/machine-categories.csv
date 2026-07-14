@@ -1,0 +1,5 @@
+code,label,status
+PRESS,Press station,active
+ASSEMBLY,Assembly station,active
+LEAK_TEST,Leak test bench,active
+VISION,Vision inspection station,active

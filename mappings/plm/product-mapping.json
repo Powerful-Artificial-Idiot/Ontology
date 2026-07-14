@@ -1,0 +1,11 @@
+{
+  "mappingId": "PLM-PRODUCT-1",
+  "version": "1.0.0",
+  "sourceSystem": "PLM",
+  "effectiveFrom": "2026-07-14",
+  "mappings": [
+    { "sourceField": "PLM.part.part_number", "ontologyTerm": "mfg:Product", "mappingType": "class", "transform": "iri_from('product', value)" },
+    { "sourceField": "PLM.part.source_id", "ontologyTerm": "core:sourceSystemId", "mappingType": "datatypeProperty", "transform": "string(value)" },
+    { "sourceField": "PLM.part.revision", "ontologyTerm": "core:versionIdentifier", "mappingType": "datatypeProperty", "transform": "string(value)" }
+  ]
+}

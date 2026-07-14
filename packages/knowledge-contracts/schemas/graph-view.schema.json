@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/graph-view.schema.json",
+  "title": "GraphViewResponse",
+  "type": "object",
+  "required": ["metadata", "entities", "relations", "nodes", "edges"],
+  "properties": {
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "entities": { "type": "array", "items": { "$ref": "knowledge-entity.schema.json" } },
+    "relations": { "type": "array", "items": { "$ref": "knowledge-relation.schema.json" } },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": ["contractVersion", "ontologyVersion", "dataVersion", "traceId", "generatedAt"],
+      "properties": {
+        "contractVersion": { "type": "string" },
+        "ontologyVersion": { "type": "string" },
+        "dataVersion": { "type": "string" },
+        "traceId": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "entityId", "visualType"],
+      "properties": {
+        "id": { "type": "string" },
+        "entityId": { "type": "string" },
+        "visualType": { "type": "string" },
+        "column": { "type": "integer", "minimum": 0 },
+        "stackId": { "type": "string" },
+        "isCritical": { "type": "boolean" },
+        "thumbnail": { "type": "string" },
+        "badges": { "type": "array", "items": { "type": "string" } },
+        "viewMetadata": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "target"],
+      "properties": {
+        "id": { "type": "string" },
+        "relationId": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "label": { "type": "string" },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "partsQty": { "type": "number" },
+            "cycleTimeSeconds": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "viewMetadata": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,20 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix equip: <https://example.com/mkg/equipment#> .
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://example.com/mkg/equipment> a owl:Ontology ;
+  owl:imports <https://example.com/mkg/core>, <https://example.com/mkg/manufacturing> ;
+  owl:versionIRI <https://example.com/mkg/equipment/1.1.0> ;
+  owl:versionInfo "1.1.0" .
+
+equip:Equipment a owl:Class ; rdfs:subClassOf mfg:ManufacturingResource ; rdfs:label "Equipment" .
+equip:MachineState a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Machine State" .
+equip:AlarmEvent a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Alarm Event" .
+equip:MaintenanceEvent a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Maintenance Event" .
+equip:MachineConfiguration a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Machine Configuration" .
+equip:MachineConfigurationVersion a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Machine Configuration Version" .
+
+equip:hasConfiguration a owl:ObjectProperty ; rdfs:domain mfg:Machine ; rdfs:range equip:MachineConfiguration ; rdfs:label "has configuration" .
+equip:hasConfigurationVersion a owl:ObjectProperty ; rdfs:domain mfg:Machine ; rdfs:range equip:MachineConfigurationVersion ; rdfs:label "has configuration version" .

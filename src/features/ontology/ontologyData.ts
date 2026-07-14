@@ -1,4 +1,4 @@
-import { ontologyActionTypes, ontologyLinkTypes, ontologyObjectTypes } from "../../data/ontologyData";
+import { ontologyActionTypes, ontologyLinkTypes, ontologyObjectTypes } from "../../repositories/legacyDemoData";
 import type { OntologyDomain } from "../../types";
 import type { OntologyLane, OntologySourceData } from "./ontologyTypes";
 
@@ -120,4 +120,3 @@ export const domainStyles: Record<OntologyDomain, {
   valueStream: { edge: "#0f766e", border: "border-teal-200", borderColor: "#99f6e4", softBg: "bg-teal-50", text: "text-teal-700", badge: "bg-teal-50 text-teal-700", filterActive: "bg-teal-50 text-teal-700", filterBorder: "border-teal-200", filterText: "text-teal-700" },
   shared: { edge: "#52525b", border: "border-zinc-200", borderColor: "#d4d4d8", softBg: "bg-zinc-100", text: "text-zinc-700", badge: "bg-zinc-100 text-zinc-700", filterActive: "bg-zinc-100 text-zinc-700", filterBorder: "border-zinc-200", filterText: "text-zinc-700" },
 };
-

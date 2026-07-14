@@ -1,0 +1,8 @@
+{
+  "id": "normal-production",
+  "title": "Normal Brake Booster Production",
+  "graphView": "production",
+  "frontendRoute": "/route-explorer",
+  "seedEntityIds": ["product:brake-booster", "operation:op30", "machine:m220"],
+  "competencyQuestionIds": ["CQ-001", "CQ-002"]
+}

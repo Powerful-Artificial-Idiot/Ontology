@@ -1,0 +1,12 @@
+{
+  "mappingId": "MES-OPERATION-1",
+  "version": "1.0.0",
+  "sourceSystem": "MES",
+  "effectiveFrom": "2026-07-14",
+  "mappings": [
+    { "sourceField": "MES.operation.operation_id", "ontologyTerm": "mfg:Operation", "mappingType": "class", "transform": "iri_from('operation', value)" },
+    { "sourceField": "MES.operation.actual_cycle_time", "ontologyTerm": "mfg:cycleTimeSeconds", "mappingType": "datatypeProperty", "transform": "decimal(value)", "unit": "s" },
+    { "sourceField": "MES.operation.machine_id", "ontologyTerm": "mfg:executedBy", "mappingType": "objectProperty", "transform": "iri_from('machine', value)" },
+    { "sourceField": "MES.operation.event_time", "ontologyTerm": "mfg:eventTime", "mappingType": "datatypeProperty", "transform": "datetime(value)" }
+  ]
+}

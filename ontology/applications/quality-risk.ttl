@@ -1,0 +1,18 @@
+@prefix app: <https://example.com/mkg/application#> .
+@prefix core: <https://example.com/mkg/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://example.com/mkg/application> a owl:Ontology ;
+  owl:imports <https://example.com/mkg/core>, <https://example.com/mkg/quality> ;
+  owl:versionIRI <https://example.com/mkg/application/1.1.0> ;
+  owl:versionInfo "1.1.0" .
+
+app:QualityRisk a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Quality Risk" .
+app:PotentialRootCause a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Potential Root Cause" .
+app:InvestigationCase a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Investigation Case" .
+app:EvidenceItem a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Evidence Item" .
+app:RiskAssessment a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Risk Assessment" .
+
+app:hasPotentialRootCause a owl:ObjectProperty ; rdfs:domain app:QualityRisk ; rdfs:range app:PotentialRootCause ; rdfs:label "has potential root cause" .
+app:hasEvidence a owl:ObjectProperty ; rdfs:domain app:InvestigationCase ; rdfs:range app:EvidenceItem ; rdfs:label "has evidence" .

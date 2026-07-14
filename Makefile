@@ -1,0 +1,55 @@
+PYTHON ?= .venv/bin/python
+PIP ?= .venv/bin/pip
+
+.PHONY: install python-install demo-install demo-dev demo-lint demo-test demo-build \
+	ontology-validate shapes-validate mappings-validate contracts-validate competency-test \
+	validate test build release clean
+
+install: demo-install python-install
+
+python-install:
+	python3 -m venv .venv
+	$(PIP) install -e .
+
+demo-install:
+	npm install
+
+demo-dev:
+	npm run dev
+
+demo-lint:
+	npm run lint
+
+demo-test:
+	npm run typecheck
+	npm run test
+
+demo-build:
+	npm run build
+
+ontology-validate:
+	$(PYTHON) scripts/validate_ontology.py
+
+shapes-validate:
+	$(PYTHON) scripts/validate_shapes.py
+
+mappings-validate:
+	$(PYTHON) scripts/validate_mappings.py
+
+contracts-validate:
+	$(PYTHON) scripts/validate_demo_contracts.py
+
+competency-test:
+	$(PYTHON) scripts/run_competency_queries.py
+
+validate: ontology-validate shapes-validate mappings-validate contracts-validate competency-test
+
+test: demo-lint demo-test competency-test
+
+release:
+	$(PYTHON) scripts/build_release.py
+
+build: validate test demo-build release
+
+clean:
+	rm -rf dist coverage playwright-report test-results .cache

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/knowledge-entity.schema.json",
+  "title": "KnowledgeEntity",
+  "type": "object",
+  "required": ["id", "type", "label", "properties"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "iri": { "type": "string", "format": "uri" },
+    "type": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "domain": { "type": "string" },
+    "properties": { "type": "object" },
+    "source": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/provenance" }
+    },
+    "validFrom": { "type": "string", "format": "date-time" },
+    "validTo": { "type": "string", "format": "date-time" },
+    "version": { "type": "string" },
+    "status": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "required": ["sourceType", "sourceId"],
+      "properties": {
+        "sourceType": { "type": "string" },
+        "sourceId": { "type": "string" },
+        "sourceSystem": { "type": "string" },
+        "documentName": { "type": "string" },
+        "locator": { "type": "string" },
+        "recordedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

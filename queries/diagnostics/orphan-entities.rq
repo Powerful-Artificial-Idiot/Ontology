@@ -1,0 +1,5 @@
+SELECT ?entity WHERE {
+  ?entity a ?type .
+  FILTER NOT EXISTS { ?entity ?predicate ?other FILTER(?predicate != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) }
+  FILTER NOT EXISTS { ?other ?predicate ?entity }
+}

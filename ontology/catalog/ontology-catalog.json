@@ -1,0 +1,11 @@
+{
+  "ontologyVersion": "1.1.0",
+  "modules": [
+    { "id": "core", "file": "../core/core.ttl", "namespace": "https://example.com/mkg/core#" },
+    { "id": "manufacturing", "file": "../domains/manufacturing.ttl", "namespace": "https://example.com/mkg/manufacturing#" },
+    { "id": "quality", "file": "../domains/quality.ttl", "namespace": "https://example.com/mkg/quality#" },
+    { "id": "equipment", "file": "../domains/equipment.ttl", "namespace": "https://example.com/mkg/equipment#" },
+    { "id": "application", "file": "../applications/quality-risk.ttl", "namespace": "https://example.com/mkg/application#" },
+    { "id": "explorer-alignment", "file": "../applications/explorer-alignment.ttl", "namespace": "https://example.com/mkg/explorer#" }
+  ]
+}

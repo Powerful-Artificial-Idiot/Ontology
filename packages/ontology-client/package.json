@@ -1,0 +1,10 @@
+{
+  "name": "@mkg/ontology-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@mkg/knowledge-contracts": "1.0.0"
+  }
+}

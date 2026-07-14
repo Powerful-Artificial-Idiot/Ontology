@@ -1,0 +1,11 @@
+@prefix demo: <https://example.com/mkg/demo-invalid#> .
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix qual: <https://example.com/mkg/quality#> .
+
+demo:LeakRate a qual:QualityCharacteristic .
+
+demo:ResultWithoutUnit a qual:MeasurementResult ;
+  qual:numericValue 3.2 ;
+  qual:measuresCharacteristic demo:LeakRate .
+
+demo:ExecutionWithoutTime a mfg:OperationExecution .

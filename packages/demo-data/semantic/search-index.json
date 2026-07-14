@@ -1,0 +1,9 @@
+{
+  "ontologyVersion": "1.1.0",
+  "dataVersion": "0.5.0",
+  "concepts": [
+    { "id": "cycle-time", "label": "Cycle Time", "aliases": ["CT", "C/T"], "ontologyTerms": ["mfg:cycleTimeSeconds"] },
+    { "id": "leak-rate", "label": "Leak Rate", "aliases": ["Leakage Rate"], "ontologyTerms": ["qual:QualityCharacteristic"] },
+    { "id": "control-method", "label": "Control Method", "aliases": ["Control Plan", "CP Version"], "ontologyTerms": ["qual:ControlPlanVersion", "qual:controlsCharacteristic"] }
+  ]
+}

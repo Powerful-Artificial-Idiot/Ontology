@@ -1,0 +1,27 @@
+version: 1.0.0
+questions:
+  - id: CQ-001
+    question: Which operations are required for a product?
+    query_file: cq-001-product-operations.rq
+    demo_scenario: normal-production
+    frontend_route: /route-explorer
+  - id: CQ-002
+    question: Which machines execute an operation?
+    query_file: cq-002-operation-machines.rq
+    demo_scenario: normal-production
+    frontend_route: /route-explorer
+  - id: CQ-003
+    question: Which Control Plan Version is currently effective for a Critical Characteristic?
+    query_file: cq-003-current-control-plan.rq
+    demo_scenario: quality-investigation
+    frontend_route: /semantic-explorer
+  - id: CQ-004
+    question: Which failure modes of a machine may affect a quality characteristic?
+    query_file: cq-004-machine-quality-impact.rq
+    demo_scenario: machine-impact-analysis
+    frontend_route: /semantic-explorer
+  - id: CQ-005
+    question: Which Machine Configuration Version is valid at a point in time?
+    query_file: cq-005-machine-configuration.rq
+    demo_scenario: machine-impact-analysis
+    frontend_route: /ontology-explorer
