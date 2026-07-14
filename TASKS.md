@@ -171,7 +171,7 @@
 
 ## P3-01 Split explorer page bundles
 
-- Status: TODO
+- Status: DONE
 - Priority: P3
 - Dependencies: P2-01
 - Scope: Lazy-load only page-level modules and record bundle metrics.
