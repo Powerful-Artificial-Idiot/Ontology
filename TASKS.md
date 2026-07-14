@@ -184,7 +184,7 @@
 
 ## P3-02 Define Pilot Runtime readiness
 
-- Status: TODO
+- Status: DONE
 - Priority: P3
 - Dependencies: P1 completion gate
 - Scope: Define Pilot dataset, graph-runtime evaluation, and five-CQ benchmark criteria.
