@@ -1,8 +1,7 @@
 import { Bot, ChevronDown, Database, FileCheck2, Gauge, Languages, Link2, RotateCcw, Search, TriangleAlert } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { semanticConceptBundles, semanticDomainLabels, semanticEntities } from "../semanticData";
 import { searchGroupOrder } from "../semanticUtils";
-import type { SemanticConceptBundle, SemanticDomainFilter, SemanticSearchMatch } from "../semanticTypes";
+import type { SemanticConceptBundle, SemanticDomain, SemanticDomainFilter, SemanticEntity, SemanticSearchMatch } from "../semanticTypes";
 
 const filters: Array<{ id: SemanticDomainFilter; label: string }> = [
   { id: "all", label: "All" },
@@ -22,8 +21,8 @@ const semanticGroups = [
   { label: "AI Context", icon: <Bot className="h-3.5 w-3.5" />, types: ["aiContext"] },
 ];
 
-export function SemanticCatalogSidebar({ searchKeyword, searchMatches, domainFilter, selectedConceptId, onSearchChange, onFilterChange, onSelectConcept, onSelectSearchResult, onReset }: { searchKeyword: string; searchMatches: SemanticSearchMatch[]; domainFilter: SemanticDomainFilter; selectedConceptId: string; onSearchChange: (value: string) => void; onFilterChange: (filter: SemanticDomainFilter) => void; onSelectConcept: (bundle: SemanticConceptBundle) => void; onSelectSearchResult: (conceptId: string, entityId: string) => void; onReset: () => void }) {
-  const visibleBundles = semanticConceptBundles.filter((bundle) => domainFilter === "all" || bundle.domain === domainFilter);
+export function SemanticCatalogSidebar({ bundles, entities, domainLabels, searchKeyword, searchMatches, domainFilter, selectedConceptId, onSearchChange, onFilterChange, onSelectConcept, onSelectSearchResult, onReset }: { bundles: SemanticConceptBundle[]; entities: SemanticEntity[]; domainLabels: Record<SemanticDomain, string>; searchKeyword: string; searchMatches: SemanticSearchMatch[]; domainFilter: SemanticDomainFilter; selectedConceptId: string; onSearchChange: (value: string) => void; onFilterChange: (filter: SemanticDomainFilter) => void; onSelectConcept: (bundle: SemanticConceptBundle) => void; onSelectSearchResult: (conceptId: string, entityId: string) => void; onReset: () => void }) {
+  const visibleBundles = bundles.filter((bundle) => domainFilter === "all" || bundle.domain === domainFilter);
   return (
     <aside className="flex w-[300px] shrink-0 flex-col border-r border-slate-200 bg-white">
       <div className="border-b border-slate-200 p-3">
@@ -53,12 +52,12 @@ export function SemanticCatalogSidebar({ searchKeyword, searchMatches, domainFil
 
         <CatalogSection title="Semantic Groups" count={semanticGroups.length} defaultOpen>
           <div className="grid grid-cols-2 gap-1.5">
-            {semanticGroups.map((group) => <div key={group.label} className="rounded-lg border border-slate-200 bg-white p-2"><div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">{group.icon}<span className="truncate">{group.label}</span></div><div className="mt-1 text-lg font-bold text-slate-950">{semanticEntities.filter((entity) => group.types.includes(entity.type)).length}</div></div>)}
+            {semanticGroups.map((group) => <div key={group.label} className="rounded-lg border border-slate-200 bg-white p-2"><div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-700">{group.icon}<span className="truncate">{group.label}</span></div><div className="mt-1 text-lg font-bold text-slate-950">{entities.filter((entity) => group.types.includes(entity.type)).length}</div></div>)}
           </div>
         </CatalogSection>
 
         <CatalogSection title="Concept Bundles" count={visibleBundles.length} defaultOpen>
-          {visibleBundles.length ? <div className="space-y-1.5">{visibleBundles.map((bundle) => <button type="button" key={bundle.id} data-semantic-concept={bundle.id} onClick={() => onSelectConcept(bundle)} className={`w-full rounded-lg border p-3 text-left transition active:scale-[0.99] ${selectedConceptId === bundle.id ? "border-slate-950 bg-slate-50 shadow-sm" : "border-slate-200 bg-white hover:border-slate-400"}`}><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-slate-950">{bundle.title}</span><span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-500">{semanticDomainLabels[bundle.domain]}</span></div><p className="mt-1 line-clamp-2 text-[10px] font-medium leading-4 text-slate-500">{bundle.summary}</p></button>)}</div> : <EmptyCatalogText>No concepts in this domain.</EmptyCatalogText>}
+          {visibleBundles.length ? <div className="space-y-1.5">{visibleBundles.map((bundle) => <button type="button" key={bundle.id} data-semantic-concept={bundle.id} onClick={() => onSelectConcept(bundle)} className={`w-full rounded-lg border p-3 text-left transition active:scale-[0.99] ${selectedConceptId === bundle.id ? "border-slate-950 bg-slate-50 shadow-sm" : "border-slate-200 bg-white hover:border-slate-400"}`}><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-slate-950">{bundle.title}</span><span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-500">{domainLabels[bundle.domain]}</span></div><p className="mt-1 line-clamp-2 text-[10px] font-medium leading-4 text-slate-500">{bundle.summary}</p></button>)}</div> : <EmptyCatalogText>No concepts in this domain.</EmptyCatalogText>}
         </CatalogSection>
 
         <button type="button" onClick={onReset} className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600 transition hover:border-slate-400 hover:text-slate-950 active:scale-[0.98]"><RotateCcw className="h-3.5 w-3.5" />Reset Semantic View</button>
@@ -75,4 +74,3 @@ function CatalogSection({ title, count, defaultOpen = false, children }: { title
 function EmptyCatalogText({ children }: { children: ReactNode }) {
   return <div className="rounded-lg border border-dashed border-slate-200 bg-white p-3 text-xs text-slate-400">{children}</div>;
 }
-

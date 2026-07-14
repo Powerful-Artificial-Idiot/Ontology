@@ -7,7 +7,7 @@ Four versions evolve independently:
 | Demo application | `0.1.0` | UI behavior and frontend code |
 | Ontology | `1.1.0` | OWL terms, constraints, and semantic compatibility |
 | Demo dataset | `0.5.0` | Fixture content and scenarios |
-| Knowledge contract | `1.0.0` | API payload compatibility |
+| Knowledge contract | `1.1.0` | API payload compatibility |
 
 Use semantic versioning. Breaking term removal, incompatible range change, or required payload removal increments major. Backward-compatible terms and optional fields increment minor. Corrections increment patch.
 

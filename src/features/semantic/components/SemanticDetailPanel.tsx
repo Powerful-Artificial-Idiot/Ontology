@@ -1,15 +1,14 @@
 import { ArrowUpRight, Bot, Database, FileCheck2, Languages } from "lucide-react";
 import type { ReactNode } from "react";
 import type { AppPage } from "../../../types";
-import { semanticDomainLabels, semanticEntityById, semanticMappingById } from "../semanticData";
-import type { SemanticConceptBundle, SemanticEntity } from "../semanticTypes";
+import type { SemanticConceptBundle, SemanticDomain, SemanticEntity, SemanticMapping } from "../semanticTypes";
 
-export function SemanticDetailPanel({ entity, bundle, onPageChange }: { entity?: SemanticEntity; bundle?: SemanticConceptBundle; onPageChange: (page: AppPage) => void }) {
+export function SemanticDetailPanel({ entity, bundle, entitiesById, mappingsById, domainLabels, onPageChange }: { entity?: SemanticEntity; bundle?: SemanticConceptBundle; entitiesById: Map<string, SemanticEntity>; mappingsById: Map<string, SemanticMapping>; domainLabels: Record<SemanticDomain, string>; onPageChange: (page: AppPage) => void }) {
   if (!entity || !bundle) return <aside className="flex w-[380px] shrink-0 items-center justify-center border-l border-slate-200 bg-white p-6 text-sm text-slate-400">Select a semantic entity.</aside>;
-  const mappings = bundle.mappingIds.map((id) => semanticMappingById.get(id)).filter(Boolean);
+  const mappings = bundle.mappingIds.map((id) => mappingsById.get(id)).filter(Boolean);
   const connectedIds = new Set<string>();
   mappings.forEach((mapping) => { if (mapping?.sourceId === entity.id) connectedIds.add(mapping.targetId); if (mapping?.targetId === entity.id) connectedIds.add(mapping.sourceId); });
-  const connected = Array.from(connectedIds).map((id) => semanticEntityById.get(id)).filter((item): item is SemanticEntity => Boolean(item));
+  const connected = Array.from(connectedIds).map((id) => entitiesById.get(id)).filter((item): item is SemanticEntity => Boolean(item));
   const fieldRows: Array<[string, string]> = [
     ["Field Name", entity.label],
     ["Source System", entity.sourceSystems?.join(", ") ?? "Unmapped"],
@@ -29,9 +28,9 @@ export function SemanticDetailPanel({ entity, bundle, onPageChange }: { entity?:
       <div className="min-h-0 flex-1 overflow-auto p-4">
         <div className="space-y-5">
           <DetailSection title="Definition"><p className="text-sm leading-6 text-slate-600">{entity.description}</p></DetailSection>
-          <DetailSection title="Semantic Governance"><KeyValues rows={[["Type", formatType(entity.type)], ["Domain", semanticDomainLabels[entity.domain]], ["Owner", entity.owner ?? "Unassigned"], ["Status", entity.status ?? "draft"], ["Confidence", entity.confidence ?? "medium"]]} /></DetailSection>
+          <DetailSection title="Semantic Governance"><KeyValues rows={[["Type", formatType(entity.type)], ["Domain", domainLabels[entity.domain]], ["Owner", entity.owner ?? "Unassigned"], ["Status", entity.status ?? "draft"], ["Confidence", entity.confidence ?? "medium"]]} /></DetailSection>
           {entity.type === "businessTerm" ? <><DetailSection title="Synonyms"><Chips values={entity.aliases ?? []} /></DetailSection>{bundle.aiContext.ambiguityNotes?.length ? <DetailSection title="Ambiguity Notes"><Notes values={bundle.aiContext.ambiguityNotes} /></DetailSection> : null}</> : null}
-          {entity.type === "synonym" ? <><DetailSection title="Preferred Term"><Chips values={[semanticEntityById.get(bundle.primaryTermId)?.label ?? bundle.title]} /></DetailSection><DetailSection title="Context and Ambiguity"><Notes values={entity.examples?.length ? entity.examples : [`Use ${entity.label} only within the ${semanticDomainLabels[entity.domain]} context.`]} /></DetailSection></> : null}
+          {entity.type === "synonym" ? <><DetailSection title="Preferred Term"><Chips values={[entitiesById.get(bundle.primaryTermId)?.label ?? bundle.title]} /></DetailSection><DetailSection title="Context and Ambiguity"><Notes values={entity.examples?.length ? entity.examples : [`Use ${entity.label} only within the ${domainLabels[entity.domain]} context.`]} /></DetailSection></> : null}
           {entity.type === "systemField" ? <DetailSection title="Field Mapping"><KeyValues rows={fieldRows} /></DetailSection> : null}
           {entity.type === "sourceEvidence" ? <DetailSection title="Evidence Record"><KeyValues rows={evidenceRows} /></DetailSection> : null}
           {entity.type === "aiContext" ? <><DetailSection title="Resolved Meaning"><p className="text-sm leading-6 text-slate-600">{bundle.aiContext.resolvedMeaning}</p></DetailSection><DetailSection title="Available Actions"><Notes values={bundle.aiContext.availableActions} /></DetailSection><DetailSection title="Evidence Coverage"><Chips values={[bundle.aiContext.evidenceCoverage]} /></DetailSection></> : null}

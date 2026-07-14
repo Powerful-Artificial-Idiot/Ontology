@@ -41,7 +41,7 @@
 
 ## P1-01 Migrate Semantic Explorer data access
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P0-02, P0-03
 - Scope: Load catalog and search data through `KnowledgeRepository`, with loading, empty, error, payload, and version handling.
@@ -54,7 +54,7 @@
 
 ## P1-02 Generate Ontology build artifacts
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P0-03
 - Scope: Deterministically generate classes, properties, relations, modules, version, manifest, and checksums from TTL.

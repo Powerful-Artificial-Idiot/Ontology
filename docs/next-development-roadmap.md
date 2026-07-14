@@ -2,7 +2,7 @@
 
 ## Current State
 
-The repository provides a validated management Demo plus Knowledge Contract `1.0.0`, Ontology `1.1.0`, Demo Dataset `0.5.0`, SHACL, mappings, five competency queries, CI, and release packaging. The frontend baseline is Route 9 nodes, Ontology 26 classes and 31 relations, and Semantic 5 lanes and 8 concepts.
+The repository provides a validated management Demo plus Knowledge Contract `1.1.0`, Ontology `1.1.0`, Demo Dataset `0.5.0`, SHACL, mappings, five competency queries, CI, and release packaging. The frontend baseline is Route 9 nodes, Ontology 26 classes and 31 relations, and Semantic 5 lanes and 8 concepts.
 
 ## Next-Stage Goal
 

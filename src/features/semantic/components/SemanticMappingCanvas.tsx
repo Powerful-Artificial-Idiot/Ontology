@@ -1,15 +1,15 @@
-import { semanticMappingById } from "../semanticData";
-import { getBundleEntities, getSemanticLaneId, semanticLaneDefinitions } from "../semanticUtils";
-import type { SemanticConceptBundle } from "../semanticTypes";
+import type { SemanticCatalogLane } from "../../../../packages/knowledge-contracts/src/index";
+import { getBundleEntities, getSemanticLaneId } from "../semanticUtils";
+import type { SemanticConceptBundle, SemanticEntity, SemanticMapping } from "../semanticTypes";
 import { SemanticMappingLane } from "./SemanticMappingLane";
 
-export function SemanticMappingCanvas({ bundle, selectedEntityId, onSelectEntity }: { bundle?: SemanticConceptBundle; selectedEntityId: string; onSelectEntity: (entityId: string) => void }) {
+export function SemanticMappingCanvas({ bundle, lanes, entitiesById, mappingsById, selectedEntityId, onSelectEntity }: { bundle?: SemanticConceptBundle; lanes: SemanticCatalogLane[]; entitiesById: Map<string, SemanticEntity>; mappingsById: Map<string, SemanticMapping>; selectedEntityId: string; onSelectEntity: (entityId: string) => void }) {
   if (!bundle) {
     return <div className="flex h-full items-center justify-center p-8"><div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center"><div className="text-sm font-bold text-slate-800">No semantic concept in this filter</div><p className="mt-2 text-xs text-slate-500">Choose another domain or reset the semantic view.</p></div></div>;
   }
 
-  const entities = getBundleEntities(bundle);
-  const mappings = bundle.mappingIds.map((id) => semanticMappingById.get(id)).filter(Boolean);
+  const entities = getBundleEntities(bundle, entitiesById);
+  const mappings = bundle.mappingIds.map((id) => mappingsById.get(id)).filter(Boolean);
   const relatedIds = new Set<string>();
   mappings.forEach((mapping) => {
     if (!mapping) return;
@@ -30,7 +30,7 @@ export function SemanticMappingCanvas({ bundle, selectedEntityId, onSelectEntity
       </div>
       <div className="min-h-0 flex-1 overflow-auto p-4">
         <div className="grid min-w-[1080px] grid-cols-5 rounded-lg border border-slate-200 bg-white py-3 shadow-sm">
-          {semanticLaneDefinitions.map((lane) => {
+          {lanes.map((lane) => {
             const laneEntities = entities.filter((entity) => getSemanticLaneId(entity) === lane.id);
             const relationLabels = Array.from(new Set(mappings.filter((mapping) => mapping && laneEntities.some((entity) => entity.id === mapping.targetId)).map((mapping) => mapping!.label)));
             return <SemanticMappingLane key={lane.id} laneId={lane.id} label={lane.label} description={lane.description} entities={laneEntities} selectedEntityId={selectedEntityId} relatedEntityIds={relatedIds} relationLabels={relationLabels} onSelect={onSelectEntity} />;
@@ -40,4 +40,3 @@ export function SemanticMappingCanvas({ bundle, selectedEntityId, onSelectEntity
     </div>
   );
 }
-

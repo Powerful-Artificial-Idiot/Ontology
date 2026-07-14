@@ -1,5 +1,5 @@
 {
-  "metadata": { "contractVersion": "1.0.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-value-stream-001", "generatedAt": "2026-07-14T00:00:00Z" },
+  "metadata": { "contractVersion": "1.1.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-value-stream-001", "generatedAt": "2026-07-14T00:00:00Z" },
   "entities": [
     { "id": "operation:op30", "iri": "https://example.com/mkg/demo#OP30", "type": "mfg:Operation", "label": "OP30 Leak Test", "domain": "production", "properties": { "cycleTimeSeconds": 42 }, "status": "active" },
     { "id": "wip:op30", "iri": "https://example.com/mkg/demo#WIPOP30", "type": "mfg:Material", "label": "Tested Booster WIP", "domain": "valueStream", "properties": { "quantity": 20, "waitingTimeMinutes": 8 }, "status": "active" }

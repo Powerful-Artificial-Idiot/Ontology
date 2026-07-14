@@ -106,7 +106,7 @@ SHACL valid fixtures must pass and files under `examples/invalid` must fail. Fro
 - Shared contracts: `packages/knowledge-contracts`.
 - Contract-aligned API fixtures: `packages/demo-data`.
 
-Migration is incremental. Stable page components continue to receive existing structures while repository adapters expose `KnowledgeEntity`, `KnowledgeRelation`, `GraphNode`, `GraphEdge`, ontology, and semantic-search contracts.
+Migration is incremental. Stable page components continue to receive existing structures while repository adapters expose `KnowledgeEntity`, `KnowledgeRelation`, `GraphNode`, `GraphEdge`, ontology, Semantic Catalog, and semantic-search contracts.
 
 ## Extending the Knowledge Model
 
@@ -148,7 +148,7 @@ Versions are independent:
 - Demo App: `0.1.0`
 - Ontology: `1.1.0`
 - Demo Dataset: `0.5.0`
-- Knowledge Contract: `1.0.0`
+- Knowledge Contract: `1.1.0`
 
 `make build` creates:
 

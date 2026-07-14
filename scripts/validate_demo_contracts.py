@@ -12,7 +12,9 @@ from common import ROOT, expand_curie, load_ontology_graph, ontology_terms
 
 
 def load_schema(name: str) -> dict:
-    return json.loads((ROOT / "packages" / "knowledge-contracts" / "schemas" / name).read_text())
+    schema = json.loads((ROOT / "packages" / "knowledge-contracts" / "schemas" / name).read_text())
+    Draft202012Validator.check_schema(schema)
+    return schema
 
 
 def schema_registry(schemas: list[dict]) -> Registry:
@@ -27,7 +29,7 @@ def validate_json(payload: object, schema: dict, registry: Registry, label: str)
 
 
 def main() -> int:
-    schemas = [load_schema(name) for name in ("knowledge-entity.schema.json", "knowledge-relation.schema.json", "graph-view.schema.json", "ontology-graph.schema.json", "semantic-search.schema.json")]
+    schemas = [load_schema(name) for name in ("knowledge-entity.schema.json", "knowledge-relation.schema.json", "graph-view.schema.json", "ontology-graph.schema.json", "semantic-search.schema.json", "semantic-catalog.schema.json")]
     registry = schema_registry(schemas)
     by_title = {schema["title"]: schema for schema in schemas}
     manifest = json.loads((ROOT / "packages" / "demo-data" / "manifest.json").read_text())

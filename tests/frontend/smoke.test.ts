@@ -9,4 +9,13 @@ describe("frontend smoke baseline", () => {
     expect(app).toContain("SemanticExplorerPage");
     expect(existsSync("index.html")).toBe(true);
   });
+
+  it("keeps Semantic Explorer behind the repository boundary", () => {
+    const page = readFileSync("src/features/semantic/SemanticExplorerPage.tsx", "utf8");
+    expect(page).toContain("getSemanticCatalog");
+    expect(page).toContain("Loading semantic catalog");
+    expect(page).toContain("Semantic catalog is empty");
+    expect(page).toContain("Semantic catalog unavailable");
+    expect(page).not.toContain("legacyDemoData");
+  });
 });

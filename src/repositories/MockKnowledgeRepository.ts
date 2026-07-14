@@ -7,14 +7,23 @@ import type {
   KnowledgeRepository,
   OntologyGraphRequest,
   OntologyGraphResponse,
+  SemanticCatalogResponse,
   SemanticSearchRequest,
   SemanticSearchResponse,
 } from "../../packages/knowledge-contracts/src/index";
-import { searchSemanticCatalog } from "../features/semantic/semanticUtils";
-import { graphEdges, ontologyLinkTypes, ontologyObjectTypes, semanticEntities, stackNodes } from "./legacyDemoData";
+import { searchSemanticCatalog, semanticLaneDefinitions } from "../features/semantic/semanticUtils";
+import {
+  graphEdges,
+  ontologyLinkTypes,
+  ontologyObjectTypes,
+  semanticConceptBundles,
+  semanticEntities,
+  semanticMappings,
+  stackNodes,
+} from "./legacyDemoData";
 
 const metadata = (): ContractMetadata => ({
-  contractVersion: "1.0.0",
+  contractVersion: "1.1.0",
   ontologyVersion: "1.1.0",
   dataVersion: "0.5.0",
   traceId: `mock-${Date.now()}`,
@@ -67,6 +76,16 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
       classes: ontologyObjectTypes.map((object) => ({ iri: `https://example.com/mkg/${object.id}`, name: object.id, label: object.label, description: object.description, module: object.domain, version: "1.1.0", properties: object.properties.map((property) => ({ iri: `https://example.com/mkg/${object.id}/${property.id}`, required: property.required })) })),
       properties: ontologyObjectTypes.flatMap((object) => object.properties.map((property) => ({ iri: `https://example.com/mkg/${object.id}/${property.id}`, name: property.id, label: property.label, propertyType: property.dataType === "reference" ? "object" as const : "datatype" as const, domain: [`https://example.com/mkg/${object.id}`], description: property.description }))),
       relations: ontologyLinkTypes.map((edge) => ({ id: edge.id, sourceId: edge.sourceObjectType, targetId: edge.targetObjectType, predicate: edge.id, label: edge.label })),
+    };
+  }
+
+  async getSemanticCatalog(): Promise<SemanticCatalogResponse> {
+    return {
+      metadata: metadata(),
+      lanes: semanticLaneDefinitions,
+      concepts: semanticConceptBundles,
+      entities: semanticEntities,
+      mappings: semanticMappings,
     };
   }
 

@@ -144,10 +144,75 @@ export type SemanticSearchResponse = {
   total: number;
 };
 
+export type SemanticCatalogLane = {
+  id: "business" | "ontology" | "system" | "evidence" | "ai";
+  label: string;
+  description: string;
+};
+
+export type SemanticCatalogEntity = {
+  id: string;
+  conceptId: string;
+  label: string;
+  type: string;
+  domain: string;
+  description: string;
+  aliases?: string[];
+  examples?: string[];
+  owner?: string;
+  status?: string;
+  confidence?: string;
+  sourceSystems?: string[];
+  sourceDocuments?: string[];
+  unit?: string;
+  dataType?: string;
+  attributes?: Record<string, string>;
+  relatedOntologyObjects?: string[];
+  usedInRouteExplorer?: string[];
+};
+
+export type SemanticCatalogMapping = {
+  id: string;
+  conceptId: string;
+  sourceId: string;
+  targetId: string;
+  relation: string;
+  label: string;
+  description: string;
+  confidence?: string;
+};
+
+export type SemanticCatalogConcept = {
+  id: string;
+  primaryTermId: string;
+  title: string;
+  domain: string;
+  summary: string;
+  entityIds: string[];
+  mappingIds: string[];
+  aiContext: {
+    resolvedMeaning: string;
+    relevantObjects: string[];
+    availableActions: string[];
+    promptContext: string;
+    ambiguityNotes?: string[];
+    evidenceCoverage: string;
+  };
+};
+
+export type SemanticCatalogResponse = {
+  metadata: ContractMetadata;
+  lanes: SemanticCatalogLane[];
+  concepts: SemanticCatalogConcept[];
+  entities: SemanticCatalogEntity[];
+  mappings: SemanticCatalogMapping[];
+};
+
 export interface KnowledgeRepository {
   getGraphView(request: GraphViewRequest): Promise<GraphViewResponse>;
   getEntityById(id: string): Promise<KnowledgeEntity | null>;
   getOntologyGraph(request: OntologyGraphRequest): Promise<OntologyGraphResponse>;
+  getSemanticCatalog(): Promise<SemanticCatalogResponse>;
   searchSemantic(request: SemanticSearchRequest): Promise<SemanticSearchResponse>;
   getEntityRelations(id: string): Promise<KnowledgeRelation[]>;
 }

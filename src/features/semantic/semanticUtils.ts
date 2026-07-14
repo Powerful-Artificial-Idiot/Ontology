@@ -17,8 +17,8 @@ export function getSemanticLaneId(entity: SemanticEntity): SemanticLaneId {
   return "ai";
 }
 
-export function getBundleEntities(bundle: SemanticConceptBundle) {
-  return bundle.entityIds.map((id) => semanticEntityById.get(id)).filter((entity): entity is SemanticEntity => Boolean(entity));
+export function getBundleEntities(bundle: SemanticConceptBundle, entitiesById = semanticEntityById) {
+  return bundle.entityIds.map((id) => entitiesById.get(id)).filter((entity): entity is SemanticEntity => Boolean(entity));
 }
 
 export function searchSemanticCatalog(keyword: string): SemanticSearchMatch[] {
@@ -61,7 +61,7 @@ export function searchSemanticCatalog(keyword: string): SemanticSearchMatch[] {
 
 export const searchGroupOrder: SemanticSearchMatch["group"][] = ["Business Terms", "Synonyms", "Metrics", "System Fields", "Evidence Documents", "AI Context"];
 
-function getSearchGroup(entity: SemanticEntity): SemanticSearchMatch["group"] {
+export function getSearchGroup(entity: SemanticEntity): SemanticSearchMatch["group"] {
   if (entity.type === "synonym") return "Synonyms";
   if (entity.type === "metric") return "Metrics";
   if (entity.type === "systemField") return "System Fields";

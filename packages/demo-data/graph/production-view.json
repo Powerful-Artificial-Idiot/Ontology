@@ -1,5 +1,5 @@
 {
-  "metadata": { "contractVersion": "1.0.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-production-001", "generatedAt": "2026-07-14T00:00:00Z" },
+  "metadata": { "contractVersion": "1.1.0", "ontologyVersion": "1.1.0", "dataVersion": "0.5.0", "traceId": "fixture-production-001", "generatedAt": "2026-07-14T00:00:00Z" },
   "entities": [
     { "id": "product:brake-booster", "iri": "https://example.com/mkg/demo#BrakeBooster", "type": "mfg:Product", "label": "FP-001 Brake Booster Assembly", "domain": "production", "properties": { "partNumber": "FP-001" }, "version": "A", "status": "active" },
     { "id": "operation:op30", "iri": "https://example.com/mkg/demo#OP30", "type": "mfg:Operation", "label": "OP30 Leak Test", "domain": "production", "properties": { "cycleTimeSeconds": 42 }, "source": [{ "sourceType": "master-data", "sourceId": "OP30", "sourceSystem": "MES", "recordedAt": "2026-07-14T00:00:00Z" }], "version": "3.4", "status": "active" },

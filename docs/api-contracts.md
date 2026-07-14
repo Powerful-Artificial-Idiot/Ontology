@@ -1,6 +1,6 @@
 # Knowledge API Contracts
 
-Contract version: `1.0.0`. Formal TypeScript and JSON Schema definitions live in `packages/knowledge-contracts`.
+Contract version: `1.1.0`. Formal TypeScript and JSON Schema definitions live in `packages/knowledge-contracts`.
 
 ## Common Metadata
 
@@ -36,6 +36,10 @@ Returns `OntologyGraphResponse`. Parameters: `domain`, `version`.
 
 Request fields: `query`, optional `domain`, `limit`, and `asOf`. Returns ranked `SemanticSearchResult` values with matched concepts, relations, explanation, and evidence.
 
+### `GET /api/semantic/catalog`
+
+Returns the governed Semantic Explorer lanes, concept bundles, semantic entities, and mappings. Canvas layout remains a frontend concern.
+
 ## Error Response
 
 ```json
@@ -57,4 +61,4 @@ Collection endpoints use opaque cursor pagination with a server-capped `limit`. 
 
 ## Replacing Mock Data
 
-The frontend currently instantiates `MockKnowledgeRepository`. Production configuration will instantiate `HttpKnowledgeRepository` with the API base URL. Page components remain unchanged; loading, error, authorization, and retry states must be added before pilot deployment.
+The frontend currently instantiates `MockKnowledgeRepository`. Production configuration will instantiate `HttpKnowledgeRepository` with the API base URL. Semantic Explorer already handles loading, empty, invalid, version-mismatch, error, and retry states; the same state model will be applied as the remaining pages migrate.

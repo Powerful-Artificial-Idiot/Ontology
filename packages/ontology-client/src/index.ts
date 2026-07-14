@@ -6,6 +6,7 @@ import type {
   KnowledgeRepository,
   OntologyGraphRequest,
   OntologyGraphResponse,
+  SemanticCatalogResponse,
   SemanticSearchRequest,
   SemanticSearchResponse,
 } from "../../knowledge-contracts/src/index";
@@ -26,6 +27,10 @@ export class HttpKnowledgeRepository implements KnowledgeRepository {
 
   getOntologyGraph(request: OntologyGraphRequest) {
     return this.get<OntologyGraphResponse>("/ontology/graph", request);
+  }
+
+  getSemanticCatalog() {
+    return this.get<SemanticCatalogResponse>("/semantic/catalog");
   }
 
   searchSemantic(request: SemanticSearchRequest) {
