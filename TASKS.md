@@ -93,7 +93,7 @@
 
 ## P1-05 Support local and HTTP repository modes
 
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Dependencies: P1-04
 - Scope: Centralize repository creation, source selection, base URL, timeout, version checks, validation, and errors.
@@ -106,7 +106,7 @@
 
 ## P1-06 Generate one Semantic scenario from CQ-004
 
-- Status: TODO
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: P1-01
 - Scope: Convert CQ-004 SPARQL results into a provenance-aware `SemanticSearchResponse` artifact.

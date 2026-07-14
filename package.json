@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "dev:local": "VITE_KNOWLEDGE_MODE=local vite --host 0.0.0.0",
+    "dev:http": "VITE_KNOWLEDGE_MODE=http VITE_KNOWLEDGE_API_BASE_URL=http://127.0.0.1:4174/api vite --host 0.0.0.0",
     "build": "npm run typecheck && vite build",
     "build:release": "python3 scripts/build_release.py",
     "preview": "vite preview --host 0.0.0.0",

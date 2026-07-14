@@ -26,6 +26,15 @@ make demo-build
 
 The original commands remain available: `npm run dev`, `npm run build`, and `npm run preview`.
 
+Repository-specific frontend commands:
+
+```bash
+make demo-dev-local
+make demo-dev-http
+```
+
+HTTP mode expects the Mock Knowledge API on port `4174`. Source selection, base URL, timeout, and version policy are centralized in `src/repositories/index.ts`; Explorer pages do not read Vite environment variables.
+
 ## Knowledge Assets
 
 ```bash
