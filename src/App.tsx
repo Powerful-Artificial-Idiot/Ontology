@@ -19,6 +19,7 @@ import { LeftSidebar } from "./components/LeftSidebar";
 import { StackNode as StackNodeComponent } from "./components/StackNode";
 import { buildRouteGraphFromResponse, type RouteGraphViewModel } from "./features/route/routeRepositoryAdapter";
 import { knowledgeRepository, type KnowledgeRepository } from "./repositories";
+import { buildExplorerUrl, pageRoute, parseExplorerLocation, type ExplorerRoute } from "./router/explorerRouter";
 import {
   getFocusedGraphElements,
   getNodeByObjectId,
@@ -44,30 +45,52 @@ const edgeTypes = {
 };
 
 export default function App() {
-  const [activePage, setActivePage] = useState<AppPage>("route");
+  const [route, setRoute] = useState<ExplorerRoute>(() => parseExplorerLocation(window.location));
 
-  if (activePage === "route") return (
+  useEffect(() => {
+    const handlePopState = () => setRoute(parseExplorerLocation(window.location));
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const navigate = useCallback((nextRoute: ExplorerRoute, replace = false) => {
+    const url = buildExplorerUrl(nextRoute);
+    window.history[replace ? "replaceState" : "pushState"]({}, "", url);
+    setRoute(nextRoute);
+  }, []);
+  const handlePageChange = useCallback((page: AppPage) => navigate(pageRoute(page)), [navigate]);
+
+  if (route.page === "route") return (
     <ReactFlowProvider key="route-flow">
-        <GraphExplorer activePage={activePage} onPageChange={setActivePage} />
+        <GraphExplorer
+          activePage="route"
+          onPageChange={handlePageChange}
+          route={route}
+          onRouteChange={navigate}
+        />
     </ReactFlowProvider>
   );
 
-  if (activePage === "ontology") return (
+  if (route.page === "ontology") return (
     <ReactFlowProvider key="ontology-flow">
-        <OntologyExplorer activePage={activePage} onPageChange={setActivePage} />
+        <OntologyExplorer activePage="ontology" onPageChange={handlePageChange} />
     </ReactFlowProvider>
   );
 
-  return <SemanticExplorerPage activePage={activePage} onPageChange={setActivePage} />;
+  return <SemanticExplorerPage activePage="semantic" onPageChange={handlePageChange} />;
 }
 
 function GraphExplorer({
   activePage,
   onPageChange,
+  route,
+  onRouteChange,
   repository = knowledgeRepository,
 }: {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
+  route: ExplorerRoute;
+  onRouteChange: (route: ExplorerRoute, replace?: boolean) => void;
   repository?: KnowledgeRepository;
 }) {
   const [loadRequest, setLoadRequest] = useState(0);
@@ -125,6 +148,8 @@ function GraphExplorer({
       activePage={activePage}
       onPageChange={onPageChange}
       routeGraphs={routeState.graphs}
+      route={route}
+      onRouteChange={onRouteChange}
     />
   );
 }
@@ -135,18 +160,22 @@ function GraphExplorerCanvas({
   activePage,
   onPageChange,
   routeGraphs,
+  route,
+  onRouteChange,
 }: {
   activePage: AppPage;
   onPageChange: (page: AppPage) => void;
   routeGraphs: Record<ViewMode, RouteGraphViewModel>;
+  route: ExplorerRoute;
+  onRouteChange: (route: ExplorerRoute, replace?: boolean) => void;
 }) {
   const reactFlow = useReactFlow();
-  const [viewMode, setViewMode] = useState<ViewMode>("production");
+  const [viewMode, setViewMode] = useState<ViewMode>(route.viewMode ?? "production");
   const [expandedNodeId, setExpandedNodeId] = useState<string | null>(null);
   const [focusMode, setFocusMode] = useState(false);
-  const [selectedNodeId, setSelectedNodeId] = useState<string>("OP30");
+  const [selectedNodeId, setSelectedNodeId] = useState<string>(route.selectedEntityId ?? "OP30");
   const [selectedObjectId, setSelectedObjectId] = useState<string>("obj-op30-operation");
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState(route.query ?? "");
   const [activeCategory, setActiveCategory] = useState<StackObjectType>("Machine");
   const [activeRouteLane, setActiveRouteLane] = useState<RouteLaneId | null>(null);
   const [sidebarScrollRequest, setSidebarScrollRequest] = useState(0);
@@ -181,6 +210,26 @@ function GraphExplorerCanvas({
   const selectedObject = selectedObjectId ? selectStackObject(viewVisibleNodes, selectedObjectId)?.object : undefined;
   const expandedNode = expandedNodeId ? viewVisibleNodes.find((node) => node.id === expandedNodeId) : undefined;
   const expandedTopObject = expandedNode ? getTopObject(expandedNode, viewMode) : undefined;
+
+  useEffect(() => {
+    const nextView = route.viewMode ?? "production";
+    setViewMode(nextView);
+    setSearchKeyword(route.query ?? "");
+    const nextNodes = routeGraphs[nextView].nodes;
+    const requestedNode = route.selectedEntityId
+      ? nextNodes.find((node) => node.id === route.selectedEntityId)
+      : undefined;
+    const nextNode = requestedNode ?? nextNodes.find((node) => node.id === "OP30") ?? nextNodes[0];
+    if (nextNode) {
+      setSelectedNodeId(nextNode.id);
+      setSelectedObjectId(getTopObject(nextNode, nextView).id);
+    }
+    const focusNode = route.focusEntityId
+      ? nextNodes.find((node) => node.id === route.focusEntityId)
+      : undefined;
+    setExpandedNodeId(focusNode?.id ?? null);
+    setFocusMode(Boolean(focusNode));
+  }, [route.focusEntityId, route.query, route.selectedEntityId, route.viewMode, routeGraphs]);
 
   const neighborhood = useMemo(() => {
     if (!selectedNodeId) {
@@ -223,6 +272,7 @@ function GraphExplorerCanvas({
     (nodeId: string) => {
       if (focusMode && expandedNodeId === nodeId) {
         exitFocusMode();
+        onRouteChange({ ...route, page: "route", viewMode, selectedEntityId: nodeId, focusEntityId: undefined });
         return;
       }
 
@@ -235,8 +285,9 @@ function GraphExplorerCanvas({
       setFocusMode(true);
       setSelectedNodeId(nodeId);
       setSelectedObjectId(getTopObject(node, viewMode).id);
+      onRouteChange({ ...route, page: "route", viewMode, selectedEntityId: nodeId, focusEntityId: nodeId });
     },
-    [expandedNodeId, exitFocusMode, focusMode, viewMode, viewVisibleNodes],
+    [expandedNodeId, exitFocusMode, focusMode, onRouteChange, route, viewMode, viewVisibleNodes],
   );
 
   const handleSelectNode = useCallback(
@@ -249,8 +300,9 @@ function GraphExplorerCanvas({
       setSelectedNodeId(nodeId);
       setSelectedObjectId(objectId ?? getTopObject(node, viewMode).id);
       setActiveRouteLane(null);
+      onRouteChange({ ...route, page: "route", viewMode, selectedEntityId: nodeId });
     },
-    [viewMode, viewVisibleNodes],
+    [onRouteChange, route, viewMode, viewVisibleNodes],
   );
 
   const handleSelectStackObject = useCallback(
@@ -271,12 +323,14 @@ function GraphExplorerCanvas({
     setActiveRouteLane(null);
     setSelectedNodeId(match.node.id);
     setSelectedObjectId(objectId);
-  }, [exitFocusMode, viewVisibleNodes]);
+    onRouteChange({ ...route, page: "route", viewMode, selectedEntityId: match.node.id, focusEntityId: undefined });
+  }, [exitFocusMode, onRouteChange, route, viewMode, viewVisibleNodes]);
 
   const handleSearchChange = useCallback((keyword: string) => {
     setSearchKeyword(keyword);
     const result = searchGraph(viewVisibleNodes, keyword);
     if (result.nodeIds.length === 0) {
+      onRouteChange({ ...route, page: "route", viewMode, query: keyword || undefined }, true);
       return;
     }
 
@@ -294,7 +348,8 @@ function GraphExplorerCanvas({
         setSelectedObjectId(getTopObject(node, viewMode).id);
       }
     }
-  }, [exitFocusMode, viewMode, viewVisibleNodes]);
+    onRouteChange({ ...route, page: "route", viewMode, query: keyword || undefined, selectedEntityId: nodeId, focusEntityId: undefined }, true);
+  }, [exitFocusMode, onRouteChange, route, viewMode, viewVisibleNodes]);
 
   useEffect(() => {
     if (selectedNode) {
@@ -453,6 +508,7 @@ function GraphExplorerCanvas({
             setSelectedNodeId(nextSelectedNode.id);
             setSelectedObjectId(getTopObject(nextSelectedNode, nextView).id);
           }
+          onRouteChange({ page: "route", viewMode: nextView, selectedEntityId: nextSelectedNode?.id });
         }}
         onSearchChange={handleSearchChange}
       />
@@ -485,7 +541,14 @@ function GraphExplorerCanvas({
             )}
           </div>
           {focusMode && expandedNode && expandedTopObject && (
-            <FocusModeBar label={expandedTopObject.label} onFitVisible={handleFitVisible} onExit={exitFocusMode} />
+            <FocusModeBar
+              label={expandedTopObject.label}
+              onFitVisible={handleFitVisible}
+              onExit={() => {
+                exitFocusMode();
+                onRouteChange({ ...route, page: "route", viewMode, selectedEntityId: selectedNodeId, focusEntityId: undefined });
+              }}
+            />
           )}
           <ReactFlow
             nodes={flowNodes}

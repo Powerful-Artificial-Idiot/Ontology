@@ -145,7 +145,7 @@
 
 ## P2-01 Add page-level URL routing
 
-- Status: TODO
+- Status: DONE
 - Priority: P2
 - Dependencies: P1 completion gate
 - Scope: Add restorable page, view, scenario, selection, query, and focus URLs without visual changes.
