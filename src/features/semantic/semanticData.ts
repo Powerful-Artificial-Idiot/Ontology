@@ -6,6 +6,7 @@ import type {
   SemanticMapping,
   SemanticRelation,
 } from "./semanticTypes";
+import { knowledgeIds } from "../../data/mockKnowledgeRegistry/ids";
 
 interface ConceptDefinition {
   id: string;
@@ -74,7 +75,7 @@ const definitions: ConceptDefinition[] = [
     evidence: [
       { label: "Control Plan CP-BB01 Rev.A", documentType: "Control Plan", version: "Rev.A", system: "QMS" },
       { label: "PFMEA PF-BB01 Rev.B", documentType: "PFMEA", version: "Rev.B", system: "QMS" },
-      { label: "SOP OP30 Leak Test", documentType: "SOP", version: "Rev.C", system: "DMS" },
+      { label: "SOP OP30 Leak Test", documentType: "SOP", version: "Rev.3", system: "DMS" },
     ],
     metric: "Leak Test Result",
     owner: "Quality Engineering",
@@ -163,6 +164,54 @@ const definitions: ConceptDefinition[] = [
     promptContext: "Resolve WIP as work-in-process inventory, retaining the operation boundary, timestamp, unit and lot scope. Do not treat finished goods inventory as WIP.",
   },
   {
+    id: "engineering-change",
+    title: "Engineering Change",
+    domain: "engineering",
+    summary: "Governed modification to released equipment, software, parameters or documents.",
+    aliases: ["Change Request", "ECN", "Program Change"],
+    ontology: [{ label: "EngineeringChange.affects", type: "ontologyRelationship" }, { label: "Program.requiresValidation", type: "ontologyRelationship" }],
+    fields: [{ label: "PLM.change_request.id", system: "PLM", dataType: "string", refresh: "On change" }, { label: "PLM.change_request.status", system: "PLM", dataType: "enum", refresh: "On approval" }],
+    evidence: [{ label: "Engineering Change Request M220 Program", documentType: "Engineering Change Request", version: "ECR-01", system: "PLM" }],
+    owner: "Manufacturing Engineering",
+    routeUsage: ["Engineering View change-impact analysis"],
+    resolvedMeaning: "Controlled change request with explicit affected objects, validation scope and release approval.",
+    relevantObjects: ["Machine", "Program", "Operation", "Validation Record"],
+    actions: ["Trace affected objects", "Find validation requirements", "Assess release conditions"],
+    promptContext: "Resolve engineering change to the governed change request and traverse only approved affects and requiresValidation relations.",
+  },
+  {
+    id: "program-version",
+    title: "Program Version",
+    domain: "engineering",
+    summary: "Released or proposed revision identifier for a machine or inspection program.",
+    aliases: ["Software Version", "Recipe Version", "Program Revision"],
+    ontology: [{ label: "Program.version", type: "ontologyProperty" }, { label: "Operation.usesProgram", type: "ontologyRelationship" }],
+    fields: [{ label: "MES.equipment_program.version", system: "MES", dataType: "string", refresh: "Per deployment" }, { label: "PLC.program_checksum", system: "Equipment Controller", dataType: "string", refresh: "Per deployment" }],
+    evidence: [{ label: "Engineering Change Request M220 Program", documentType: "Engineering Change Request", version: "ECR-01", system: "PLM" }, { label: "Validation Record M220 Program V3.5", documentType: "Validation Record", version: "Draft 1", system: "Validation Repository" }],
+    owner: "Controls Engineering",
+    routeUsage: ["Engineering View program object"],
+    resolvedMeaning: "The exact governed program revision deployed or proposed for a manufacturing resource.",
+    relevantObjects: ["Program", "Machine", "Operation", "Engineering Change"],
+    actions: ["Compare program revisions", "Verify checksum", "Trace deployment scope"],
+    promptContext: "Retain both current and proposed program versions and require controlled validation before treating a proposed version as released.",
+  },
+  {
+    id: "validation",
+    title: "Validation",
+    domain: "engineering",
+    summary: "Documented evidence that a changed process remains fit for controlled release.",
+    aliases: ["Revalidation", "Verification Run", "Release Validation"],
+    ontology: [{ label: "Program.requiresValidation", type: "ontologyRelationship" }, { label: "ValidationRecord.approvalStatus", type: "ontologyProperty" }],
+    fields: [{ label: "QMS.validation_record.status", system: "QMS", dataType: "enum", refresh: "On approval" }, { label: "MES.validation_trial.batch", system: "MES", dataType: "string", refresh: "Per trial" }],
+    evidence: [{ label: "Validation Record M220 Program V3.5", documentType: "Validation Record", version: "Draft 1", system: "Validation Repository" }],
+    owner: "Process Engineering / Quality",
+    routeUsage: ["Engineering View release evidence"],
+    resolvedMeaning: "Controlled verification package linking trial results, acceptance criteria and accountable approval.",
+    relevantObjects: ["Validation Record", "Program", "Machine", "Quality Characteristic"],
+    actions: ["Find required tests", "Check approval status", "Trace trial genealogy"],
+    promptContext: "Resolve validation to an evidence record; do not infer release approval from a draft or failed result.",
+  },
+  {
     id: "lead-time",
     title: "Lead Time",
     domain: "valueStream",
@@ -207,8 +256,33 @@ const entities: SemanticEntity[] = [];
 const mappings: SemanticMapping[] = [];
 const bundles: SemanticConceptBundle[] = [];
 
+const canonicalPrimaryTermIds: Record<string, string> = {
+  "leak-rate": knowledgeIds.semantic.leakRate,
+  "cycle-time": knowledgeIds.semantic.cycleTime,
+  ctq: knowledgeIds.semantic.ctq,
+  bottleneck: knowledgeIds.semantic.bottleneck,
+  wip: knowledgeIds.semantic.wip,
+  "engineering-change": knowledgeIds.semantic.engineeringChange,
+  "program-version": knowledgeIds.semantic.programVersion,
+  validation: knowledgeIds.semantic.validation,
+};
+
+const canonicalAliasIds: Record<string, string> = {
+  "Air Leak": knowledgeIds.semantic.airLeak,
+  Leakage: knowledgeIds.semantic.leakage,
+  "Leak Test Result": knowledgeIds.semantic.leakTestResult,
+};
+
+const canonicalFieldIds: Record<string, string> = {
+  "QMS.inspection_result.leak_rate": knowledgeIds.semantic.qmsLeakRate,
+  "MES.op30_test_value": knowledgeIds.semantic.mesOp30Value,
+  "MES.operation_cycle_time": knowledgeIds.semantic.mesOperationCycleTime,
+  "MES.wip_quantity": knowledgeIds.semantic.mesWipQuantity,
+  "IE.line_balance_result": knowledgeIds.semantic.ieLineBalanceResult,
+};
+
 definitions.forEach((definition) => {
-  const primaryId = `${definition.id}-term`;
+  const primaryId = canonicalPrimaryTermIds[definition.id] ?? `${definition.id}-term`;
   const entityIds: string[] = [];
   const mappingIds: string[] = [];
   const addEntity = (entity: Omit<SemanticEntity, "conceptId">) => {
@@ -224,7 +298,7 @@ definitions.forEach((definition) => {
   addEntity({ id: primaryId, label: definition.title, type: "businessTerm", domain: definition.domain, description: definition.summary, aliases: definition.aliases, owner: definition.owner, status: "approved", confidence: "approved", relatedOntologyObjects: definition.relevantObjects, usedInRouteExplorer: definition.routeUsage });
 
   definition.aliases.forEach((alias, index) => {
-    const id = `${definition.id}-alias-${index + 1}`;
+    const id = canonicalAliasIds[alias] ?? `${definition.id}-alias-${index + 1}`;
     addEntity({ id, label: alias, type: "synonym", domain: definition.domain, description: `Accepted business-language alias for ${definition.title}.`, owner: definition.owner, status: "reviewed", confidence: index === 0 ? "high" : "medium", examples: definition.ambiguityNotes });
     addMapping(id, primaryId, "synonymOf", "synonymOf");
   });
@@ -244,7 +318,7 @@ definitions.forEach((definition) => {
   });
 
   const fieldIds = definition.fields.map((field, index) => {
-    const id = `${definition.id}-field-${index + 1}`;
+    const id = canonicalFieldIds[field.label] ?? `${definition.id}-field-${index + 1}`;
     addEntity({ id, label: field.label, type: "systemField", domain: definition.domain, description: `${field.system} field mapped to ${definition.title}.`, owner: definition.owner, status: "approved", confidence: "high", sourceSystems: [field.system], dataType: field.dataType, unit: field.unit, attributes: { "Refresh Frequency": field.refresh ?? "On change", "Mapped Term": definition.title } });
     addMapping(ontologyIds[index % ontologyIds.length], id, "storedIn", "storedIn");
     return id;

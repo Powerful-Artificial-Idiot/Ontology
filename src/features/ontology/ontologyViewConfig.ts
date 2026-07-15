@@ -1,4 +1,9 @@
+import { knowledgeIds } from "../../data/mockKnowledgeRegistry/ids";
+
 export const ontologyClassCurieByViewType: Record<string, string> = {
+  [knowledgeIds.ontology.controlPlan]: "qual:ControlPlanVersion",
+  [knowledgeIds.ontology.pfmea]: "app:QualityRisk",
+  [knowledgeIds.ontology.sop]: "core:Document",
   Product: "mfg:Product",
   Material: "mfg:Material",
   Component: "mfg:Material",
@@ -28,6 +33,16 @@ export const ontologyClassCurieByViewType: Record<string, string> = {
 };
 
 export const ontologyRelationCurieByViewLink: Record<string, string> = {
+  [knowledgeIds.ontology.nextOperation]: "mfg:flowsTo",
+  [knowledgeIds.ontology.performedOn]: "mfg:executedBy",
+  [knowledgeIds.ontology.usesProgram]: "mfg:usesParameter",
+  [knowledgeIds.ontology.controls]: "qual:controlsCharacteristic",
+  [knowledgeIds.ontology.governedBy]: "mfg:flowsTo",
+  [knowledgeIds.ontology.riskAnalyzedBy]: "mfg:flowsTo",
+  [knowledgeIds.ontology.describedBy]: "mfg:flowsTo",
+  [knowledgeIds.ontology.contributesTo]: "mfg:flowsTo",
+  [knowledgeIds.ontology.affects]: "mfg:flowsTo",
+  [knowledgeIds.ontology.requiresValidation]: "mfg:flowsTo",
   "link-product-requires-operation": "mfg:requiresOperation",
   "link-product-has-route": "mfg:flowsTo",
   "link-route-contains-operation": "mfg:flowsTo",

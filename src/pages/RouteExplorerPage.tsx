@@ -149,7 +149,7 @@ function GraphExplorerCanvas({
   const [expandedNodeId, setExpandedNodeId] = useState<string | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string>(route.selectedEntityId ?? "OP30");
-  const [selectedObjectId, setSelectedObjectId] = useState<string>("obj-op30-operation");
+  const [selectedObjectId, setSelectedObjectId] = useState<string>("operation.op30-leak-test");
   const [searchKeyword, setSearchKeyword] = useState(route.query ?? "");
   const [activeCategory, setActiveCategory] = useState<StackObjectType>("Machine");
   const [activeRouteLane, setActiveRouteLane] = useState<RouteLaneId | null>(null);

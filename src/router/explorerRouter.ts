@@ -59,6 +59,10 @@ export function parseExplorerLocation(input: Pick<Location, "pathname" | "search
     }
     return { page: "semantic", invalidPath: input.pathname, ...shared };
   }
+  if (segments[0] === "agent") {
+    if (segments.length === 1) return { page: "agent", ...shared };
+    return { page: "agent", invalidPath: input.pathname, ...shared };
+  }
   return { page: "route", viewMode: "production", invalidPath: input.pathname, ...shared };
 }
 
@@ -68,9 +72,10 @@ export function buildExplorerUrl(route: ExplorerRoute): string {
   else if (route.page === "ontology" && route.ontologyTarget) {
     pathname = `/ontology/${route.ontologyTarget.kind === "class" ? "classes" : "properties"}/${encodeURIComponent(route.ontologyTarget.id)}`;
   } else if (route.page === "ontology") pathname = "/ontology";
-  else if (route.semanticTarget) {
+  else if (route.page === "semantic" && route.semanticTarget) {
     pathname = `/semantic/${route.semanticTarget.kind === "scenario" ? "scenarios" : "entities"}/${encodeURIComponent(route.semanticTarget.id)}`;
-  } else pathname = "/semantic";
+  } else if (route.page === "semantic") pathname = "/semantic";
+  else pathname = "/agent";
 
   const params = new URLSearchParams();
   if (route.selectedEntityId) params.set("selected", route.selectedEntityId);

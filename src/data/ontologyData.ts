@@ -5,6 +5,7 @@ import type {
   OntologyObjectType,
   OntologyProperty,
 } from "../types";
+import { knowledgeIds } from "./mockKnowledgeRegistry/ids";
 
 function property(
   name: string,
@@ -543,6 +544,36 @@ export const ontologyObjectTypes: OntologyObjectType[] = [
     ["Manufacturing Engineering"],
     ["Source-mapped"],
   ),
+  objectType(
+    knowledgeIds.ontology.controlPlan,
+    "Control Plan",
+    "quality",
+    "Canonical governed control-plan document type used by Agent and Quality View evidence.",
+    ["QMS"],
+    [property("controlPlanItemId", "string", "Control plan identifier.", { example: "CP-BB01" }), property("version", "string", "Released revision.", { example: "Rev.A" })],
+    ["Control Plan CP-BB01 Rev.A"],
+    ["Canonical", "Source-mapped"],
+  ),
+  objectType(
+    knowledgeIds.ontology.pfmea,
+    "PFMEA",
+    "quality",
+    "Canonical PFMEA evidence type used for process-risk analysis.",
+    ["QMS"],
+    [property("riskId", "string", "PFMEA identifier.", { example: "PF-BB01" }), property("version", "string", "Released revision.", { example: "Rev.B" })],
+    ["PFMEA PF-BB01 Rev.B"],
+    ["Canonical", "Source-mapped"],
+  ),
+  objectType(
+    knowledgeIds.ontology.sop,
+    "SOP",
+    "engineering",
+    "Canonical standard operating procedure type describing operation execution.",
+    ["Document Library"],
+    [property("documentId", "string", "SOP identifier.", { example: "SOP-OP30" }), property("version", "string", "Released revision.", { example: "Rev.3" })],
+    ["SOP OP30 Leak Test"],
+    ["Canonical", "Source-mapped"],
+  ),
 ];
 
 const linkQtyProperties = [
@@ -551,6 +582,16 @@ const linkQtyProperties = [
 ];
 
 export const ontologyLinkTypes: OntologyLinkType[] = [
+  linkType(knowledgeIds.ontology.nextOperation, "nextOperation", "Operation", "Operation", "many-to-many", "production", "Canonical left-to-right route sequence relation.", [], ["OP20 nextOperation OP30", "OP30 nextOperation OP40"]),
+  linkType(knowledgeIds.ontology.performedOn, "performedOn", "Operation", "Machine", "many-to-one", "engineering", "Canonical operation-to-execution-resource relation.", [], ["OP30 Leak Test performedOn M220 Leak Test Bench"]),
+  linkType(knowledgeIds.ontology.usesProgram, "usesProgram", "Operation", "Program", "many-to-many", "engineering", "Canonical operation-to-program dependency relation.", [], ["OP30 Leak Test usesProgram LeakTestProgram V3.4"]),
+  linkType(knowledgeIds.ontology.controls, "controls", "Operation", "Quality Characteristic", "one-to-many", "quality", "Canonical operation-to-quality-characteristic control relation.", [], ["OP30 Leak Test controls Leak Rate"]),
+  linkType(knowledgeIds.ontology.governedBy, "governedBy", "Quality Characteristic", knowledgeIds.ontology.controlPlan, "many-to-many", "quality", "Canonical quality-characteristic-to-control-plan governance relation.", [], ["Leak Rate governedBy Control Plan CP-BB01 Rev.A"]),
+  linkType(knowledgeIds.ontology.riskAnalyzedBy, "riskAnalyzedBy", "Quality Characteristic", knowledgeIds.ontology.pfmea, "many-to-many", "quality", "Canonical quality-characteristic-to-PFMEA risk relation.", [], ["Leak Rate riskAnalyzedBy PFMEA PF-BB01 Rev.B"]),
+  linkType(knowledgeIds.ontology.describedBy, "describedBy", "Operation", knowledgeIds.ontology.sop, "many-to-many", "engineering", "Canonical operation-to-procedure relation.", [], ["OP30 Leak Test describedBy SOP OP30 Leak Test"]),
+  linkType(knowledgeIds.ontology.contributesTo, "contributesTo", "Operation", "Value Stream Metric", "many-to-many", "valueStream", "Canonical operation-to-value-stream-impact relation.", [], ["OP30 Leak Test contributesTo Waiting Time before OP40"]),
+  linkType(knowledgeIds.ontology.affects, "affects", "Document", "Operation", "many-to-many", "engineering", "Canonical engineering-change or quality-event impact relation.", [], ["Engineering Change Request M220 Program affects OP30 Leak Test"]),
+  linkType(knowledgeIds.ontology.requiresValidation, "requiresValidation", "Program", "Document", "many-to-many", "engineering", "Canonical program-to-validation-evidence relation.", [], ["LeakTestProgram V3.5 requiresValidation Validation Record M220 Program V3.5"]),
   linkType("link-product-requires-operation", "requires", "Product", "Operation", "one-to-many", "production", "Product requires one or more operations to be produced.", [], ["Brake Booster requires OP10, OP20, OP30, OP40"]),
   linkType("link-product-has-route", "hasRoute", "Product", "Process Route", "one-to-many", "production", "Product owns one or more released process routes."),
   linkType("link-route-contains-operation", "contains", "Process Route", "Operation", "one-to-many", "production", "Process route contains ordered operations."),

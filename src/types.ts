@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
 export type ViewMode = "production" | "quality" | "engineering" | "valueStream";
-export type AppPage = "route" | "ontology" | "semantic";
+export type AppPage = "route" | "ontology" | "semantic" | "agent";
 export type OntologyDomain = "production" | "quality" | "engineering" | "valueStream" | "shared";
 export type OntologyFilter = "all" | OntologyDomain;
 export type OntologySelectionKind = "object" | "property" | "link" | "relationshipType" | "lane" | "action" | "empty";

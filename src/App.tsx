@@ -2,10 +2,17 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { buildExplorerUrl, pageRoute, parseExplorerLocation, type ExplorerRoute } from "./router/explorerRouter";
 import type { AppPage } from "./types";
 
+if (import.meta.env.DEV) {
+  void import("./data/mockKnowledgeRegistry/runtimeValidation").then(({ reportMockKnowledgeValidation }) => reportMockKnowledgeValidation());
+}
+
 const RouteExplorerPage = lazy(() => import("./pages/RouteExplorerPage"));
 const OntologyExplorer = lazy(() => import("./pages/OntologyExplorer"));
 const SemanticExplorerPage = lazy(() =>
   import("./features/semantic/SemanticExplorerPage").then((module) => ({ default: module.SemanticExplorerPage })),
+);
+const AgentDemoPage = lazy(() =>
+  import("./features/agent-demo/AgentDemoPage").then((module) => ({ default: module.AgentDemoPage })),
 );
 
 export default function App() {
@@ -30,8 +37,10 @@ export default function App() {
         <RouteExplorerPage activePage="route" onPageChange={handlePageChange} route={route} onRouteChange={navigate} />
       ) : route.page === "ontology" ? (
         <OntologyExplorer activePage="ontology" onPageChange={handlePageChange} route={route} onRouteChange={navigate} />
-      ) : (
+      ) : route.page === "semantic" ? (
         <SemanticExplorerPage activePage="semantic" onPageChange={handlePageChange} route={route} onRouteChange={navigate} />
+      ) : (
+        <AgentDemoPage activePage="agent" onPageChange={handlePageChange} />
       )}
     </Suspense>
   );

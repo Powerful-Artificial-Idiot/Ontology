@@ -29,8 +29,8 @@ describe("Ontology Explorer render model", () => {
     const nodes = buildRenderedNodes(params);
     const edges = buildRenderedEdges(params);
 
-    expect(nodes).toHaveLength(26);
-    expect(edges).toHaveLength(31);
+    expect(nodes).toHaveLength(29);
+    expect(edges).toHaveLength(41);
     expect(nodes.find((node) => node.id === "Operation")?.data.expanded).toBe(true);
     expect(edges.every((edge) => baseVisible.nodeIds.has(edge.source) && baseVisible.nodeIds.has(edge.target))).toBe(true);
   });

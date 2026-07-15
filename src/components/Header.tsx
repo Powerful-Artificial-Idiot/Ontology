@@ -6,6 +6,7 @@ interface HeaderProps {
   searchKeyword: string;
   searchSummary: string;
   searchPlaceholder?: string;
+  showSearch?: boolean;
   onPageChange: (page: AppPage) => void;
   onViewModeChange?: (viewMode: ViewMode) => void;
   onSearchChange: (keyword: string) => void;
@@ -24,6 +25,7 @@ export function Header({
   searchKeyword,
   searchSummary,
   searchPlaceholder = "Search material, operation, machine, fixture, CTQ, document...",
+  showSearch = true,
   onPageChange,
   onViewModeChange,
   onSearchChange,
@@ -40,6 +42,7 @@ export function Header({
           { value: "route" as const, label: "Route Explorer" },
           { value: "ontology" as const, label: "Ontology Explorer" },
           { value: "semantic" as const, label: "Semantic Explorer" },
+          { value: "agent" as const, label: "Agent Demo" },
         ].map((page) => (
           <button
             key={page.value}
@@ -56,19 +59,21 @@ export function Header({
         ))}
       </nav>
 
-      <div className="relative min-w-[180px] flex-1">
-        <input
-          value={searchKeyword}
-          onChange={(event) => onSearchChange(event.target.value)}
-          placeholder={searchPlaceholder}
-          className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-4 text-sm outline-none transition focus:border-slate-500 focus:bg-white"
-        />
-        {searchSummary && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">
-            {searchSummary}
-          </div>
-        )}
-      </div>
+      {showSearch ? (
+        <div className="relative min-w-[180px] flex-1">
+          <input
+            value={searchKeyword}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-4 text-sm outline-none transition focus:border-slate-500 focus:bg-white"
+          />
+          {searchSummary && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">
+              {searchSummary}
+            </div>
+          )}
+        </div>
+      ) : <div className="min-w-6 flex-1" />}
 
       {activePage === "route" && viewMode && onViewModeChange ? (
         <div className="flex rounded-lg border border-slate-200 bg-slate-100 p-1">
@@ -89,7 +94,7 @@ export function Header({
         </div>
       ) : (
         <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">
-          {activePage === "semantic" ? "Semantic Layer" : "Schema Layer"}
+          {activePage === "semantic" ? "Semantic Layer" : activePage === "agent" ? "Agent Runtime" : "Schema Layer"}
         </span>
       )}
 

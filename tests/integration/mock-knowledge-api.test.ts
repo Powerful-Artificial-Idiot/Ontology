@@ -2,6 +2,7 @@ import { createServer, type Server } from "node:http";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createMockKnowledgeApi } from "../../services/mock-knowledge-api/app";
 import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRepository";
+import { knowledgeIds } from "../../src/data/mockKnowledgeRegistry/ids";
 
 describe("Mock Knowledge API", () => {
   let server: Server;
@@ -26,7 +27,7 @@ describe("Mock Knowledge API", () => {
 
   it("serves entity, relation, graph, ontology, and catalog resources", async () => {
     const [entity, relations, graph, ontology, catalog] = await Promise.all([
-      fetchJson(`${baseUrl}/api/entities/obj-op30-operation`),
+      fetchJson(`${baseUrl}/api/entities/${knowledgeIds.operation.op30}`),
       fetchJson(`${baseUrl}/api/entities/OP30/relations`),
       fetchJson(`${baseUrl}/api/graph/views/production`),
       fetchJson(`${baseUrl}/api/ontology/graph`),
@@ -36,8 +37,8 @@ describe("Mock Knowledge API", () => {
     expect(entity.payload.label).toBe("OP30 Leak Test");
     expect(Array.isArray(relations.payload)).toBe(true);
     expect(graph.payload.nodes).toHaveLength(9);
-    expect(ontology.payload.classes).toHaveLength(26);
-    expect(catalog.payload.concepts).toHaveLength(8);
+    expect(ontology.payload.classes).toHaveLength(29);
+    expect(catalog.payload.concepts).toHaveLength(11);
   });
 
   it("serves semantic search through POST", async () => {

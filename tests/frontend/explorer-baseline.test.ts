@@ -13,13 +13,13 @@ describe("Explorer regression baseline", () => {
   });
 
   it("preserves the approved Ontology Explorer graph counts", () => {
-    expect(ontologySourceData.nodes).toHaveLength(26);
-    expect(ontologySourceData.edges).toHaveLength(31);
+    expect(ontologySourceData.nodes).toHaveLength(29);
+    expect(ontologySourceData.edges).toHaveLength(41);
   });
 
   it("preserves the approved Semantic Explorer catalog counts", () => {
     expect(semanticLaneDefinitions).toHaveLength(5);
-    expect(semanticConceptBundles).toHaveLength(8);
+    expect(semanticConceptBundles).toHaveLength(11);
   });
 
   it("initializes the application repository through the shared entry point", () => {

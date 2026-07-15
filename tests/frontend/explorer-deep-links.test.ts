@@ -36,14 +36,14 @@ describe("Explorer deep links", () => {
 
     expect(resolveSemanticTarget(route.semanticTarget!, catalog)).toEqual({
       status: "resolved",
-      value: { conceptId: "leak-rate", entityId: "leak-rate-term", defaultQuery: "CQ-004" },
+      value: { conceptId: "leak-rate", entityId: "semantic.term.leak-rate", defaultQuery: "CQ-004" },
     });
   });
 
   it("resolves Semantic entities and explains invalid scenarios", async () => {
     const catalog = createSemanticCatalogModel(await repository.getSemanticCatalog());
 
-    expect(resolveSemanticTarget({ kind: "entity", id: "cycle-time-term" }, catalog).status).toBe("resolved");
+    expect(resolveSemanticTarget({ kind: "entity", id: "semantic.term.cycle-time" }, catalog).status).toBe("resolved");
     expect(resolveSemanticTarget({ kind: "scenario", id: "missing-scenario" }, catalog)).toMatchObject({
       status: "invalid",
       message: "Semantic scenario “missing-scenario” was not found.",

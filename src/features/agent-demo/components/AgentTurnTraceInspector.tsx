@@ -1,0 +1,18 @@
+import { Braces, CornerDownRight } from "lucide-react";
+import type { AgentConversationTurn } from "../agentDemoTypes";
+import { AgentTraceStepCard } from "./AgentTraceStepCard";
+
+export function AgentTurnTraceInspector({ turn, selectedReferenceId, onSelectReference }: { turn?: AgentConversationTurn; selectedReferenceId: string | null; onSelectReference: (referenceId: string) => void }) {
+  const contextStep = turn?.trace.find((step) => step.layer === "context");
+  return (
+    <aside className="flex w-[390px] shrink-0 flex-col border-l border-slate-200 bg-slate-50">
+      <div className="flex h-11 shrink-0 items-center border-b border-slate-200 bg-white px-4"><Braces className="h-4 w-4 text-slate-600" /><div className="ml-2 text-xs font-bold text-slate-900">Structured Agent Trace</div>{turn ? <span className="ml-auto rounded bg-slate-100 px-2 py-1 text-[8px] font-bold uppercase text-slate-500">Turn {turn.order}</span> : null}</div>
+      {!turn ? <div className="flex flex-1 items-center justify-center p-6 text-center"><div><Braces className="mx-auto h-6 w-6 text-slate-300" /><div className="mt-3 text-xs font-bold text-slate-700">No turn selected</div><p className="mt-1 text-[10px] leading-4 text-slate-400">Run a question or select a previous response to inspect its structured trace.</p></div></div> : <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="rounded-md border border-slate-200 bg-white p-3"><div className="text-[8px] font-bold uppercase tracking-wider text-slate-400">User request</div><p className="mt-1.5 text-[10px] font-semibold leading-4 text-slate-800">{turn.userMessage.content}</p><div className="mt-2 flex flex-wrap gap-1">{turn.userMessage.detectedTerms?.map((term) => <span key={term} className="rounded bg-slate-100 px-1.5 py-1 text-[8px] font-semibold text-slate-600">{term}</span>)}</div>{turn.agentResponse ? <div className="mt-3 border-t border-slate-100 pt-2"><div className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Answer summary</div><p className="mt-1 text-[9px] leading-4 text-slate-600">{turn.agentResponse.summary}</p></div> : null}</div>
+        {contextStep ? <div className="mt-3 rounded-md border border-cyan-200 bg-cyan-50 p-3"><div className="flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-wider text-cyan-700"><CornerDownRight className="h-3 w-3" />Context used for this turn</div><div className="mt-1.5 space-y-1">{contextStep.input.map((item) => <div key={item} className="text-[9px] leading-3.5 text-slate-700">{item}</div>)}</div></div> : null}
+        {turn.viewIndexes.length ? <div className="mt-3 rounded-md border border-slate-200 bg-white p-3"><div className="text-[8px] font-bold uppercase tracking-wider text-slate-500">Cross-view Knowledge Index</div><div className="mt-2 space-y-2">{turn.viewIndexes.map((index) => <div key={index.view} className="rounded border border-slate-100 bg-slate-50 p-2"><div className="flex items-center justify-between"><span className="text-[8px] font-bold text-blue-700">{index.view}</span><span className="text-[7px] font-semibold text-slate-400">{index.objectIds.length} objects · {index.referenceIds.length} sources</span></div><div className="mt-1 text-[8px] leading-3 text-slate-600">{index.findings[0]}</div><div className="mt-1 truncate font-mono text-[7px] text-slate-400" title={index.objectIds.join(", ")}>{index.objectIds.join(" · ")}</div></div>)}</div></div> : null}
+        <div className="mt-3 space-y-2.5">{turn.trace.map((step) => <AgentTraceStepCard key={step.id} step={step} references={turn.references} objects={turn.relatedObjects} selectedReferenceId={selectedReferenceId} onSelectReference={onSelectReference} />)}</div>
+      </div>}
+    </aside>
+  );
+}

@@ -5,12 +5,12 @@ import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRep
 describe("Ontology repository response adapter", () => {
   const repository = new MockKnowledgeRepository();
 
-  it("builds the approved 26/31 view from repository semantics", async () => {
+  it("builds the approved 29/41 view from repository semantics", async () => {
     const response = await repository.getOntologyGraph({ version: "1.1.0" });
     const source = buildOntologySourceDataFromResponse(response);
 
-    expect(source.nodes).toHaveLength(26);
-    expect(source.edges).toHaveLength(31);
+    expect(source.nodes).toHaveLength(29);
+    expect(source.edges).toHaveLength(41);
     expect(source.nodes.find((node) => node.id === "Operation")?.semanticIri).toBe("https://example.com/mkg/manufacturing#Operation");
     expect(source.edges.find((edge) => edge.id === "link-operation-conducted-by-machine")?.semanticIri).toBe("https://example.com/mkg/manufacturing#executedBy");
   });

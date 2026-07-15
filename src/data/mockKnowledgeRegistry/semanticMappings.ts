@@ -1,0 +1,22 @@
+import { knowledgeIds as id } from "./ids";
+import type { MockSemanticMapping } from "./types";
+
+export const semanticMappings: MockSemanticMapping[] = [
+  mapping("semantic.mapping.air-leak", id.semantic.airLeak, id.semantic.leakRate, "synonymOf", "Air Leak is an approved synonym of Leak Rate."),
+  mapping("semantic.mapping.leakage", id.semantic.leakage, id.semantic.leakRate, "synonymOf", "Leakage is an approved synonym of Leak Rate."),
+  mapping("semantic.mapping.leak-test-result", id.semantic.leakTestResult, id.semantic.leakRate, "synonymOf", "Leak Test Result resolves to Leak Rate in OP30 context."),
+  mapping("semantic.mapping.leak-rate-property", id.semantic.leakRate, id.quality.leakRate, "mapsToProperty", "Leak Rate maps to the canonical quality characteristic."),
+  mapping("semantic.mapping.qms-leak-rate", id.semantic.qmsLeakRate, id.quality.leakRate, "storedIn", "QMS inspection results store Leak Rate values."),
+  mapping("semantic.mapping.mes-op30-value", id.semantic.mesOp30Value, id.quality.leakRate, "storedIn", "MES OP30 test values store execution measurements for Leak Rate."),
+  mapping("semantic.mapping-cycle-time", id.semantic.cycleTime, id.valueStream.operationCycleTime, "mapsToProperty", "Cycle Time maps to the canonical operation cycle-time metric."),
+  mapping("semantic.mapping-bottleneck", id.semantic.bottleneck, id.valueStream.qualityBottleneckRisk, "mapsToObject", "Bottleneck language can map to a governed value-stream constraint risk when evidence supports it."),
+  mapping("semantic.mapping-wip", id.semantic.wip, id.valueStream.wipBeforeOp20, "mapsToObject", "WIP maps to the governed work-in-process buffer at the requested operation boundary."),
+  mapping("semantic.mapping-engineering-change", id.semantic.engineeringChange, id.document.engineeringChangeM220, "mapsToObject", "Engineering Change maps to the governed M220 program change request."),
+  mapping("semantic.mapping-program-version", id.semantic.programVersion, id.program.leakTestV35, "mapsToObject", "Program Version resolves to the proposed governed LeakTestProgram release in the active context."),
+  mapping("semantic.mapping-validation", id.semantic.validation, id.document.validationRecordV35, "mapsToObject", "Validation maps to the controlled V3.5 validation record."),
+  mapping("semantic.mapping-mes-cycle-time", id.semantic.mesOperationCycleTime, id.valueStream.op20CycleTime, "storedIn", "MES operation cycle-time values support the OP20 cycle-time metric."),
+  mapping("semantic.mapping-mes-wip", id.semantic.mesWipQuantity, id.valueStream.wipBeforeOp20, "storedIn", "MES WIP quantity supports the WIP before OP20 buffer metric."),
+  mapping("semantic.mapping-ie-line-balance", id.semantic.ieLineBalanceResult, id.valueStream.lineBottleneckRisk, "storedIn", "IE line-balance results support the line bottleneck risk assessment."),
+];
+
+function mapping(id: string, sourceId: string, targetId: string, relation: MockSemanticMapping["relation"], description: string): MockSemanticMapping { return { id, sourceId, targetId, relation, description }; }

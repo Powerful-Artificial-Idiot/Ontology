@@ -11,7 +11,7 @@
       "entity": {
         "description": "Quality characteristic that may be affected by M220 through Leakage Failure.",
         "domain": "quality",
-        "id": "leak-rate-term",
+        "id": "semantic.term.leak-rate",
         "iri": "https://example.com/mkg/demo#LeakRate",
         "label": "Leak Rate",
         "properties": {

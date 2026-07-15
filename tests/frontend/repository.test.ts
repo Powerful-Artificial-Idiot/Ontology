@@ -21,7 +21,7 @@ describe("MockKnowledgeRepository", () => {
   it("provides the complete semantic catalog through the repository contract", async () => {
     const response = await repository.getSemanticCatalog();
     expect(response.lanes).toHaveLength(5);
-    expect(response.concepts).toHaveLength(8);
+    expect(response.concepts).toHaveLength(11);
     expect(response.entities.length).toBeGreaterThan(response.concepts.length);
     expect(response.mappings.length).toBeGreaterThan(0);
   });

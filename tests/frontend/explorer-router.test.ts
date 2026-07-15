@@ -36,6 +36,15 @@ describe("Explorer URL router", () => {
     expect(buildExplorerUrl(pageRoute("route"))).toBe("/routes/production");
     expect(buildExplorerUrl(pageRoute("ontology"))).toBe("/ontology");
     expect(buildExplorerUrl(pageRoute("semantic"))).toBe("/semantic");
+    expect(buildExplorerUrl(pageRoute("agent"))).toBe("/agent");
+  });
+
+  it("opens Agent Demo through a stable standalone route", () => {
+    expect(parseExplorerLocation({ pathname: "/agent", search: "" })).toMatchObject({ page: "agent" });
+    expect(parseExplorerLocation({ pathname: "/agent/unknown", search: "" })).toMatchObject({
+      page: "agent",
+      invalidPath: "/agent/unknown",
+    });
   });
 
   it("falls back safely for unknown paths", () => {

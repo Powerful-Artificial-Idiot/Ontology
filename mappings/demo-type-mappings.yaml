@@ -12,6 +12,8 @@ demo_type_mappings:
   Inspection Method: qual:InspectionMethod
   Control Method: qual:InspectionMethod
   PFMEA Risk: app:QualityRisk
+  PFMEA: app:QualityRisk
+  Bottleneck Marker: app:QualityRisk
   Document: core:Document
   Engineering Spec: core:Document
   Program: mfg:ProcessParameter
@@ -59,7 +61,20 @@ ontology_explorer_type_mappings:
   Source System Mapping: core:SourceSystem
   Version: core:VersionedEntity
   Owner: core:Agent
+  ontology.object.control-plan: qual:ControlPlanVersion
+  ontology.object.pfmea: app:QualityRisk
+  ontology.object.sop: core:Document
 ontology_explorer_relation_mappings:
+  ontology.relationship.next-operation: mfg:flowsTo
+  ontology.relationship.performed-on: mfg:executedBy
+  ontology.relationship.uses-program: mfg:usesParameter
+  ontology.relationship.controls: qual:controlsCharacteristic
+  ontology.relationship.governed-by: mfg:flowsTo
+  ontology.relationship.risk-analyzed-by: mfg:flowsTo
+  ontology.relationship.described-by: mfg:flowsTo
+  ontology.relationship.contributes-to: mfg:flowsTo
+  ontology.relationship.affects: mfg:flowsTo
+  ontology.relationship.requires-validation: mfg:flowsTo
   link-product-requires-operation: mfg:requiresOperation
   link-product-has-route: mfg:flowsTo
   link-route-contains-operation: mfg:flowsTo

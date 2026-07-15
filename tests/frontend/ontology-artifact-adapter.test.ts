@@ -13,10 +13,10 @@ describe("Ontology artifact view adapter", () => {
   it("connects every visible type, property, and relation to a generated semantic term", () => {
     const connected = connectOntologyViewToArtifact(ontologyObjectTypes, ontologyLinkTypes);
 
-    expect(connected.nodes).toHaveLength(26);
-    expect(connected.edges).toHaveLength(31);
-    expect(Object.keys(ontologyClassCurieByViewType)).toHaveLength(26);
-    expect(Object.keys(ontologyRelationCurieByViewLink)).toHaveLength(31);
+    expect(connected.nodes).toHaveLength(29);
+    expect(connected.edges).toHaveLength(41);
+    expect(Object.keys(ontologyClassCurieByViewType)).toHaveLength(29);
+    expect(Object.keys(ontologyRelationCurieByViewLink)).toHaveLength(41);
     expect(connected.nodes.every((node) => node.semanticIri && node.semanticModule && node.properties.every((property) => property.semanticIri))).toBe(true);
     expect(connected.edges.every((edge) => edge.semanticIri && edge.semanticModule)).toBe(true);
   });
