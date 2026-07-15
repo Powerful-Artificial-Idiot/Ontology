@@ -3,7 +3,7 @@ import { AlertTriangle } from "lucide-react";
 import { Header } from "../../components/Header";
 import type { AppPage } from "../../types";
 import type { AgentClient, AgentRunEvent } from "./agentClient";
-import type { AgentConversationSession, AgentConversationTurn, AgentScenario, AgentSharedContext } from "./agentDemoTypes";
+import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentScenario, AgentSharedContext } from "./agentDemoTypes";
 import { AgentContextPanel } from "./components/AgentContextPanel";
 import { AgentConversationThread } from "./components/AgentConversationThread";
 import { AgentReferencesPanel } from "./components/AgentReferencesPanel";
@@ -24,6 +24,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
   const [draft, setDraft] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string>();
+  const [conversationLanguage, setConversationLanguage] = useState<AgentLanguage>(() => typeof window !== "undefined" && window.localStorage.getItem("agent-question-language") === "en" ? "en" : "zh");
   const runIdRef = useRef(0);
   const abortRef = useRef<AbortController>();
 
@@ -56,6 +57,10 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
       cancelRun();
     };
   }, [cancelRun, client]);
+
+  useEffect(() => {
+    window.localStorage.setItem("agent-question-language", conversationLanguage);
+  }, [conversationLanguage]);
 
   const startNewSession = useCallback(async (scenarioId: string) => {
     cancelRun();
@@ -108,6 +113,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
       sessionId: sessionSnapshot.id,
       scenarioId: sessionSnapshot.scenarioId,
       userMessage: question,
+      language: conversationLanguage,
       previousTurns: sessionSnapshot.turns,
       sharedContext: sessionSnapshot.sharedContext,
       signal,
@@ -120,7 +126,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
       },
     });
     return completedTurn && sharedContext ? { turn: completedTurn, sharedContext } : undefined;
-  }, [applyEvent, client]);
+  }, [applyEvent, client, conversationLanguage]);
 
   const submitQuestion = useCallback(async (question: string) => {
     const normalized = question.trim();
@@ -159,7 +165,8 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
       let cursor = await client.startSession(scenario.id);
       if (runId !== runIdRef.current) return;
       setSession(cursor);
-      const questions = scenario.exampleQuestions?.length ? scenario.exampleQuestions : [scenario.userQuestion];
+      const localizedExamples = scenario.suggestedQuestionOptions?.slice(0, 3).map((question) => question[conversationLanguage]);
+      const questions = localizedExamples?.length ? localizedExamples : scenario.exampleQuestions?.length ? scenario.exampleQuestions : [scenario.userQuestion];
       for (const question of questions) {
         if (controller.signal.aborted || runId !== runIdRef.current) return;
         const result = await executeTurn(cursor, question, runId, controller.signal);
@@ -174,7 +181,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
         abortRef.current = undefined;
       }
     }
-  }, [cancelRun, client, executeTurn, isRunning, scenarios, selectedScenarioId]);
+  }, [cancelRun, client, conversationLanguage, executeTurn, isRunning, scenarios, selectedScenarioId]);
 
   const handleScenarioChange = useCallback((scenarioId: string) => {
     if (scenarioId === selectedScenarioId) return;
@@ -195,7 +202,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = scriptedAgent
       <AgentWorkspaceHeader sessionId={session?.id} turnCount={session?.turns.length ?? 0} isRunning={isRunning} onLoadExample={() => void loadExampleConversation()} onReset={() => void startNewSession(selectedScenarioId)} />
       {error ? <div className="flex shrink-0 items-center gap-2 border-b border-red-200 bg-red-50 px-5 py-2 text-[10px] font-semibold text-red-700"><AlertTriangle className="h-3.5 w-3.5" />Agent workspace error: {error}</div> : null}
       <div className="flex min-h-0 flex-1">
-        <AgentContextPanel scenarios={scenarios} selectedScenarioId={selectedScenarioId} selectedTurn={selectedTurn} sharedContext={sharedContext} validationReport={mockKnowledgeValidationReport} isRunning={isRunning} onSelectScenario={handleScenarioChange} onAskQuestion={(question) => void submitQuestion(question)} />
+        <AgentContextPanel scenarios={scenarios} selectedScenarioId={selectedScenarioId} selectedTurn={selectedTurn} sharedContext={sharedContext} validationReport={mockKnowledgeValidationReport} isRunning={isRunning} questionLanguage={conversationLanguage} onQuestionLanguageChange={setConversationLanguage} onSelectScenario={handleScenarioChange} onAskQuestion={(question) => void submitQuestion(question)} />
         <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <div className="flex min-h-0 flex-1">
             <AgentConversationThread turns={session?.turns ?? []} selectedTurnId={selectedTurnId} selectedReferenceId={selectedReferenceId} draft={draft} isRunning={isRunning} onDraftChange={setDraft} onSubmit={() => void submitQuestion(draft)} onSelectTurn={(turnId) => { setSelectedTurnId(turnId); setSelectedReferenceId(null); }} onSelectReference={(turnId, referenceId) => { setSelectedTurnId(turnId); setSelectedReferenceId(referenceId); }} />

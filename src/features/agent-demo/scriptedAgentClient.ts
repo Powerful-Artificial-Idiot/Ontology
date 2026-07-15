@@ -1,7 +1,8 @@
 import type { AgentClient, AgentRunTurnOptions } from "./agentClient";
 import { selectScriptedTurnTemplate, type ScriptedTurnTemplate } from "./agentConversationData";
 import { agentDemoScenarios } from "./agentDemoData";
-import type { AgentConversationSession, AgentConversationTurn, AgentReasoningStep, AgentReference, AgentRelatedObject, AgentSharedContext } from "./agentDemoTypes";
+import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentReasoningStep, AgentReference, AgentRelatedObject, AgentSharedContext } from "./agentDemoTypes";
+import { localizeAgentResponse } from "./agentResponseLocalizations";
 
 let sessionSequence = 0;
 
@@ -38,10 +39,13 @@ export class ScriptedAgentClient implements AgentClient {
     if (options.signal?.aborted) return;
 
     const template = selectScriptedTurnTemplate(options.scenarioId, options.userMessage, options.previousTurns, options.sharedContext);
+    const language = options.language ?? inferResponseLanguage(options.userMessage);
+    const response = localizeAgentResponse(template.id, template.response, language);
     const order = options.previousTurns.length + 1;
     const turnId = `${options.sessionId}-turn-${order}`;
     const now = new Date().toISOString();
-    const steps = hydrateTrace(template.trace, turnId, options.sharedContext, options.previousTurns.length);
+    const steps = hydrateTrace(template.trace, turnId, options.sharedContext, options.previousTurns.length)
+      .map((step) => step.layer === "answer" ? { ...step, output: [response.summary] } : step);
     const runningTurn: AgentConversationTurn = {
       id: turnId,
       order,
@@ -89,18 +93,22 @@ export class ScriptedAgentClient implements AgentClient {
     const completedAt = new Date().toISOString();
     const completedTurn: AgentConversationTurn = {
       ...runningTurn,
-      agentResponse: { ...template.response, id: `${turnId}-response` },
+      agentResponse: { ...response, id: `${turnId}-response` },
       trace: steps,
       references: template.references,
       relatedObjects: template.relatedObjects,
       viewIndexes: template.viewIndexes,
       status: "completed",
-      confidence: template.response.confidence,
+      confidence: response.confidence,
       completedAt,
     };
     const sharedContext = mergeSharedContext(options.sharedContext, template);
     options.onEvent({ type: "turn-completed", turn: completedTurn, sharedContext });
   }
+}
+
+function inferResponseLanguage(message: string): AgentLanguage {
+  return /[\u3400-\u9fff]/u.test(message) ? "zh" : "en";
 }
 
 export function emptySharedContext(): AgentSharedContext {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { AgentRunEvent } from "../../src/features/agent-demo/agentClient";
 import { agentDemoScenarios } from "../../src/features/agent-demo/agentDemoData";
-import type { AgentConversationSession, AgentConversationTurn, AgentSharedContext } from "../../src/features/agent-demo/agentDemoTypes";
+import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentSharedContext } from "../../src/features/agent-demo/agentDemoTypes";
 import { ScriptedAgentClient } from "../../src/features/agent-demo/scriptedAgentClient";
 
 describe("Agent Demo multi-turn scripted boundary", () => {
@@ -38,11 +38,28 @@ describe("Agent Demo multi-turn scripted boundary", () => {
     const englishQuestion = scenario?.suggestedQuestionOptions?.[0]?.en;
     expect(englishQuestion).toBeTruthy();
     const session = await client.startSession("quality-issue-trace");
-    const result = await runTurn(client, session, englishQuestion!);
+    const result = await runTurn(client, session, englishQuestion!, [], "en");
 
     expect(result.turn.userMessage.content).toBe(englishQuestion);
     expect(result.turn.agentResponse?.confidence).toBe("high");
+    expect(JSON.stringify(result.turn.agentResponse)).not.toMatch(/[\u3400-\u9fff]/u);
     expect(result.turn.relatedObjects.some((object) => object.id.includes("op30"))).toBe(true);
+  });
+
+  it("returns English-only response payloads for every scripted English conversation", async () => {
+    const client = new ScriptedAgentClient(0);
+    for (const scenario of agentDemoScenarios) {
+      let session = await client.startSession(scenario.id);
+      const englishQuestions = scenario.suggestedQuestionOptions?.slice(0, 3).map((question) => question.en) ?? [];
+      expect(englishQuestions).toHaveLength(3);
+
+      for (const question of englishQuestions) {
+        const result = await runTurn(client, session, question, [], "en");
+        expect(JSON.stringify(result.turn.agentResponse)).not.toMatch(/[\u3400-\u9fff]/u);
+        expect(result.turn.trace.find((step) => step.layer === "answer")?.output.join(" ")).not.toMatch(/[\u3400-\u9fff]/u);
+        session = advanceSession(session, result);
+      }
+    }
   });
 
   it("starts an empty session and streams an evidence-backed first turn", async () => {
@@ -131,15 +148,20 @@ describe("Agent Demo multi-turn scripted boundary", () => {
     const result = await runTurn(client, session, "请分析一下这个问题");
     expect(result.turn.agentResponse?.confidence).toBe("low");
     expect(result.turn.agentResponse?.assumptions?.length).toBeGreaterThan(0);
+
+    const englishResult = await runTurn(client, session, "Analyze this issue", [], "en");
+    expect(englishResult.turn.agentResponse?.confidence).toBe("low");
+    expect(JSON.stringify(englishResult.turn.agentResponse)).not.toMatch(/[\u3400-\u9fff]/u);
   });
 });
 
-async function runTurn(client: ScriptedAgentClient, session: AgentConversationSession, message: string, events: AgentRunEvent[] = []) {
+async function runTurn(client: ScriptedAgentClient, session: AgentConversationSession, message: string, events: AgentRunEvent[] = [], language?: AgentLanguage) {
   let completed: { turn: AgentConversationTurn; sharedContext: AgentSharedContext } | undefined;
   await client.runTurn({
     sessionId: session.id,
     scenarioId: session.scenarioId,
     userMessage: message,
+    language,
     previousTurns: session.turns,
     sharedContext: session.sharedContext,
     onEvent: (event) => {

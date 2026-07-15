@@ -2,6 +2,8 @@ export type AgentLayer = "user" | "context" | "semantic" | "ontology" | "knowled
 
 export type AgentDomain = "quality" | "engineering" | "valueStream" | "production";
 
+export type AgentLanguage = "zh" | "en";
+
 export type AgentSuggestedQuestion = {
   zh: string;
   en: string;

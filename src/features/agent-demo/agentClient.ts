@@ -1,4 +1,4 @@
-import type { AgentConversationSession, AgentConversationTurn, AgentReasoningStep, AgentScenario, AgentSharedContext } from "./agentDemoTypes";
+import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentReasoningStep, AgentScenario, AgentSharedContext } from "./agentDemoTypes";
 
 export type AgentRunEvent =
   | { type: "session-started"; session: AgentConversationSession }
@@ -12,6 +12,7 @@ export type AgentRunTurnOptions = {
   sessionId: string;
   scenarioId: string;
   userMessage: string;
+  language?: AgentLanguage;
   previousTurns: AgentConversationTurn[];
   sharedContext: AgentSharedContext;
   onEvent: (event: AgentRunEvent) => void;
