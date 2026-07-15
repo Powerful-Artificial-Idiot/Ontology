@@ -1899,6 +1899,25 @@
         line-height: 1.55;
       }
 
+      html[data-language="en"] .stair {
+        min-height: max(var(--height), 154px);
+        grid-template-rows: auto auto auto;
+        padding: 14px;
+      }
+
+      html[data-language="en"] .stair strong {
+        font-size: 15px;
+        line-height: 1.2;
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+      }
+
+      html[data-language="en"] .stair span {
+        font-size: 11px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
       .outcome-row {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
