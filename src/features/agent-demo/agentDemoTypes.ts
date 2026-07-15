@@ -2,6 +2,11 @@ export type AgentLayer = "user" | "context" | "semantic" | "ontology" | "knowled
 
 export type AgentDomain = "quality" | "engineering" | "valueStream" | "production";
 
+export type AgentSuggestedQuestion = {
+  zh: string;
+  en: string;
+};
+
 export type AgentToolName =
   | "contextResolver"
   | "semanticResolver"
@@ -104,6 +109,7 @@ export type AgentScenario = {
   domain: AgentDomain;
   userQuestion: string;
   suggestedQuestions?: string[];
+  suggestedQuestionOptions?: AgentSuggestedQuestion[];
   exampleQuestions?: string[];
   businessGoal: string;
   expectedOutcome: string;

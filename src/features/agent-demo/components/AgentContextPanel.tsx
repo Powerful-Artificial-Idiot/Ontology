@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BookOpenCheck, ChevronRight, Layers3, Lightbulb, Wrench } from "lucide-react";
 import { agentSourceCatalog, agentToolCatalog } from "../agentUiCatalog";
 import type { AgentConversationTurn, AgentScenario, AgentSharedContext, AgentToolName } from "../agentDemoTypes";
@@ -7,9 +8,12 @@ import { AgentSharedContextPanel } from "./AgentSharedContextPanel";
 const domainStyles = { quality: "bg-orange-500", engineering: "bg-indigo-500", valueStream: "bg-emerald-500", production: "bg-blue-500" };
 
 export function AgentContextPanel({ scenarios, selectedScenarioId, selectedTurn, sharedContext, validationReport, isRunning, onSelectScenario, onAskQuestion }: { scenarios: AgentScenario[]; selectedScenarioId: string; selectedTurn?: AgentConversationTurn; sharedContext: AgentSharedContext; validationReport: MockKnowledgeValidationReport; isRunning: boolean; onSelectScenario: (scenarioId: string) => void; onAskQuestion: (question: string) => void }) {
+  const [questionLanguage, setQuestionLanguage] = useState<"zh" | "en">(() => typeof window !== "undefined" && window.localStorage.getItem("agent-question-language") === "en" ? "en" : "zh");
   const scenario = scenarios.find((item) => item.id === selectedScenarioId);
+  const questionOptions = scenario?.suggestedQuestionOptions ?? scenario?.suggestedQuestions?.map((question) => ({ zh: question, en: question })) ?? [];
   const activeTools = new Set(selectedTurn?.trace.map((step) => step.toolName).filter((tool): tool is AgentToolName => Boolean(tool)) ?? scenario?.tools ?? []);
   const activeSources = new Set(selectedTurn?.references.map((reference) => reference.type) ?? scenario?.knowledgeSources ?? []);
+  useEffect(() => window.localStorage.setItem("agent-question-language", questionLanguage), [questionLanguage]);
   return (
     <aside className="flex w-[292px] shrink-0 flex-col border-r border-slate-200 bg-slate-50">
       <div className="min-h-0 flex-1 overflow-y-auto">
@@ -18,8 +22,14 @@ export function AgentContextPanel({ scenarios, selectedScenarioId, selectedTurn,
           <div className="mt-2 space-y-1.5">{scenarios.map((item) => { const active = item.id === selectedScenarioId; return <button key={item.id} type="button" onClick={() => onSelectScenario(item.id)} className={`group flex w-full items-center gap-2 rounded-md border px-2.5 py-2 text-left transition ${active ? "border-slate-400 bg-white shadow-sm" : "border-transparent hover:border-slate-200 hover:bg-white"}`}><span className={`h-7 w-1 rounded-full ${domainStyles[item.domain]}`} /><span className="min-w-0 flex-1"><span className="block truncate text-[11px] font-bold text-slate-800">{item.sidebarLabel}</span><span className="mt-0.5 block truncate text-[9px] font-medium text-slate-400">{item.expectedOutcome}</span></span><ChevronRight className={`h-3.5 w-3.5 ${active ? "text-slate-700" : "text-slate-300"}`} /></button>; })}</div>
         </section>
         <section className="border-t border-slate-200 px-3 py-3">
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><Lightbulb className="h-3.5 w-3.5" />Suggested Questions</div>
-          <div className="mt-2 space-y-1.5">{scenario?.suggestedQuestions?.map((question) => <button data-suggested-question={question} key={question} type="button" disabled={isRunning} onClick={() => onAskQuestion(question)} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-2 text-left text-[10px] font-medium leading-4 text-slate-600 transition hover:border-blue-300 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50">{question}</button>)}</div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><Lightbulb className="h-3.5 w-3.5" />{questionLanguage === "zh" ? "建议问题" : "Suggested Questions"}</div>
+            <div className="flex rounded-md border border-slate-200 bg-white p-0.5" aria-label="Suggested question language">
+              <button type="button" aria-pressed={questionLanguage === "zh"} onClick={() => setQuestionLanguage("zh")} className={`rounded px-1.5 py-0.5 text-[8px] font-bold transition ${questionLanguage === "zh" ? "bg-slate-800 text-white" : "text-slate-500 hover:text-slate-800"}`}>中文</button>
+              <button type="button" aria-pressed={questionLanguage === "en"} onClick={() => setQuestionLanguage("en")} className={`rounded px-1.5 py-0.5 text-[8px] font-bold transition ${questionLanguage === "en" ? "bg-slate-800 text-white" : "text-slate-500 hover:text-slate-800"}`}>EN</button>
+            </div>
+          </div>
+          <div className="mt-2 space-y-1.5">{questionOptions.map((question) => <button data-suggested-question={question.zh} key={question.zh} type="button" lang={questionLanguage === "zh" ? "zh-CN" : "en"} disabled={isRunning} onClick={() => onAskQuestion(question[questionLanguage])} className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-2 text-left text-[10px] font-medium leading-4 text-slate-600 transition hover:border-blue-300 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50">{question[questionLanguage]}</button>)}</div>
         </section>
         <section className="border-t border-slate-200 px-3 py-3">
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500"><Wrench className="h-3.5 w-3.5" />Agent Tools</div>

@@ -16,6 +16,8 @@ describe("Agent Demo multi-turn scripted boundary", () => {
       expect(scenario.suggestedQuestions?.length).toBeGreaterThan(0);
       expect(scenario.exampleQuestions).toHaveLength(3);
       expect(scenario.suggestedQuestions).toHaveLength(4);
+      expect(scenario.suggestedQuestionOptions).toHaveLength(4);
+      expect(scenario.suggestedQuestionOptions?.every((question) => question.zh.length > 0 && question.en.length > 0)).toBe(true);
       expect(scenario.references.length).toBeGreaterThanOrEqual(5);
       const referenceIds = new Set(scenario.references.map((reference) => reference.id));
       const objectIds = new Set(scenario.relatedObjects.map((object) => object.id));
@@ -28,6 +30,19 @@ describe("Agent Demo multi-turn scripted boundary", () => {
         expect(citation.referenceIds.every((id) => referenceIds.has(id))).toBe(true);
       });
     });
+  });
+
+  it("resolves English suggested questions to the same governed scripted turns", async () => {
+    const client = new ScriptedAgentClient(0);
+    const scenario = agentDemoScenarios.find((item) => item.id === "quality-issue-trace");
+    const englishQuestion = scenario?.suggestedQuestionOptions?.[0]?.en;
+    expect(englishQuestion).toBeTruthy();
+    const session = await client.startSession("quality-issue-trace");
+    const result = await runTurn(client, session, englishQuestion!);
+
+    expect(result.turn.userMessage.content).toBe(englishQuestion);
+    expect(result.turn.agentResponse?.confidence).toBe("high");
+    expect(result.turn.relatedObjects.some((object) => object.id.includes("op30"))).toBe(true);
   });
 
   it("starts an empty session and streams an evidence-backed first turn", async () => {

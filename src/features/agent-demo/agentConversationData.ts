@@ -21,6 +21,7 @@ import type {
   AgentSharedContext,
   AgentViewIndex,
 } from "./agentDemoTypes";
+import { getSuggestedQuestionAliases } from "./agentSuggestedQuestions";
 
 export type ScriptedTurnTemplate = {
   id: string;
@@ -358,7 +359,7 @@ export const fallbackClarificationTurn: ScriptedTurnTemplate = scriptedTurn({
 export function selectScriptedTurnTemplate(scenarioId: string, userMessage: string, _previousTurns: AgentConversationTurn[], _sharedContext: AgentSharedContext) {
   const templates = scriptedTurnsByScenario[scenarioId] ?? [];
   const normalized = normalize(userMessage);
-  const exact = templates.find((template) => normalize(template.question) === normalized);
+  const exact = templates.find((template) => getSuggestedQuestionAliases(scenarioId, template.question).some((alias) => normalize(alias) === normalized));
   if (exact) return exact;
   const scored = templates
     .map((template) => ({ template, score: template.matchTerms.filter((term) => normalized.includes(normalize(term))).length }))
