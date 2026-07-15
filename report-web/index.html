@@ -1,0 +1,3538 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>企业制造知识资产层建设项目建议报告</title>
+    <meta
+      name="description"
+      content="面向管理层的企业制造知识资产层建设项目建议汇报，以产品加工路线为试点，为 AI Agent 提供可信制造业务上下文。"
+    >
+    <link rel="preload" as="image" href="/report-assets/manufacturing-knowledge-hero.jpg">
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f3f6f7;
+        --surface: #ffffff;
+        --surface-soft: #f8fafb;
+        --ink: #10202b;
+        --muted: #51616d;
+        --soft: #71808b;
+        --line: #dce5e8;
+        --accent: #16776f;
+        --accent-strong: #0d5f59;
+        --accent-soft: #eaf7f5;
+        --accent-mid: #9fd5cf;
+        --danger: #a44343;
+        --radius: 8px;
+        --shadow: 0 18px 52px rgba(16, 32, 43, 0.1);
+        --max: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.55;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      figure {
+        margin: 0;
+      }
+
+      .shell {
+        width: min(var(--max), calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(220, 229, 232, 0.9);
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav {
+        min-height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: grid;
+        min-width: 210px;
+        gap: 1px;
+      }
+
+      .brand strong {
+        font-size: 15px;
+        letter-spacing: -0.015em;
+      }
+
+      .brand span {
+        color: var(--soft);
+        font-size: 11px;
+      }
+
+      .navlinks {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
+
+      .navlinks a,
+      .print-button,
+      .language-button {
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        padding: 7px 10px;
+        color: var(--muted);
+        background: transparent;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .navlinks a:hover,
+      .navlinks a.active,
+      .print-button:hover,
+      .language-button:hover {
+        border-color: var(--line);
+        background: var(--surface-soft);
+        color: var(--ink);
+      }
+
+      .navlinks .demo-link {
+        margin-left: 4px;
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .navlinks .demo-link:hover {
+        border-color: var(--accent-strong);
+        background: var(--accent-strong);
+        color: #ffffff;
+      }
+
+      .language-button {
+        min-width: 42px;
+        justify-content: center;
+        border-color: var(--line);
+        background: var(--surface-soft);
+        color: var(--accent-strong);
+      }
+
+      @media (min-width: 1041px) {
+        html[data-language="en"] .nav {
+          gap: 12px;
+        }
+
+        html[data-language="en"] .brand {
+          min-width: 170px;
+        }
+
+        html[data-language="en"] .navlinks a,
+        html[data-language="en"] .print-button,
+        html[data-language="en"] .language-button {
+          padding-right: 6px;
+          padding-left: 6px;
+          font-size: 12px;
+        }
+      }
+
+      .hero {
+        min-height: calc(100dvh - 66px);
+        display: grid;
+        align-items: center;
+        padding: 42px 0 56px;
+        background:
+          linear-gradient(90deg, rgba(22, 119, 111, 0.045), transparent 42%),
+          var(--bg);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 48px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        width: fit-content;
+        display: inline-flex;
+        border: 1px solid var(--accent-mid);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      h1 {
+        max-width: 610px;
+        margin-top: 18px;
+        font-size: clamp(44px, 5.2vw, 66px);
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+      }
+
+      .hero-copy {
+        max-width: 560px;
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .hero-copy strong {
+        color: var(--accent-strong);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .primary-button,
+      .secondary-button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: var(--radius);
+        padding: 10px 16px;
+        font-weight: 800;
+        white-space: nowrap;
+        transition: transform 160ms ease, background 160ms ease;
+      }
+
+      .primary-button {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .secondary-button {
+        border-color: var(--line);
+        background: var(--surface);
+        color: var(--ink);
+      }
+
+      .primary-button:hover,
+      .secondary-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .primary-button:active,
+      .secondary-button:active,
+      .print-button:active,
+      .language-button:active {
+        transform: translateY(1px);
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: 510px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-visual img {
+        width: 100%;
+        height: 100%;
+        min-height: 510px;
+        display: block;
+        object-fit: cover;
+      }
+
+      .hero-visual::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(16, 32, 43, 0.18), transparent 56%);
+        pointer-events: none;
+      }
+
+      .hero-panel {
+        position: absolute;
+        z-index: 1;
+        left: 22px;
+        right: 22px;
+        bottom: 22px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: var(--radius);
+        background: rgba(220, 229, 232, 0.92);
+        backdrop-filter: blur(14px);
+      }
+
+      .hero-panel div {
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .hero-panel strong {
+        display: block;
+        font-size: 20px;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-panel span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      section {
+        padding: 72px 0;
+        scroll-margin-top: 84px;
+      }
+
+      section:nth-of-type(even) {
+        background: rgba(255, 255, 255, 0.58);
+      }
+
+      #future,
+      #roadmap,
+      #support {
+        background: var(--bg);
+      }
+
+      #pilot,
+      #benefits,
+      .closing {
+        background: rgba(255, 255, 255, 0.58);
+      }
+
+      .section-head {
+        display: grid;
+        gap: 12px;
+        max-width: 800px;
+        margin-bottom: 30px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(31px, 4vw, 46px);
+        line-height: 1.05;
+        letter-spacing: -0.048em;
+      }
+
+      .section-head p {
+        max-width: 680px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .section-kicker {
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .position-grid {
+        display: grid;
+        grid-template-columns: 0.82fr 1.18fr;
+        gap: 20px;
+      }
+
+      .position-card,
+      .readiness-card,
+      .capital-board,
+      .fracture-card,
+      .impact-card,
+      .value-axis,
+      .architecture-map,
+      .route-views,
+      .agent-future-board,
+      .pilot-board,
+      .timeline,
+      .benefit-board,
+      .support-board,
+      .closing-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: 0 1px 2px rgba(16, 32, 43, 0.04);
+      }
+
+      .position-card {
+        padding: 26px;
+        display: grid;
+        align-content: space-between;
+        gap: 26px;
+      }
+
+      .position-card h3 {
+        max-width: 360px;
+        font-size: 30px;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+
+      .system-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .system-cloud span,
+      .tag-row span,
+      .moat-tags span,
+      .route-capabilities span {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .position-layer {
+        border-left: 4px solid var(--accent);
+        padding: 16px 0 16px 16px;
+        background: linear-gradient(90deg, var(--accent-soft), transparent);
+      }
+
+      .position-layer strong {
+        display: block;
+        color: var(--accent-strong);
+        font-size: 20px;
+      }
+
+      .position-layer span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .readiness-card {
+        padding: 26px;
+      }
+
+      .chart-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .chart-head h3 {
+        font-size: 24px;
+        letter-spacing: -0.035em;
+      }
+
+      .chart-head span {
+        color: var(--soft);
+        font-size: 12px;
+      }
+
+      .bar-chart {
+        min-height: 280px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+        align-items: end;
+        margin-top: 24px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .bar-column {
+        height: 260px;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) 40px 20px;
+        align-items: stretch;
+        gap: 8px;
+        text-align: center;
+      }
+
+      .bar {
+        width: min(72px, 72%);
+        height: calc(var(--value) * 2px);
+        justify-self: center;
+        align-self: end;
+        display: grid;
+        align-content: start;
+        border-radius: 6px 6px 0 0;
+        padding-top: 9px;
+        background: #b8c4ca;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .bar-column.context .bar {
+        background: var(--accent-mid);
+        color: var(--accent-strong);
+      }
+
+      .bar-column.utility .bar {
+        background: var(--accent);
+        color: #ffffff;
+      }
+
+      .bar-column strong {
+        display: grid;
+        place-items: start center;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.25;
+      }
+
+      .bar-column small {
+        display: grid;
+        place-items: start center;
+        color: var(--soft);
+        font-size: 11px;
+        line-height: 1.25;
+      }
+
+      .chart-conclusion {
+        margin-top: 16px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .chart-conclusion strong {
+        font-size: 18px;
+      }
+
+      .chart-conclusion span {
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .context-flow {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 1fr 34px 1.15fr 34px 1fr;
+        align-items: stretch;
+      }
+
+      .flow-block {
+        min-height: 138px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: var(--surface);
+      }
+
+      .flow-block.core {
+        border-color: var(--accent-mid);
+        background: var(--accent-soft);
+      }
+
+      .flow-block small {
+        color: var(--soft);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .flow-block strong {
+        display: block;
+        margin-top: 7px;
+        font-size: 19px;
+      }
+
+      .flow-block p {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .flow-arrow {
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .capital-board {
+        padding: 24px;
+      }
+
+      .moat-map {
+        display: grid;
+        grid-template-columns: 0.86fr 1.18fr 0.96fr;
+        gap: 12px;
+      }
+
+      .moat-column {
+        min-height: 220px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        background: var(--surface-soft);
+      }
+
+      .moat-column.core {
+        border-color: var(--accent-mid);
+        background: linear-gradient(145deg, var(--accent-soft), #ffffff);
+      }
+
+      .moat-column h3 {
+        font-size: 19px;
+        letter-spacing: -0.025em;
+      }
+
+      .moat-column p {
+        margin-top: 5px;
+        color: var(--soft);
+        font-size: 12px;
+      }
+
+      .moat-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 16px;
+      }
+
+      .moat-column.core .moat-tags span {
+        border-color: var(--accent-mid);
+        background: #ffffff;
+        color: var(--accent-strong);
+      }
+
+      .strategic-sentence {
+        margin-top: 14px;
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: clamp(20px, 2.6vw, 30px);
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+      }
+
+      .reproduction {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+        padding-top: 20px;
+      }
+
+      .reproduction-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .reproduction-head h3 {
+        font-size: 21px;
+      }
+
+      .reproduction-head span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .cycle-track {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 16px;
+      }
+
+      .cycle-step {
+        position: relative;
+        min-height: 92px;
+        display: grid;
+        align-content: center;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px;
+        background: var(--surface-soft);
+      }
+
+      .cycle-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -17px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .cycle-step strong {
+        font-size: 14px;
+      }
+
+      .cycle-step span {
+        margin-top: 3px;
+        color: var(--soft);
+        font-size: 11px;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+
+      .pain-layout {
+        display: grid;
+        grid-template-columns: 1.16fr 0.84fr;
+        gap: 20px;
+      }
+
+      .fracture-card,
+      .impact-card {
+        padding: 24px;
+      }
+
+      .fracture-grid {
+        display: grid;
+        grid-template-areas:
+          "data core docs"
+          "version core experience";
+        grid-template-columns: 1fr 1.1fr 1fr;
+        gap: 12px;
+      }
+
+      .fracture-node,
+      .fracture-core {
+        min-height: 118px;
+        display: grid;
+        align-content: center;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px;
+        background: var(--surface-soft);
+      }
+
+      .fracture-node:nth-child(1) { grid-area: data; }
+      .fracture-node:nth-child(2) { grid-area: docs; }
+      .fracture-node:nth-child(3) { grid-area: version; }
+      .fracture-node:nth-child(4) { grid-area: experience; }
+
+      .fracture-node strong {
+        font-size: 17px;
+      }
+
+      .fracture-node span {
+        margin-top: 4px;
+        color: var(--soft);
+        font-size: 12px;
+      }
+
+      .fracture-core {
+        grid-area: core;
+        border-color: #d4b5b5;
+        background: #fbf3f3;
+        color: var(--danger);
+        text-align: center;
+      }
+
+      .fracture-core strong {
+        font-size: 24px;
+        line-height: 1.1;
+      }
+
+      .fracture-core span {
+        margin-top: 7px;
+        color: #815555;
+        font-size: 12px;
+      }
+
+      .impact-card h3 {
+        font-size: 24px;
+        line-height: 1.12;
+        letter-spacing: -0.035em;
+      }
+
+      .impact-ladder {
+        display: grid;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .impact-level {
+        border-left: 4px solid var(--line);
+        padding: 11px 14px;
+        background: var(--surface-soft);
+      }
+
+      .impact-level strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .impact-level span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .value-axis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        overflow: hidden;
+      }
+
+      .value-stage {
+        position: relative;
+        min-height: 224px;
+        padding: 24px;
+        border-top: 4px solid var(--accent);
+        background: var(--surface);
+      }
+
+      .value-stage + .value-stage {
+        border-left: 1px solid var(--line);
+      }
+
+      .value-stage:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        z-index: 1;
+        right: -13px;
+        top: 28px;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: #ffffff;
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .value-stage small {
+        color: var(--soft);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .value-stage strong {
+        display: block;
+        margin-top: 18px;
+        color: var(--accent-strong);
+        font-size: 30px;
+        letter-spacing: -0.04em;
+      }
+
+      .value-stage p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .architecture-map {
+        overflow: hidden;
+      }
+
+      .architecture-band {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 22px;
+        align-items: center;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .architecture-band:last-child {
+        border-bottom: 0;
+      }
+
+      .architecture-band > strong {
+        font-size: 17px;
+      }
+
+      .architecture-band > div {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .architecture-band.app {
+        background: var(--accent-soft);
+      }
+
+      .architecture-band.systems {
+        background: var(--surface-soft);
+      }
+
+      .semantic-engine {
+        padding: 22px;
+        border-bottom: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .semantic-engine > header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .semantic-engine h3 {
+        font-size: 25px;
+        letter-spacing: -0.035em;
+      }
+
+      .semantic-engine header span {
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .alignment-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .alignment-column {
+        min-height: 166px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 17px;
+        background: var(--surface-soft);
+      }
+
+      .alignment-column small {
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .alignment-column strong {
+        display: block;
+        margin-top: 7px;
+        font-size: 18px;
+      }
+
+      .alignment-column p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .route-views {
+        margin-top: 18px;
+        padding: 22px;
+      }
+
+      .route-views header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .route-views h3 {
+        font-size: 22px;
+      }
+
+      .route-views header span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .view-map {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .view-cell {
+        min-height: 118px;
+        border-top: 3px solid var(--accent);
+        padding: 16px;
+        background: var(--surface-soft);
+      }
+
+      .view-cell strong {
+        display: block;
+        font-size: 16px;
+      }
+
+      .view-cell span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .route-capabilities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+
+      .context-blueprint-board {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: 0 1px 2px rgba(16, 32, 43, 0.04);
+      }
+
+      .context-layer {
+        padding: 22px 24px;
+      }
+
+      .context-layer + .context-layer {
+        border-top: 1px solid var(--line);
+      }
+
+      .context-layer-head {
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr);
+        gap: 18px;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+
+      .context-layer-head strong {
+        color: var(--accent-strong);
+        font-size: 14px;
+      }
+
+      .context-layer-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .participant-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--line);
+      }
+
+      .participant-item {
+        min-height: 130px;
+        padding: 17px;
+        background: #ffffff;
+      }
+
+      .participant-item small {
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .participant-item strong {
+        display: block;
+        margin-top: 11px;
+        font-size: 17px;
+      }
+
+      .participant-item span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .access-layer {
+        background: var(--accent-soft);
+      }
+
+      .access-control-band {
+        display: grid;
+        grid-template-columns: minmax(190px, 0.75fr) minmax(0, 2.25fr);
+        gap: 22px;
+        align-items: center;
+        border-left: 4px solid var(--accent);
+        padding: 18px 20px;
+        background: #ffffff;
+      }
+
+      .access-control-band h3 {
+        font-size: 20px;
+        line-height: 1.16;
+        letter-spacing: -0.025em;
+      }
+
+      .access-control-band p {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .control-tags,
+      .source-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .control-tags span,
+      .source-tags span {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 9px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .hub-layer {
+        padding: 28px 24px;
+        background: var(--surface-soft);
+      }
+
+      .context-hub {
+        border: 2px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 22px;
+        background: #ffffff;
+      }
+
+      .context-hub-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr);
+        gap: 28px;
+        align-items: end;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .context-hub-title small {
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .context-hub-title h3 {
+        margin-top: 5px;
+        font-size: 30px;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+
+      .context-hub-header > p {
+        border-left: 3px solid var(--accent-mid);
+        padding-left: 14px;
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .context-hub-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .hub-capability {
+        min-height: 106px;
+        border-top: 3px solid var(--accent);
+        padding: 14px;
+        background: var(--surface-soft);
+      }
+
+      .hub-capability strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .hub-capability span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .source-layer {
+        background: #ffffff;
+      }
+
+      .source-connection {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.45fr);
+        gap: 24px;
+        align-items: center;
+      }
+
+      .source-connection p {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .source-connection p strong {
+        color: var(--ink);
+      }
+
+      .context-flow-marker {
+        min-height: 28px;
+        display: grid;
+        place-items: center;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-soft);
+        color: var(--accent);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .knowledge-lifecycle {
+        margin-top: 18px;
+        scroll-margin-top: 118px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 22px;
+        background: var(--surface);
+      }
+
+      .lifecycle-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .lifecycle-head h3 {
+        font-size: 22px;
+      }
+
+      .lifecycle-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .lifecycle-track {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .lifecycle-step {
+        position: relative;
+        min-height: 96px;
+        padding: 13px 12px;
+        border-top: 3px solid var(--accent);
+        background: var(--surface-soft);
+      }
+
+      .lifecycle-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        z-index: 1;
+        top: 32px;
+        right: -13px;
+        width: 18px;
+        height: 22px;
+        display: grid;
+        place-items: center;
+        background: #ffffff;
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .lifecycle-step small {
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 900;
+      }
+
+      .lifecycle-step strong {
+        display: block;
+        margin-top: 7px;
+        font-size: 14px;
+      }
+
+      .maintenance-roles {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--line);
+      }
+
+      .maintenance-role {
+        min-height: 118px;
+        padding: 14px;
+        background: #ffffff;
+      }
+
+      .maintenance-role strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .maintenance-role span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .agent-governance-note {
+        margin-top: 12px;
+        border-left: 4px solid var(--accent);
+        padding: 12px 15px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .context-management-summary {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.65fr);
+        gap: 18px;
+        align-items: stretch;
+        margin-top: 18px;
+        scroll-margin-top: 118px;
+      }
+
+      .context-summary-statement {
+        display: grid;
+        align-content: center;
+        border-left: 4px solid var(--accent);
+        padding: 20px 22px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 18px;
+        font-weight: 850;
+        line-height: 1.35;
+      }
+
+      .context-outcomes {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--line);
+      }
+
+      .context-outcome {
+        padding: 18px;
+        background: #ffffff;
+      }
+
+      .context-outcome strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .context-outcome span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .agent-future-board {
+        overflow: hidden;
+      }
+
+      .agent-reasoning-map {
+        display: grid;
+        grid-template-columns: minmax(170px, 0.8fr) 36px minmax(520px, 1.8fr) 36px minmax(170px, 0.8fr);
+        align-items: stretch;
+        padding: 26px;
+      }
+
+      .agent-terminal {
+        min-height: 260px;
+        display: grid;
+        align-content: center;
+        border: 1px solid var(--line);
+        border-top: 4px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: var(--surface-soft);
+      }
+
+      .agent-terminal.output {
+        border-color: var(--accent-mid);
+        background: var(--accent-soft);
+      }
+
+      .agent-terminal small,
+      .reasoning-engine small,
+      .reasoning-step small {
+        color: var(--accent-strong);
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .agent-terminal strong {
+        display: block;
+        margin-top: 9px;
+        font-size: 22px;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+      }
+
+      .agent-terminal p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .agent-arrow {
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .reasoning-engine {
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: #ffffff;
+      }
+
+      .reasoning-engine > header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .reasoning-engine h3 {
+        font-size: 22px;
+        letter-spacing: -0.035em;
+      }
+
+      .reasoning-engine header span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .reasoning-track {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .reasoning-step {
+        min-height: 166px;
+        display: grid;
+        grid-template-rows: 18px 22px 44px 1fr;
+        align-content: start;
+        gap: 7px;
+        border-top: 3px solid var(--accent);
+        padding: 14px 12px;
+        background: var(--surface-soft);
+      }
+
+      .reasoning-step b {
+        color: var(--accent);
+        font-size: 11px;
+      }
+
+      .reasoning-step strong {
+        font-size: 16px;
+        line-height: 1.2;
+      }
+
+      .reasoning-step span {
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .trace-rail {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        gap: 18px;
+        align-items: center;
+        border-top: 1px solid var(--line);
+        padding: 20px 26px;
+        background: var(--surface-soft);
+      }
+
+      .trace-rail > strong {
+        color: var(--accent-strong);
+        font-size: 16px;
+      }
+
+      .trace-events {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--line);
+      }
+
+      .trace-events span {
+        min-height: 54px;
+        display: grid;
+        place-items: center;
+        padding: 8px;
+        background: #ffffff;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 750;
+        text-align: center;
+      }
+
+      .agent-trust-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .agent-trust-row div {
+        border-top: 3px solid var(--accent);
+        padding: 13px 15px;
+        background: var(--surface);
+      }
+
+      .agent-trust-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .agent-trust-row span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .agent-demo-callout {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-top: 14px;
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius);
+        padding: 15px 18px;
+        background: var(--accent-soft);
+      }
+
+      .agent-demo-callout strong {
+        display: block;
+        color: var(--accent-strong);
+        font-size: 16px;
+      }
+
+      .agent-demo-callout span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .pilot-board {
+        padding: 26px;
+      }
+
+      .pilot-equation {
+        display: grid;
+        grid-template-columns: 1fr 36px 1fr 36px 1fr 46px 1.1fr;
+        align-items: stretch;
+      }
+
+      .equation-item,
+      .equation-result {
+        min-height: 146px;
+        display: grid;
+        align-content: center;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        background: var(--surface-soft);
+        text-align: center;
+      }
+
+      .equation-result {
+        border-color: var(--accent-mid);
+        background: var(--accent-soft);
+      }
+
+      .equation-item strong,
+      .equation-result strong {
+        color: var(--accent-strong);
+        font-size: 34px;
+        letter-spacing: -0.045em;
+      }
+
+      .equation-item span,
+      .equation-result span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .equation-symbol {
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .validation-gates {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .gate {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 15px;
+        background: #ffffff;
+      }
+
+      .gate strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .gate span {
+        display: block;
+        margin-top: 4px;
+        color: var(--soft);
+        font-size: 12px;
+      }
+
+      .governance-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        overflow: hidden;
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--line);
+      }
+
+      .governance-strip div {
+        padding: 16px;
+        background: var(--surface-soft);
+      }
+
+      .governance-strip strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .governance-strip span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .timeline {
+        padding: 24px;
+      }
+
+      .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .phase {
+        grid-column: var(--start) / span var(--span);
+        min-height: 192px;
+        display: grid;
+        grid-template-rows: 18px 48px 42px 22px;
+        align-content: start;
+        row-gap: 8px;
+        border-top: 4px solid var(--accent);
+        border-radius: 0 0 var(--radius) var(--radius);
+        padding: 16px;
+        background: var(--surface-soft);
+      }
+
+      .phase small {
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .phase h3 {
+        margin-top: 0;
+        font-size: 18px;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+      }
+
+      .phase p {
+        margin-top: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .phase output {
+        display: block;
+        margin-top: 0;
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 850;
+        line-height: 1.55;
+      }
+
+      .year-thread {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 18px;
+        align-items: center;
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        background: var(--accent-soft);
+      }
+
+      .year-thread strong {
+        color: var(--accent-strong);
+      }
+
+      .thread-flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .thread-flow b {
+        color: var(--accent);
+      }
+
+      @media (min-width: 1041px) {
+        html[data-language="en"] .phase {
+          min-height: 244px;
+          grid-template-rows: auto auto auto auto;
+          padding: 14px;
+        }
+
+        html[data-language="en"] .phase h3 {
+          font-size: 15px;
+          line-height: 1.25;
+          letter-spacing: 0;
+          overflow-wrap: anywhere;
+        }
+
+        html[data-language="en"] .phase p,
+        html[data-language="en"] .phase output {
+          font-size: 11px;
+          line-height: 1.45;
+          overflow-wrap: anywhere;
+        }
+
+        html[data-language="en"] .year-thread {
+          grid-template-columns: minmax(260px, 0.8fr) minmax(0, 2.2fr);
+          gap: 20px;
+        }
+
+        html[data-language="en"] .year-thread strong {
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        html[data-language="en"] .thread-flow {
+          gap: 6px;
+          font-size: 11px;
+        }
+
+        html[data-language="en"] .thread-flow span {
+          white-space: nowrap;
+        }
+      }
+
+      .benefit-board {
+        display: grid;
+        grid-template-columns: 0.72fr 1.28fr;
+        gap: 0;
+        overflow: hidden;
+      }
+
+      .benefit-core {
+        padding: 26px;
+        background: var(--accent-soft);
+        border-right: 1px solid var(--line);
+      }
+
+      .benefit-core h3 {
+        font-size: 29px;
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+
+      .benefit-core p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .core-layers {
+        display: grid;
+        gap: 8px;
+        margin-top: 20px;
+      }
+
+      .core-layers div {
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius);
+        padding: 11px 13px;
+        background: #ffffff;
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .stair-chart {
+        min-height: 360px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        align-items: end;
+        padding: 26px;
+        background:
+          linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 25%,
+          #ffffff;
+      }
+
+      .stair {
+        min-height: var(--height);
+        display: grid;
+        grid-template-rows: 18px 36px 42px;
+        row-gap: 4px;
+        align-content: end;
+        border: 1px solid var(--accent-mid);
+        border-radius: var(--radius) var(--radius) 0 0;
+        padding: 16px;
+        background: linear-gradient(180deg, #ffffff, var(--accent-soft));
+      }
+
+      .stair small {
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1.5;
+      }
+
+      .stair strong {
+        display: block;
+        margin-top: 0;
+        font-size: 21px;
+        line-height: 1.35;
+      }
+
+      .stair span {
+        display: block;
+        margin-top: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .outcome-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .outcome-row div {
+        border-left: 3px solid var(--accent);
+        padding: 11px 14px;
+        background: var(--surface);
+      }
+
+      .outcome-row strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .outcome-row span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .support-board {
+        padding: 28px;
+      }
+
+      .support-board h2 {
+        max-width: 780px;
+        font-size: clamp(31px, 4vw, 48px);
+        line-height: 1.05;
+        letter-spacing: -0.048em;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .decision {
+        min-height: 150px;
+        border-top: 4px solid var(--accent);
+        padding: 18px;
+        background: var(--surface-soft);
+      }
+
+      .decision strong {
+        display: block;
+        color: var(--accent-strong);
+        font-size: 20px;
+      }
+
+      .decision span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .closing {
+        padding: 72px 0 90px;
+      }
+
+      .closing-card {
+        display: grid;
+        gap: 18px;
+        padding: 32px;
+      }
+
+      .closing-card h2 {
+        max-width: 920px;
+        font-size: clamp(34px, 4.4vw, 54px);
+        line-height: 1.03;
+        letter-spacing: -0.052em;
+      }
+
+      .closing-card p {
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 22px 0;
+        color: var(--soft);
+        background: #ffffff;
+        font-size: 12px;
+      }
+
+      @media (max-width: 1040px) {
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 12px 0;
+        }
+
+        .navlinks {
+          width: 100%;
+          overflow-x: auto;
+          padding-bottom: 2px;
+        }
+
+        .language-button {
+          position: sticky;
+          left: 0;
+          z-index: 2;
+          order: -1;
+          background: var(--surface);
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .hero-grid,
+        .position-grid,
+        .pain-layout,
+        .benefit-board,
+        .agent-reasoning-map {
+          grid-template-columns: 1fr;
+        }
+
+        .agent-arrow {
+          min-height: 34px;
+          transform: rotate(90deg);
+        }
+
+        .agent-terminal {
+          min-height: 150px;
+        }
+
+        .benefit-core {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .timeline-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .phase {
+          grid-column: auto;
+        }
+
+        .phase:last-child {
+          grid-column: 1 / -1;
+        }
+
+        .moat-map,
+        .alignment-grid,
+        .view-map,
+        .validation-gates,
+        .decision-grid,
+        .outcome-row,
+        .agent-trust-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .moat-column.core {
+          grid-column: span 2;
+          grid-row: 1;
+        }
+
+        .cycle-track {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .participant-grid,
+        .context-hub-grid,
+        .maintenance-roles {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .maintenance-role:last-child {
+          grid-column: 1 / -1;
+        }
+
+        .access-control-band,
+        .source-connection,
+        .context-management-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .lifecycle-track {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .lifecycle-step::after {
+          display: none !important;
+        }
+
+        .cycle-step::after {
+          display: none;
+        }
+
+        .pilot-equation {
+          grid-template-columns: 1fr 28px 1fr 28px 1fr;
+        }
+
+        .equation-result {
+          grid-column: 1 / -1;
+          margin-top: 12px;
+        }
+
+        .pilot-equation .equation-symbol:nth-of-type(6) {
+          display: none;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: min(var(--max), calc(100% - 28px));
+        }
+
+        section {
+          padding: 54px 0;
+        }
+
+        .hero {
+          padding: 34px 0 48px;
+        }
+
+        .hero-grid {
+          gap: 30px;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        .hero-copy {
+          font-size: 16px;
+        }
+
+        .hero-visual,
+        .hero-visual img {
+          min-height: 390px;
+        }
+
+        .hero-panel {
+          left: 14px;
+          right: 14px;
+          bottom: 14px;
+          grid-template-columns: 1fr;
+        }
+
+        .hero-panel div {
+          padding: 11px 13px;
+        }
+
+        .hero-panel span {
+          display: none;
+        }
+
+        .section-head h2 {
+          font-size: 34px;
+        }
+
+        .bar-chart {
+          min-height: 230px;
+          gap: 6px;
+        }
+
+        .bar-column {
+          height: 226px;
+        }
+
+        .bar {
+          height: calc(var(--value) * 1.55px);
+          width: 70%;
+        }
+
+        .bar-column strong {
+          font-size: 10px;
+        }
+
+        .context-flow {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .flow-arrow {
+          transform: rotate(90deg);
+        }
+
+        .moat-map,
+        .alignment-grid,
+        .view-map,
+        .validation-gates,
+        .decision-grid,
+        .outcome-row,
+        .governance-strip,
+        .agent-trust-row,
+        .trace-events,
+        .participant-grid,
+        .context-hub-grid,
+        .maintenance-roles,
+        .context-outcomes,
+        .lifecycle-track {
+          grid-template-columns: 1fr;
+        }
+
+        .maintenance-role:last-child {
+          grid-column: auto;
+        }
+
+        .context-layer {
+          padding: 18px;
+        }
+
+        .context-layer-head,
+        .context-hub-header {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .access-control-band {
+          padding: 16px;
+        }
+
+        .context-hub {
+          padding: 16px;
+        }
+
+        .context-hub-title h3 {
+          font-size: 25px;
+        }
+
+        .context-hub-header > p {
+          margin-top: 8px;
+        }
+
+        .participant-item,
+        .hub-capability,
+        .maintenance-role {
+          min-height: 0;
+        }
+
+        .lifecycle-head {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .lifecycle-step {
+          min-height: 0;
+          border-top: 0;
+          border-left: 3px solid var(--accent);
+        }
+
+        .context-summary-statement {
+          font-size: 16px;
+        }
+
+        .agent-reasoning-map {
+          padding: 18px;
+        }
+
+        .reasoning-engine > header,
+        .agent-demo-callout {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .reasoning-track {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .reasoning-step {
+          min-height: 154px;
+        }
+
+        .trace-rail {
+          grid-template-columns: 1fr;
+        }
+
+        .moat-column.core {
+          grid-column: auto;
+          grid-row: auto;
+        }
+
+        .reproduction-head,
+        .semantic-engine > header,
+        .route-views header,
+        .chart-conclusion {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .cycle-track {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .fracture-grid {
+          grid-template-areas:
+            "core"
+            "data"
+            "docs"
+            "version"
+            "experience";
+          grid-template-columns: 1fr;
+        }
+
+        .fracture-core,
+        .fracture-node {
+          min-height: 96px;
+        }
+
+        .value-axis {
+          grid-template-columns: 1fr;
+        }
+
+        .value-stage {
+          min-height: 170px;
+        }
+
+        .value-stage + .value-stage {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+
+        .value-stage::after {
+          display: none !important;
+        }
+
+        .architecture-band {
+          grid-template-columns: 1fr;
+          gap: 7px;
+        }
+
+        .pilot-equation {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .equation-symbol {
+          display: none;
+        }
+
+        .equation-result {
+          grid-column: 1 / -1;
+          margin-top: 0;
+        }
+
+        .pilot-equation .equation-item:nth-child(5) {
+          grid-column: 1 / -1;
+        }
+
+        .pilot-equation .equation-symbol:nth-of-type(6) {
+          display: none;
+        }
+
+        .equation-item,
+        .equation-result {
+          min-height: 120px;
+        }
+
+        .timeline-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phase {
+          grid-column: auto;
+          min-height: 0;
+          grid-template-rows: repeat(4, auto);
+        }
+
+        .phase:last-child {
+          grid-column: auto;
+        }
+
+        .year-thread {
+          grid-template-columns: 1fr;
+        }
+
+        .thread-flow {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .thread-flow b {
+          transform: rotate(90deg);
+        }
+
+        .stair-chart {
+          min-height: 0;
+          grid-template-columns: 1fr;
+          align-items: stretch;
+          background: #ffffff;
+        }
+
+        .stair {
+          min-height: 120px;
+          border-radius: var(--radius);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        .primary-button,
+        .secondary-button {
+          transition: none;
+        }
+      }
+
+      @media print {
+        .topbar,
+        .hero-actions {
+          display: none;
+        }
+
+        body,
+        section,
+        section:nth-of-type(even) {
+          background: #ffffff;
+        }
+
+        section,
+        .closing {
+          break-inside: avoid;
+          padding: 28px 0;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        #context-blueprint {
+          break-inside: auto;
+        }
+
+        .context-layer,
+        .knowledge-lifecycle,
+        .context-management-summary,
+        .maintenance-role,
+        .lifecycle-step {
+          break-inside: avoid;
+        }
+
+        .context-blueprint-board,
+        .knowledge-lifecycle {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <nav class="shell nav" aria-label="页面导航">
+        <a class="brand" href="#top">
+          <strong>制造知识资产层项目建议</strong>
+          <span>面向管理层汇报网页</span>
+        </a>
+        <div class="navlinks" aria-label="章节">
+          <a href="#why">战略判断</a>
+          <a href="#capital">知识资本</a>
+          <a href="#blueprint">架构路线</a>
+          <a href="#context-blueprint">统一上下文</a>
+          <a href="#future">Agent 展望</a>
+          <a href="#roadmap">一年计划</a>
+          <a href="#benefits">预期收益</a>
+          <a href="#support">决策事项</a>
+          <a class="demo-link" href="/routes/production" target="_blank" rel="noopener">打开 Demo</a>
+          <button class="language-button" type="button" data-language-toggle aria-label="Switch to English" title="Switch to English">EN</button>
+          <button class="print-button" type="button" onclick="window.print()">打印汇报</button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="shell hero-grid">
+          <div>
+            <span class="eyebrow">AI 战略转型首个知识工程试点</span>
+            <h1>建设企业制造知识资产层</h1>
+            <p class="hero-copy">让制造知识成为 <strong>AI Agent 可调用的可信业务上下文</strong>，支撑追溯、分析、决策与持续学习。</p>
+            <div class="hero-actions">
+              <a class="primary-button" href="#support">查看决策事项</a>
+              <a class="secondary-button" href="#blueprint">查看架构路线</a>
+            </div>
+          </div>
+          <figure class="hero-visual" aria-label="制造现场与知识资产连接示意">
+            <img
+              src="/report-assets/manufacturing-knowledge-hero.jpg"
+              alt="现代制造车间中的加工设备，画面叠加知识图谱节点和关系线"
+              width="1672"
+              height="941"
+            >
+            <figcaption class="hero-panel">
+              <div><strong>连接</strong><span>产品、工艺、设备、质量与文件</span></div>
+              <div><strong>可信</strong><span>来源、版本、责任人与审核</span></div>
+              <div><strong>调用</strong><span>为 AI Agent 供给业务上下文</span></div>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="why">
+        <div class="shell">
+          <header class="section-head">
+            <span class="section-kicker">项目定位</span>
+            <h2>AI 应用的瓶颈，已经从模型转向企业上下文。</h2>
+            <p>模型能力快速普及，结构化知识与 AI-ready data 决定业务价值能否释放。</p>
+          </header>
+
+          <div class="position-grid">
+            <article class="position-card">
+              <div>
+                <h3>不替代现有系统，在其之上建立知识连接层。</h3>
+                <div class="system-cloud" style="margin-top: 18px;">
+                  <span>MES</span><span>PLM</span><span>ERP</span><span>QMS</span><span>文档库</span><span>数字孪生</span>
+                </div>
+              </div>
+              <div class="position-layer">
+                <strong>制造知识资产层</strong>
+                <span>连接对象、关系、文件、版本、证据与责任</span>
+              </div>
+            </article>
+
+            <figure class="readiness-card" aria-label="企业 AI 应用有效性示意指数">
+              <div class="chart-head">
+                <h3>AI 应用有效性缺口</h3>
+                <span>示意指数，非绩效测量</span>
+              </div>
+              <div class="bar-chart">
+                <div class="bar-column">
+                  <div class="bar" style="--value: 90;">90</div>
+                  <strong>模型能力</strong><small>已具备</small>
+                </div>
+                <div class="bar-column context">
+                  <div class="bar" style="--value: 60;">60</div>
+                  <strong>数据质量</strong><small>待治理</small>
+                </div>
+                <div class="bar-column context">
+                  <div class="bar" style="--value: 40;">40</div>
+                  <strong>数据关联</strong><small>待连接</small>
+                </div>
+                <div class="bar-column context">
+                  <div class="bar" style="--value: 20;">20</div>
+                  <strong>知识结构</strong><small>核心短板</small>
+                </div>
+                <div class="bar-column utility">
+                  <div class="bar" style="--value: 20;">20</div>
+                  <strong>业务效用</strong><small>受上限约束</small>
+                </div>
+              </div>
+              <figcaption class="chart-conclusion">
+                <strong>模型强，不等于业务效用高。</strong>
+                <span>缺口来自企业知识上下文</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="context-flow" aria-label="AI Agent 业务价值链">
+            <article class="flow-block">
+              <small>可替换能力</small>
+              <strong>LLM 与 Agent 技术</strong>
+              <p>推理、生成、编排、检索与工具调用。</p>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-block core">
+              <small>真正瓶颈</small>
+              <strong>结构化知识与 AI-ready data</strong>
+              <p>业务对象统一、关系可追溯、版本有证据。</p>
+            </article>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <article class="flow-block">
+              <small>价值释放</small>
+              <strong>更懂业务的 AI Agent</strong>
+              <p>追溯、诊断、影响分析与工程决策辅助。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="capital">
+        <div class="shell">
+          <header class="section-head">
+            <h2>AI Agent 时代的核心护城河，是可持续再生产的企业知识资本。</h2>
+            <p>模型和工具会更换，企业制造知识的积累能力无法临时购买。</p>
+          </header>
+
+          <div class="capital-board">
+            <div class="moat-map" aria-label="企业知识资本护城河图">
+              <article class="moat-column">
+                <h3>可替换能力</h3>
+                <p>技术周期持续变化</p>
+                <div class="moat-tags">
+                  <span>LLM</span><span>Agent 框架</span><span>前端应用</span><span>业务系统</span><span>单点工具</span>
+                </div>
+              </article>
+              <article class="moat-column core">
+                <h3>企业知识资本层</h3>
+                <p>最难复制，持续增值</p>
+                <div class="moat-tags">
+                  <span>产品</span><span>工艺</span><span>设备</span><span>质量</span><span>工程经验</span><span>异常处理</span><span>精益改善</span><span>文件证据</span><span>版本审计</span>
+                </div>
+              </article>
+              <article class="moat-column">
+                <h3>长期竞争力</h3>
+                <p>AI 更懂业务与现场</p>
+                <div class="moat-tags">
+                  <span>质量追溯</span><span>影响分析</span><span>异常诊断</span><span>工程决策</span><span>数字孪生</span><span>组织学习</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="strategic-sentence">AI Agent 的上限，不只取决于模型能力，更取决于企业能提供怎样的业务上下文。</div>
+
+            <div class="reproduction">
+              <div class="reproduction-head">
+                <h3>知识资本积累与再生产闭环</h3>
+                <span>每一次业务活动，都是知识增长入口</span>
+              </div>
+              <div class="cycle-track" aria-label="知识再生产流程">
+                <div class="cycle-step"><strong>业务发生</strong><span>问题、变更、改善</span></div>
+                <div class="cycle-step"><strong>知识提取</strong><span>对象、关系、规则</span></div>
+                <div class="cycle-step"><strong>业务审核</strong><span>责任人与证据</span></div>
+                <div class="cycle-step"><strong>版本沉淀</strong><span>来源与审计</span></div>
+                <div class="cycle-step"><strong>AI 调用</strong><span>查询、分析、建议</span></div>
+                <div class="cycle-step"><strong>反馈更新</strong><span>结果回流知识层</span></div>
+              </div>
+              <div class="tag-row" aria-label="知识再生产入口示例">
+                <span>8D</span><span>NCR</span><span>ECN</span><span>PFMEA</span><span>Control Plan</span><span>设备异常</span><span>A3 改善</span><span>项目复盘</span><span>供应商问题</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pain">
+        <div class="shell">
+          <header class="section-head">
+            <h2>当前不是缺系统，而是缺跨系统知识关系。</h2>
+            <p>数据、文件和经验彼此孤立，AI 与数字孪生只能停留在浅层应用。</p>
+          </header>
+          <div class="pain-layout">
+            <figure class="fracture-card" aria-label="企业知识关系断裂示意">
+              <div class="fracture-grid">
+                <div class="fracture-node"><strong>部门数据分散</strong><span>生产、质量、工程各自维护</span></div>
+                <div class="fracture-node"><strong>系统与文件脱节</strong><span>结构化数据和经验规则分离</span></div>
+                <div class="fracture-node"><strong>版本责任不清</strong><span>来源、生效时间、审核难追溯</span></div>
+                <div class="fracture-node"><strong>经验跟人走</strong><span>异常与改善难以复用</span></div>
+                <div class="fracture-core"><strong>关系断裂</strong><span>业务上下文无法完整供给 AI</span></div>
+              </div>
+            </figure>
+            <aside class="impact-card">
+              <h3>关系缺失会直接压低 AI 能力上限。</h3>
+              <div class="impact-ladder">
+                <div class="impact-level"><strong>只能做泛化问答</strong><span>知道文档内容，不理解业务对象</span></div>
+                <div class="impact-level"><strong>难以可靠追溯</strong><span>无法确认版本、来源和影响范围</span></div>
+                <div class="impact-level"><strong>数字孪生停留在展示</strong><span>看见设备，无法理解业务关联</span></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="value">
+        <div class="shell">
+          <header class="section-head">
+            <h2>核心价值：把知识变成组织能力。</h2>
+            <p>从信息透明走向可推理、可复用、可持续增长。</p>
+          </header>
+          <div class="value-axis" aria-label="知识转化为组织能力的四个阶段">
+            <article class="value-stage"><small>透明</small><strong>看得见</strong><p>产品路线、工艺、设备、质量与文件统一呈现。</p></article>
+            <article class="value-stage"><small>协同</small><strong>连得上</strong><p>跨部门围绕同一业务对象与关系工作。</p></article>
+            <article class="value-stage"><small>决策</small><strong>能推理</strong><p>支持追溯、诊断、变更影响与工程判断。</p></article>
+            <article class="value-stage"><small>学习</small><strong>可再生</strong><p>业务结果持续回流，形成企业知识飞轮。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="blueprint">
+        <div class="shell">
+          <header class="section-head">
+            <span class="section-kicker">技术路线</span>
+            <h2>三层知识机制，让 AI 对齐真实业务。</h2>
+            <p>在现有系统之上，语义层统一语言，本体层定义关系，知识层承载证据与经验。</p>
+          </header>
+
+          <div class="architecture-map" aria-label="制造知识资产层技术架构">
+            <div class="architecture-band app">
+              <strong>AI 与业务应用</strong>
+              <div>AI Agent / 质量追溯 / 变更影响 / 异常诊断 / 数字孪生</div>
+            </div>
+            <div class="semantic-engine">
+              <header>
+                <h3>制造知识资产核心</h3>
+                <span>让 AI 按企业语境理解与推理</span>
+              </header>
+              <div class="alignment-grid">
+                <article class="alignment-column">
+                  <small>SEMANTIC LAYER</small>
+                  <strong>语义层</strong>
+                  <p>统一产品、工序、设备、质量、文件与变更的业务语言。</p>
+                </article>
+                <article class="alignment-column">
+                  <small>ONTOLOGY LAYER</small>
+                  <strong>本体层</strong>
+                  <p>定义对象边界、层级、关系、约束和适用范围。</p>
+                </article>
+                <article class="alignment-column">
+                  <small>KNOWLEDGE LAYER</small>
+                  <strong>知识层</strong>
+                  <p>承载实例、经验、文件证据、版本、责任人与审核。</p>
+                </article>
+              </div>
+            </div>
+            <div class="architecture-band">
+              <strong>治理与服务</strong>
+              <div>Data Fabric / Knowledge Graph / Semantic API / Source Traceability / Audit Trail</div>
+            </div>
+            <div class="architecture-band systems">
+              <strong>现有业务系统</strong>
+              <div>MES / PLM / ERP / QMS / WMS / IoT / 文档库 / Excel / PowerPoint</div>
+            </div>
+          </div>
+
+          <div class="route-views" id="capability">
+            <header>
+              <h3>以一条产品加工路线，串联四类业务视图。</h3>
+              <span>同一对象模型，不同管理视角</span>
+            </header>
+            <div class="view-map">
+              <article class="view-cell"><strong>Production</strong><span>物料、工序、设备、节拍</span></article>
+              <article class="view-cell"><strong>Quality</strong><span>CTQ、PFMEA、Control Plan</span></article>
+              <article class="view-cell"><strong>Engineering</strong><span>工装、程序、参数、图纸</span></article>
+              <article class="view-cell"><strong>Value Stream</strong><span>库存、等待、瓶颈、改善</span></article>
+            </div>
+            <div class="route-capabilities">
+              <span>堆叠节点</span><span>关系追溯</span><span>文件知识抽取</span><span>AI 上下文服务</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="context-blueprint">
+        <div class="shell">
+          <header class="section-head">
+            <h2>让全企业在权限边界内，共享并共同维护同一份可信业务上下文。</h2>
+            <p>员工、AI Agent、业务系统和授权相关方不再分别复制和解释知识，而是围绕统一的业务对象、关系、证据、版本和责任机制进行查询、协作与持续维护。</p>
+          </header>
+
+          <div class="strategic-sentence">一份上下文，多类参与者，统一权限，持续演进。</div>
+
+          <figure class="context-blueprint-board" aria-label="企业统一知识上下文四层蓝图">
+            <div class="context-layer participant-layer">
+              <div class="context-layer-head">
+                <strong>01 · 参与者</strong>
+                <span>所有参与者围绕同一份可信业务上下文协作，不再为部门或 Agent 复制多套知识库。</span>
+              </div>
+              <div class="participant-grid">
+                <article class="participant-item">
+                  <small>PEOPLE</small>
+                  <strong>员工与专家</strong>
+                  <span>查询、补充、审核、复盘</span>
+                </article>
+                <article class="participant-item">
+                  <small>AI AGENT</small>
+                  <strong>AI Agent</strong>
+                  <span>检索、推理、建议、受控行动</span>
+                </article>
+                <article class="participant-item">
+                  <small>SYSTEMS</small>
+                  <strong>业务系统</strong>
+                  <span>读取上下文、触发流程、回写结果</span>
+                </article>
+                <article class="participant-item">
+                  <small>ECOSYSTEM</small>
+                  <strong>授权相关方</strong>
+                  <span>供应商、客户、合作伙伴在授权范围内协同</span>
+                </article>
+              </div>
+            </div>
+
+            <div class="context-flow-marker" aria-hidden="true">↓</div>
+
+            <div class="context-layer access-layer">
+              <div class="context-layer-head">
+                <strong>02 · 统一访问与权限控制</strong>
+                <span>先确认身份、角色、数据范围与业务场景，再允许读取、贡献、审核或发布。</span>
+              </div>
+              <div class="access-control-band">
+                <div>
+                  <h3>Governed Access</h3>
+                  <p>统一执行最小权限、职责分离与受控接口策略。</p>
+                </div>
+                <div class="control-tags" aria-label="统一访问与权限控制能力">
+                  <span>Identity</span>
+                  <span>RBAC / ABAC</span>
+                  <span>最小权限</span>
+                  <span>数据域隔离</span>
+                  <span>场景授权</span>
+                  <span>人工审批</span>
+                  <span>API Policy</span>
+                  <span>Audit Trail</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="context-flow-marker" aria-hidden="true">↓</div>
+
+            <div class="context-layer hub-layer">
+              <div class="context-layer-head">
+                <strong>03 · 企业统一知识上下文</strong>
+                <span>统一维护、持续更新、可追溯的企业业务事实基础。</span>
+              </div>
+              <div class="context-hub">
+                <header class="context-hub-header">
+                  <div class="context-hub-title">
+                    <small>ENTERPRISE CONTEXT HUB</small>
+                    <h3>企业统一知识上下文</h3>
+                  </div>
+                  <p>同一对象、同一关系、同一证据、同一版本基线。</p>
+                </header>
+                <div class="context-hub-grid">
+                  <article class="hub-capability"><strong>Semantic Layer</strong><span>统一业务语言与术语口径</span></article>
+                  <article class="hub-capability"><strong>Ontology</strong><span>统一对象、关系与约束</span></article>
+                  <article class="hub-capability"><strong>Knowledge Graph</strong><span>连接跨系统知识关系</span></article>
+                  <article class="hub-capability"><strong>Evidence</strong><span>关联来源文件与业务证据</span></article>
+                  <article class="hub-capability"><strong>Version</strong><span>管理版本、生效与失效状态</span></article>
+                  <article class="hub-capability"><strong>Owner</strong><span>明确责任人、审核人与发布权</span></article>
+                  <article class="hub-capability"><strong>Source Traceability</strong><span>追溯系统、文件与原始记录</span></article>
+                  <article class="hub-capability"><strong>Audit Trail</strong><span>记录访问、推理、调用与修改</span></article>
+                </div>
+              </div>
+            </div>
+
+            <div class="context-flow-marker" aria-hidden="true">↓</div>
+
+            <div class="context-layer source-layer">
+              <div class="context-layer-head">
+                <strong>04 · 现有系统与知识来源</strong>
+                <span>业务系统继续承载交易、执行和事实记录，知识上下文层负责连接、解释与治理。</span>
+              </div>
+              <div class="source-connection">
+                <div class="source-tags" aria-label="企业系统与知识来源">
+                  <span>MES</span><span>PLM</span><span>ERP</span><span>QMS</span><span>WMS</span><span>IoT</span><span>文档库</span><span>Excel</span><span>数字孪生</span><span>工程经验</span><span>业务流程</span>
+                </div>
+                <p><strong>连接方式：</strong>Data Fabric / Semantic API / Knowledge Graph。平台形成统一上下文访问与治理层，不替代现有系统。</p>
+              </div>
+            </div>
+          </figure>
+
+          <div class="knowledge-lifecycle" id="context-lifecycle" aria-label="企业知识共同维护闭环">
+            <header class="lifecycle-head">
+              <h3>知识共同维护闭环</h3>
+              <span>从业务事实发生到新版本发布，全过程有责任、有证据、有记录。</span>
+            </header>
+            <div class="lifecycle-track">
+              <div class="lifecycle-step"><small>01</small><strong>业务发生</strong></div>
+              <div class="lifecycle-step"><small>02</small><strong>知识贡献</strong></div>
+              <div class="lifecycle-step"><small>03</small><strong>责任人审核</strong></div>
+              <div class="lifecycle-step"><small>04</small><strong>正式发布</strong></div>
+              <div class="lifecycle-step"><small>05</small><strong>人与 Agent 使用</strong></div>
+              <div class="lifecycle-step"><small>06</small><strong>结果反馈</strong></div>
+              <div class="lifecycle-step"><small>07</small><strong>版本更新</strong></div>
+            </div>
+            <div class="maintenance-roles" aria-label="不同参与者的知识维护权限">
+              <article class="maintenance-role"><strong>员工</strong><span>按角色查询、贡献和审核知识。</span></article>
+              <article class="maintenance-role"><strong>业务专家</strong><span>确认知识正确性并批准正式发布。</span></article>
+              <article class="maintenance-role"><strong>AI Agent</strong><span>调用知识、提出建议并生成候选更新。</span></article>
+              <article class="maintenance-role"><strong>业务系统</strong><span>通过受控接口读取上下文并回写结果。</span></article>
+              <article class="maintenance-role"><strong>外部相关方</strong><span>仅访问被授权的数据域和业务范围。</span></article>
+            </div>
+            <p class="agent-governance-note">AI Agent 可以提出知识更新建议，但不能绕过权限、责任人和审核机制直接修改或发布正式知识。</p>
+          </div>
+
+          <div class="context-management-summary" id="context-summary">
+            <p class="context-summary-statement">企业统一知识上下文，不只是 AI 的知识库，而是人、Agent、系统和生态相关方共同工作的业务事实基础。</p>
+            <div class="context-outcomes" aria-label="企业统一知识上下文的三项管理结果">
+              <article class="context-outcome"><strong>统一理解</strong><span>减少部门、系统和 Agent 之间的语义偏差</span></article>
+              <article class="context-outcome"><strong>安全协作</strong><span>在权限边界内共享、贡献和审核知识</span></article>
+              <article class="context-outcome"><strong>持续进化</strong><span>每次业务活动和 Agent 使用都推动知识更新</span></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="future">
+        <div class="shell">
+          <header class="section-head">
+            <span class="section-kicker">未来展望</span>
+            <h2>在知识资产层之上，搭建企业级知识推理 Agent。</h2>
+            <p>Semantic 统一业务语言，Ontology 约束对象关系，Knowledge 提供可信事实与证据，让 Agent 在企业规则和权限边界内完成可靠推理。</p>
+          </header>
+
+          <figure class="agent-future-board" aria-label="企业级知识推理 Agent 工作机制">
+            <div class="agent-reasoning-map">
+              <article class="agent-terminal">
+                <small>BUSINESS QUESTION</small>
+                <strong>一个真实业务问题</strong>
+                <p>某项工艺变更，会影响哪些产品、设备、质量控制点和现行文件？</p>
+              </article>
+              <div class="agent-arrow" aria-hidden="true">→</div>
+              <div class="reasoning-engine">
+                <header>
+                  <div>
+                    <small>ENTERPRISE REASONING AGENT</small>
+                    <h3>受业务上下文约束的推理链</h3>
+                  </div>
+                  <span>每一步自动记录</span>
+                </header>
+                <div class="reasoning-track">
+                  <article class="reasoning-step">
+                    <b>01</b><small>SEMANTIC</small><strong>语义对齐</strong><span>识别企业术语、业务意图与查询边界</span>
+                  </article>
+                  <article class="reasoning-step">
+                    <b>02</b><small>ONTOLOGY</small><strong>关系推演</strong><span>按对象、关系、约束和适用范围展开</span>
+                  </article>
+                  <article class="reasoning-step">
+                    <b>03</b><small>KNOWLEDGE</small><strong>证据检索</strong><span>调用现行版本、来源文件与历史经验</span>
+                  </article>
+                  <article class="reasoning-step">
+                    <b>04</b><small>AGENT</small><strong>受控综合</strong><span>在权限边界内形成判断与行动建议</span>
+                  </article>
+                </div>
+              </div>
+              <div class="agent-arrow" aria-hidden="true">→</div>
+              <article class="agent-terminal output">
+                <small>TRUSTED OUTPUT</small>
+                <strong>结论 + 证据 + 路径</strong>
+                <p>每条判断附来源、版本和关联对象；证据不足或低置信度结果转人工审核。</p>
+              </article>
+            </div>
+            <figcaption class="trace-rail">
+              <strong>全链路 Audit Trail</strong>
+              <div class="trace-events">
+                <span>输入与操作者</span>
+                <span>调用数据与文件</span>
+                <span>每一步推理过程</span>
+                <span>模型与工具版本</span>
+                <span>结论与审核记录</span>
+              </div>
+            </figcaption>
+          </figure>
+
+          <div class="agent-trust-row" aria-label="知识推理 Agent 可信保障">
+            <div><strong>安全</strong><span>按角色、数据权限和场景边界调用</span></div>
+            <div><strong>可靠</strong><span>结论建立在受治理的事实与规则上</span></div>
+            <div><strong>可追溯</strong><span>来源、过程、版本和责任完整留痕</span></div>
+            <div><strong>可治理</strong><span>置信度门槛、人工复核与反馈闭环</span></div>
+          </div>
+
+          <div class="agent-demo-callout">
+            <div>
+              <strong>Agent Demo：展示一次可解释、可追溯的制造知识推理</strong>
+              <span>从业务提问到证据调用、关系推演和结论生成，完整呈现 Agent 的推理路径。</span>
+            </div>
+            <a class="primary-button" href="/agent" target="_blank" rel="noopener">查看 Agent Demo</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="pilot">
+        <div class="shell">
+          <header class="section-head">
+            <h2>用一个产品，验证一套可复制的方法。</h2>
+            <p>小范围启动，验证知识模型、数据映射、治理机制和 AI 调用价值。</p>
+          </header>
+          <div class="pilot-board">
+            <div class="pilot-equation" aria-label="试点范围公式">
+              <div class="equation-item"><strong>1</strong><span>个产品</span></div>
+              <div class="equation-symbol" aria-hidden="true">×</div>
+              <div class="equation-item"><strong>1</strong><span>条主加工路线</span></div>
+              <div class="equation-symbol" aria-hidden="true">×</div>
+              <div class="equation-item"><strong>10-20</strong><span>个关键工序</span></div>
+              <div class="equation-symbol" aria-hidden="true">=</div>
+              <div class="equation-result"><strong>1</strong><span>个可验证知识闭环</span></div>
+            </div>
+            <div class="validation-gates">
+              <div class="gate"><strong>知识模型</strong><span>业务对象与关系是否合理</span></div>
+              <div class="gate"><strong>数据映射</strong><span>跨系统对象能否准确连接</span></div>
+              <div class="gate"><strong>可信治理</strong><span>来源、版本、责任是否清晰</span></div>
+              <div class="gate"><strong>AI 调用</strong><span>能否支持追溯与影响分析</span></div>
+            </div>
+            <div class="governance-strip" id="governance">
+              <div><strong>业务部门负责知识正确</strong><span>生产、质量、工程、物流共同确认内容真实性</span></div>
+              <div><strong>平台团队负责系统可信</strong><span>连接、权限、版本、审计、API 与 AI 上下文</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap">
+        <div class="shell">
+          <header class="section-head">
+            <span class="section-kicker">一年实施计划</span>
+            <h2>从试点验证，逐步走向 AI 制造底座。</h2>
+            <p>全年按建模、连接、服务、闭环、AI 集成五段推进。</p>
+          </header>
+          <div class="timeline" aria-label="一年项目路线图">
+            <div class="timeline-grid">
+              <article class="phase" style="--start: 1; --span: 2;">
+                <small>1-2 月</small><h3>试点定界与知识建模</h3><p>产品、路线、Owner、责任边界</p><output>试点章程 + 本体模型</output>
+              </article>
+              <article class="phase" style="--start: 3; --span: 2;">
+                <small>3-4 月</small><h3>真实数据连接与映射</h3><p>系统样本、文件样本、对象 ID</p><output>真实路线图谱</output>
+              </article>
+              <article class="phase" style="--start: 5; --span: 3;">
+                <small>5-7 月</small><h3>知识服务与可信治理</h3><p>Graph、Search、Version、Audit</p><output>语义服务接口</output>
+              </article>
+              <article class="phase" style="--start: 8; --span: 3;">
+                <small>8-10 月</small><h3>业务流程闭环</h3><p>8D、NCR、ECN 或 A3 场景</p><output>流程到知识闭环</output>
+              </article>
+              <article class="phase" style="--start: 11; --span: 2;">
+                <small>11-12 月</small><h3>AI Agent 与孪生集成</h3><p>查询、追溯、影响分析</p><output>AI 制造助手试点</output>
+              </article>
+            </div>
+            <div class="year-thread">
+              <strong>贯穿全年：底层架构持续加厚</strong>
+              <div class="thread-flow">
+                <span>Data Fabric</span><b>→</b><span>Ontology</span><b>→</b><span>Knowledge Graph</span><b>→</b><span>Semantic Layer</span><b>→</b><span>Agent Context</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="benefits">
+        <div class="shell">
+          <header class="section-head">
+            <h2>收益随底座成熟逐步释放。</h2>
+            <p>不是年底一次性交付，而是透明、追溯、闭环、AI 赋能按季度形成。</p>
+          </header>
+          <div class="benefit-board">
+            <aside class="benefit-core">
+              <h3>为以 AI 为核心的制造业转型提供底层架构支撑。</h3>
+              <p>将分散数据和经验组织成可信、可审计、可调用的业务上下文。</p>
+              <div class="core-layers">
+                <div>统一对象模型</div>
+                <div>可信知识关系</div>
+                <div>语义查询服务</div>
+                <div>AI 上下文供给</div>
+              </div>
+            </aside>
+            <div class="stair-chart" aria-label="预期收益阶梯释放图">
+              <div class="stair" style="--height: 120px;"><small>Q1</small><strong>信息透明</strong><span>路线、设备、质量与文件统一呈现</span></div>
+              <div class="stair" style="--height: 170px;"><small>Q2</small><strong>追溯分析</strong><span>版本、来源与影响范围可识别</span></div>
+              <div class="stair" style="--height: 225px;"><small>Q3</small><strong>流程闭环</strong><span>业务处理结果沉淀为知识</span></div>
+              <div class="stair" style="--height: 285px;"><small>Q4</small><strong>AI 赋能</strong><span>Agent 基于可信上下文分析与建议</span></div>
+            </div>
+          </div>
+          <div class="outcome-row">
+            <div><strong>效率</strong><span>减少查找、确认与重复解释</span></div>
+            <div><strong>决策</strong><span>提升追溯、诊断与变更判断质量</span></div>
+            <div><strong>壁垒</strong><span>形成持续增长的企业专有知识资本</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="support">
+        <div class="shell">
+          <div class="support-board">
+            <h2>需要管理层支持四项关键决策。</h2>
+            <div class="decision-grid">
+              <article class="decision"><strong>定范围</strong><span>确定一个试点产品或产线，以及一条主加工路线。</span></article>
+              <article class="decision"><strong>定 Owner</strong><span>指定业务负责人，组织生产、质量、工程与 IT 共同参与。</span></article>
+              <article class="decision"><strong>开数据</strong><span>允许读取有限范围的系统数据和文件样本。</span></article>
+              <article class="decision"><strong>定机制</strong><span>明确责任、审核、复盘与后续扩展边界。</span></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <div class="shell">
+          <div class="closing-card">
+            <h2>建议作为公司 AI 战略转型下的首个知识工程试点。</h2>
+            <p>本项目的长期意义，不只是建设知识图谱工具，而是建立面向 AI Agent 时代的知识资本积累与再生产机制。模型和系统会持续变化，高质量、可追溯、可审计、可被 AI 调用的制造知识资本，才是长期竞争优势。</p>
+            <div class="hero-actions">
+              <a class="primary-button" href="/routes/production" target="_blank" rel="noopener">打开 Demo</a>
+              <a class="secondary-button" href="#top">回到开场</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">企业制造知识资产层建设项目建议报告。基于产品加工路线知识图谱试点。</div>
+    </footer>
+
+    <script>
+      const textTranslations = new Map();
+      const addTranslations = (entries) => Object.entries(entries).forEach(([zh, en]) => textTranslations.set(zh, en));
+
+      addTranslations({
+        "制造知识资产层项目建议": "Manufacturing Knowledge Asset Layer Proposal",
+        "面向管理层汇报网页": "Executive presentation",
+        "战略判断": "Strategy",
+        "知识资本": "Capital",
+        "架构路线": "Architecture",
+        "统一上下文": "Context",
+        "Agent 展望": "Agent",
+        "一年计划": "Roadmap",
+        "预期收益": "Benefits",
+        "决策事项": "Decisions",
+        "打开 Demo": "Open Demo",
+        "打印汇报": "Print",
+        "AI 战略转型首个知识工程试点": "FIRST KNOWLEDGE ENGINEERING PILOT FOR AI TRANSFORMATION",
+        "建设企业制造知识资产层": "Build the Enterprise Manufacturing Knowledge Asset Layer",
+        "让制造知识成为": "Turn manufacturing knowledge into",
+        "AI Agent 可调用的可信业务上下文": "trusted business context accessible to AI Agents",
+        "，支撑追溯、分析、决策与持续学习。": ", supporting traceability, analysis, decisions, and continuous learning.",
+        "查看决策事项": "View Decisions",
+        "查看架构路线": "View Architecture",
+        "连接": "Connected",
+        "产品、工艺、设备、质量与文件": "Products, processes, equipment, quality, and documents",
+        "可信": "Trusted",
+        "来源、版本、责任人与审核": "Sources, versions, ownership, and approvals",
+        "调用": "Accessible",
+        "为 AI Agent 供给业务上下文": "Governed business context for AI Agents",
+        "项目定位": "PROJECT POSITIONING",
+        "AI 应用的瓶颈，已经从模型转向企业上下文。": "The AI bottleneck has shifted from models to enterprise context.",
+        "模型能力快速普及，结构化知识与 AI-ready data 决定业务价值能否释放。": "As model capabilities become widely available, structured knowledge and AI-ready data determine whether business value can be realized.",
+        "不替代现有系统，在其之上建立知识连接层。": "Build a knowledge connection layer above existing systems, without replacing them.",
+        "文档库": "Document Repository",
+        "数字孪生": "Digital Twin",
+        "制造知识资产层": "Manufacturing Knowledge Asset Layer",
+        "连接对象、关系、文件、版本、证据与责任": "Connect objects, relationships, files, versions, evidence, and ownership",
+        "AI 应用有效性缺口": "AI Effectiveness Gap",
+        "示意指数，非绩效测量": "Illustrative index, not a performance metric",
+        "模型能力": "Model Capability",
+        "已具备": "Available",
+        "数据质量": "Data Quality",
+        "待治理": "Governance Needed",
+        "数据关联": "Data Connectivity",
+        "待连接": "Connection Needed",
+        "知识结构": "Knowledge Structure",
+        "核心短板": "Critical Gap",
+        "业务效用": "Business Utility",
+        "受上限约束": "Context-Limited",
+        "模型强，不等于业务效用高。": "Strong models do not guarantee high business utility.",
+        "缺口来自企业知识上下文": "The gap is enterprise context",
+        "可替换能力": "Replaceable Capabilities",
+        "LLM 与 Agent 技术": "LLM and Agent Technology",
+        "推理、生成、编排、检索与工具调用。": "Reasoning, generation, orchestration, retrieval, and tool use.",
+        "真正瓶颈": "Actual Bottleneck",
+        "结构化知识与 AI-ready data": "Structured Knowledge and AI-ready Data",
+        "业务对象统一、关系可追溯、版本有证据。": "Unified business objects, traceable relationships, and evidence-backed versions.",
+        "价值释放": "Value Realization",
+        "更懂业务的 AI Agent": "Business-Aware AI Agents",
+        "追溯、诊断、影响分析与工程决策辅助。": "Traceability, diagnosis, impact analysis, and engineering decision support."
+      });
+
+      addTranslations({
+        "AI Agent 时代的核心护城河，是可持续再生产的企业知识资本。": "In the AI Agent era, the core moat is enterprise knowledge capital that can be continuously reproduced.",
+        "模型和工具会更换，企业制造知识的积累能力无法临时购买。": "Models and tools will change; the ability to accumulate enterprise manufacturing knowledge cannot be purchased on demand.",
+        "技术周期持续变化": "Technology cycles continue to change",
+        "Agent 框架": "Agent Frameworks",
+        "前端应用": "Front-end Applications",
+        "业务系统": "Business Systems",
+        "单点工具": "Point Solutions",
+        "企业知识资本层": "Enterprise Knowledge Capital Layer",
+        "最难复制，持续增值": "Hardest to replicate, continuously appreciating",
+        "产品": "Product",
+        "工艺": "Process",
+        "设备": "Equipment",
+        "质量": "Quality",
+        "工程经验": "Engineering Experience",
+        "异常处理": "Exception Handling",
+        "精益改善": "Lean Improvement",
+        "文件证据": "Document Evidence",
+        "版本审计": "Version Audit",
+        "长期竞争力": "Long-Term Competitiveness",
+        "AI 更懂业务与现场": "AI understands the business and shop floor",
+        "质量追溯": "Quality Traceability",
+        "影响分析": "Impact Analysis",
+        "异常诊断": "Exception Diagnosis",
+        "工程决策": "Engineering Decisions",
+        "组织学习": "Organizational Learning",
+        "AI Agent 的上限，不只取决于模型能力，更取决于企业能提供怎样的业务上下文。": "The ceiling of an AI Agent depends not only on model capability, but on the business context the enterprise can provide.",
+        "知识资本积累与再生产闭环": "Knowledge Capital Accumulation and Reproduction Loop",
+        "每一次业务活动，都是知识增长入口": "Every business activity is an entry point for knowledge growth",
+        "业务发生": "Business Activity",
+        "问题、变更、改善": "Issues, changes, improvements",
+        "知识提取": "Knowledge Extraction",
+        "对象、关系、规则": "Objects, relationships, rules",
+        "业务审核": "Business Review",
+        "责任人与证据": "Owners and evidence",
+        "版本沉淀": "Version Baseline",
+        "来源与审计": "Sources and audit",
+        "AI 调用": "AI Use",
+        "查询、分析、建议": "Query, analysis, recommendations",
+        "反馈更新": "Feedback Update",
+        "结果回流知识层": "Results flow back into the knowledge layer",
+        "设备异常": "Equipment Exception",
+        "A3 改善": "A3 Improvement",
+        "项目复盘": "Project Review",
+        "供应商问题": "Supplier Issue",
+        "当前不是缺系统，而是缺跨系统知识关系。": "The enterprise does not lack systems; it lacks knowledge relationships across systems.",
+        "数据、文件和经验彼此孤立，AI 与数字孪生只能停留在浅层应用。": "Data, documents, and experience remain isolated, limiting AI and digital twins to shallow use cases.",
+        "部门数据分散": "Departmental Data Is Fragmented",
+        "生产、质量、工程各自维护": "Production, quality, and engineering maintain separate copies",
+        "系统与文件脱节": "Systems and Documents Are Disconnected",
+        "结构化数据和经验规则分离": "Structured data is separated from experiential rules",
+        "版本责任不清": "Version Ownership Is Unclear",
+        "来源、生效时间、审核难追溯": "Sources, effective dates, and approvals are difficult to trace",
+        "经验跟人走": "Experience Leaves with People",
+        "异常与改善难以复用": "Exceptions and improvements are difficult to reuse",
+        "关系断裂": "Broken Relationships",
+        "业务上下文无法完整供给 AI": "Complete business context cannot be supplied to AI",
+        "关系缺失会直接压低 AI 能力上限。": "Missing relationships directly lower the ceiling of AI capability.",
+        "只能做泛化问答": "Only Generic Q&A",
+        "知道文档内容，不理解业务对象": "Knows document content but not business objects",
+        "难以可靠追溯": "Unreliable Traceability",
+        "无法确认版本、来源和影响范围": "Cannot confirm versions, sources, or scope of impact",
+        "数字孪生停留在展示": "Digital Twins Remain Visualizations",
+        "看见设备，无法理解业务关联": "Equipment is visible, but business relationships are not understood"
+      });
+
+      addTranslations({
+        "核心价值：把知识变成组织能力。": "Core value: turn knowledge into organizational capability.",
+        "从信息透明走向可推理、可复用、可持续增长。": "Move from information transparency to reasoning, reuse, and continuous growth.",
+        "透明": "Transparency",
+        "看得见": "Visible",
+        "产品路线、工艺、设备、质量与文件统一呈现。": "Present product routes, processes, equipment, quality, and documents in one view.",
+        "协同": "Collaboration",
+        "连得上": "Connected",
+        "跨部门围绕同一业务对象与关系工作。": "Enable departments to work around the same business objects and relationships.",
+        "决策": "Decisions",
+        "能推理": "Reasonable",
+        "支持追溯、诊断、变更影响与工程判断。": "Support traceability, diagnosis, change impact, and engineering judgment.",
+        "学习": "Learning",
+        "可再生": "Renewable",
+        "业务结果持续回流，形成企业知识飞轮。": "Continuously feed business outcomes back into an enterprise knowledge flywheel.",
+        "技术路线": "TECHNICAL APPROACH",
+        "三层知识机制，让 AI 对齐真实业务。": "A three-layer knowledge mechanism aligns AI with the real business.",
+        "在现有系统之上，语义层统一语言，本体层定义关系，知识层承载证据与经验。": "Above existing systems, the semantic layer unifies language, the ontology layer defines relationships, and the knowledge layer carries evidence and experience.",
+        "AI 与业务应用": "AI and Business Applications",
+        "AI Agent / 质量追溯 / 变更影响 / 异常诊断 / 数字孪生": "AI Agent / Quality Traceability / Change Impact / Exception Diagnosis / Digital Twin",
+        "制造知识资产核心": "Manufacturing Knowledge Asset Core",
+        "让 AI 按企业语境理解与推理": "Enable AI to understand and reason in enterprise context",
+        "语义层": "Semantic Layer",
+        "统一产品、工序、设备、质量、文件与变更的业务语言。": "Unify the business language for products, operations, equipment, quality, documents, and changes.",
+        "本体层": "Ontology Layer",
+        "定义对象边界、层级、关系、约束和适用范围。": "Define object boundaries, hierarchies, relationships, constraints, and scope of applicability.",
+        "知识层": "Knowledge Layer",
+        "承载实例、经验、文件证据、版本、责任人与审核。": "Carry instances, experience, document evidence, versions, owners, and approvals.",
+        "治理与服务": "Governance and Services",
+        "现有业务系统": "Existing Business Systems",
+        "MES / PLM / ERP / QMS / WMS / IoT / 文档库 / Excel / PowerPoint": "MES / PLM / ERP / QMS / WMS / IoT / Document Repository / Excel / PowerPoint",
+        "以一条产品加工路线，串联四类业务视图。": "Use one product manufacturing route to connect four business views.",
+        "同一对象模型，不同管理视角": "One object model, multiple management perspectives",
+        "物料、工序、设备、节拍": "Materials, operations, equipment, takt time",
+        "工装、程序、参数、图纸": "Fixtures, programs, parameters, drawings",
+        "库存、等待、瓶颈、改善": "Inventory, waiting, bottlenecks, improvements",
+        "堆叠节点": "Stacked Nodes",
+        "关系追溯": "Relationship Traceability",
+        "文件知识抽取": "Document Knowledge Extraction",
+        "AI 上下文服务": "AI Context Services"
+      });
+
+      addTranslations({
+        "让全企业在权限边界内，共享并共同维护同一份可信业务上下文。": "Enable the entire enterprise to share and jointly maintain one trusted business context within defined access boundaries.",
+        "员工、AI Agent、业务系统和授权相关方不再分别复制和解释知识，而是围绕统一的业务对象、关系、证据、版本和责任机制进行查询、协作与持续维护。": "Employees, AI Agents, business systems, and authorized stakeholders no longer copy and interpret knowledge separately. They query, collaborate, and continuously maintain shared business objects, relationships, evidence, versions, and accountability.",
+        "一份上下文，多类参与者，统一权限，持续演进。": "One context. Multiple participants. Unified access. Continuous evolution.",
+        "01 · 参与者": "01 · Participants",
+        "所有参与者围绕同一份可信业务上下文协作，不再为部门或 Agent 复制多套知识库。": "All participants collaborate around the same trusted business context instead of creating separate knowledge bases for departments or Agents.",
+        "员工与专家": "Employees and Experts",
+        "查询、补充、审核、复盘": "Query, contribute, review, learn",
+        "检索、推理、建议、受控行动": "Retrieve, reason, recommend, act under control",
+        "读取上下文、触发流程、回写结果": "Read context, trigger workflows, write back results",
+        "授权相关方": "Authorized Stakeholders",
+        "供应商、客户、合作伙伴在授权范围内协同": "Suppliers, customers, and partners collaborate within authorized scope",
+        "02 · 统一访问与权限控制": "02 · Unified Access and Authorization",
+        "先确认身份、角色、数据范围与业务场景，再允许读取、贡献、审核或发布。": "Verify identity, role, data scope, and business scenario before allowing reading, contribution, review, or publication.",
+        "统一执行最小权限、职责分离与受控接口策略。": "Consistently enforce least privilege, segregation of duties, and governed interface policies.",
+        "最小权限": "Least Privilege",
+        "数据域隔离": "Data-Domain Isolation",
+        "场景授权": "Scenario Authorization",
+        "人工审批": "Human Approval",
+        "03 · 企业统一知识上下文": "03 · Enterprise Unified Knowledge Context",
+        "统一维护、持续更新、可追溯的企业业务事实基础。": "A jointly maintained, continuously updated, and traceable foundation of enterprise business facts.",
+        "企业统一知识上下文": "Enterprise Unified Knowledge Context",
+        "同一对象、同一关系、同一证据、同一版本基线。": "One object, one relationship, one evidence set, one version baseline.",
+        "统一业务语言与术语口径": "Unified business language and terminology",
+        "统一对象、关系与约束": "Unified objects, relationships, and constraints",
+        "连接跨系统知识关系": "Connect knowledge relationships across systems",
+        "关联来源文件与业务证据": "Link source documents and business evidence",
+        "管理版本、生效与失效状态": "Manage versions and effective status",
+        "明确责任人、审核人与发布权": "Define owners, reviewers, and publishing authority",
+        "追溯系统、文件与原始记录": "Trace systems, documents, and source records",
+        "记录访问、推理、调用与修改": "Record access, reasoning, calls, and changes",
+        "04 · 现有系统与知识来源": "04 · Existing Systems and Knowledge Sources",
+        "业务系统继续承载交易、执行和事实记录，知识上下文层负责连接、解释与治理。": "Business systems continue to carry transactions, execution, and facts; the knowledge context layer connects, interprets, and governs them.",
+        "业务流程": "Business Processes",
+        "连接方式：": "Connection methods:",
+        "Data Fabric / Semantic API / Knowledge Graph。平台形成统一上下文访问与治理层，不替代现有系统。": "Data Fabric / Semantic API / Knowledge Graph. The platform provides a unified context access and governance layer without replacing existing systems.",
+        "知识共同维护闭环": "Shared Knowledge Maintenance Loop",
+        "从业务事实发生到新版本发布，全过程有责任、有证据、有记录。": "From a business event to a new version release, every step has ownership, evidence, and records.",
+        "知识贡献": "Knowledge Contribution",
+        "责任人审核": "Owner Review",
+        "正式发布": "Formal Publication",
+        "人与 Agent 使用": "Human and Agent Use",
+        "结果反馈": "Outcome Feedback",
+        "版本更新": "Version Update",
+        "员工": "Employees",
+        "按角色查询、贡献和审核知识。": "Query, contribute, and review knowledge according to role.",
+        "业务专家": "Business Experts",
+        "确认知识正确性并批准正式发布。": "Confirm knowledge accuracy and approve formal publication.",
+        "调用知识、提出建议并生成候选更新。": "Use knowledge, make recommendations, and generate candidate updates.",
+        "通过受控接口读取上下文并回写结果。": "Read context and write back results through governed interfaces.",
+        "外部相关方": "External Stakeholders",
+        "仅访问被授权的数据域和业务范围。": "Access only authorized data domains and business scope.",
+        "AI Agent 可以提出知识更新建议，但不能绕过权限、责任人和审核机制直接修改或发布正式知识。": "AI Agents may propose knowledge updates, but cannot bypass authorization, ownership, or review controls to modify or publish governed knowledge directly.",
+        "企业统一知识上下文，不只是 AI 的知识库，而是人、Agent、系统和生态相关方共同工作的业务事实基础。": "Enterprise unified knowledge context is not merely an AI knowledge base; it is the business-fact foundation on which people, Agents, systems, and ecosystem stakeholders work together.",
+        "统一理解": "Shared Understanding",
+        "减少部门、系统和 Agent 之间的语义偏差": "Reduce semantic differences across departments, systems, and Agents",
+        "安全协作": "Secure Collaboration",
+        "在权限边界内共享、贡献和审核知识": "Share, contribute, and review knowledge within authorization boundaries",
+        "持续进化": "Continuous Evolution",
+        "每次业务活动和 Agent 使用都推动知识更新": "Every business activity and Agent interaction advances the knowledge base"
+      });
+
+      addTranslations({
+        "未来展望": "FUTURE VISION",
+        "在知识资产层之上，搭建企业级知识推理 Agent。": "Build enterprise knowledge-reasoning Agents on top of the knowledge asset layer.",
+        "Semantic 统一业务语言，Ontology 约束对象关系，Knowledge 提供可信事实与证据，让 Agent 在企业规则和权限边界内完成可靠推理。": "Semantic unifies business language, Ontology governs object relationships, and Knowledge provides trusted facts and evidence so Agents can reason reliably within enterprise rules and access boundaries.",
+        "一个真实业务问题": "A Real Business Question",
+        "某项工艺变更，会影响哪些产品、设备、质量控制点和现行文件？": "Which products, equipment, quality control points, and current documents are affected by a process change?",
+        "受业务上下文约束的推理链": "Reasoning Constrained by Business Context",
+        "每一步自动记录": "Every step recorded automatically",
+        "语义对齐": "Semantic Alignment",
+        "识别企业术语、业务意图与查询边界": "Identify enterprise terms, business intent, and query boundaries",
+        "关系推演": "Relationship Reasoning",
+        "按对象、关系、约束和适用范围展开": "Traverse approved objects, relationships, constraints, and scope",
+        "证据检索": "Evidence Retrieval",
+        "调用现行版本、来源文件与历史经验": "Retrieve current versions, source documents, and historical experience",
+        "受控综合": "Governed Synthesis",
+        "在权限边界内形成判断与行动建议": "Form judgments and action recommendations within authorization boundaries",
+        "结论 + 证据 + 路径": "Conclusion + Evidence + Path",
+        "每条判断附来源、版本和关联对象；证据不足或低置信度结果转人工审核。": "Every judgment includes its source, version, and related objects; insufficient evidence or low-confidence results are routed to human review.",
+        "全链路 Audit Trail": "End-to-End Audit Trail",
+        "输入与操作者": "Input and Operator",
+        "调用数据与文件": "Data and Files Used",
+        "每一步推理过程": "Each Reasoning Step",
+        "模型与工具版本": "Model and Tool Versions",
+        "结论与审核记录": "Conclusion and Review Record",
+        "安全": "Secure",
+        "按角色、数据权限和场景边界调用": "Use is governed by role, data rights, and scenario boundaries",
+        "可靠": "Reliable",
+        "结论建立在受治理的事实与规则上": "Conclusions are grounded in governed facts and rules",
+        "可追溯": "Traceable",
+        "来源、过程、版本和责任完整留痕": "Sources, process, versions, and ownership are fully recorded",
+        "可治理": "Governable",
+        "置信度门槛、人工复核与反馈闭环": "Confidence thresholds, human review, and feedback loops",
+        "Agent Demo：展示一次可解释、可追溯的制造知识推理": "Agent Demo: Explainable and Traceable Manufacturing Knowledge Reasoning",
+        "从业务提问到证据调用、关系推演和结论生成，完整呈现 Agent 的推理路径。": "Follow the complete Agent reasoning path from a business question through evidence use and relationship reasoning to a conclusion.",
+        "查看 Agent Demo": "View Agent Demo",
+        "用一个产品，验证一套可复制的方法。": "Validate a repeatable method with one product.",
+        "小范围启动，验证知识模型、数据映射、治理机制和 AI 调用价值。": "Start with a controlled scope to validate the knowledge model, data mapping, governance mechanism, and value of AI use.",
+        "个产品": "Product",
+        "条主加工路线": "Primary Manufacturing Route",
+        "个关键工序": "Key Operations",
+        "个可验证知识闭环": "Verifiable Knowledge Loop",
+        "知识模型": "Knowledge Model",
+        "业务对象与关系是否合理": "Validate business objects and relationships",
+        "数据映射": "Data Mapping",
+        "跨系统对象能否准确连接": "Verify accurate object connections across systems",
+        "可信治理": "Trusted Governance",
+        "来源、版本、责任是否清晰": "Confirm clear sources, versions, and ownership",
+        "能否支持追溯与影响分析": "Validate support for traceability and impact analysis",
+        "业务部门负责知识正确": "Business Functions Own Knowledge Accuracy",
+        "生产、质量、工程、物流共同确认内容真实性": "Production, quality, engineering, and logistics jointly confirm content accuracy",
+        "平台团队负责系统可信": "Platform Team Owns System Trust",
+        "连接、权限、版本、审计、API 与 AI 上下文": "Connections, authorization, versions, audit, APIs, and AI context"
+      });
+
+      addTranslations({
+        "一年实施计划": "ONE-YEAR IMPLEMENTATION PLAN",
+        "从试点验证，逐步走向 AI 制造底座。": "Progress from pilot validation to an AI manufacturing foundation.",
+        "全年按建模、连接、服务、闭环、AI 集成五段推进。": "Advance through five stages: modeling, connection, services, closed-loop operations, and AI integration.",
+        "1-2 月": "Months 1-2",
+        "试点定界与知识建模": "Pilot Scope and Knowledge Modeling",
+        "产品、路线、Owner、责任边界": "Product, route, owner, accountability boundaries",
+        "试点章程 + 本体模型": "Pilot charter + ontology model",
+        "3-4 月": "Months 3-4",
+        "真实数据连接与映射": "Real Data Connection and Mapping",
+        "系统样本、文件样本、对象 ID": "System samples, document samples, object IDs",
+        "真实路线图谱": "Real route graph",
+        "5-7 月": "Months 5-7",
+        "知识服务与可信治理": "Knowledge Services and Trusted Governance",
+        "Graph、Search、Version、Audit": "Graph, Search, Version, Audit",
+        "语义服务接口": "Semantic service APIs",
+        "8-10 月": "Months 8-10",
+        "业务流程闭环": "Closed-Loop Business Processes",
+        "8D、NCR、ECN 或 A3 场景": "8D, NCR, ECN, or A3 scenarios",
+        "流程到知识闭环": "Process-to-knowledge loop",
+        "11-12 月": "Months 11-12",
+        "AI Agent 与孪生集成": "AI Agent and Digital Twin Integration",
+        "查询、追溯、影响分析": "Query, traceability, impact analysis",
+        "AI 制造助手试点": "AI manufacturing assistant pilot",
+        "贯穿全年：底层架构持续加厚": "Throughout the year: continuously strengthen the underlying architecture",
+        "收益随底座成熟逐步释放。": "Benefits are released progressively as the foundation matures.",
+        "不是年底一次性交付，而是透明、追溯、闭环、AI 赋能按季度形成。": "Value is delivered quarterly through transparency, traceability, closed-loop operations, and AI enablement, rather than as a single year-end release.",
+        "为以 AI 为核心的制造业转型提供底层架构支撑。": "Provide the underlying architecture for AI-centered manufacturing transformation.",
+        "将分散数据和经验组织成可信、可审计、可调用的业务上下文。": "Organize fragmented data and experience into trusted, auditable, and accessible business context.",
+        "统一对象模型": "Unified Object Model",
+        "可信知识关系": "Trusted Knowledge Relationships",
+        "语义查询服务": "Semantic Query Services",
+        "AI 上下文供给": "AI Context Supply",
+        "信息透明": "Information Transparency",
+        "路线、设备、质量与文件统一呈现": "Unified view of routes, equipment, quality, and documents",
+        "追溯分析": "Traceability Analysis",
+        "版本、来源与影响范围可识别": "Identify versions, sources, and impact scope",
+        "流程闭环": "Closed-Loop Process",
+        "业务处理结果沉淀为知识": "Turn business outcomes into governed knowledge",
+        "AI 赋能": "AI Enablement",
+        "Agent 基于可信上下文分析与建议": "Agents analyze and recommend using trusted context",
+        "效率": "Efficiency",
+        "减少查找、确认与重复解释": "Reduce searching, verification, and repeated interpretation",
+        "提升追溯、诊断与变更判断质量": "Improve traceability, diagnosis, and change decisions",
+        "壁垒": "Defensibility",
+        "形成持续增长的企业专有知识资本": "Build continuously growing proprietary enterprise knowledge capital",
+        "需要管理层支持四项关键决策。": "Four management decisions are required.",
+        "定范围": "Define Scope",
+        "确定一个试点产品或产线，以及一条主加工路线。": "Select one pilot product or line and one primary manufacturing route.",
+        "定 Owner": "Assign an Owner",
+        "指定业务负责人，组织生产、质量、工程与 IT 共同参与。": "Assign a business owner to coordinate production, quality, engineering, and IT.",
+        "开数据": "Enable Data Access",
+        "允许读取有限范围的系统数据和文件样本。": "Allow controlled access to a limited set of system data and document samples.",
+        "定机制": "Establish Governance",
+        "明确责任、审核、复盘与后续扩展边界。": "Define accountability, review, retrospective, and future expansion boundaries.",
+        "建议作为公司 AI 战略转型下的首个知识工程试点。": "Recommend this as the company's first knowledge engineering pilot under its AI transformation strategy.",
+        "本项目的长期意义，不只是建设知识图谱工具，而是建立面向 AI Agent 时代的知识资本积累与再生产机制。模型和系统会持续变化，高质量、可追溯、可审计、可被 AI 调用的制造知识资本，才是长期竞争优势。": "The long-term value is not merely a knowledge graph tool, but a mechanism for accumulating and reproducing knowledge capital in the AI Agent era. Models and systems will continue to change; high-quality, traceable, auditable manufacturing knowledge that AI can use is the lasting competitive advantage.",
+        "回到开场": "Back to Top",
+        "企业制造知识资产层建设项目建议报告。基于产品加工路线知识图谱试点。": "Enterprise Manufacturing Knowledge Asset Layer Proposal. Based on a product manufacturing route knowledge graph pilot."
+      });
+
+      const attributeTranslations = new Map(Object.entries({
+        "页面导航": "Page navigation",
+        "章节": "Sections",
+        "制造现场与知识资产连接示意": "Manufacturing operations connected to enterprise knowledge assets",
+        "现代制造车间中的加工设备，画面叠加知识图谱节点和关系线": "Modern manufacturing equipment overlaid with knowledge graph nodes and relationships",
+        "企业 AI 应用有效性示意指数": "Illustrative enterprise AI effectiveness index",
+        "AI Agent 业务价值链": "AI Agent business value chain",
+        "企业知识资本护城河图": "Enterprise knowledge capital moat",
+        "知识再生产流程": "Knowledge reproduction process",
+        "知识再生产入口示例": "Examples of knowledge reproduction entry points",
+        "企业知识关系断裂示意": "Enterprise knowledge relationship fragmentation",
+        "知识转化为组织能力的四个阶段": "Four stages of converting knowledge into organizational capability",
+        "制造知识资产层技术架构": "Manufacturing knowledge asset layer architecture",
+        "企业统一知识上下文四层蓝图": "Four-layer enterprise unified knowledge context blueprint",
+        "统一访问与权限控制能力": "Unified access and authorization capabilities",
+        "企业系统与知识来源": "Enterprise systems and knowledge sources",
+        "企业知识共同维护闭环": "Shared enterprise knowledge maintenance loop",
+        "不同参与者的知识维护权限": "Knowledge maintenance permissions by participant",
+        "企业统一知识上下文的三项管理结果": "Three management outcomes of enterprise unified knowledge context",
+        "企业级知识推理 Agent 工作机制": "Enterprise knowledge-reasoning Agent operating model",
+        "知识推理 Agent 可信保障": "Trust controls for knowledge-reasoning Agents",
+        "试点范围公式": "Pilot scope formula",
+        "一年项目路线图": "One-year project roadmap",
+        "预期收益阶梯释放图": "Progressive expected benefit realization"
+      }));
+
+      const translatedTextNodes = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        if (node.parentElement?.matches("script, style")) continue;
+        const value = node.nodeValue ?? "";
+        const normalized = value.trim();
+        const english = textTranslations.get(normalized);
+        if (!english) continue;
+        translatedTextNodes.push({ node, zh: value, en: value.replace(normalized, english) });
+      }
+
+      const translatedAttributes = [];
+      document.querySelectorAll("[aria-label], [alt], [title]").forEach((element) => {
+        ["aria-label", "alt", "title"].forEach((attribute) => {
+          const zh = element.getAttribute(attribute);
+          const en = zh ? attributeTranslations.get(zh) : undefined;
+          if (zh && en) translatedAttributes.push({ element, attribute, zh, en });
+        });
+      });
+
+      const languageButton = document.querySelector("[data-language-toggle]");
+      const readLanguage = () => {
+        try { return localStorage.getItem("report-language") === "en" ? "en" : "zh"; }
+        catch { return "zh"; }
+      };
+      const storeLanguage = (language) => {
+        try { localStorage.setItem("report-language", language); }
+        catch { /* Language switching remains available without persistence. */ }
+      };
+      const applyLanguage = (language) => {
+        const english = language === "en";
+        translatedTextNodes.forEach((item) => { item.node.nodeValue = english ? item.en : item.zh; });
+        translatedAttributes.forEach((item) => item.element.setAttribute(item.attribute, english ? item.en : item.zh));
+        document.documentElement.lang = english ? "en" : "zh-CN";
+        document.documentElement.dataset.language = language;
+        document.title = english ? "Enterprise Manufacturing Knowledge Asset Layer Proposal" : "企业制造知识资产层建设项目建议报告";
+        if (languageButton) {
+          languageButton.textContent = english ? "中文" : "EN";
+          languageButton.setAttribute("aria-label", english ? "切换到中文" : "Switch to English");
+          languageButton.setAttribute("title", english ? "切换到中文" : "Switch to English");
+        }
+        storeLanguage(language);
+      };
+
+      let currentLanguage = readLanguage();
+      applyLanguage(currentLanguage);
+      languageButton?.addEventListener("click", () => {
+        currentLanguage = currentLanguage === "zh" ? "en" : "zh";
+        applyLanguage(currentLanguage);
+      });
+
+      const navLinks = document.querySelectorAll(".navlinks a[href^='#']");
+      const sections = Array.from(navLinks)
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      const sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach((link) => {
+              link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
+            });
+          });
+        },
+        { rootMargin: "-38% 0px -54% 0px", threshold: 0 }
+      );
+
+      sections.forEach((section) => sectionObserver.observe(section));
+    </script>
+  </body>
+</html>
