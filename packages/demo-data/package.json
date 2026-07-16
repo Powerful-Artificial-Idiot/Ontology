@@ -2,5 +2,6 @@
   "name": "@mkg/demo-data",
   "version": "0.5.0",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "exports": "./src/index.ts"
 }

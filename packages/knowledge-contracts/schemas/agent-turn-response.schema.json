@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/agent-turn-response.schema.json",
+  "title": "AgentTurnResponse",
+  "type": "object",
+  "required": ["contractVersion", "requestId", "turnId", "status", "queryPlan", "evidencePack", "answer", "citationValidation", "trace", "completedAt"],
+  "properties": {
+    "contractVersion": { "const": "1.0.0" },
+    "requestId": { "type": "string", "minLength": 1 },
+    "turnId": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["completed", "clarification-required", "failed"] },
+    "queryPlan": { "$ref": "https://example.com/mkg/contracts/semantic-query-plan.schema.json" },
+    "graphQueryPlan": { "$ref": "https://example.com/mkg/contracts/graph-query-plan.schema.json" },
+    "evidencePack": { "$ref": "https://example.com/mkg/contracts/evidence-pack.schema.json" },
+    "answer": {
+      "type": "object",
+      "required": ["summary", "findings", "recommendedActions", "risks", "assumptions", "claims", "confidence"],
+      "properties": {
+        "summary": { "type": "string" },
+        "findings": { "type": "array", "items": { "type": "string" } },
+        "recommendedActions": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "assumptions": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "enum": ["low", "medium", "high", "approved"] },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "text", "classification", "citations"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "text": { "type": "string" },
+              "classification": { "enum": ["fact", "assumption", "limitation", "unknown"] },
+              "citations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["evidenceId"],
+                  "properties": { "evidenceId": { "type": "string" }, "locator": { "type": "string" } },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "citationValidation": {
+      "type": "object",
+      "required": ["status", "checkedClaimIds", "issues"],
+      "properties": {
+        "status": { "enum": ["passed", "failed"] },
+        "checkedClaimIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claimId", "code", "message"],
+            "properties": {
+              "claimId": { "type": "string" },
+              "code": { "enum": ["missing-citation", "unknown-evidence", "unsupported-claim", "inactive-evidence"] },
+              "message": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "trace": {
+      "type": "object",
+      "required": ["traceId", "requestId", "stages"],
+      "properties": {
+        "traceId": { "type": "string" },
+        "requestId": { "type": "string" },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "stage", "status", "startedAt", "completedAt", "durationMs", "inputRefs", "outputRefs", "summary"],
+            "properties": {
+              "id": { "type": "string" },
+              "stage": { "enum": ["semantic-parsing", "query-plan-validation", "ontology-validation", "query-compilation", "graph-retrieval", "document-retrieval", "evidence-pack", "answer-composition", "citation-validation"] },
+              "status": { "enum": ["completed", "skipped", "failed"] },
+              "startedAt": { "type": "string", "format": "date-time" },
+              "completedAt": { "type": "string", "format": "date-time" },
+              "durationMs": { "type": "number", "minimum": 0 },
+              "tool": { "type": "string" },
+              "inputRefs": { "type": "array", "items": { "type": "string" } },
+              "outputRefs": { "type": "array", "items": { "type": "string" } },
+              "summary": { "type": "string" },
+              "errorCode": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "completedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

@@ -29,7 +29,20 @@ def validate_json(payload: object, schema: dict, registry: Registry, label: str)
 
 
 def main() -> int:
-    schemas = [load_schema(name) for name in ("knowledge-entity.schema.json", "knowledge-relation.schema.json", "graph-view.schema.json", "ontology-graph.schema.json", "semantic-search.schema.json", "semantic-catalog.schema.json")]
+    schemas = [load_schema(name) for name in (
+        "knowledge-entity.schema.json",
+        "knowledge-relation.schema.json",
+        "graph-view.schema.json",
+        "ontology-graph.schema.json",
+        "semantic-search.schema.json",
+        "semantic-catalog.schema.json",
+        "agent-turn-request.schema.json",
+        "semantic-query-plan.schema.json",
+        "graph-query-plan.schema.json",
+        "evidence-pack.schema.json",
+        "agent-turn-response.schema.json",
+        "canonical-knowledge-baseline.schema.json",
+    )]
     registry = schema_registry(schemas)
     by_title = {schema["title"]: schema for schema in schemas}
     manifest = json.loads((ROOT / "packages" / "demo-data" / "manifest.json").read_text())
@@ -68,6 +81,11 @@ def main() -> int:
     if assertion_types != {"asserted", "inferred"} or any(not result.get("evidence") or not result.get("explanation") for result in generated_search["results"]):
         raise AssertionError("Generated CQ-004 scenario must preserve asserted, inferred, evidence, and explanation metadata")
 
+    canonical_path = ROOT / "packages" / "demo-data" / "canonical" / "leak-rate-quality-issue-trace.json"
+    canonical = json.loads(canonical_path.read_text())
+    validate_json(canonical, by_title["CanonicalKnowledgeBaseline"], registry, str(canonical_path))
+    validate_canonical_baseline(canonical, terms)
+
     alignment = yaml.safe_load((ROOT / "mappings" / "demo-type-mappings.yaml").read_text())
     source = (ROOT / "src" / "data" / "mockGraph.ts").read_text()
     runtime_types = set(re.findall(r'\btype:\s*"([^"]+)"', source))
@@ -101,8 +119,59 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, canonical Agent baseline, legacy mappings, and ontology alignment.")
     return 0
+
+
+def validate_canonical_baseline(baseline: dict, terms: set) -> None:
+    entity_ids = {entity["id"] for entity in baseline["entities"]}
+    if len(entity_ids) != len(baseline["entities"]):
+        raise AssertionError("Canonical baseline contains duplicate entity IDs")
+    relation_ids = {relation["id"] for relation in baseline["relations"]}
+    if len(relation_ids) != len(baseline["relations"]):
+        raise AssertionError("Canonical baseline contains duplicate relation IDs")
+    for entity in baseline["entities"]:
+        if expand_curie(entity["type"]) not in terms:
+            raise AssertionError(f"Canonical entity uses unknown ontology type: {entity['id']} -> {entity['type']}")
+    for relation in baseline["relations"]:
+        if expand_curie(relation["predicate"]) not in terms:
+            raise AssertionError(f"Canonical relation uses unknown ontology predicate: {relation['id']} -> {relation['predicate']}")
+        if relation["sourceId"] not in entity_ids or relation["targetId"] not in entity_ids:
+            raise AssertionError(f"Canonical relation endpoint is missing: {relation['id']}")
+
+    seed_ids = set(baseline["scenario"]["seedEntityIds"])
+    if not seed_ids <= entity_ids:
+        raise AssertionError(f"Canonical scenario has unknown seed IDs: {sorted(seed_ids - entity_ids)}")
+    plan_entity_ids = {entity["id"] for entity in baseline["queryPlan"]["entities"]}
+    if not plan_entity_ids <= entity_ids:
+        raise AssertionError(f"Canonical query plan has unknown entity IDs: {sorted(plan_entity_ids - entity_ids)}")
+    if baseline["request"]["message"] != baseline["scenario"]["question"] or baseline["queryPlan"]["originalQuestion"] != baseline["scenario"]["question"]:
+        raise AssertionError("Canonical request, query plan, and scenario question must match")
+    if baseline["expectedResponse"]["queryPlan"] != baseline["queryPlan"]:
+        raise AssertionError("Canonical expected response must preserve the validated query plan")
+    if baseline["graphQueryPlan"]["semanticPlanId"] != baseline["queryPlan"]["planId"]:
+        raise AssertionError("Canonical graph query plan must reference the semantic query plan")
+    if baseline["expectedResponse"]["evidencePack"] != baseline["evidencePack"]:
+        raise AssertionError("Canonical expected response must preserve the evidence pack")
+
+    evidence_ids = {item["id"] for item in baseline["evidencePack"]["items"]}
+    claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+    for item in baseline["evidencePack"]["items"]:
+        unknown_entities = set(item["linkedEntityIds"]) - entity_ids
+        if unknown_entities:
+            raise AssertionError(f"Evidence {item['id']} links unknown entities: {sorted(unknown_entities)}")
+        unknown_claims = set(item["supportsClaimIds"]) - claim_ids
+        if unknown_claims:
+            raise AssertionError(f"Evidence {item['id']} supports unknown claims: {sorted(unknown_claims)}")
+    for claim in baseline["expectedResponse"]["answer"]["claims"]:
+        citation_ids = {citation["evidenceId"] for citation in claim["citations"]}
+        if claim["classification"] == "fact" and not citation_ids:
+            raise AssertionError(f"Factual claim has no citation: {claim['id']}")
+        if not citation_ids <= evidence_ids:
+            raise AssertionError(f"Claim {claim['id']} cites unknown evidence: {sorted(citation_ids - evidence_ids)}")
+    checked_ids = set(baseline["expectedResponse"]["citationValidation"]["checkedClaimIds"])
+    if checked_ids != claim_ids:
+        raise AssertionError("Citation validation must cover every canonical claim")
 
 
 if __name__ == "__main__":

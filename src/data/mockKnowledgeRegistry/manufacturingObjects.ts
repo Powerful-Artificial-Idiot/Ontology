@@ -1,29 +1,30 @@
+import { getLeakRateCanonicalEntity } from "../../../packages/demo-data/src/index";
 import { knowledgeIds as id } from "./ids";
 import type { MockKnowledgeObject } from "./types";
 
 export const manufacturingObjects: MockKnowledgeObject[] = [
-  object(id.product.brakeBooster, "Brake Booster Assembly", "Product", "production", "Finished brake booster assembly produced by the released BB01 route.", "Route Explorer", ["Production View", "Quality View", "Engineering View"]),
+  canonicalObject(id.product.brakeBooster, "Product", ["Production View", "Quality View", "Engineering View"]),
   object(id.part.aluminumHousing, "Aluminum Housing Blank", "Part", "production", "Aluminum housing blank consumed by OP10 Housing Press Fit.", "Route Explorer", ["Production View"]),
   object(id.part.rubberDiaphragm, "Rubber Diaphragm", "Part", "production", "Rubber diaphragm consumed by OP20 Diaphragm Assembly.", "Route Explorer", ["Production View"]),
   object(id.part.pushRod, "Push Rod", "Part", "production", "Push rod consumed by OP10 Housing Press Fit.", "Route Explorer", ["Production View"]),
   object(id.part.sealRing, "Seal Ring", "Part", "production", "Seal ring consumed by OP20 Diaphragm Assembly.", "Route Explorer", ["Production View"]),
   object(id.operation.op10, "OP10 Housing Press Fit", "Operation", "production", "Housing press-fit operation in the Brake Booster Assembly route.", "Route Explorer", ["Production View", "Engineering View", "Value Stream View"]),
-  object(id.operation.op20, "OP20 Diaphragm Assembly", "Operation", "production", "Diaphragm assembly operation and current route bottleneck candidate.", "Route Explorer", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
-  object(id.operation.op30, "OP30 Leak Test", "Operation", "production", "Automatic leak-test operation controlling Leak Rate.", "Route Explorer", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
-  object(id.operation.op40, "OP40 Final Inspection", "Operation", "production", "Final inspection operation downstream of OP30 Leak Test.", "Route Explorer", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
+  canonicalObject(id.operation.op20, "Operation", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
+  canonicalObject(id.operation.op30, "Operation", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
+  canonicalObject(id.operation.op40, "Operation", ["Production View", "Quality View", "Engineering View", "Value Stream View"]),
   object(id.machine.m210, "M210 Press Fit Station", "Machine", "engineering", "Press-fit station used by OP10 Housing Press Fit.", "Route Explorer", ["Engineering View"]),
-  object(id.machine.m220, "M220 Leak Test Bench", "Machine", "engineering", "Automated pressure-decay leak-test bench used by OP30 Leak Test.", "Route Explorer", ["Engineering View"], "MES / EAM", "Asset v8"),
-  object(id.fixture.fx002, "FX-002 Leak Test Fixture", "Fixture", "engineering", "Sealing fixture required by OP30 Leak Test.", "Route Explorer", ["Engineering View"], "Tooling DB", "Rev F"),
-  object(id.program.leakTestV34, "LeakTestProgram V3.4", "Program", "engineering", "Released M220 test program controlling pressure and pass/fail thresholds.", "Route Explorer", ["Engineering View"], "Equipment Controller", "V3.4"),
+  canonicalObject(id.machine.m220, "Machine", ["Engineering View"]),
+  canonicalObject(id.fixture.fx002, "Fixture", ["Engineering View"]),
+  canonicalObject(id.program.leakTestV34, "Program", ["Engineering View"]),
   object(id.program.leakTestV35, "LeakTestProgram V3.5", "Program", "engineering", "Proposed M220 test program version requiring controlled validation before release.", "Route Explorer", ["Engineering View"], "Equipment Controller", "V3.5"),
-  object(id.quality.leakRate, "Leak Rate", "QualityCharacteristic", "quality", "Quality characteristic measured during OP30 Leak Test to validate booster sealing performance.", "Route Explorer", ["Quality View"], "QMS", "v2.0"),
+  canonicalObject(id.quality.leakRate, "QualityCharacteristic", ["Quality View"]),
   object(id.quality.ctqLeakRate, "CTQ Leak Rate", "CTQ", "quality", "Critical-to-quality classification for the Leak Rate characteristic.", "Route Explorer", ["Quality View"]),
   object(id.quality.visualDefect, "Visual Defect", "QualityCharacteristic", "quality", "Final visual defect characteristic controlled at OP40 Final Inspection.", "Route Explorer", ["Quality View"]),
-  object(id.quality.sealingLeak, "Sealing Leak Failure Mode", "FailureMode", "quality", "PFMEA failure mode for loss of sealing integrity.", "Route Explorer", ["Quality View"], "QMS", "Rev.B"),
-  object(id.quality.automaticLeakTest, "100% Leak Test", "ControlMethod", "quality", "Automatic inspection control applied to every unit at OP30 Leak Test.", "Route Explorer", ["Quality View"]),
-  document(id.document.controlPlan, "Control Plan CP-BB01 Rev.A", "quality", "QMS", "Rev.A", ["Quality View"]),
-  document(id.document.pfmea, "PFMEA PF-BB01 Rev.B", "quality", "QMS", "Rev.B", ["Quality View"]),
-  document(id.document.sopOp30, "SOP OP30 Leak Test", "governance", "DMS", "Rev.3", ["Engineering View", "Quality View"]),
+  canonicalObject(id.quality.sealingLeak, "FailureMode", ["Quality View"]),
+  canonicalObject(id.quality.automaticLeakTest, "ControlMethod", ["Quality View"]),
+  canonicalObject(id.document.controlPlan, "Document", ["Quality View"]),
+  canonicalObject(id.document.pfmea, "Document", ["Quality View"]),
+  canonicalObject(id.document.sopOp30, "Document", ["Engineering View", "Quality View"]),
   document(id.document.routingSheet, "Routing Sheet BB01", "production", "PLM", "Rev.C", ["Production View", "Value Stream View"]),
   document(id.document.validationRecord, "Validation Record M220 Program V3.4", "engineering", "Validation Repository", "Rev.1", ["Engineering View"]),
   document(id.document.validationRecordV35, "Validation Record M220 Program V3.5", "engineering", "Validation Repository", "Draft 1", ["Engineering View"]),
@@ -61,6 +62,23 @@ export const manufacturingObjects: MockKnowledgeObject[] = [
 ];
 
 export const manufacturingObjectById = new Map(manufacturingObjects.map((item) => [item.id, item]));
+
+function canonicalObject(id: string, type: MockKnowledgeObject["type"], sourceViews: NonNullable<MockKnowledgeObject["sourceViews"]>): MockKnowledgeObject {
+  const entity = getLeakRateCanonicalEntity(id);
+  const source = entity.source?.[0];
+  return {
+    id: entity.id,
+    label: entity.label,
+    type,
+    domain: entity.domain as MockKnowledgeObject["domain"],
+    description: entity.description ?? entity.label,
+    sourcePage: "Route Explorer",
+    sourceViews,
+    sourceSystem: source?.sourceSystem,
+    version: entity.version,
+    attributes: entity.properties as MockKnowledgeObject["attributes"],
+  };
+}
 
 function object(id: string, label: string, type: MockKnowledgeObject["type"], domain: MockKnowledgeObject["domain"], description: string, sourcePage: MockKnowledgeObject["sourcePage"], sourceViews: NonNullable<MockKnowledgeObject["sourceViews"]>, sourceSystem?: string, version?: string): MockKnowledgeObject {
   return { id, label, type, domain, description, sourcePage, sourceViews, sourceSystem, version };

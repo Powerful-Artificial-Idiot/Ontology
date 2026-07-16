@@ -12,6 +12,8 @@ import type {
   SemanticSearchResponse,
 } from "../../packages/knowledge-contracts/src/index";
 import cq004MachineQualityImpact from "../../packages/demo-data/semantic/generated/cq-004-machine-quality-impact.json";
+import { ontologyRelations } from "../data/mockKnowledgeRegistry/ontologyRelations";
+import { resolveCanonicalKnowledgeId } from "../data/mockKnowledgeRegistry/ids";
 import { searchSemanticCatalog, semanticLaneDefinitions } from "../features/semantic/semanticUtils";
 import { connectOntologyViewToArtifact } from "../features/ontology/ontologyArtifactAdapter";
 import {
@@ -66,12 +68,13 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
   }
 
   async getEntityById(id: string): Promise<KnowledgeEntity | null> {
-    const stackObject = stackNodes.flatMap((node) => node.stackObjects).find((object) => object.id === id);
+    const canonicalId = resolveCanonicalKnowledgeId(id);
+    const stackObject = stackNodes.flatMap((node) => node.stackObjects).find((object) => object.id === canonicalId);
     if (stackObject) return toKnowledgeEntity(stackObject);
-    const ontologyObject = ontologyObjectTypes.find((object) => object.id === id);
-    if (ontologyObject) return { id, type: "OntologyClass", label: ontologyObject.label, description: ontologyObject.description, domain: ontologyObject.domain, properties: { sourceSystems: ontologyObject.sourceSystems, status: ontologyObject.status } };
-    const semanticEntity = semanticEntities.find((entity) => entity.id === id);
-    return semanticEntity ? { id, type: entityType(semanticEntity.type), label: semanticEntity.label, description: semanticEntity.description, domain: semanticEntity.domain, properties: { ...semanticEntity.attributes, aliases: semanticEntity.aliases }, status: semanticEntity.status } : null;
+    const ontologyObject = ontologyObjectTypes.find((object) => object.id === canonicalId);
+    if (ontologyObject) return { id: canonicalId, type: "OntologyClass", label: ontologyObject.label, description: ontologyObject.description, domain: ontologyObject.domain, properties: { sourceSystems: ontologyObject.sourceSystems, status: ontologyObject.status } };
+    const semanticEntity = semanticEntities.find((entity) => entity.id === canonicalId);
+    return semanticEntity ? { id: canonicalId, type: entityType(semanticEntity.type), label: semanticEntity.label, description: semanticEntity.description, domain: semanticEntity.domain, properties: { ...semanticEntity.attributes, aliases: semanticEntity.aliases }, status: semanticEntity.status } : null;
   }
 
   async getOntologyGraph(_request: OntologyGraphRequest): Promise<OntologyGraphResponse> {
@@ -121,6 +124,20 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
   }
 
   async getEntityRelations(id: string): Promise<KnowledgeRelation[]> {
+    const canonicalId = resolveCanonicalKnowledgeId(id);
+    const canonicalRelations = ontologyRelations
+      .filter((relation) => relation.sourceId === canonicalId || relation.targetId === canonicalId)
+      .map((relation): KnowledgeRelation => ({
+        id: relation.id,
+        sourceId: relation.sourceId,
+        targetId: relation.targetId,
+        predicate: relation.relationType,
+        label: relation.label,
+        properties: { description: relation.description },
+        evidenceType: relation.evidenceIds?.length ? "governed-reference" : undefined,
+        assertionType: "asserted",
+      }));
+    if (canonicalRelations.length) return canonicalRelations;
     return graphEdges.filter((edge) => edge.source === id || edge.target === id).map(toKnowledgeRelation);
   }
 }

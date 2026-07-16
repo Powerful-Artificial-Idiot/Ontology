@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/evidence-pack.schema.json",
+  "title": "EvidencePack",
+  "type": "object",
+  "required": ["id", "queryPlanId", "generatedAt", "ontologyVersion", "dataVersion", "items", "limitations"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "queryPlanId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "ontologyVersion": { "type": "string", "minLength": 1 },
+    "dataVersion": { "type": "string", "minLength": 1 },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "title", "excerpt", "source", "linkedEntityIds", "supportsClaimIds"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["semantic", "ontology", "graph", "document", "system-record"] },
+          "title": { "type": "string", "minLength": 1 },
+          "excerpt": { "type": "string", "minLength": 1 },
+          "source": {
+            "type": "object",
+            "required": ["sourceType", "sourceId"],
+            "properties": {
+              "sourceType": { "type": "string" },
+              "sourceId": { "type": "string" },
+              "sourceSystem": { "type": "string" },
+              "documentName": { "type": "string" },
+              "locator": { "type": "string" },
+              "recordedAt": { "type": "string", "format": "date-time" }
+            },
+            "additionalProperties": false
+          },
+          "linkedEntityIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "supportsClaimIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "version": { "type": "string" },
+          "effectiveAt": { "type": "string", "format": "date-time" },
+          "status": { "enum": ["draft", "active", "superseded"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,5 +1,7 @@
+import { leakRateQualityIssueTraceIds as canonical } from "../../../packages/demo-data/src/index";
+
 export const knowledgeIds = {
-  product: { brakeBooster: "product.brake-booster-assembly" },
+  product: { brakeBooster: canonical.product.brakeBooster },
   part: {
     aluminumHousing: "part.aluminum-housing-blank",
     rubberDiaphragm: "part.rubber-diaphragm",
@@ -7,28 +9,28 @@ export const knowledgeIds = {
     sealRing: "part.seal-ring",
   },
   operation: {
-    op10: "operation.op10-housing-press-fit",
-    op20: "operation.op20-diaphragm-assembly",
-    op30: "operation.op30-leak-test",
-    op40: "operation.op40-final-inspection",
+    op10: canonical.operation.op10,
+    op20: canonical.operation.op20,
+    op30: canonical.operation.op30,
+    op40: canonical.operation.op40,
   },
-  machine: { m210: "machine.m210-press-fit-station", m220: "machine.m220-leak-test-bench" },
-  fixture: { fx002: "fixture.fx-002-leak-test-fixture" },
+  machine: { m210: "machine.m210-press-fit-station", m220: canonical.machine.m220 },
+  fixture: { fx002: canonical.fixture.fx002 },
   program: {
-    leakTestV34: "program.leak-test-program-v3-4",
-    leakTestV35: "program.leak-test-program-v3-5",
+    leakTestV34: canonical.program.leakTestV34,
+    leakTestV35: "program.leak-test.v3-5",
   },
   quality: {
-    leakRate: "quality.leak-rate",
-    ctqLeakRate: "quality.ctq-leak-rate",
+    leakRate: canonical.quality.leakRate,
+    ctqLeakRate: "quality-classification.ctq.leak-rate",
     visualDefect: "quality.visual-defect",
-    sealingLeak: "failure-mode.sealing-leak",
-    automaticLeakTest: "control-method.100-percent-leak-test",
+    sealingLeak: canonical.quality.internalLeakage,
+    automaticLeakTest: canonical.quality.automaticLeakTest,
   },
   document: {
-    controlPlan: "doc.control-plan-cp-bb01-rev-a",
-    pfmea: "doc.pfmea-pf-bb01-rev-b",
-    sopOp30: "doc.sop-op30-leak-test",
+    controlPlan: canonical.document.controlPlan,
+    pfmea: canonical.document.pfmea,
+    sopOp30: canonical.document.sopOp30,
     routingSheet: "doc.routing-sheet-bb01",
     validationRecord: "doc.validation-record-m220-program-v3-4",
     validationRecordV35: "doc.validation-record-m220-program-v3-5",
@@ -95,6 +97,30 @@ export const knowledgeIds = {
     ontologyValueStream: "evidence.ontology-value-stream-flow",
     mesShift: "evidence.mes-shift-op10-op30",
     mesOp30History: "evidence.mes-op30-test-history",
-    qmsLeakDistribution: "evidence.qms-leak-rate-distribution",
+    qmsLeakDistribution: canonical.evidence.recentQualityResults,
+    route: canonical.evidence.route,
   },
 } as const;
+
+export const legacyKnowledgeIdAliases: Readonly<Record<string, string>> = {
+  "product.brake-booster-assembly": knowledgeIds.product.brakeBooster,
+  "operation.op10-housing-press-fit": knowledgeIds.operation.op10,
+  "operation.op20-diaphragm-assembly": knowledgeIds.operation.op20,
+  "operation.op30-leak-test": knowledgeIds.operation.op30,
+  "operation.op40-final-inspection": knowledgeIds.operation.op40,
+  "machine.m220-leak-test-bench": knowledgeIds.machine.m220,
+  "fixture.fx-002-leak-test-fixture": knowledgeIds.fixture.fx002,
+  "program.leak-test-program-v3-4": knowledgeIds.program.leakTestV34,
+  "program.leak-test-program-v3-5": knowledgeIds.program.leakTestV35,
+  "quality.leak-rate": knowledgeIds.quality.leakRate,
+  "quality.ctq-leak-rate": knowledgeIds.quality.ctqLeakRate,
+  "failure-mode.sealing-leak": knowledgeIds.quality.sealingLeak,
+  "control-method.100-percent-leak-test": knowledgeIds.quality.automaticLeakTest,
+  "doc.control-plan-cp-bb01-rev-a": knowledgeIds.document.controlPlan,
+  "doc.pfmea-pf-bb01-rev-b": knowledgeIds.document.pfmea,
+  "doc.sop-op30-leak-test": knowledgeIds.document.sopOp30,
+};
+
+export function resolveCanonicalKnowledgeId(id: string): string {
+  return legacyKnowledgeIdAliases[id] ?? id;
+}

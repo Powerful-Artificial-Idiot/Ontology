@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/graph-query-plan.schema.json",
+  "title": "GraphQueryPlan",
+  "type": "object",
+  "required": ["graphPlanId", "graphPlanVersion", "semanticPlanId", "intent", "templateId", "readOnly", "seedEntityIds", "allowedRelationTypes", "maxDepth", "resultLimit", "parameters"],
+  "properties": {
+    "graphPlanId": { "type": "string", "minLength": 1 },
+    "graphPlanVersion": { "const": "1.0.0" },
+    "semanticPlanId": { "type": "string", "minLength": 1 },
+    "intent": { "enum": ["quality_issue_trace", "engineering_change_impact", "bottleneck_analysis", "evidence_lookup", "clarification_required"] },
+    "templateId": { "type": "string", "minLength": 1 },
+    "readOnly": { "const": true },
+    "seedEntityIds": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "allowedRelationTypes": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "maxDepth": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "resultLimit": { "type": "integer", "minimum": 1, "maximum": 200 },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "number" },
+          { "type": "boolean" },
+          { "type": "array", "items": { "type": "string" } }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "not": {
+    "anyOf": [
+      { "required": ["cypher"] },
+      { "required": ["query"] },
+      { "required": ["sql"] },
+      { "required": ["text"] }
+    ]
+  }
+}

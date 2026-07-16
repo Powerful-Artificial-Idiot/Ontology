@@ -16,6 +16,7 @@
     "typecheck": "tsc -b",
     "lint": "eslint src packages services --max-warnings 0",
     "test": "vitest run",
+    "test:agent-core": "vitest run tests/backend/deterministic-agent-pipeline.test.ts",
     "test:watch": "vitest",
     "api:dev": "vite-node services/mock-knowledge-api/start.ts",
     "api:test": "vitest run tests/integration/mock-knowledge-api.test.ts",

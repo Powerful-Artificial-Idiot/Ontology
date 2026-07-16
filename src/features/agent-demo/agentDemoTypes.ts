@@ -1,8 +1,18 @@
+import type {
+  AgentConfidence as SharedAgentConfidence,
+  AgentDomain as SharedAgentDomain,
+  AgentLanguage as SharedAgentLanguage,
+  AgentTurnRequest,
+  EvidencePack,
+  GraphQueryPlan,
+  SemanticQueryPlan,
+} from "../../../packages/knowledge-contracts/src/index";
+
 export type AgentLayer = "user" | "context" | "semantic" | "ontology" | "knowledge" | "crossView" | "evidence" | "answer";
 
-export type AgentDomain = "quality" | "engineering" | "valueStream" | "production";
+export type AgentDomain = Exclude<SharedAgentDomain, "governance">;
 
-export type AgentLanguage = "zh" | "en";
+export type AgentLanguage = SharedAgentLanguage;
 
 export type AgentSuggestedQuestion = {
   zh: string;
@@ -27,7 +37,7 @@ export type AgentReasoningStep = {
   input: string[];
   action: string;
   output: string[];
-  confidence: "low" | "medium" | "high" | "approved";
+  confidence: SharedAgentConfidence;
   toolName?: AgentToolName;
   toolInput?: Record<string, unknown>;
   toolOutput?: Record<string, unknown>;
@@ -123,6 +133,13 @@ export type AgentScenario = {
   tools: AgentToolName[];
   knowledgeSources: AgentReferenceType[];
   initialContext: AgentSharedContext;
+  canonicalBaseline?: {
+    baselineId: string;
+    request: AgentTurnRequest;
+    queryPlan: SemanticQueryPlan;
+    graphQueryPlan: GraphQueryPlan;
+    evidencePack: EvidencePack;
+  };
 };
 
 export type AgentRunStatus = "idle" | "running" | "completed" | "error";
@@ -136,7 +153,7 @@ export type AgentUserMessage = {
 
 export type AgentResponseMessage = AgentFinalAnswer & {
   id: string;
-  confidence: "low" | "medium" | "high" | "approved";
+  confidence: SharedAgentConfidence;
 };
 
 export type AgentSharedContext = {
@@ -162,7 +179,7 @@ export type AgentConversationTurn = {
   relatedObjects: AgentRelatedObject[];
   viewIndexes: AgentViewIndex[];
   status: "pending" | "running" | "completed" | "error";
-  confidence?: "low" | "medium" | "high" | "approved";
+  confidence?: SharedAgentConfidence;
   createdAt: string;
   completedAt?: string;
 };

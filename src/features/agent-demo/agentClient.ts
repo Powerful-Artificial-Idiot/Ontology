@@ -1,5 +1,7 @@
 import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentReasoningStep, AgentScenario, AgentSharedContext } from "./agentDemoTypes";
 
+export type { AgentTurnRequest, AgentTurnResponse, ContractAgentClient } from "../../../packages/knowledge-contracts/src/index";
+
 export type AgentRunEvent =
   | { type: "session-started"; session: AgentConversationSession }
   | { type: "turn-started"; turn: AgentConversationTurn }

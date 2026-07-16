@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/semantic-query-plan.schema.json",
+  "title": "SemanticQueryPlan",
+  "type": "object",
+  "required": ["planId", "planVersion", "intent", "originalQuestion", "entities", "relationTypes", "requestedFacets", "constraints", "assumptions"],
+  "properties": {
+    "planId": { "type": "string", "minLength": 1 },
+    "planVersion": { "const": "1.0.0" },
+    "intent": { "enum": ["quality_issue_trace", "engineering_change_impact", "bottleneck_analysis", "evidence_lookup", "clarification_required"] },
+    "originalQuestion": { "type": "string", "minLength": 1 },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "role"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "type": { "type": "string" },
+          "role": { "enum": ["subject", "affected", "resource", "risk", "evidence", "context"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "relationTypes": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "requestedFacets": { "type": "array", "items": { "enum": ["production", "quality", "engineering", "valueStream", "governance"] }, "uniqueItems": true },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "operator", "value"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "operator": { "enum": ["eq", "in", "before", "after", "between"] },
+          "value": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "temporalScope": {
+      "type": "object",
+      "properties": {
+        "asOf": { "type": "string", "format": "date-time" },
+        "from": { "type": "string", "format": "date-time" },
+        "to": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "assumptions": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

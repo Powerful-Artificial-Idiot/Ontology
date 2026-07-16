@@ -1,0 +1,318 @@
+{
+  "baselineId": "canonical-baseline.leak-rate-quality-issue-trace",
+  "baselineVersion": "1.0.0",
+  "agentContractVersion": "1.0.0",
+  "ontologyVersion": "1.1.0",
+  "dataVersion": "1.0.0",
+  "scenario": {
+    "id": "quality-issue-trace",
+    "title": "Leak Rate Quality Issue Trace",
+    "question": "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险和文件？",
+    "intent": "quality_issue_trace",
+    "seedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"]
+  },
+  "ids": {
+    "product": { "brakeBooster": "product.brake-booster" },
+    "operation": {
+      "op10": "operation.op10",
+      "op20": "operation.op20",
+      "op30": "operation.op30",
+      "op40": "operation.op40"
+    },
+    "machine": { "m220": "machine.m220" },
+    "fixture": { "fx002": "fixture.fx-002" },
+    "program": { "leakTestV34": "program.leak-test.v3-4" },
+    "quality": {
+      "leakRate": "quality-characteristic.leak-rate",
+      "automaticLeakTest": "control-method.automatic-leak-test",
+      "internalLeakage": "failure-mode.internal-leakage"
+    },
+    "document": {
+      "controlPlan": "document.control-plan.cp-bb01.rev-a",
+      "pfmea": "document.pfmea.pf-bb01.rev-b",
+      "sopOp30": "document.sop.op30-leak-test"
+    },
+    "evidence": {
+      "route": "evidence.route.brake-booster.rev-c",
+      "recentQualityResults": "evidence.qms.leak-rate.recent"
+    }
+  },
+  "entities": [
+    {
+      "id": "product.brake-booster",
+      "type": "mfg:Product",
+      "label": "Brake Booster Assembly",
+      "description": "Finished brake booster assembly produced by the released BB01 route.",
+      "domain": "production",
+      "properties": { "productCode": "FP-001", "owner": "Product Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "FP-001", "sourceSystem": "PLM / ERP", "recordedAt": "2026-06-18T00:00:00Z" }],
+      "version": "Rev.C",
+      "status": "active"
+    },
+    {
+      "id": "operation.op20",
+      "type": "mfg:Operation",
+      "label": "OP20 Diaphragm Assembly",
+      "description": "Assembly operation immediately upstream of OP30 Leak Test.",
+      "domain": "production",
+      "properties": { "operationCode": "OP20", "owner": "Manufacturing Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "OP-020", "sourceSystem": "MES", "recordedAt": "2026-06-20T00:00:00Z" }],
+      "version": "v2.1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op30",
+      "type": "mfg:Operation",
+      "label": "OP30 Leak Test",
+      "description": "Automatic leak-test operation controlling the Leak Rate characteristic.",
+      "domain": "production",
+      "properties": { "operationCode": "OP30", "taktTime": "45s", "outputWip": "Tested Booster", "owner": "Production Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "OP-030", "sourceSystem": "MES", "recordedAt": "2026-06-20T00:00:00Z" }],
+      "version": "v3.0",
+      "status": "active"
+    },
+    {
+      "id": "operation.op40",
+      "type": "mfg:Operation",
+      "label": "OP40 Final Inspection",
+      "description": "Final inspection operation immediately downstream of OP30 Leak Test.",
+      "domain": "production",
+      "properties": { "operationCode": "OP40", "owner": "Quality Operations" },
+      "source": [{ "sourceType": "system-record", "sourceId": "OP-040", "sourceSystem": "MES", "recordedAt": "2026-06-20T00:00:00Z" }],
+      "version": "v2.0",
+      "status": "active"
+    },
+    {
+      "id": "machine.m220",
+      "type": "mfg:Machine",
+      "label": "M220 Leak Test Bench",
+      "description": "Automated pressure-decay leak-test bench used by OP30 Leak Test.",
+      "domain": "engineering",
+      "properties": { "equipmentCode": "M220", "pressureRange": "0-4 bar", "calibrationDue": "2026-09-01", "owner": "Maintenance" },
+      "source": [{ "sourceType": "system-record", "sourceId": "EQ-M220", "sourceSystem": "MES / EAM", "recordedAt": "2026-06-14T00:00:00Z" }],
+      "version": "Asset v8",
+      "status": "active"
+    },
+    {
+      "id": "fixture.fx-002",
+      "type": "mfg:ManufacturingResource",
+      "label": "FX-002 Leak Test Fixture",
+      "description": "Sealing fixture required by OP30 Leak Test.",
+      "domain": "engineering",
+      "properties": { "fixtureCode": "FX-002", "calibrationDue": "2026-08-20", "owner": "Tooling Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "TOOL-FX-002", "sourceSystem": "Tooling DB", "recordedAt": "2026-06-02T00:00:00Z" }],
+      "version": "Rev.F",
+      "status": "active"
+    },
+    {
+      "id": "program.leak-test.v3-4",
+      "type": "mfg:ProcessParameter",
+      "label": "LeakTestProgram V3.4",
+      "description": "Released M220 program controlling pressure and pass/fail thresholds.",
+      "domain": "engineering",
+      "properties": { "programName": "LeakTestProgram", "pressure": "2.5 bar", "leakThreshold": "0.8 cc/min", "owner": "Controls Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "PRG-LEAKTEST-V3.4", "sourceSystem": "Equipment Controller", "recordedAt": "2026-06-15T00:00:00Z" }],
+      "version": "V3.4",
+      "status": "active"
+    },
+    {
+      "id": "quality-characteristic.leak-rate",
+      "type": "qual:QualityCharacteristic",
+      "label": "Leak Rate",
+      "description": "Critical quality characteristic measured during OP30 Leak Test.",
+      "domain": "quality",
+      "properties": { "unit": "cc/min", "specification": "< 0.05 cc/min", "inspectionFrequency": "100%", "risk": "High", "owner": "Quality Engineering" },
+      "source": [{ "sourceType": "system-record", "sourceId": "CTQ-OP30-LEAK-RATE", "sourceSystem": "QMS", "recordedAt": "2026-06-17T00:00:00Z" }],
+      "version": "v2.0",
+      "status": "active"
+    },
+    {
+      "id": "control-method.automatic-leak-test",
+      "type": "qual:InspectionMethod",
+      "label": "100% Automatic Leak Test",
+      "description": "Automatic inspection control applied to every unit at OP30.",
+      "domain": "quality",
+      "properties": { "frequency": "100%", "equipmentId": "machine.m220", "owner": "Quality Engineering" },
+      "source": [{ "sourceType": "document", "sourceId": "CP-BB01", "sourceSystem": "QMS", "recordedAt": "2026-06-17T00:00:00Z" }],
+      "version": "Rev.A",
+      "status": "active"
+    },
+    {
+      "id": "failure-mode.internal-leakage",
+      "type": "qual:FailureMode",
+      "label": "Internal Leakage",
+      "description": "PFMEA failure mode for loss of internal sealing integrity.",
+      "domain": "quality",
+      "properties": { "effect": "Reduced brake booster performance", "severity": "Critical", "owner": "Quality Engineering" },
+      "source": [{ "sourceType": "document", "sourceId": "PF-BB01", "sourceSystem": "QMS", "recordedAt": "2026-06-17T00:00:00Z" }],
+      "version": "Rev.B",
+      "status": "active"
+    },
+    {
+      "id": "document.control-plan.cp-bb01.rev-a",
+      "type": "qual:ControlPlanVersion",
+      "label": "Control Plan CP-BB01 Rev.A",
+      "description": "Released control plan defining Leak Rate inspection and containment requirements.",
+      "domain": "quality",
+      "properties": { "documentType": "Control Plan", "approvalStatus": "Released", "owner": "Quality Engineering" },
+      "source": [{ "sourceType": "document", "sourceId": "CP-BB01", "sourceSystem": "QMS", "documentName": "Control Plan CP-BB01", "locator": "OP30 / Leak Rate", "recordedAt": "2026-06-17T00:00:00Z" }],
+      "version": "Rev.A",
+      "status": "active"
+    },
+    {
+      "id": "document.pfmea.pf-bb01.rev-b",
+      "type": "core:Document",
+      "label": "PFMEA PF-BB01 Rev.B",
+      "description": "Released PFMEA covering internal leakage and OP30 detection controls.",
+      "domain": "quality",
+      "properties": { "documentType": "PFMEA", "approvalStatus": "Released", "owner": "Quality Engineering" },
+      "source": [{ "sourceType": "document", "sourceId": "PF-BB01", "sourceSystem": "QMS", "documentName": "PFMEA PF-BB01", "locator": "OP30 / Internal Leakage", "recordedAt": "2026-06-17T00:00:00Z" }],
+      "version": "Rev.B",
+      "status": "active"
+    },
+    {
+      "id": "document.sop.op30-leak-test",
+      "type": "core:Document",
+      "label": "SOP OP30 Leak Test",
+      "description": "Released work instruction for M220 setup and OP30 leak testing.",
+      "domain": "governance",
+      "properties": { "documentType": "SOP", "approvalStatus": "Released", "owner": "Process Documentation" },
+      "source": [{ "sourceType": "document", "sourceId": "SOP-OP30", "sourceSystem": "DMS", "documentName": "SOP OP30 Leak Test", "locator": "Setup and golden-part verification", "recordedAt": "2026-06-03T00:00:00Z" }],
+      "version": "Rev.3",
+      "status": "active"
+    }
+  ],
+  "relations": [
+    { "id": "relation.product.brake-booster.has-operation.op30", "sourceId": "product.brake-booster", "targetId": "operation.op30", "predicate": "mfg:requiresOperation", "label": "hasOperation", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op20.next-operation.op30", "sourceId": "operation.op20", "targetId": "operation.op30", "predicate": "mfg:flowsTo", "label": "nextOperation", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.next-operation.op40", "sourceId": "operation.op30", "targetId": "operation.op40", "predicate": "mfg:flowsTo", "label": "nextOperation", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.performed-on.machine.m220", "sourceId": "operation.op30", "targetId": "machine.m220", "predicate": "mfg:executedBy", "label": "performedOn", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.requires-fixture.fx-002", "sourceId": "operation.op30", "targetId": "fixture.fx-002", "predicate": "mfg:flowsTo", "label": "requiresFixture", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.uses-program.v3-4", "sourceId": "operation.op30", "targetId": "program.leak-test.v3-4", "predicate": "mfg:usesParameter", "label": "usesProgram", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.controls.leak-rate", "sourceId": "operation.op30", "targetId": "quality-characteristic.leak-rate", "predicate": "qual:controlsCharacteristic", "label": "controls", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.leak-rate.controlled-by.automatic-leak-test", "sourceId": "quality-characteristic.leak-rate", "targetId": "control-method.automatic-leak-test", "predicate": "mfg:flowsTo", "label": "controlledBy", "properties": { "frequency": "100%" }, "assertionType": "asserted" },
+    { "id": "relation.leak-rate.governed-by.control-plan", "sourceId": "quality-characteristic.leak-rate", "targetId": "document.control-plan.cp-bb01.rev-a", "predicate": "mfg:flowsTo", "label": "governedBy", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.leak-rate.risk-analyzed-by.pfmea", "sourceId": "quality-characteristic.leak-rate", "targetId": "document.pfmea.pf-bb01.rev-b", "predicate": "mfg:flowsTo", "label": "riskAnalyzedBy", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.pfmea.identifies.internal-leakage", "sourceId": "document.pfmea.pf-bb01.rev-b", "targetId": "failure-mode.internal-leakage", "predicate": "mfg:flowsTo", "label": "identifiesFailureMode", "properties": {}, "assertionType": "asserted" },
+    { "id": "relation.operation.op30.described-by.sop", "sourceId": "operation.op30", "targetId": "document.sop.op30-leak-test", "predicate": "mfg:flowsTo", "label": "describedBy", "properties": {}, "assertionType": "asserted" }
+  ],
+  "request": {
+    "contractVersion": "1.0.0",
+    "requestId": "request.quality-issue-trace.001",
+    "scenarioId": "quality-issue-trace",
+    "mode": "scripted",
+    "language": "zh",
+    "message": "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险和文件？",
+    "context": { "previousTurnIds": [], "resolvedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"], "activeTopic": "Leak Rate abnormality trace", "assumptions": [] },
+    "requestedAt": "2026-07-16T00:00:00Z"
+  },
+  "queryPlan": {
+    "planId": "query-plan.quality-issue-trace.001",
+    "planVersion": "1.0.0",
+    "intent": "quality_issue_trace",
+    "originalQuestion": "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险和文件？",
+    "entities": [
+      { "id": "operation.op30", "label": "OP30 Leak Test", "type": "mfg:Operation", "role": "subject" },
+      { "id": "quality-characteristic.leak-rate", "label": "Leak Rate", "type": "qual:QualityCharacteristic", "role": "subject" }
+    ],
+    "relationTypes": ["link-product-requires-operation", "ontology.relationship.performed-on", "link-operation-requires-fixture", "ontology.relationship.uses-program", "ontology.relationship.controls", "link-quality-controlled-by-method", "ontology.relationship.governed-by", "ontology.relationship.risk-analyzed-by", "ontology.relationship.described-by"],
+    "requestedFacets": ["production", "engineering", "quality", "governance"],
+    "constraints": [{ "key": "entity.status", "operator": "eq", "value": "active" }],
+    "assumptions": ["最近异常是演示场景中的 QMS 信号，尚未连接真实时间序列。"]
+  },
+  "graphQueryPlan": {
+    "graphPlanId": "graph-query-plan.quality-issue-trace.001",
+    "graphPlanVersion": "1.0.0",
+    "semanticPlanId": "query-plan.quality-issue-trace.001",
+    "intent": "quality_issue_trace",
+    "templateId": "quality-issue-trace.direct-neighborhood.v1",
+    "readOnly": true,
+    "seedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"],
+    "allowedRelationTypes": ["hasOperation", "nextOperation", "performedOn", "requiresFixture", "usesProgram", "controls", "controlledBy", "governedBy", "riskAnalyzedBy", "identifiesFailureMode", "describedBy"],
+    "maxDepth": 2,
+    "resultLimit": 50,
+    "parameters": { "status": "active" }
+  },
+  "evidencePack": {
+    "id": "evidence-pack.quality-issue-trace.001",
+    "queryPlanId": "query-plan.quality-issue-trace.001",
+    "generatedAt": "2026-07-16T00:00:01Z",
+    "ontologyVersion": "1.1.0",
+    "dataVersion": "1.0.0",
+    "items": [
+      { "id": "evidence.route.brake-booster.rev-c", "kind": "graph", "title": "Released Brake Booster Route", "excerpt": "Brake Booster Assembly includes OP30 between OP20 and OP40.", "source": { "sourceType": "route-graph", "sourceId": "BB01-ROUTE", "sourceSystem": "PLM / MES", "locator": "OP20 -> OP30 -> OP40" }, "linkedEntityIds": ["product.brake-booster", "operation.op20", "operation.op30", "operation.op40"], "supportsClaimIds": ["claim.affected-product"], "version": "Rev.C", "status": "active" },
+      { "id": "document.control-plan.cp-bb01.rev-a", "kind": "document", "title": "Control Plan CP-BB01 Rev.A", "excerpt": "Leak Rate is inspected automatically at 100% frequency; abnormal results require containment and equipment verification.", "source": { "sourceType": "document", "sourceId": "CP-BB01", "sourceSystem": "QMS", "locator": "OP30 / Leak Rate" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "control-method.automatic-leak-test"], "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"], "version": "Rev.A", "status": "active" },
+      { "id": "document.pfmea.pf-bb01.rev-b", "kind": "document", "title": "PFMEA PF-BB01 Rev.B", "excerpt": "Internal Leakage can reduce brake booster performance and requires detection controls at OP30.", "source": { "sourceType": "document", "sourceId": "PF-BB01", "sourceSystem": "QMS", "locator": "OP30 / Internal Leakage" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "failure-mode.internal-leakage"], "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"], "version": "Rev.B", "status": "active" },
+      { "id": "document.sop.op30-leak-test", "kind": "document", "title": "SOP OP30 Leak Test", "excerpt": "M220 uses FX-002, LeakTestProgram V3.4 and a 2.5 bar test pressure with golden-part verification.", "source": { "sourceType": "document", "sourceId": "SOP-OP30", "sourceSystem": "DMS", "locator": "Setup and golden-part verification" }, "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"], "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"], "version": "Rev.3", "status": "active" },
+      { "id": "evidence.qms.leak-rate.recent", "kind": "system-record", "title": "Recent Leak Rate Results", "excerpt": "The demo baseline contains an abnormal Leak Rate signal but no live QMS time-series connection.", "source": { "sourceType": "system-record", "sourceId": "QMS-DEMO-LEAK-RATE", "sourceSystem": "QMS Mock" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"], "supportsClaimIds": ["claim.signal-limitation"], "version": "2026-07 Demo", "status": "active" }
+    ],
+    "limitations": ["No live QMS time-series, batch genealogy or equipment telemetry is connected in Phase 1."]
+  },
+  "expectedResponse": {
+    "contractVersion": "1.0.0",
+    "requestId": "request.quality-issue-trace.001",
+    "turnId": "turn.quality-issue-trace.001",
+    "status": "completed",
+    "queryPlan": {
+      "planId": "query-plan.quality-issue-trace.001",
+      "planVersion": "1.0.0",
+      "intent": "quality_issue_trace",
+      "originalQuestion": "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险和文件？",
+      "entities": [
+        { "id": "operation.op30", "label": "OP30 Leak Test", "type": "mfg:Operation", "role": "subject" },
+        { "id": "quality-characteristic.leak-rate", "label": "Leak Rate", "type": "qual:QualityCharacteristic", "role": "subject" }
+      ],
+      "relationTypes": ["link-product-requires-operation", "ontology.relationship.performed-on", "link-operation-requires-fixture", "ontology.relationship.uses-program", "ontology.relationship.controls", "link-quality-controlled-by-method", "ontology.relationship.governed-by", "ontology.relationship.risk-analyzed-by", "ontology.relationship.described-by"],
+      "requestedFacets": ["production", "engineering", "quality", "governance"],
+      "constraints": [{ "key": "entity.status", "operator": "eq", "value": "active" }],
+      "assumptions": ["最近异常是演示场景中的 QMS 信号，尚未连接真实时间序列。"]
+    },
+    "evidencePack": {
+      "id": "evidence-pack.quality-issue-trace.001",
+      "queryPlanId": "query-plan.quality-issue-trace.001",
+      "generatedAt": "2026-07-16T00:00:01Z",
+      "ontologyVersion": "1.1.0",
+      "dataVersion": "1.0.0",
+      "items": [
+        { "id": "evidence.route.brake-booster.rev-c", "kind": "graph", "title": "Released Brake Booster Route", "excerpt": "Brake Booster Assembly includes OP30 between OP20 and OP40.", "source": { "sourceType": "route-graph", "sourceId": "BB01-ROUTE", "sourceSystem": "PLM / MES", "locator": "OP20 -> OP30 -> OP40" }, "linkedEntityIds": ["product.brake-booster", "operation.op20", "operation.op30", "operation.op40"], "supportsClaimIds": ["claim.affected-product"], "version": "Rev.C", "status": "active" },
+        { "id": "document.control-plan.cp-bb01.rev-a", "kind": "document", "title": "Control Plan CP-BB01 Rev.A", "excerpt": "Leak Rate is inspected automatically at 100% frequency; abnormal results require containment and equipment verification.", "source": { "sourceType": "document", "sourceId": "CP-BB01", "sourceSystem": "QMS", "locator": "OP30 / Leak Rate" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "control-method.automatic-leak-test"], "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"], "version": "Rev.A", "status": "active" },
+        { "id": "document.pfmea.pf-bb01.rev-b", "kind": "document", "title": "PFMEA PF-BB01 Rev.B", "excerpt": "Internal Leakage can reduce brake booster performance and requires detection controls at OP30.", "source": { "sourceType": "document", "sourceId": "PF-BB01", "sourceSystem": "QMS", "locator": "OP30 / Internal Leakage" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "failure-mode.internal-leakage"], "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"], "version": "Rev.B", "status": "active" },
+        { "id": "document.sop.op30-leak-test", "kind": "document", "title": "SOP OP30 Leak Test", "excerpt": "M220 uses FX-002, LeakTestProgram V3.4 and a 2.5 bar test pressure with golden-part verification.", "source": { "sourceType": "document", "sourceId": "SOP-OP30", "sourceSystem": "DMS", "locator": "Setup and golden-part verification" }, "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"], "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"], "version": "Rev.3", "status": "active" },
+        { "id": "evidence.qms.leak-rate.recent", "kind": "system-record", "title": "Recent Leak Rate Results", "excerpt": "The demo baseline contains an abnormal Leak Rate signal but no live QMS time-series connection.", "source": { "sourceType": "system-record", "sourceId": "QMS-DEMO-LEAK-RATE", "sourceSystem": "QMS Mock" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"], "supportsClaimIds": ["claim.signal-limitation"], "version": "2026-07 Demo", "status": "active" }
+      ],
+      "limitations": ["No live QMS time-series, batch genealogy or equipment telemetry is connected in Phase 1."]
+    },
+    "answer": {
+      "summary": "Leak Rate 异常可能影响 Brake Booster Assembly，并关联 OP30 的 M220、FX-002、V3.4 程序、Internal Leakage 风险以及受控质量和作业文件。",
+      "findings": ["产品范围：Brake Booster Assembly。", "设备与工程资源：M220、FX-002、LeakTestProgram V3.4。", "质量风险：Internal Leakage，检测频率为 100%。", "文件：Control Plan Rev.A、PFMEA Rev.B、SOP Rev.3。"],
+      "recommendedActions": ["按 Control Plan 启动围堵。", "核对 M220、FX-002、程序版本和 golden-part 结果。", "按批次补充 QMS 与 MES genealogy 后再确认实际影响范围。"],
+      "risks": ["在缺少实时批次和设备数据时，不能断言全部产品均已受影响。"],
+      "assumptions": ["异常信号来自 Phase 1 Mock QMS 记录。"],
+      "claims": [
+        { "id": "claim.affected-product", "text": "OP30 belongs to the released Brake Booster Assembly route.", "classification": "fact", "citations": [{ "evidenceId": "evidence.route.brake-booster.rev-c" }] },
+        { "id": "claim.affected-equipment", "text": "OP30 uses M220, FX-002 and LeakTestProgram V3.4.", "classification": "fact", "citations": [{ "evidenceId": "document.sop.op30-leak-test" }] },
+        { "id": "claim.quality-risk", "text": "Leak Rate is controlled at 100% frequency and is linked to Internal Leakage risk.", "classification": "fact", "citations": [{ "evidenceId": "document.control-plan.cp-bb01.rev-a" }, { "evidenceId": "document.pfmea.pf-bb01.rev-b" }] },
+        { "id": "claim.governed-documents", "text": "Control Plan, PFMEA and SOP are the governed documents for this investigation.", "classification": "fact", "citations": [{ "evidenceId": "document.control-plan.cp-bb01.rev-a" }, { "evidenceId": "document.pfmea.pf-bb01.rev-b" }, { "evidenceId": "document.sop.op30-leak-test" }] },
+        { "id": "claim.signal-limitation", "text": "The actual affected batch population is unknown until live QMS and MES genealogy are connected.", "classification": "limitation", "citations": [{ "evidenceId": "evidence.qms.leak-rate.recent" }] }
+      ],
+      "confidence": "high"
+    },
+    "citationValidation": { "status": "passed", "checkedClaimIds": ["claim.affected-product", "claim.affected-equipment", "claim.quality-risk", "claim.governed-documents", "claim.signal-limitation"], "issues": [] },
+    "trace": {
+      "traceId": "trace.quality-issue-trace.001",
+      "requestId": "request.quality-issue-trace.001",
+      "stages": [
+        { "id": "stage.01", "stage": "semantic-parsing", "status": "completed", "startedAt": "2026-07-16T00:00:00.000Z", "completedAt": "2026-07-16T00:00:00.020Z", "durationMs": 20, "tool": "canonical-fixture-parser", "inputRefs": ["request.quality-issue-trace.001"], "outputRefs": ["query-plan.quality-issue-trace.001"], "summary": "Resolved OP30 and Leak Rate to canonical entity IDs." },
+        { "id": "stage.02", "stage": "query-plan-validation", "status": "completed", "startedAt": "2026-07-16T00:00:00.020Z", "completedAt": "2026-07-16T00:00:00.025Z", "durationMs": 5, "inputRefs": ["query-plan.quality-issue-trace.001"], "outputRefs": ["query-plan.quality-issue-trace.001"], "summary": "Validated the structured plan against the shared contract." },
+        { "id": "stage.03", "stage": "ontology-validation", "status": "completed", "startedAt": "2026-07-16T00:00:00.025Z", "completedAt": "2026-07-16T00:00:00.030Z", "durationMs": 5, "inputRefs": ["query-plan.quality-issue-trace.001"], "outputRefs": ["relation.operation.op30.controls.leak-rate"], "summary": "Validated requested entity and relation types against the ontology baseline." },
+        { "id": "stage.04", "stage": "query-compilation", "status": "skipped", "startedAt": "2026-07-16T00:00:00.030Z", "completedAt": "2026-07-16T00:00:00.030Z", "durationMs": 0, "inputRefs": [], "outputRefs": [], "summary": "No database query is compiled in Phase 1." },
+        { "id": "stage.05", "stage": "graph-retrieval", "status": "completed", "startedAt": "2026-07-16T00:00:00.030Z", "completedAt": "2026-07-16T00:00:00.045Z", "durationMs": 15, "tool": "canonical-fixture", "inputRefs": ["operation.op30", "quality-characteristic.leak-rate"], "outputRefs": ["product.brake-booster", "machine.m220", "failure-mode.internal-leakage"], "summary": "Retrieved the bounded canonical neighborhood from local fixtures." },
+        { "id": "stage.06", "stage": "document-retrieval", "status": "completed", "startedAt": "2026-07-16T00:00:00.045Z", "completedAt": "2026-07-16T00:00:00.055Z", "durationMs": 10, "tool": "canonical-fixture", "inputRefs": ["quality-characteristic.leak-rate"], "outputRefs": ["document.control-plan.cp-bb01.rev-a", "document.pfmea.pf-bb01.rev-b", "document.sop.op30-leak-test"], "summary": "Retrieved governed local document evidence." },
+        { "id": "stage.07", "stage": "evidence-pack", "status": "completed", "startedAt": "2026-07-16T00:00:00.055Z", "completedAt": "2026-07-16T00:00:00.065Z", "durationMs": 10, "inputRefs": ["query-plan.quality-issue-trace.001"], "outputRefs": ["evidence-pack.quality-issue-trace.001"], "summary": "Built an evidence pack with provenance and limitations." },
+        { "id": "stage.08", "stage": "answer-composition", "status": "completed", "startedAt": "2026-07-16T00:00:00.065Z", "completedAt": "2026-07-16T00:00:00.080Z", "durationMs": 15, "tool": "scripted-answer-composer", "inputRefs": ["evidence-pack.quality-issue-trace.001"], "outputRefs": ["turn.quality-issue-trace.001"], "summary": "Composed the deterministic scripted answer from evidence only." },
+        { "id": "stage.09", "stage": "citation-validation", "status": "completed", "startedAt": "2026-07-16T00:00:00.080Z", "completedAt": "2026-07-16T00:00:00.085Z", "durationMs": 5, "inputRefs": ["turn.quality-issue-trace.001", "evidence-pack.quality-issue-trace.001"], "outputRefs": ["citation-validation.passed"], "summary": "Verified that every factual claim references known evidence." }
+      ]
+    },
+    "completedAt": "2026-07-16T00:00:00.085Z"
+  }
+}

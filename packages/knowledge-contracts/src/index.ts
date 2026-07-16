@@ -217,3 +217,5 @@ export interface KnowledgeRepository {
   searchSemantic(request: SemanticSearchRequest): Promise<SemanticSearchResponse>;
   getEntityRelations(id: string): Promise<KnowledgeRelation[]>;
 }
+
+export * from "./agent";

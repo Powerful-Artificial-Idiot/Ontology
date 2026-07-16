@@ -2,7 +2,8 @@
   "id": "quality-investigation",
   "title": "Leak Rate Control Investigation",
   "graphView": "quality",
-  "frontendRoute": "/semantic-explorer",
-  "seedEntityIds": ["quality:leak-rate", "control-plan:cp001-v3", "operation:op30"],
+  "frontendRoute": "/semantic",
+  "canonicalBaselineId": "canonical-baseline.leak-rate-quality-issue-trace",
+  "seedEntityIds": ["quality-characteristic.leak-rate", "document.control-plan.cp-bb01.rev-a", "operation.op30"],
   "competencyQuestionIds": ["CQ-003"]
 }

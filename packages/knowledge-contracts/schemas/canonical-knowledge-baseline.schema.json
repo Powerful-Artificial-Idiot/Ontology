@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/canonical-knowledge-baseline.schema.json",
+  "title": "CanonicalKnowledgeBaseline",
+  "type": "object",
+  "required": ["baselineId", "baselineVersion", "agentContractVersion", "ontologyVersion", "dataVersion", "scenario", "ids", "entities", "relations", "request", "queryPlan", "graphQueryPlan", "evidencePack", "expectedResponse"],
+  "properties": {
+    "baselineId": { "type": "string", "minLength": 1 },
+    "baselineVersion": { "type": "string", "minLength": 1 },
+    "agentContractVersion": { "const": "1.0.0" },
+    "ontologyVersion": { "type": "string", "minLength": 1 },
+    "dataVersion": { "type": "string", "minLength": 1 },
+    "scenario": {
+      "type": "object",
+      "required": ["id", "title", "question", "intent", "seedEntityIds"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "question": { "type": "string" },
+        "intent": { "enum": ["quality_issue_trace", "engineering_change_impact", "bottleneck_analysis", "evidence_lookup", "clarification_required"] },
+        "seedEntityIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "ids": { "type": "object" },
+    "entities": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-entity.schema.json" } },
+    "relations": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-relation.schema.json" } },
+    "request": { "$ref": "https://example.com/mkg/contracts/agent-turn-request.schema.json" },
+    "queryPlan": { "$ref": "https://example.com/mkg/contracts/semantic-query-plan.schema.json" },
+    "graphQueryPlan": { "$ref": "https://example.com/mkg/contracts/graph-query-plan.schema.json" },
+    "evidencePack": { "$ref": "https://example.com/mkg/contracts/evidence-pack.schema.json" },
+    "expectedResponse": { "$ref": "https://example.com/mkg/contracts/agent-turn-response.schema.json" }
+  },
+  "additionalProperties": false
+}
