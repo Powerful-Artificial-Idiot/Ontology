@@ -21,8 +21,7 @@ export const OntologyNode = memo(function OntologyNode({ data }: NodeProps<Ontol
         emphasized ? "ring-2 ring-slate-300/70" : "",
         visualState === "dimmed" ? "opacity-[0.22]" : "opacity-100",
       ].join(" ")}
-      onMouseEnter={() => data.onHover({ kind: "node", id: objectType.id })}
-      onMouseLeave={() => data.onLeave({ kind: "node", id: objectType.id })}
+      data-visual-state={visualState}
       onDoubleClick={(event) => {
         event.stopPropagation();
         data.onFocus(objectType.id);

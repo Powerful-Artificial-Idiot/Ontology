@@ -48,4 +48,12 @@ describe("frontend smoke baseline", () => {
     expect(app).toContain('import("./features/agent-demo/AgentDemoPage")');
     expect(app).not.toContain("reactflow");
   });
+
+  it("loads React Flow base styles before any lazy explorer route mounts", () => {
+    const entry = readFileSync("src/main.tsx", "utf8");
+    const routePage = readFileSync("src/pages/RouteExplorerPage.tsx", "utf8");
+
+    expect(entry).toContain('import "reactflow/dist/style.css"');
+    expect(routePage).not.toContain('import "reactflow/dist/style.css"');
+  });
 });

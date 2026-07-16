@@ -42,8 +42,7 @@ export const OntologyEdge = memo(function OntologyEdge({
         stroke="transparent"
         strokeWidth={18}
         className="react-flow__edge-interaction"
-        onMouseEnter={() => data.onHover({ kind: "edge", id })}
-        onMouseLeave={() => data.onLeave({ kind: "edge", id })}
+        data-visual-state={visualState}
       />
       <EdgeLabelRenderer>
         <div

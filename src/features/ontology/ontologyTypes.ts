@@ -76,15 +76,11 @@ export interface OntologyNodeData {
   onToggleExpand: (objectTypeId: string) => void;
   onSelectProperty: (objectTypeId: string, propertyId: string) => void;
   onFocus: (objectTypeId: string) => void;
-  onHover: (entity: OntologyEntity) => void;
-  onLeave: (entity: OntologyEntity) => void;
 }
 
 export interface OntologyEdgeData {
   linkType: OntologyLinkType;
   visualState: OntologyVisualState;
-  onHover: (entity: OntologyEntity) => void;
-  onLeave: (entity: OntologyEntity) => void;
 }
 
 export type OntologyInteractionAction =

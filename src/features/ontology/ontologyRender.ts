@@ -2,7 +2,7 @@ import { MarkerType, Position, type Edge, type Node } from "reactflow";
 import { domainStyles } from "./ontologyData";
 import { ontologyNodePositions } from "./ontologyLayout";
 import { getEdgeVisualState, getNodeVisualState } from "./ontologyInteraction";
-import type { OntologyEdgeData, OntologyEntity, OntologyInteractionState, OntologyNodeData, OntologyScope, OntologySearchResult, OntologySourceData } from "./ontologyTypes";
+import type { OntologyEdgeData, OntologyInteractionState, OntologyNodeData, OntologyScope, OntologySearchResult, OntologySourceData } from "./ontologyTypes";
 
 interface RenderParams {
   source: OntologySourceData;
@@ -14,8 +14,6 @@ interface RenderParams {
   onToggleExpand: (id: string) => void;
   onSelectProperty: (objectTypeId: string, propertyId: string) => void;
   onFocus: (objectTypeId: string) => void;
-  onHover: (entity: OntologyEntity) => void;
-  onLeave: (entity: OntologyEntity) => void;
 }
 
 export function buildRenderedNodes(params: RenderParams): Node<OntologyNodeData>[] {
@@ -39,8 +37,6 @@ export function buildRenderedNodes(params: RenderParams): Node<OntologyNodeData>
         onToggleExpand: params.onToggleExpand,
         onSelectProperty: params.onSelectProperty,
         onFocus: params.onFocus,
-        onHover: params.onHover,
-        onLeave: params.onLeave,
       },
     }));
 }
@@ -58,8 +54,6 @@ export function buildRenderedEdges(params: RenderParams): Edge<OntologyEdgeData>
       data: {
         linkType,
         visualState: getEdgeVisualState({ edge: linkType, interaction: params.interaction, activeScope: params.activeScope, search: params.search }),
-        onHover: params.onHover,
-        onLeave: params.onLeave,
       },
     }));
 }

@@ -11,7 +11,6 @@ import ReactFlow, {
   applyNodeChanges,
   useReactFlow,
 } from "reactflow";
-import "reactflow/dist/style.css";
 import { CustomMetadataEdge } from "../components/BusinessEdge";
 import { DetailPanel } from "../components/DetailPanel";
 import { Header } from "../components/Header";

@@ -13,7 +13,7 @@ import { OntologyEdge } from "./components/OntologyEdge";
 import { OntologyNode } from "./components/OntologyNode";
 import { OntologySidebar } from "./components/OntologySidebar";
 import { domainStyles } from "./ontologyData";
-import { getEntityScope, getFocusLabel, initialOntologyInteractionState, ontologyInteractionReducer } from "./ontologyInteraction";
+import { getEntityScope, getFocusLabel, getPrimaryInteractionEntity, initialOntologyInteractionState, ontologyInteractionReducer } from "./ontologyInteraction";
 import { buildRenderedEdges, buildRenderedNodes } from "./ontologyRender";
 import { buildOntologySourceDataFromResponse } from "./ontologyRepositoryAdapter";
 import { searchOntology } from "./ontologySearch";
@@ -78,7 +78,7 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source, route, onRou
     }),
     [interaction.domainFilter, interaction.focusState, source],
   );
-  const activeEntity = interaction.hoveredEntity ?? interaction.selectedEntity;
+  const activeEntity = getPrimaryInteractionEntity(interaction);
   const activeScope = useMemo(
     () => getEntityScope(activeEntity, interaction.highlightMode, source.nodes, source.edges),
     [activeEntity, interaction.highlightMode, source],
@@ -151,9 +151,7 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source, route, onRou
     onToggleExpand: handleToggleExpand,
     onSelectProperty: handleSelectProperty,
     onFocus: (nodeId: string) => handleFocus({ mode: "node-focus", nodeId }),
-    onHover: handleHover,
-    onLeave: handleLeave,
-  }), [activeScope, baseVisible, expandedObjectIds, handleFocus, handleHover, handleLeave, handleSelectProperty, handleToggleExpand, interaction, search, source]);
+  }), [activeScope, baseVisible, expandedObjectIds, handleFocus, handleSelectProperty, handleToggleExpand, interaction, search, source]);
 
   const renderedNodes = useMemo(() => buildRenderedNodes(renderParams), [renderParams]);
   const renderedEdges = useMemo(() => buildRenderedEdges(renderParams), [renderParams]);
@@ -224,9 +222,13 @@ function OntologyExplorerCanvas({ activePage, onPageChange, source, route, onRou
             edges={renderedEdges}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
+            onNodeMouseEnter={(_, node) => handleHover({ kind: "node", id: node.id })}
+            onNodeMouseLeave={(_, node) => handleLeave({ kind: "node", id: node.id })}
+            onEdgeMouseEnter={(_, edge) => handleHover({ kind: "edge", id: edge.id })}
+            onEdgeMouseLeave={(_, edge) => handleLeave({ kind: "edge", id: edge.id })}
             onNodeClick={(_, node) => handleSelect({ kind: "node", id: node.id })}
             onEdgeClick={(_, edge) => handleSelect({ kind: "edge", id: edge.id })}
-            onPaneClick={() => { dispatch({ type: "clear-hover" }); handleSelect(null); }}
+            onPaneClick={() => handleSelect(null)}
             onMoveStart={() => dispatch({ type: "clear-hover" })}
             nodesDraggable={false}
             nodesConnectable={false}
@@ -301,9 +303,9 @@ function OntologyRepositoryState({ activePage, onPageChange, state, onRetry }: {
 }
 
 function describeStatus(selected: OntologyEntity | null, hovered: OntologyEntity | null) {
-  const entity = hovered ?? selected;
+  const entity = selected ?? hovered;
   if (!entity) return "No selection";
-  const prefix = hovered ? "Hover" : "Selected";
+  const prefix = selected ? "Selected" : "Hover";
   if (entity.kind === "property") return `${prefix}: ${entity.objectTypeId}.${entity.propertyId.replace(/^prop-/, "")}`;
   if (entity.kind === "relationshipType") return `${prefix}: ${entity.id}`;
   return `${prefix}: ${entity.id}`;

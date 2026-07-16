@@ -29,13 +29,17 @@ export function ontologyInteractionReducer(
     return isSameEntity(state.hoveredEntity, action.entity) ? { ...state, hoveredEntity: null } : state;
   }
   if (action.type === "clear-hover") return state.hoveredEntity ? { ...state, hoveredEntity: null } : state;
-  if (action.type === "select") return { ...state, selectedEntity: action.entity };
+  if (action.type === "select") return { ...state, hoveredEntity: null, selectedEntity: action.entity };
   if (action.type === "focus") return { ...state, hoveredEntity: null, focusState: action.focus };
   if (action.type === "filter") {
     return { ...state, hoveredEntity: null, selectedEntity: null, focusState: { mode: "normal" }, domainFilter: action.filter };
   }
   if (action.type === "highlight-mode") return { ...state, hoveredEntity: null, highlightMode: action.mode };
   return initialOntologyInteractionState;
+}
+
+export function getPrimaryInteractionEntity(interaction: OntologyInteractionState): OntologyEntity | null {
+  return interaction.selectedEntity ?? interaction.hoveredEntity;
 }
 
 export function getEntityScope(
@@ -182,4 +186,3 @@ function isNodeEntity(entity: OntologyEntity | null, nodeId: string) {
 function hasSearchResults(search: OntologySearchResult) {
   return search.objectIds.size + search.edgeIds.size + search.laneIds.size + search.actionIds.size > 0;
 }
-
