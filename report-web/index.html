@@ -1389,6 +1389,500 @@
         font-size: 11px;
       }
 
+      .agent-platform-board {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: 0 1px 2px rgba(16, 32, 43, 0.04);
+      }
+
+      .agent-platform-layer {
+        padding: 22px 24px;
+      }
+
+      .platform-layer-head {
+        display: grid;
+        grid-template-columns: 185px minmax(0, 1fr);
+        gap: 18px;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+
+      .platform-layer-head strong {
+        color: var(--accent-strong);
+        font-size: 14px;
+      }
+
+      .platform-layer-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .agent-platform-marker {
+        min-height: 30px;
+        display: grid;
+        place-items: center;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: var(--surface-soft);
+        color: var(--accent);
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .platform-capability-flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .platform-capability-stage {
+        position: relative;
+        min-height: 176px;
+        border-top: 4px solid var(--accent);
+        padding: 18px;
+        background: var(--surface-soft);
+      }
+
+      .platform-capability-stage:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        z-index: 1;
+        top: 70px;
+        right: -17px;
+        width: 24px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        background: #ffffff;
+        color: var(--accent);
+        font-weight: 900;
+      }
+
+      .platform-capability-stage small,
+      .domain-agent small,
+      .context-package small,
+      .foundation-title small {
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .platform-capability-stage h3 {
+        margin-top: 7px;
+        font-size: 20px;
+      }
+
+      .platform-capability-stage p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .platform-stage-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 12px;
+      }
+
+      .platform-stage-items span {
+        border: 1px solid var(--line);
+        padding: 4px 7px;
+        background: #ffffff;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .controlled-execution-loop {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 12px;
+        border: 1px solid var(--accent-mid);
+        background: var(--accent-mid);
+      }
+
+      .controlled-execution-loop span {
+        position: relative;
+        padding: 10px 12px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .controlled-execution-loop span:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        z-index: 1;
+        top: 8px;
+        right: -10px;
+        color: var(--accent);
+      }
+
+      .execution-governance-note {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 11px;
+        text-align: right;
+      }
+
+      .orchestration-layer {
+        background: var(--accent-soft);
+      }
+
+      .orchestration-band {
+        display: grid;
+        grid-template-columns: minmax(230px, 0.65fr) minmax(0, 2.35fr);
+        gap: 22px;
+        align-items: center;
+        border-left: 4px solid var(--accent);
+        padding: 18px 20px;
+        background: #ffffff;
+      }
+
+      .orchestration-band h3 {
+        font-size: 20px;
+        line-height: 1.18;
+      }
+
+      .orchestration-band p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .orchestration-capabilities,
+      .gateway-service-tags,
+      .foundation-source-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .orchestration-capabilities span,
+      .gateway-service-tags span,
+      .foundation-source-tags span {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 9px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .domain-agent-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .domain-agent {
+        min-height: 150px;
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--accent);
+        padding: 14px 12px;
+        background: #ffffff;
+      }
+
+      .domain-agent strong {
+        display: block;
+        margin-top: 9px;
+        font-size: 13px;
+        line-height: 1.25;
+      }
+
+      .domain-agent span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.5;
+      }
+
+      .domain-ecosystem-note {
+        margin-top: 12px;
+        border-left: 4px solid var(--accent);
+        padding: 11px 14px;
+        background: var(--surface-soft);
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .gateway-layer {
+        background: var(--surface-soft);
+      }
+
+      .gateway-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .gateway-services,
+      .context-package {
+        border: 1px solid var(--line);
+        padding: 18px;
+        background: #ffffff;
+      }
+
+      .gateway-services h3,
+      .context-package h3 {
+        font-size: 19px;
+      }
+
+      .gateway-services p,
+      .context-package > p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .gateway-service-tags {
+        margin-top: 14px;
+      }
+
+      .context-package {
+        border: 2px solid var(--accent);
+      }
+
+      .context-package-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        margin-top: 13px;
+      }
+
+      .context-package-grid span {
+        border-left: 3px solid var(--accent-mid);
+        padding: 7px 9px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .context-exchange {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 11px;
+        color: var(--accent-strong);
+        font-size: 10px;
+        font-weight: 850;
+      }
+
+      .foundation-layer {
+        background: #ffffff;
+      }
+
+      .knowledge-foundation {
+        border: 2px solid var(--accent);
+        padding: 20px;
+        background: var(--accent-soft);
+      }
+
+      .foundation-header {
+        display: grid;
+        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+        gap: 24px;
+        align-items: end;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--accent-mid);
+      }
+
+      .foundation-title h3 {
+        margin-top: 5px;
+        font-size: 25px;
+        line-height: 1.1;
+      }
+
+      .foundation-header p {
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .foundation-capabilities {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .foundation-capability {
+        min-height: 62px;
+        padding: 10px;
+        background: #ffffff;
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .foundation-sources {
+        display: grid;
+        grid-template-columns: 175px minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
+        margin-top: 12px;
+        border-top: 1px solid var(--accent-mid);
+        padding-top: 12px;
+      }
+
+      .foundation-sources strong {
+        font-size: 12px;
+      }
+
+      .foundation-source-tags span {
+        background: #ffffff;
+      }
+
+      .agent-platform-paths {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .platform-value-path {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: var(--surface);
+      }
+
+      .platform-value-path header {
+        display: grid;
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 12px;
+        align-items: baseline;
+      }
+
+      .platform-value-path header small {
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 900;
+      }
+
+      .platform-value-path h3 {
+        font-size: 19px;
+      }
+
+      .platform-value-path > p {
+        margin-top: 8px;
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .platform-path-track {
+        display: grid;
+        grid-template-columns: repeat(var(--path-steps), minmax(0, 1fr));
+        gap: 6px;
+        margin-top: 14px;
+      }
+
+      .platform-path-node {
+        position: relative;
+        min-height: 70px;
+        display: grid;
+        place-items: center;
+        padding: 9px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 750;
+        line-height: 1.4;
+        text-align: center;
+      }
+
+      .platform-path-node:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        z-index: 1;
+        top: 24px;
+        right: -11px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .collaboration-example {
+        margin-top: 13px;
+        border-left: 4px solid var(--accent);
+        padding: 12px 14px;
+        background: var(--accent-soft);
+      }
+
+      .collaboration-example > strong {
+        display: block;
+        color: var(--accent-strong);
+        font-size: 12px;
+      }
+
+      .example-agent-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        margin-top: 9px;
+      }
+
+      .example-agent-grid span {
+        padding: 7px 8px;
+        background: #ffffff;
+        color: var(--muted);
+        font-size: 9px;
+        line-height: 1.4;
+      }
+
+      .agent-platform-summary {
+        margin-top: 18px;
+        border-left: 4px solid var(--accent);
+        padding: 20px;
+        background: var(--accent-soft);
+      }
+
+      .agent-platform-summary > p {
+        color: var(--accent-strong);
+        font-size: 17px;
+        font-weight: 850;
+        line-height: 1.4;
+      }
+
+      .platform-values {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 15px;
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+
+      .platform-value {
+        padding: 15px;
+        background: #ffffff;
+      }
+
+      .platform-value strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .platform-value span {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
       .agent-future-board {
         overflow: hidden;
       }
@@ -2094,6 +2588,32 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .domain-agent-grid,
+        .foundation-capabilities {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .gateway-layout,
+        .orchestration-band,
+        .foundation-header,
+        .foundation-sources,
+        .agent-platform-paths {
+          grid-template-columns: 1fr;
+        }
+
+        .platform-path-track {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .platform-path-node::after {
+          display: none !important;
+        }
+
+        .platform-values,
+        .example-agent-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
         .maintenance-role:last-child {
           grid-column: 1 / -1;
         }
@@ -2219,7 +2739,15 @@
         .context-hub-grid,
         .maintenance-roles,
         .context-outcomes,
-        .lifecycle-track {
+        .lifecycle-track,
+        .platform-capability-flow,
+        .controlled-execution-loop,
+        .domain-agent-grid,
+        .foundation-capabilities,
+        .context-package-grid,
+        .platform-path-track,
+        .platform-values,
+        .example-agent-grid {
           grid-template-columns: 1fr;
         }
 
@@ -2231,10 +2759,80 @@
           padding: 18px;
         }
 
+        .agent-platform-layer {
+          padding: 18px;
+        }
+
         .context-layer-head,
-        .context-hub-header {
+        .context-hub-header,
+        .platform-layer-head,
+        .foundation-header,
+        .foundation-sources,
+        .platform-value-path header {
           grid-template-columns: 1fr;
           gap: 6px;
+        }
+
+        .platform-capability-flow,
+        .controlled-execution-loop,
+        .platform-path-track {
+          gap: 18px;
+        }
+
+        .platform-capability-stage {
+          min-height: 0;
+        }
+
+        .platform-capability-stage:not(:last-child)::after,
+        .controlled-execution-loop span:not(:last-child)::after,
+        .platform-path-node:not(:last-child)::after {
+          content: "↓";
+          top: auto;
+          right: calc(50% - 12px);
+          bottom: -20px;
+          width: 24px;
+          height: 20px;
+          display: grid !important;
+          place-items: center;
+          background: #ffffff;
+          color: var(--accent);
+        }
+
+        .orchestration-band {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+
+        .gateway-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .context-exchange {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .knowledge-foundation {
+          padding: 16px;
+        }
+
+        .foundation-title h3 {
+          font-size: 22px;
+        }
+
+        .domain-agent,
+        .foundation-capability,
+        .platform-path-node {
+          min-height: 0;
+        }
+
+        .execution-governance-note {
+          text-align: left;
+        }
+
+        .agent-platform-summary > p {
+          font-size: 15px;
         }
 
         .access-control-band {
@@ -2451,7 +3049,8 @@
           min-height: auto;
         }
 
-        #context-blueprint {
+        #context-blueprint,
+        #agent-platform {
           break-inside: auto;
         }
 
@@ -2459,12 +3058,17 @@
         .knowledge-lifecycle,
         .context-management-summary,
         .maintenance-role,
-        .lifecycle-step {
+        .lifecycle-step,
+        .agent-platform-layer,
+        .platform-value-path,
+        .platform-value,
+        .agent-platform-summary {
           break-inside: avoid;
         }
 
         .context-blueprint-board,
-        .knowledge-lifecycle {
+        .knowledge-lifecycle,
+        .agent-platform-board {
           box-shadow: none;
         }
       }
@@ -2482,6 +3086,7 @@
           <a href="#capital">知识资本</a>
           <a href="#blueprint">架构路线</a>
           <a href="#context-blueprint">统一上下文</a>
+          <a href="#agent-platform">Agent 平台</a>
           <a href="#future">Agent 展望</a>
           <a href="#roadmap">一年计划</a>
           <a href="#benefits">预期收益</a>
@@ -2899,6 +3504,172 @@
               <article class="context-outcome"><strong>统一理解</strong><span>减少部门、系统和 Agent 之间的语义偏差</span></article>
               <article class="context-outcome"><strong>安全协作</strong><span>在权限边界内共享、贡献和审核知识</span></article>
               <article class="context-outcome"><strong>持续进化</strong><span>每次业务活动和 Agent 使用都推动知识更新</span></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="agent-platform">
+        <div class="shell">
+          <header class="section-head">
+            <span class="section-kicker">AGENT 基础设施</span>
+            <h2>以知识资产层为 Agent 基建，连接企业分布式智能。</h2>
+            <p>共享知识上下文让每个 Agent 快速理解业务，标准接口让各部门 Agent 保留专业能力，同时参与跨领域分析、决策与授权执行。</p>
+          </header>
+
+          <div class="strategic-sentence">统一上下文，开放 Agent；统一治理，协同决策。</div>
+
+          <figure class="agent-platform-board" aria-label="企业 Agent 基础设施与多 Agent 协同平台五层架构">
+            <div class="agent-platform-layer capability-layer">
+              <div class="platform-layer-head">
+                <strong>01 · 统一业务能力平台</strong>
+                <span>从跨域分析进入辅助决策，并在权限、规则和人工审批约束下执行。</span>
+              </div>
+              <div class="platform-capability-flow">
+                <article class="platform-capability-stage">
+                  <small>ANALYZE</small>
+                  <h3>统一分析</h3>
+                  <p>汇总多个 Domain Agent 的专业判断，形成同一问题的跨域事实视图。</p>
+                  <div class="platform-stage-items"><span>质量追溯</span><span>异常诊断</span><span>变更影响分析</span></div>
+                </article>
+                <article class="platform-capability-stage">
+                  <small>DECIDE</small>
+                  <h3>辅助决策</h3>
+                  <p>基于统一对象、关系和证据，形成可比较、可解释的决策建议。</p>
+                  <div class="platform-stage-items"><span>生产优化</span><span>维护建议</span><span>工程决策支持</span></div>
+                </article>
+                <article class="platform-capability-stage">
+                  <small>EXECUTE</small>
+                  <h3>授权执行</h3>
+                  <p>通过权限校验、业务规则和必要的人工审批，调用流程或业务系统。</p>
+                  <div class="platform-stage-items"><span>供应链协同</span><span>数字孪生联动</span><span>受控工具调用</span></div>
+                </article>
+              </div>
+              <div class="controlled-execution-loop" aria-label="受控分析决策执行闭环">
+                <span>分析</span><span>决策</span><span>权限校验</span><span>执行</span><span>结果反馈</span>
+              </div>
+              <p class="execution-governance-note">执行不是无约束自动化：高风险操作必须经过业务规则校验和 Human-in-the-loop 审批。</p>
+            </div>
+
+            <div class="agent-platform-marker" aria-hidden="true">↓</div>
+
+            <div class="agent-platform-layer orchestration-layer">
+              <div class="platform-layer-head">
+                <strong>02 · Agent 协同与编排层</strong>
+                <span>平台拆解任务、选择合适的 Domain Agent、供给统一上下文，并汇总专业分析结果。</span>
+              </div>
+              <div class="orchestration-band">
+                <div>
+                  <h3>Agent Collaboration &amp; Orchestration</h3>
+                  <p>同一任务链路中的每次路由、调用、审批和结果都可追踪。</p>
+                </div>
+                <div class="orchestration-capabilities" aria-label="Agent 协同与编排能力">
+                  <span>任务分解</span><span>Agent 路由</span><span>Context Package</span><span>多 Agent 协作</span><span>工具调用</span><span>工作流编排</span><span>Human-in-the-loop</span><span>执行状态追踪</span><span>结果汇总</span><span>全链路审计</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="agent-platform-marker" aria-hidden="true">↓</div>
+
+            <div class="agent-platform-layer domain-layer">
+              <div class="platform-layer-head">
+                <strong>03 · 企业 Domain Agent 生态</strong>
+                <span>各领域可以独立建设、独立演进专业 Agent，同时遵循统一接入与治理规则。</span>
+              </div>
+              <div class="domain-agent-grid">
+                <article class="domain-agent"><small>PRODUCTION</small><strong>Production Agent</strong><span>产能、节拍、排程与现场异常</span></article>
+                <article class="domain-agent"><small>QUALITY</small><strong>Quality Agent</strong><span>质量追溯、缺陷分析与控制计划</span></article>
+                <article class="domain-agent"><small>ENGINEERING</small><strong>Engineering Agent</strong><span>工艺、变更、参数与影响分析</span></article>
+                <article class="domain-agent"><small>EQUIPMENT</small><strong>Equipment Agent</strong><span>设备状态、故障诊断与维护建议</span></article>
+                <article class="domain-agent"><small>SUPPLY CHAIN</small><strong>Supply Chain Agent</strong><span>供应风险、物料影响与供应商协同</span></article>
+                <article class="domain-agent"><small>VALUE STREAM</small><strong>Value Stream Agent</strong><span>瓶颈识别、浪费分析与改善建议</span></article>
+                <article class="domain-agent"><small>EXTENSIBLE</small><strong>部门自建 Agent</strong><span>按统一接口接入其他专业能力</span></article>
+              </div>
+              <p class="domain-ecosystem-note">不要求所有 Agent 由同一团队开发，但要求所有 Agent 在同一语义、权限和证据体系下协同。各 Agent 可以使用不同 LLM、Agent 框架和开发团队。</p>
+            </div>
+
+            <div class="agent-platform-marker" aria-hidden="true">↓</div>
+
+            <div class="agent-platform-layer gateway-layer">
+              <div class="platform-layer-head">
+                <strong>04 · Context &amp; Integration Gateway</strong>
+                <span>向 Agent 提供与任务相关的最小必要上下文，而不是无边界读取企业全部数据。</span>
+              </div>
+              <div class="gateway-layout">
+                <div class="gateway-services">
+                  <h3>Agent Context &amp; Integration Gateway</h3>
+                  <p>统一封装上下文查询、工具接入、事件交互、身份权限和来源追溯。</p>
+                  <div class="gateway-service-tags" aria-label="Agent Context 与集成接口能力">
+                    <span>Context API</span><span>Semantic API</span><span>Knowledge Query</span><span>Agent Gateway</span><span>Tool Registry</span><span>Event Integration</span><span>Identity &amp; Permission</span><span>Source Traceability</span><span>Audit Trail</span>
+                  </div>
+                </div>
+                <div class="context-package">
+                  <small>MINIMUM NECESSARY CONTEXT</small>
+                  <h3>Context Package</h3>
+                  <p>每个任务只获得完成工作所需的结构化上下文包。</p>
+                  <div class="context-package-grid">
+                    <span>当前任务</span><span>相关业务对象</span><span>关系网络</span><span>有效规则</span><span>文件证据</span><span>历史案例</span><span>权限范围</span><span>数据版本</span>
+                  </div>
+                  <div class="context-exchange"><span>↑ 向 Agent 供给 Context Package</span><span>↓ 执行结果与证据回流</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="agent-platform-marker" aria-hidden="true">↓</div>
+
+            <div class="agent-platform-layer foundation-layer">
+              <div class="platform-layer-head">
+                <strong>05 · 企业制造知识资产层</strong>
+                <span>为所有 Agent 提供统一、可信、可追溯的企业业务上下文。</span>
+              </div>
+              <div class="knowledge-foundation">
+                <header class="foundation-header">
+                  <div class="foundation-title"><small>SHARED AGENT FOUNDATION</small><h3>企业制造知识资产层</h3></div>
+                  <p>将现有系统中的业务事实组织成 Agent 可理解、可调用、可校验的上下文，而不是替代现有系统。</p>
+                </header>
+                <div class="foundation-capabilities">
+                  <div class="foundation-capability">Semantic Layer</div><div class="foundation-capability">Ontology</div><div class="foundation-capability">Knowledge Graph</div><div class="foundation-capability">Business Rules</div><div class="foundation-capability">Evidence</div><div class="foundation-capability">Version</div><div class="foundation-capability">Owner</div><div class="foundation-capability">Source</div><div class="foundation-capability">Permission</div><div class="foundation-capability">Audit</div>
+                </div>
+                <div class="foundation-sources">
+                  <strong>现有系统与业务事实来源</strong>
+                  <div class="foundation-source-tags" aria-label="Agent 平台连接的现有系统">
+                    <span>MES</span><span>PLM</span><span>ERP</span><span>QMS</span><span>WMS</span><span>IoT</span><span>文档库</span><span>数字孪生</span><span>Excel</span><span>业务流程</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </figure>
+
+          <div class="agent-platform-paths" aria-label="Agent 平台两条价值路径">
+            <article class="platform-value-path">
+              <header><small>PATH 01</small><h3>快速建设 Agent</h3></header>
+              <p>一次建设知识上下文，多次复用于不同 Agent。</p>
+              <div class="platform-path-track" style="--path-steps: 5;">
+                <div class="platform-path-node">企业知识资产层</div><div class="platform-path-node">生成 Context Package</div><div class="platform-path-node">Agent 快速理解业务</div><div class="platform-path-node">减少重复数据连接</div><div class="platform-path-node">缩短场景开发周期</div>
+              </div>
+            </article>
+            <article class="platform-value-path">
+              <header><small>PATH 02</small><h3>跨 Domain 协同</h3></header>
+              <p>多个专业 Agent 基于同一证据和关系网络形成统一建议。</p>
+              <div class="platform-path-track" style="--path-steps: 7;">
+                <div class="platform-path-node">业务问题</div><div class="platform-path-node">任务拆解</div><div class="platform-path-node">Domain Agent 分析</div><div class="platform-path-node">证据与关系校验</div><div class="platform-path-node">汇总决策建议</div><div class="platform-path-node">授权执行</div><div class="platform-path-node">结果回流知识层</div>
+              </div>
+              <div class="collaboration-example">
+                <strong>示例：某关键设备异常将影响哪些订单？</strong>
+                <div class="example-agent-grid">
+                  <span>Equipment Agent：故障与恢复时间</span><span>Production Agent：产能与工序影响</span><span>Quality Agent：质量风险</span><span>Supply Chain Agent：物料与交付风险</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="agent-platform-summary">
+            <p>知识资产层让每个 Agent 快速懂业务；统一接口让不同 Agent 协同工作；权限与审计机制让分析、决策和执行安全可控。</p>
+            <div class="platform-values" aria-label="Agent 基础设施的四项平台价值">
+              <article class="platform-value"><strong>快速拉齐</strong><span>Agent 无需重复理解企业对象、术语和关系。</span></article>
+              <article class="platform-value"><strong>专业自治</strong><span>各部门可以独立开发和演进自己的 Domain Agent。</span></article>
+              <article class="platform-value"><strong>跨域协同</strong><span>多个 Agent 基于同一上下文完成联合分析。</span></article>
+              <article class="platform-value"><strong>统一治理</strong><span>权限、证据、版本、执行和审计遵循统一规则。</span></article>
             </div>
           </div>
         </div>
@@ -3342,6 +4113,106 @@
       });
 
       addTranslations({
+        "Agent 平台": "Agent Platform",
+        "AGENT 基础设施": "AGENT INFRASTRUCTURE",
+        "以知识资产层为 Agent 基建，连接企业分布式智能。": "Use the knowledge asset layer as Agent infrastructure to connect distributed enterprise intelligence.",
+        "共享知识上下文让每个 Agent 快速理解业务，标准接口让各部门 Agent 保留专业能力，同时参与跨领域分析、决策与授权执行。": "Shared knowledge context helps every Agent understand the business quickly, while standard interfaces let departmental Agents retain specialized capabilities and participate in cross-domain analysis, decisions, and authorized execution.",
+        "统一上下文，开放 Agent；统一治理，协同决策。": "Unified context, open Agents; unified governance, collaborative decisions.",
+        "01 · 统一业务能力平台": "01 · Unified Business Capability Platform",
+        "从跨域分析进入辅助决策，并在权限、规则和人工审批约束下执行。": "Move from cross-domain analysis to decision support and execute under authorization, business rules, and human approval.",
+        "统一分析": "Unified Analysis",
+        "汇总多个 Domain Agent 的专业判断，形成同一问题的跨域事实视图。": "Combine specialized judgments from multiple Domain Agents into one cross-domain fact view of the issue.",
+        "质量追溯": "Quality Traceability",
+        "异常诊断": "Anomaly Diagnosis",
+        "变更影响分析": "Change Impact Analysis",
+        "辅助决策": "Decision Support",
+        "基于统一对象、关系和证据，形成可比较、可解释的决策建议。": "Create comparable and explainable recommendations from unified objects, relationships, and evidence.",
+        "生产优化": "Production Optimization",
+        "维护建议": "Maintenance Recommendations",
+        "工程决策支持": "Engineering Decision Support",
+        "授权执行": "Authorized Execution",
+        "通过权限校验、业务规则和必要的人工审批，调用流程或业务系统。": "Invoke workflows or business systems only after authorization checks, business rules, and required human approval.",
+        "供应链协同": "Supply Chain Collaboration",
+        "数字孪生联动": "Digital Twin Integration",
+        "受控工具调用": "Governed Tool Calls",
+        "分析": "Analyze",
+        "决策": "Decide",
+        "权限校验": "Authorization Check",
+        "执行": "Execute",
+        "执行不是无约束自动化：高风险操作必须经过业务规则校验和 Human-in-the-loop 审批。": "Execution is not unconstrained automation: high-risk actions must pass business-rule checks and Human-in-the-loop approval.",
+        "02 · Agent 协同与编排层": "02 · Agent Collaboration and Orchestration",
+        "平台拆解任务、选择合适的 Domain Agent、供给统一上下文，并汇总专业分析结果。": "The platform decomposes tasks, selects suitable Domain Agents, supplies unified context, and consolidates specialized analysis.",
+        "同一任务链路中的每次路由、调用、审批和结果都可追踪。": "Every route, call, approval, and result in the same task chain is traceable.",
+        "任务分解": "Task Decomposition",
+        "Agent 路由": "Agent Routing",
+        "多 Agent 协作": "Multi-Agent Collaboration",
+        "工具调用": "Tool Calling",
+        "工作流编排": "Workflow Orchestration",
+        "执行状态追踪": "Execution Status Tracking",
+        "结果汇总": "Result Consolidation",
+        "全链路审计": "End-to-End Audit",
+        "03 · 企业 Domain Agent 生态": "03 · Enterprise Domain Agent Ecosystem",
+        "各领域可以独立建设、独立演进专业 Agent，同时遵循统一接入与治理规则。": "Each domain can build and evolve specialized Agents independently while following unified access and governance rules.",
+        "产能、节拍、排程与现场异常": "Capacity, takt, scheduling, and shop-floor exceptions",
+        "质量追溯、缺陷分析与控制计划": "Quality traceability, defect analysis, and control plans",
+        "工艺、变更、参数与影响分析": "Processes, changes, parameters, and impact analysis",
+        "设备状态、故障诊断与维护建议": "Equipment condition, fault diagnosis, and maintenance recommendations",
+        "供应风险、物料影响与供应商协同": "Supply risk, material impact, and supplier collaboration",
+        "瓶颈识别、浪费分析与改善建议": "Bottleneck identification, waste analysis, and improvement recommendations",
+        "部门自建 Agent": "Department-Built Agent",
+        "按统一接口接入其他专业能力": "Connect other specialized capabilities through standard interfaces",
+        "不要求所有 Agent 由同一团队开发，但要求所有 Agent 在同一语义、权限和证据体系下协同。各 Agent 可以使用不同 LLM、Agent 框架和开发团队。": "Agents do not need to be built by one team, but every Agent must collaborate within the same semantic, authorization, and evidence system. Agents may use different LLMs, frameworks, and development teams.",
+        "04 · Context & Integration Gateway": "04 · Context & Integration Gateway",
+        "向 Agent 提供与任务相关的最小必要上下文，而不是无边界读取企业全部数据。": "Provide each Agent with the minimum task-relevant context instead of unrestricted access to all enterprise data.",
+        "统一封装上下文查询、工具接入、事件交互、身份权限和来源追溯。": "Standardize context queries, tool access, event interaction, identity and permissions, and source traceability.",
+        "每个任务只获得完成工作所需的结构化上下文包。": "Each task receives only the structured context package required to complete the work.",
+        "当前任务": "Current Task",
+        "相关业务对象": "Related Business Objects",
+        "关系网络": "Relationship Network",
+        "有效规则": "Effective Rules",
+        "文件证据": "Document Evidence",
+        "历史案例": "Historical Cases",
+        "权限范围": "Authorization Scope",
+        "数据版本": "Data Version",
+        "↑ 向 Agent 供给 Context Package": "↑ Supply Context Package to Agent",
+        "↓ 执行结果与证据回流": "↓ Return execution results and evidence",
+        "05 · 企业制造知识资产层": "05 · Enterprise Manufacturing Knowledge Asset Layer",
+        "为所有 Agent 提供统一、可信、可追溯的企业业务上下文。": "Provide every Agent with unified, trusted, and traceable enterprise business context.",
+        "企业制造知识资产层": "Enterprise Manufacturing Knowledge Asset Layer",
+        "将现有系统中的业务事实组织成 Agent 可理解、可调用、可校验的上下文，而不是替代现有系统。": "Organize business facts from existing systems into context that Agents can understand, invoke, and validate without replacing those systems.",
+        "现有系统与业务事实来源": "Existing Systems and Business-Fact Sources",
+        "快速建设 Agent": "Rapid Agent Delivery",
+        "一次建设知识上下文，多次复用于不同 Agent。": "Build knowledge context once and reuse it across many Agents.",
+        "企业知识资产层": "Enterprise Knowledge Asset Layer",
+        "生成 Context Package": "Generate Context Package",
+        "Agent 快速理解业务": "Agent Understands Business Quickly",
+        "减少重复数据连接": "Reduce Repeated Data Connections",
+        "缩短场景开发周期": "Shorten Scenario Delivery Cycle",
+        "跨 Domain 协同": "Cross-Domain Collaboration",
+        "多个专业 Agent 基于同一证据和关系网络形成统一建议。": "Multiple specialized Agents form one recommendation from the same evidence and relationship network.",
+        "业务问题": "Business Question",
+        "任务拆解": "Task Decomposition",
+        "Domain Agent 分析": "Domain Agent Analysis",
+        "证据与关系校验": "Evidence and Relationship Validation",
+        "汇总决策建议": "Consolidated Recommendation",
+        "结果回流知识层": "Results Return to Knowledge Layer",
+        "示例：某关键设备异常将影响哪些订单？": "Example: Which orders will be affected by a critical equipment abnormality?",
+        "Equipment Agent：故障与恢复时间": "Equipment Agent: fault and recovery time",
+        "Production Agent：产能与工序影响": "Production Agent: capacity and operation impact",
+        "Quality Agent：质量风险": "Quality Agent: quality risk",
+        "Supply Chain Agent：物料与交付风险": "Supply Chain Agent: material and delivery risk",
+        "知识资产层让每个 Agent 快速懂业务；统一接口让不同 Agent 协同工作；权限与审计机制让分析、决策和执行安全可控。": "The knowledge asset layer helps every Agent understand the business quickly; unified interfaces enable Agents to collaborate; authorization and audit controls keep analysis, decisions, and execution safe and governed.",
+        "快速拉齐": "Rapid Alignment",
+        "Agent 无需重复理解企业对象、术语和关系。": "Agents do not repeatedly relearn enterprise objects, terminology, and relationships.",
+        "专业自治": "Domain Autonomy",
+        "各部门可以独立开发和演进自己的 Domain Agent。": "Departments can independently develop and evolve their own Domain Agents.",
+        "跨域协同": "Cross-Domain Collaboration",
+        "多个 Agent 基于同一上下文完成联合分析。": "Multiple Agents perform joint analysis from the same context.",
+        "统一治理": "Unified Governance",
+        "权限、证据、版本、执行和审计遵循统一规则。": "Authorization, evidence, versions, execution, and audit follow unified rules."
+      });
+
+      addTranslations({
         "未来展望": "FUTURE VISION",
         "在知识资产层之上，搭建企业级知识推理 Agent。": "Build enterprise knowledge-reasoning Agents on top of the knowledge asset layer.",
         "Semantic 统一业务语言，Ontology 约束对象关系，Knowledge 提供可信事实与证据，让 Agent 在企业规则和权限边界内完成可靠推理。": "Semantic unifies business language, Ontology governs object relationships, and Knowledge provides trusted facts and evidence so Agents can reason reliably within enterprise rules and access boundaries.",
@@ -3475,6 +4346,13 @@
         "企业知识共同维护闭环": "Shared enterprise knowledge maintenance loop",
         "不同参与者的知识维护权限": "Knowledge maintenance permissions by participant",
         "企业统一知识上下文的三项管理结果": "Three management outcomes of enterprise unified knowledge context",
+        "企业 Agent 基础设施与多 Agent 协同平台五层架构": "Five-layer enterprise Agent infrastructure and multi-Agent collaboration platform",
+        "受控分析决策执行闭环": "Governed analysis, decision, and execution loop",
+        "Agent 协同与编排能力": "Agent collaboration and orchestration capabilities",
+        "Agent Context 与集成接口能力": "Agent context and integration gateway capabilities",
+        "Agent 平台连接的现有系统": "Existing systems connected to the Agent platform",
+        "Agent 平台两条价值路径": "Two value paths enabled by the Agent platform",
+        "Agent 基础设施的四项平台价值": "Four platform outcomes of Agent infrastructure",
         "企业级知识推理 Agent 工作机制": "Enterprise knowledge-reasoning Agent operating model",
         "知识推理 Agent 可信保障": "Trust controls for knowledge-reasoning Agents",
         "试点范围公式": "Pilot scope formula",
