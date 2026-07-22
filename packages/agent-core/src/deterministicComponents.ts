@@ -71,6 +71,17 @@ export class DeterministicScenarioSemanticParser implements SemanticParser {
 
   async parse(request: AgentTurnRequest, baseline: CanonicalKnowledgeBaseline): Promise<SemanticQueryPlan> {
     const normalized = request.message.normalize("NFKC").toLowerCase();
+    if (baseline.scenario.id === "engineering-change-impact") {
+      const reversedProgramDirection = /from\s+(?:leaktestprogram\s+)?v3\.5\s+to\s+(?:leaktestprogram\s+)?v3\.4/u.test(normalized);
+      if (reversedProgramDirection) {
+        throw new AgentPipelineError(
+          "CLARIFICATION_REQUIRED",
+          "The requested program direction conflicts with the governed current/proposed version baseline.",
+          "semantic-parsing",
+          { currentVersion: "V3.4", proposedVersion: "V3.5" },
+        );
+      }
+    }
     const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
     const missingSeedEntityIds = baseline.scenario.seedEntityIds.filter((entityId) => {
       if (baseline.scenario.id === "quality-issue-trace") {

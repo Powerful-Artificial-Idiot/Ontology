@@ -10,6 +10,17 @@ export type EvaluationSeverity = "blocker" | "critical" | "major" | "minor";
 export type EvaluationCategory = "semantic" | "graph-retrieval" | "document-retrieval" | "evidence" | "answer-grounding" | "citation" | "context" | "runtime";
 export type ProviderAcceptanceStatus = "pending" | "passed" | "failed";
 
+export type ProviderScenarioAcceptance = {
+  scenarioId: string;
+  semanticParser: ProviderAcceptanceStatus;
+  answerComposer: ProviderAcceptanceStatus;
+  fullPipeline: ProviderAcceptanceStatus;
+  fallbackUsed: boolean;
+  citationCoverage: number;
+  checkedAt: string;
+  details: string[];
+};
+
 export type EvaluationDataset = {
   datasetId: string;
   version: string;
@@ -25,10 +36,12 @@ export type EvaluationCase = {
   severity: EvaluationSeverity;
   tags: string[];
   executionProfile?: "default" | "no-document-access";
+  skip?: boolean;
   turns: EvaluationTurnCase[];
   expectedContext?: {
     turnCount: number;
     resolvedEntityIds: string[];
+    forbiddenResolvedEntityIds?: string[];
     activeTopic?: string;
   };
 };
@@ -38,6 +51,7 @@ export type EvaluationTurnCase = {
   input: {
     message: string;
     language: AgentLanguage;
+    scenarioId?: string;
     context?: AgentConversationContext;
   };
   expected: EvaluationTurnExpectation;
@@ -139,6 +153,7 @@ export type EvaluationProviderAcceptance = {
   modelIds?: string[];
   checkedAt?: string;
   details: string[];
+  scenarios?: ProviderScenarioAcceptance[];
 };
 
 export type EvaluationReport = {
@@ -179,6 +194,32 @@ export type ReleaseGatePolicy = {
   requireRuntimeProbes: boolean;
   requireSemanticProviderAcceptance: boolean;
   requireAnswerProviderAcceptance: boolean;
+  requireFullPipelineProviderAcceptance?: boolean;
+  requiredProviderScenarioIds?: string[];
+  minimumProviderScenarioCitationCoverage?: number;
+  minimumQualityCaseCount?: number;
+  minimumEngineeringChangeCaseCount?: number;
+  minimumBottleneckCaseCount?: number;
+  minimumCrossDomainCaseCount?: number;
+  minimumTotalCaseCount?: number;
+};
+
+export type EvaluationCoverageCounts = {
+  quality: number;
+  engineeringChange: number;
+  bottleneck: number;
+  crossDomain: number;
+  total: number;
+};
+
+export type EvaluationCoverageResult = {
+  status: "passed" | "failed";
+  counts: EvaluationCoverageCounts;
+  duplicateCaseIds: string[];
+  invalidCaseIds: string[];
+  skippedCaseIds: string[];
+  missingDomains: string[];
+  reasons: string[];
 };
 
 export type ReleaseGateResult = {

@@ -4,5 +4,5 @@
   "graphView": "valueStream",
   "frontendRoute": "/agent-demo",
   "seedEntityIds": ["operation.op20"],
-  "competencyQuestionIds": ["CQ-007"]
+  "competencyQuestionIds": ["CQ-007", "CQ-010", "CQ-011"]
 }

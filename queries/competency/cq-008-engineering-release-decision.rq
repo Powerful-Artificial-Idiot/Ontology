@@ -1,0 +1,7 @@
+PREFIX eng: <https://example.com/mkg/engineering#>
+SELECT ?change ?validation ?decision WHERE {
+  ?change a eng:EngineeringChange ;
+    eng:requiresValidation ?validation .
+  ?validation a eng:ValidationRecord ;
+    eng:releaseDecision ?decision .
+}

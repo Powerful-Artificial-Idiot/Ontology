@@ -83,6 +83,8 @@ describe("DeepSeek Chat Completions provider adapters", () => {
     expect(body.model).toBe("deepseek-v4-pro");
     expect(body.messages[0].content).toContain("evidence_grounded_answer_draft");
     expect(body.messages[0].content).toContain("evidence-chunk.document.sop.op30-leak-test");
+    expect(body.messages[0].content).toContain("Write every user-facing string in English only");
+    expect(body.messages[0].content).toContain("no user-facing string contains Chinese characters");
     expect(body.messages[1].content).toContain("claimPolicies");
   });
 

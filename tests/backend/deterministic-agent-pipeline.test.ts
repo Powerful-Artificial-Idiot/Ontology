@@ -155,6 +155,32 @@ describe("Phase 2 deterministic Agent pipeline", () => {
     expect(audit.list().every((event) => event.resourceIds.includes("operation.op30"))).toBe(true);
   });
 
+  it("clears stale entities and active topic on an explicit scenario switch", async () => {
+    const { client, sessions } = createDeterministicAgentClient(new SteppingClock());
+    await client.startSession({ id: "session-domain-switch", scenarioId: "quality-issue-trace", mode: "live", language: "en" });
+    await client.runTurn({
+      ...request("switch-quality", "en"),
+      sessionId: "session-domain-switch",
+      context: undefined,
+      message: "OP30 Leak Rate is abnormal. Which equipment and quality risks may be affected?",
+    });
+    await client.runTurn({
+      ...request("switch-engineering", "en"),
+      sessionId: "session-domain-switch",
+      scenarioId: "engineering-change-impact",
+      context: undefined,
+      message: "Switch to Engineering Change: assess M220 changing from LeakTestProgram V3.4 to V3.5 and its validation gates.",
+    });
+
+    const session = await sessions.get("session-domain-switch");
+    expect(session?.scenarioId).toBe("engineering-change-impact");
+    expect(session?.context.activeTopic).toBe("engineering_change_impact");
+    expect(session?.context.resolvedEntityIds).toEqual(["machine.m220", "program.leak-test.v3-4", "program.leak-test.v3-5"]);
+    expect(session?.context.resolvedEntityIds).not.toContain("operation.op30");
+    expect(session?.context.resolvedEntityIds).not.toContain("quality-characteristic.leak-rate");
+    expect(session?.context.previousTurnIds).toHaveLength(2);
+  });
+
   it("honors cancellation before executing a pipeline stage", async () => {
     const pipeline = createDeterministicAgentPipeline({ clock: new SteppingClock() });
     const controller = new AbortController();

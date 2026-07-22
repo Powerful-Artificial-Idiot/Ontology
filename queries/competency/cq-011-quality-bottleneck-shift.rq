@@ -1,0 +1,11 @@
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX vs: <https://example.com/mkg/value-stream#>
+SELECT ?risk ?operation ?characteristic WHERE {
+  ?risk a vs:BottleneckRisk ;
+    vs:affectsFlow ?operation .
+  ?operation a mfg:Operation ;
+    qual:controlsCharacteristic ?characteristic .
+  VALUES ?qualityType { qual:QualityCharacteristic qual:CriticalCharacteristic }
+  ?characteristic a ?qualityType .
+}

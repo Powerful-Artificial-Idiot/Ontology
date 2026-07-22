@@ -15,6 +15,7 @@ describe("OpenAI Responses evidence-grounded answer provider", () => {
     expect(url).toBe("https://llm.example.test/v1/responses");
     const body = JSON.parse(String(init?.body));
     expect(body).toMatchObject({ model: "test-answer-model", store: false, text: { format: { type: "json_schema", strict: true, name: "evidence_grounded_answer_draft" } } });
+    expect(body.instructions).toContain("Write every user-facing string in English only");
     expect(body.text.format.schema.properties.confidence.enum).not.toContain("approved");
     expect(JSON.stringify(body.text.format.schema)).toContain("evidence-chunk.document.sop.op30-leak-test");
     expect(JSON.stringify(body.text.format.schema)).not.toMatch(/minItems|maxItems|uniqueItems|minLength|maxLength/u);

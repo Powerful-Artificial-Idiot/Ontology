@@ -16,7 +16,8 @@ demo:BrakeBooster a mfg:Product ;
 
 demo:OP30 a mfg:Operation ;
   mfg:executedBy demo:M220 ;
-  mfg:cycleTimeSeconds 42.0 .
+  mfg:cycleTimeSeconds 42.0 ;
+  qual:controlsCharacteristic demo:LeakRate .
 
 demo:OP30Execution001 a mfg:OperationExecution ;
   mfg:eventTime "2026-07-14T08:00:00Z"^^xsd:dateTime .
@@ -59,7 +60,7 @@ demo:M220ConfigV2 a equip:MachineConfigurationVersion ;
   core:supersedes demo:M220ConfigV1 .
 
 demo:ProgramChangeV35 a eng:EngineeringChange ;
-  eng:affects demo:M220, demo:OP30 ;
+  eng:affects demo:M220, demo:OP30, demo:LeakRate ;
   eng:requiresValidation demo:ProgramValidationV35 ;
   eng:changeStatus "proposed" ;
   core:versionIdentifier "V3.5" ;
@@ -78,3 +79,8 @@ demo:OP20BottleneckRisk a vs:BottleneckRisk ;
   vs:affectsFlow demo:OP20 ;
   vs:metricValue 0.82 ;
   vs:unit "ratio" .
+
+demo:OP30RetestShiftRisk a vs:BottleneckRisk ;
+  vs:affectsFlow demo:OP30 ;
+  vs:metricValue 0.4 ;
+  vs:unit "bounded-score" .

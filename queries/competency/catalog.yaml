@@ -35,3 +35,23 @@ questions:
     query_file: cq-007-bottleneck-evidence.rq
     demo_scenario: bottleneck-analysis
     frontend_route: /agent-demo
+  - id: CQ-008
+    question: Which validation release decision governs a proposed engineering change?
+    query_file: cq-008-engineering-release-decision.rq
+    demo_scenario: engineering-change-impact
+    frontend_route: /agent-demo
+  - id: CQ-009
+    question: Which quality characteristic and current Control Plan are affected by an engineering change?
+    query_file: cq-009-change-quality-control-impact.rq
+    demo_scenario: engineering-change-impact
+    frontend_route: /agent-demo
+  - id: CQ-010
+    question: Which bounded bottleneck risks affect an operation and what are their governed metric values?
+    query_file: cq-010-bottleneck-risk-metric.rq
+    demo_scenario: bottleneck-analysis
+    frontend_route: /agent-demo
+  - id: CQ-011
+    question: Which downstream quality control is connected to a bounded bottleneck-shift risk?
+    query_file: cq-011-quality-bottleneck-shift.rq
+    demo_scenario: bottleneck-analysis
+    frontend_route: /agent-demo

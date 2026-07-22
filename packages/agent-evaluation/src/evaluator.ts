@@ -121,6 +121,8 @@ function evaluateContext(testCase: EvaluationCase, context: AgentConversationCon
   if (!testCase.expectedContext) return;
   checks.push(check(`${testCase.caseId}.context-turns`, "context", testCase, context?.previousTurnIds.length === testCase.expectedContext.turnCount, "Session context contains the expected completed turns.", testCase.expectedContext.turnCount, context?.previousTurnIds.length ?? 0));
   checks.push(check(`${testCase.caseId}.context-entities`, "context", testCase, Boolean(context && testCase.expectedContext.resolvedEntityIds.every((id) => context.resolvedEntityIds.includes(id))), "Session context preserves expected canonical entities."));
+  const forbidden = testCase.expectedContext.forbiddenResolvedEntityIds ?? [];
+  checks.push(check(`${testCase.caseId}.context-forbidden-entities`, "context", testCase, Boolean(context && forbidden.every((id) => !context.resolvedEntityIds.includes(id))), "Session context does not retain stale canonical entities.", 0, context?.resolvedEntityIds.filter((id) => forbidden.includes(id)).length ?? 0));
   if (testCase.expectedContext.activeTopic) checks.push(check(`${testCase.caseId}.context-topic`, "context", testCase, context?.activeTopic === testCase.expectedContext.activeTopic, "Session active topic is stable.", testCase.expectedContext.activeTopic, context?.activeTopic ?? "missing"));
 }
 

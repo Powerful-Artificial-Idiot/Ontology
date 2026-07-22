@@ -90,7 +90,7 @@ describe("Phase 5A deterministic Agent evaluation", () => {
 
       const artifact = await runLiveProviderAcceptance({ provider: "deepseek", outputPath, environment: {} });
       expect(artifact).toMatchObject({
-        artifactVersion: "1.1.0",
+        artifactVersion: "1.2.0",
         providerId: "deepseek-chat-completions",
         transport: "chat-completions",
         fallbackUsed: false,
@@ -98,8 +98,13 @@ describe("Phase 5A deterministic Agent evaluation", () => {
         answerComposer: "pending",
         fullPipeline: "pending",
       });
+      expect(artifact.scenarios).toHaveLength(4);
+      expect(artifact.scenarios?.every((scenario) => scenario.semanticParser === "pending"
+        && scenario.answerComposer === "pending"
+        && scenario.fullPipeline === "pending"
+        && !scenario.fallbackUsed)).toBe(true);
       expect(JSON.parse(await readFile(outputPath, "utf8"))).toEqual(artifact);
-      expect(artifact.details.join(" ")).toContain("DeepSeek full pipeline live acceptance: pending");
+      expect(artifact.details.join(" ")).toContain("DeepSeek Phase 5B live acceptance: pending");
       expect(artifact.details.join(" ")).not.toContain("OpenAI");
     } finally {
       await rm(directory, { recursive: true, force: true });
@@ -115,6 +120,35 @@ describe("Phase 5A deterministic Agent evaluation", () => {
       answerComposer: "pending",
       details: [],
     })).toMatchObject({ fallbackUsed: undefined, semanticParser: "pending", answerComposer: "pending" });
+  });
+
+  it("rejects incomplete or inconsistent provider scenario artifacts", () => {
+    const base = {
+      artifactVersion: "1.2.0",
+      providerId: "deepseek-chat-completions",
+      transport: "chat-completions",
+      fallbackUsed: false,
+      semanticParser: "passed",
+      answerComposer: "passed",
+      fullPipeline: "passed",
+      checkedAt: "2026-07-22T00:00:00.000Z",
+      details: [],
+    } as const;
+    expect(() => validateProviderAcceptanceArtifact(base)).toThrow("requires scenario results");
+    expect(() => validateProviderAcceptanceArtifact({
+      ...base,
+      semanticParser: "pending",
+      scenarios: [{
+        scenarioId: "engineering-change-impact",
+        semanticParser: "passed",
+        answerComposer: "passed",
+        fullPipeline: "passed",
+        fallbackUsed: false,
+        citationCoverage: 1,
+        checkedAt: base.checkedAt,
+        details: [],
+      }],
+    })).toThrow("Semantic Parser aggregate status");
   });
 });
 

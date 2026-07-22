@@ -1,0 +1,24 @@
+{
+  "policyId": "release-gate.phase5b-formal-acceptance",
+  "version": "1.0.0",
+  "minimumCasePassRate": 1,
+  "minimumCitationCoverage": 1,
+  "maximumP95LatencyMs": 5000,
+  "allowBlockerFailures": 0,
+  "allowCriticalFailures": 0,
+  "requireRuntimeProbes": true,
+  "requireSemanticProviderAcceptance": true,
+  "requireAnswerProviderAcceptance": true,
+  "requireFullPipelineProviderAcceptance": true,
+  "requiredProviderScenarioIds": [
+    "engineering-change-impact",
+    "bottleneck-analysis",
+    "cross-domain-engineering-quality-bottleneck"
+  ],
+  "minimumProviderScenarioCitationCoverage": 1,
+  "minimumQualityCaseCount": 6,
+  "minimumEngineeringChangeCaseCount": 12,
+  "minimumBottleneckCaseCount": 12,
+  "minimumCrossDomainCaseCount": 6,
+  "minimumTotalCaseCount": 36
+}

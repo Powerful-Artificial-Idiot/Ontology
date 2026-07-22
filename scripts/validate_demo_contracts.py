@@ -265,15 +265,16 @@ def validate_document_registry(document_registry: dict, root, baseline: dict) ->
 
 def validate_evaluation_dataset(dataset: dict, baselines: dict[str, dict]) -> None:
     for case in dataset["cases"]:
-        scenario_id = case.get("scenarioId", "quality-issue-trace")
-        baseline = baselines.get(scenario_id)
-        if not baseline:
-            raise AssertionError(f"Evaluation case {case['caseId']} references unknown scenario: {scenario_id}")
-        entity_ids = {entity["id"] for entity in baseline["entities"]}
-        relation_ids = {relation["id"] for relation in baseline["relations"]}
-        evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
-        claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+        default_scenario_id = case.get("scenarioId", "quality-issue-trace")
         for turn in case["turns"]:
+            scenario_id = turn.get("input", {}).get("scenarioId", default_scenario_id)
+            baseline = baselines.get(scenario_id)
+            if not baseline:
+                raise AssertionError(f"Evaluation case {case['caseId']} references unknown scenario: {scenario_id}")
+            entity_ids = {entity["id"] for entity in baseline["entities"]}
+            relation_ids = {relation["id"] for relation in baseline["relations"]}
+            evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
+            claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
             expected = turn["expected"]
             semantic = expected.get("semantic", {})
             unknown = set(semantic.get("entityIds", [])) - entity_ids

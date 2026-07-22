@@ -12,6 +12,12 @@ export function validateReleaseGatePolicy(value: unknown): asserts value is Rele
   for (const key of ["requireRuntimeProbes", "requireSemanticProviderAcceptance", "requireAnswerProviderAcceptance"] as const) {
     if (typeof value[key] !== "boolean") throw new Error(`${key} must be boolean.`);
   }
+  if (value.requireFullPipelineProviderAcceptance !== undefined && typeof value.requireFullPipelineProviderAcceptance !== "boolean") throw new Error("requireFullPipelineProviderAcceptance must be boolean.");
+  if (value.requiredProviderScenarioIds !== undefined && (!Array.isArray(value.requiredProviderScenarioIds) || !value.requiredProviderScenarioIds.every(isString) || new Set(value.requiredProviderScenarioIds).size !== value.requiredProviderScenarioIds.length)) throw new Error("requiredProviderScenarioIds must contain unique scenario IDs.");
+  if (value.minimumProviderScenarioCitationCoverage !== undefined && (typeof value.minimumProviderScenarioCitationCoverage !== "number" || value.minimumProviderScenarioCitationCoverage < 0 || value.minimumProviderScenarioCitationCoverage > 1)) throw new Error("minimumProviderScenarioCitationCoverage must be a ratio between 0 and 1.");
+  for (const key of ["minimumQualityCaseCount", "minimumEngineeringChangeCaseCount", "minimumBottleneckCaseCount", "minimumCrossDomainCaseCount", "minimumTotalCaseCount"] as const) {
+    if (value[key] !== undefined && (!Number.isInteger(value[key]) || (value[key] as number) < 0)) throw new Error(`${key} must be a non-negative integer.`);
+  }
 }
 
 export function evaluateReleaseGate(report: EvaluationReport, policy: ReleaseGatePolicy, evaluatedAt = new Date().toISOString()): ReleaseGateResult {
@@ -24,6 +30,18 @@ export function evaluateReleaseGate(report: EvaluationReport, policy: ReleaseGat
   if (policy.requireRuntimeProbes && (report.runtimeProbes.length === 0 || report.runtimeProbes.some((probe) => probe.status !== "passed"))) reasons.push("Required runtime probes did not all pass.");
   if (policy.requireSemanticProviderAcceptance && report.providerAcceptance.semanticParser !== "passed") reasons.push(`Semantic Parser live provider acceptance is ${report.providerAcceptance.semanticParser}.`);
   if (policy.requireAnswerProviderAcceptance && report.providerAcceptance.answerComposer !== "passed") reasons.push(`Answer Composer live provider acceptance is ${report.providerAcceptance.answerComposer}.`);
+  if (policy.requireFullPipelineProviderAcceptance && report.providerAcceptance.fullPipeline !== "passed") reasons.push(`Full Pipeline live provider acceptance is ${report.providerAcceptance.fullPipeline ?? "pending"}.`);
+  const scenarioById = new Map(report.providerAcceptance.scenarios?.map((scenario) => [scenario.scenarioId, scenario]) ?? []);
+  for (const scenarioId of policy.requiredProviderScenarioIds ?? []) {
+    const scenario = scenarioById.get(scenarioId);
+    if (!scenario) {
+      reasons.push(`Required provider scenario acceptance is missing: ${scenarioId}.`);
+      continue;
+    }
+    if (scenario.semanticParser !== "passed" || scenario.answerComposer !== "passed" || scenario.fullPipeline !== "passed") reasons.push(`Provider scenario ${scenarioId} did not pass Semantic, Answer, and Full Pipeline acceptance.`);
+    if (scenario.fallbackUsed) reasons.push(`Provider scenario ${scenarioId} used fallback.`);
+    if (scenario.citationCoverage < (policy.minimumProviderScenarioCitationCoverage ?? policy.minimumCitationCoverage)) reasons.push(`Provider scenario ${scenarioId} citation coverage ${scenario.citationCoverage} is below the required threshold.`);
+  }
   return { status: reasons.length ? "failed" : "passed", policyId: policy.policyId, policyVersion: policy.version, evaluatedAt, reasons };
 }
 

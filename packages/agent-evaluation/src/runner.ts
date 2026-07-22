@@ -30,6 +30,7 @@ export class AgentEvaluationRunner {
     validateEvaluationDataset(dataset);
     const results: EvaluationCaseResult[] = [];
     for (const testCase of dataset.cases) {
+      if (testCase.skip) continue;
       const execution = await this.options.executor.execute(testCase);
       const result = evaluateCase(testCase, execution);
       results.push(result);
@@ -69,6 +70,7 @@ export class AgentEvaluationRunner {
         modelIds: this.options.providerAcceptance.modelIds ? [...this.options.providerAcceptance.modelIds] : undefined,
         checkedAt: this.options.providerAcceptance.checkedAt,
         details: [...this.options.providerAcceptance.details],
+        scenarios: this.options.providerAcceptance.scenarios?.map((scenario) => ({ ...scenario, details: [...scenario.details] })),
       },
       cases: results,
       runtimeProbes,
@@ -97,12 +99,14 @@ export function validateEvaluationDataset(dataset: unknown): asserts dataset is 
       throw new Error("Each evaluation case requires an ID, title, severity, tags, and turns.");
     }
     if (testCase.scenarioId !== undefined && !isString(testCase.scenarioId)) throw new Error(`Evaluation case ${testCase.caseId} has an invalid scenario ID.`);
+    if (testCase.skip !== undefined && typeof testCase.skip !== "boolean") throw new Error(`Evaluation case ${testCase.caseId} has an invalid skip flag.`);
     const turnIds = testCase.turns.map((turn) => turn.turnId);
     if (new Set(turnIds).size !== turnIds.length) throw new Error(`Evaluation case ${testCase.caseId} contains duplicate turn IDs.`);
     testCase.turns.forEach((turn) => {
       if (!isRecord(turn) || !isString(turn.turnId) || !isRecord(turn.input) || !isString(turn.input.message) || (turn.input.language !== "zh" && turn.input.language !== "en") || !isRecord(turn.expected)) {
         throw new Error(`Evaluation case ${testCase.caseId} contains an invalid turn.`);
       }
+      if (turn.input.scenarioId !== undefined && !isString(turn.input.scenarioId)) throw new Error(`Evaluation case ${testCase.caseId} has an invalid turn scenario ID.`);
       if (turn.expected.errorCode !== undefined && !isString(turn.expected.errorCode)) throw new Error(`Evaluation case ${testCase.caseId} has an invalid expected error code.`);
       if (turn.expected.semantic !== undefined) {
         const semantic = turn.expected.semantic;

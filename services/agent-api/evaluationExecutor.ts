@@ -27,7 +27,7 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
 
   async execute(testCase: EvaluationCase): Promise<EvaluationCaseExecution> {
     const clock = new SystemAgentClock();
-    const scenarioId = testCase.scenarioId ?? "quality-issue-trace";
+    const scenarioId = testCase.turns[0]?.input.scenarioId ?? testCase.scenarioId ?? "quality-issue-trace";
     const defaultRetriever = createDefaultGovernedDocumentRetriever();
     const documentRetriever = testCase.executionProfile === "no-document-access"
       ? new ScenarioGovernedDocumentEvidenceRetriever({
@@ -55,7 +55,7 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
         contractVersion: AGENT_CONTRACT_VERSION,
         requestId: `evaluation.${testCase.caseId}.${turnCase.turnId}`,
         sessionId,
-        scenarioId,
+        scenarioId: turnCase.input.scenarioId ?? scenarioId,
         mode: "live",
         language: turnCase.input.language,
         message: turnCase.input.message,

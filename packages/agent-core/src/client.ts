@@ -151,20 +151,27 @@ export class DeterministicAgentClient implements ContractAgentClient {
     const session = request.sessionId ? await this.sessions.get(request.sessionId) : null;
     if (request.sessionId && !session) throw new AgentPipelineError("SESSION_NOT_FOUND", `Session not found: ${request.sessionId}`);
     try {
+      const scenarioChanged = Boolean(session && request.scenarioId && request.scenarioId !== session.scenarioId);
+      const resetContext = session && scenarioChanged ? {
+        previousTurnIds: [...session.context.previousTurnIds],
+        resolvedEntityIds: [],
+        assumptions: [],
+      } : undefined;
       const contextualRequest = session
-        ? { ...request, context: request.context ?? session.context }
+        ? { ...request, context: request.context ?? resetContext ?? session.context }
         : request;
       const response = await this.pipeline.run(contextualRequest, signal, onEvent);
       if (session) {
         const resolvedEntityIds = response.queryPlan.entities.map((entity) => entity.id);
         const updated: AgentSession = {
           ...session,
+          scenarioId: request.scenarioId ?? session.scenarioId,
           turnIds: [...session.turnIds, response.turnId],
           context: {
             previousTurnIds: [...session.context.previousTurnIds, response.turnId],
-            resolvedEntityIds: [...new Set([...session.context.resolvedEntityIds, ...resolvedEntityIds])],
-            activeTopic: session.context.activeTopic ?? response.queryPlan.intent,
-            assumptions: [...new Set([...session.context.assumptions, ...response.answer.assumptions])],
+            resolvedEntityIds: scenarioChanged ? resolvedEntityIds : [...new Set([...session.context.resolvedEntityIds, ...resolvedEntityIds])],
+            activeTopic: scenarioChanged ? response.queryPlan.intent : session.context.activeTopic ?? response.queryPlan.intent,
+            assumptions: scenarioChanged ? [...response.answer.assumptions] : [...new Set([...session.context.assumptions, ...response.answer.assumptions])],
           },
           updatedAt: response.completedAt,
         };

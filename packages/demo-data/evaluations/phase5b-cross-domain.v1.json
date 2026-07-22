@@ -1,0 +1,649 @@
+{
+  "datasetId": "evaluation.phase5b-cross-domain",
+  "version": "1.1.0",
+  "domain": "manufacturing-cross-domain",
+  "description": "Cross-domain regression set spanning quality, engineering-change, and value-stream bottleneck analysis without mixing canonical scenario boundaries.",
+  "cases": [
+    {
+      "caseId": "cross-domain.engineering-quality",
+      "scenarioId": "engineering-change-impact",
+      "title": "Engineering change resolves governed quality-control impact",
+      "severity": "blocker",
+      "tags": [
+        "engineering",
+        "quality",
+        "cross-domain"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For M220 changing LeakTestProgram V3.4 to V3.5, trace the OP30 Leak Rate quality-control, validation and release impact.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "graph": {
+              "templateId": "engineering-change-impact.dependency-scope.v1",
+              "seedEntityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ],
+              "requiredObjectIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate",
+                "doc.validation-record-m220-program-v3-5"
+              ],
+              "requiredRelationIds": [
+                "relation.change.m220-v3-5.affects.program.v3-5",
+                "relation.change.m220-v3-5.affects.operation.op30",
+                "relation.program.v3-5.requires-validation",
+                "relation.program.v3-5.supersedes.v3-4",
+                "relation.operation.op30.controls.leak-rate",
+                "relation.leak-rate.governed-by.control-plan"
+              ],
+              "maxDepth": 3
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.m220-program-change-scope",
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.engineering-change-request-m220-program",
+                  "version": "ECR-01",
+                  "chunkId": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+                },
+                {
+                  "documentId": "doc.validation-record-m220-program-v3-5",
+                  "version": "Protocol Rev.1",
+                  "chunkId": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+                },
+                {
+                  "documentId": "document.control-plan.cp-bb01.rev-a",
+                  "version": "Rev.A",
+                  "chunkId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+                },
+                {
+                  "documentId": "document.sop.op30-leak-test",
+                  "version": "Rev.3",
+                  "chunkId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.validation-required",
+                "claim.quality-control-impact",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 1,
+        "resolvedEntityIds": [
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "activeTopic": "engineering_change_impact"
+      }
+    },
+    {
+      "caseId": "cross-domain.quality-value-stream",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Quality retest signal remains a bounded bottleneck-shift risk",
+      "severity": "blocker",
+      "tags": [
+        "quality",
+        "value-stream",
+        "cross-domain",
+        "multi-turn"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP20 the current bottleneck?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "message": "For OP20, could OP30 Leak Rate retest shift the bottleneck downstream?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.shift-risk",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "confirmed shift"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "operation.op20"
+        ],
+        "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "cross-domain.quality-equipment-evidence",
+      "scenarioId": "quality-issue-trace",
+      "title": "Quality issue trace remains aligned with shared M220 and Leak Rate facts",
+      "severity": "critical",
+      "tags": [
+        "quality",
+        "equipment",
+        "documents",
+        "cross-domain"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate is abnormal. Which products, equipment, quality risks, and documents may be affected?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "quality_issue_trace",
+              "entityIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate"
+              ]
+            },
+            "graph": {
+              "templateId": "quality-issue-trace.direct-neighborhood.v1",
+              "seedEntityIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate"
+              ],
+              "requiredObjectIds": [
+                "machine.m220",
+                "quality-characteristic.leak-rate",
+                "failure-mode.internal-leakage"
+              ],
+              "requiredRelationIds": [
+                "relation.operation.op30.performed-on.machine.m220",
+                "relation.operation.op30.controls.leak-rate"
+              ],
+              "maxDepth": 2
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.route.brake-booster.rev-c",
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification",
+                "evidence-chunk.record.qms.leak-rate.2026-07-demo.record-qms-lr-2026-0716-signal-summary"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.affected-product",
+                "claim.affected-equipment",
+                "claim.quality-risk",
+                "claim.governed-documents",
+                "claim.signal-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 1,
+        "resolvedEntityIds": [
+          "operation.op30",
+          "quality-characteristic.leak-rate"
+        ],
+        "activeTopic": "quality_issue_trace"
+      }
+    },
+    {
+      "caseId": "cross-domain.quality-to-engineering-switch",
+      "scenarioId": "quality-issue-trace",
+      "title": "Explicit Quality to Engineering Change switch clears stale quality entities",
+      "severity": "blocker",
+      "tags": [
+        "quality",
+        "engineering",
+        "multi-turn",
+        "domain-switch"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "scenarioId": "quality-issue-trace",
+            "message": "OP30 Leak Rate is abnormal. Which equipment and quality risks may be affected?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "quality_issue_trace",
+              "entityIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.affected-equipment",
+                "claim.quality-risk",
+                "claim.signal-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "scenarioId": "engineering-change-impact",
+            "message": "Switch to Engineering Change: assess M220 changing from LeakTestProgram V3.4 to V3.5 and its validation gates.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.m220-program-change-scope",
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.engineering-change-request-m220-program",
+                  "version": "ECR-01",
+                  "chunkId": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+                },
+                {
+                  "documentId": "doc.validation-record-m220-program-v3-5",
+                  "version": "Protocol Rev.1",
+                  "chunkId": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+                },
+                {
+                  "documentId": "document.control-plan.cp-bb01.rev-a",
+                  "version": "Rev.A",
+                  "chunkId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+                },
+                {
+                  "documentId": "document.sop.op30-leak-test",
+                  "version": "Rev.3",
+                  "chunkId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.validation-required",
+                "claim.quality-control-impact",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "forbiddenResolvedEntityIds": [
+          "operation.op30",
+          "quality-characteristic.leak-rate"
+        ],
+        "activeTopic": "engineering_change_impact"
+      }
+    },
+    {
+      "caseId": "cross-domain.engineering-to-bottleneck-switch",
+      "scenarioId": "engineering-change-impact",
+      "title": "Explicit Engineering Change to Bottleneck switch clears release context",
+      "severity": "blocker",
+      "tags": [
+        "engineering",
+        "value-stream",
+        "multi-turn",
+        "domain-switch"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "scenarioId": "engineering-change-impact",
+            "message": "Assess M220 changing from LeakTestProgram V3.4 to V3.5 and its release impact.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "scenarioId": "bottleneck-analysis",
+            "message": "Switch to Bottleneck Analysis: is OP20 the current bounded constraint?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.brake-booster-value-stream",
+                "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+                "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+                "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.line-balance-study-lb-bb01",
+                  "version": "Rev.1",
+                  "chunkId": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison"
+                },
+                {
+                  "documentId": "doc.value-stream-map-vs-bb01",
+                  "version": "Rev.2",
+                  "chunkId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+                },
+                {
+                  "documentId": "doc.standard-work-op20",
+                  "version": "Rev.B",
+                  "chunkId": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence"
+                },
+                {
+                  "documentId": "record.mes.op20-shift.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+                },
+                {
+                  "documentId": "record.qms.op30-retest.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.route-impact",
+                "claim.shift-risk",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "operation.op20"
+        ],
+        "forbiddenResolvedEntityIds": [
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "cross-domain.bottleneck-to-quality-switch",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Explicit Bottleneck to Quality switch does not equate flow constraint with defect",
+      "severity": "blocker",
+      "tags": [
+        "value-stream",
+        "quality",
+        "multi-turn",
+        "domain-switch"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "scenarioId": "bottleneck-analysis",
+            "message": "Is OP20 the current bounded bottleneck candidate?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "scenarioId": "quality-issue-trace",
+            "message": "Switch to Quality: OP30 Leak Rate is abnormal. Trace the governed quality risk and evidence.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "quality_issue_trace",
+              "entityIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.route.brake-booster.rev-c",
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification",
+                "evidence-chunk.record.qms.leak-rate.2026-07-demo.record-qms-lr-2026-0716-signal-summary"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.affected-product",
+                "claim.affected-equipment",
+                "claim.quality-risk",
+                "claim.governed-documents",
+                "claim.signal-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "operation.op30",
+          "quality-characteristic.leak-rate"
+        ],
+        "forbiddenResolvedEntityIds": [
+          "operation.op20"
+        ],
+        "activeTopic": "quality_issue_trace"
+      }
+    },
+    {
+      "caseId": "cross-domain.ct-ambiguity",
+      "scenarioId": "quality-issue-trace",
+      "title": "CT without domain context requires clarification",
+      "severity": "critical",
+      "tags": [
+        "ambiguity",
+        "cross-domain",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "CT is high. What does CT mean here?",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    }
+  ]
+}

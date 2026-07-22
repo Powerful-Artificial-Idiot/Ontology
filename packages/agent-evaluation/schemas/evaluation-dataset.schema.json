@@ -29,6 +29,7 @@
         "severity": { "enum": ["blocker", "critical", "major", "minor"] },
         "tags": { "$ref": "#/$defs/stringArray" },
         "executionProfile": { "enum": ["default", "no-document-access"] },
+        "skip": { "type": "boolean" },
         "turns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/turn" } },
         "expectedContext": {
           "type": "object",
@@ -37,6 +38,7 @@
           "properties": {
             "turnCount": { "type": "integer", "minimum": 0 },
             "resolvedEntityIds": { "$ref": "#/$defs/stringArray" },
+            "forbiddenResolvedEntityIds": { "$ref": "#/$defs/stringArray" },
             "activeTopic": { "type": "string" }
           }
         }
@@ -55,6 +57,7 @@
           "properties": {
             "message": { "type": "string", "minLength": 1 },
             "language": { "enum": ["zh", "en"] },
+            "scenarioId": { "type": "string", "minLength": 1 },
             "context": { "type": "object" }
           }
         },

@@ -4,5 +4,5 @@
   "graphView": "engineering",
   "frontendRoute": "/agent-demo",
   "seedEntityIds": ["machine.m220", "program.leak-test.v3-4", "program.leak-test.v3-5"],
-  "competencyQuestionIds": ["CQ-006"]
+  "competencyQuestionIds": ["CQ-006", "CQ-008", "CQ-009"]
 }

@@ -1,0 +1,7 @@
+PREFIX vs: <https://example.com/mkg/value-stream#>
+SELECT ?risk ?operation ?value ?unit WHERE {
+  ?risk a vs:BottleneckRisk ;
+    vs:affectsFlow ?operation ;
+    vs:metricValue ?value ;
+    vs:unit ?unit .
+}

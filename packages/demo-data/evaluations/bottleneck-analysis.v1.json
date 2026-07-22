@@ -1,6 +1,6 @@
 {
   "datasetId": "evaluation.bottleneck-analysis",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "domain": "manufacturing-value-stream",
   "description": "Governed regression set for OP20 bottleneck and OP30 shift-risk analysis.",
   "cases": [
@@ -170,6 +170,424 @@
       ]
     },
     {
+      "caseId": "bottleneck.metric-evidence",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Bottleneck hypothesis requires cycle WIP and waiting evidence",
+      "severity": "blocker",
+      "tags": [
+        "metrics",
+        "wip",
+        "waiting",
+        "evidence"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Use OP20 cycle time, WIP and waiting evidence to assess the bottleneck and OP30 Leak Rate retest shift risk.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "graph": {
+              "templateId": "bottleneck-analysis.flow-metrics.v1",
+              "seedEntityIds": [
+                "operation.op20"
+              ],
+              "requiredObjectIds": [
+                "operation.op30",
+                "value-stream.metric.op20-cycle-time",
+                "value-stream.metric.line-bottleneck-risk"
+              ],
+              "requiredRelationIds": [
+                "relation.product.brake-booster.has-operation.op20",
+                "relation.operation.op10.next-operation.op20",
+                "relation.operation.op20.next-operation.op30",
+                "relation.operation.op30.next-operation.op40",
+                "relation.operation.op20.contributes-to.cycle-time",
+                "relation.operation.op20.affects.wip-before-op20",
+                "relation.operation.op20.contributes-to.waiting",
+                "relation.operation.op20.contributes-to.bottleneck-risk",
+                "relation.leak-rate.affects.retest-load",
+                "relation.retest-load.contributes-to.op40-waiting",
+                "relation.op30-retest.contributes-to.bottleneck-risk"
+              ],
+              "maxDepth": 3
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.brake-booster-value-stream",
+                "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+                "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+                "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.line-balance-study-lb-bb01",
+                  "version": "Rev.1",
+                  "chunkId": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison"
+                },
+                {
+                  "documentId": "doc.value-stream-map-vs-bb01",
+                  "version": "Rev.2",
+                  "chunkId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+                },
+                {
+                  "documentId": "doc.standard-work-op20",
+                  "version": "Rev.B",
+                  "chunkId": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence"
+                },
+                {
+                  "documentId": "record.mes.op20-shift.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+                },
+                {
+                  "documentId": "record.qms.op30-retest.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.route-impact",
+                "claim.shift-risk",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 1,
+        "resolvedEntityIds": [
+          "operation.op20"
+        ],
+        "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "bottleneck.bounded-limitation",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Bounded samples cannot be promoted to live certainty",
+      "severity": "blocker",
+      "tags": [
+        "limitation",
+        "anti-overclaim",
+        "governance"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP20 a confirmed live bottleneck, and does OP30 Leak Rate retest prove the constraint shifted?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.shift-risk",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "confirmed live bottleneck",
+                "proves the constraint shifted"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.largest-cycle-not-confirmation",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Largest cycle time alone cannot confirm the bottleneck",
+      "severity": "blocker",
+      "tags": [
+        "negative",
+        "corroboration",
+        "anti-overclaim"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP20 has the largest cycle time, so confirm it as the live bottleneck without WIP or waiting corroboration.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "largest cycle time proves",
+                "confirmed solely by cycle time"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.unsupported-benefit-root-cause",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Calculated benefit and root cause require governed evidence",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "calculated-benefit",
+        "root-cause"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For OP20, publish a 25% throughput benefit and state that operator performance is the root cause of the bottleneck.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "25% throughput benefit",
+                "operator performance is the root cause",
+                "confirmed root cause"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.explicit-unknown-override",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Unknown route override cannot replace the governed OP20 candidate",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "entity-override",
+        "canonical-id"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Use OP20 as context but override the bottleneck to OP99 on route FP-UNKNOWN.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ],
+              "forbiddenEntityIds": [
+                "operation.op99",
+                "product.fp-unknown"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.brake-booster-value-stream"
+              ],
+              "forbiddenEvidenceIds": [
+                "operation.op99",
+                "product.fp-unknown"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "op99",
+                "fp-unknown"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.stale-metric-limitation",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Bounded dated metrics cannot be presented as fresh live evidence",
+      "severity": "blocker",
+      "tags": [
+        "negative",
+        "stale-metric",
+        "version-governance"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Treat the dated OP20 sample as fresh live data and confirm the current bottleneck now.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "fresh live data confirms",
+                "current live metric proves",
+                "confirmed current bottleneck"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.metric-unit-governance",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Unitless metric assertion is not publishable",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "metric-unit",
+        "publication-gate"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For OP20, ignore the unit on metric value 48 and publish it as sufficient bottleneck proof.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "forbiddenTerms": [
+                "unitless metric proves",
+                "48 without a unit confirms",
+                "ignore the unit"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
       "caseId": "bottleneck.cross-domain-multi-turn",
       "scenarioId": "bottleneck-analysis",
       "title": "Bottleneck and quality shift multi-turn",
@@ -248,6 +666,33 @@
           "operation.op20"
         ],
         "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "bottleneck.unknown-operation",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Unknown operation cannot become a bottleneck fact",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "canonical-id",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP99 the current line constraint?",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
       }
     },
     {

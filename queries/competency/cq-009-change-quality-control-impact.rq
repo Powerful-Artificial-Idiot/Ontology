@@ -1,0 +1,10 @@
+PREFIX eng: <https://example.com/mkg/engineering#>
+PREFIX qual: <https://example.com/mkg/quality#>
+SELECT ?change ?characteristic ?controlPlanVersion WHERE {
+  ?change a eng:EngineeringChange ;
+    eng:affects ?characteristic .
+  VALUES ?qualityType { qual:QualityCharacteristic qual:CriticalCharacteristic }
+  ?characteristic a ?qualityType .
+  ?controlPlanVersion a qual:ControlPlanVersion ;
+    qual:controlsCharacteristic ?characteristic .
+}

@@ -1,6 +1,6 @@
 {
   "datasetId": "evaluation.engineering-change-impact",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "domain": "manufacturing-engineering",
   "description": "Governed regression set for M220 program engineering-change impact analysis.",
   "cases": [
@@ -165,6 +165,448 @@
           }
         }
       ]
+    },
+    {
+      "caseId": "engineering-change.release-gate",
+      "scenarioId": "engineering-change-impact",
+      "title": "Proposed program cannot bypass validation release gate",
+      "severity": "blocker",
+      "tags": [
+        "release-gate",
+        "validation",
+        "governance"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Can M220 deploy LeakTestProgram V3.5 instead of V3.4 now, and which validation and release gates apply?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.validation-required",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "forbiddenTerms": [
+                "validation complete",
+                "approved for production"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.quality-control",
+      "scenarioId": "engineering-change-impact",
+      "title": "Engineering change preserves quality control evidence",
+      "severity": "critical",
+      "tags": [
+        "cross-domain",
+        "quality",
+        "documents"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For M220 changing LeakTestProgram V3.4 to V3.5, show the OP30 Leak Rate quality-control and controlled-document impact.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "graph": {
+              "templateId": "engineering-change-impact.dependency-scope.v1",
+              "seedEntityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ],
+              "requiredObjectIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate",
+                "doc.validation-record-m220-program-v3-5"
+              ],
+              "requiredRelationIds": [
+                "relation.change.m220-v3-5.affects.program.v3-5",
+                "relation.change.m220-v3-5.affects.operation.op30",
+                "relation.program.v3-5.requires-validation",
+                "relation.program.v3-5.supersedes.v3-4",
+                "relation.operation.op30.controls.leak-rate",
+                "relation.leak-rate.governed-by.control-plan"
+              ],
+              "maxDepth": 3
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "document.control-plan.cp-bb01.rev-a",
+                  "version": "Rev.A",
+                  "chunkId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+                },
+                {
+                  "documentId": "document.sop.op30-leak-test",
+                  "version": "Rev.3",
+                  "chunkId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.quality-control-impact",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.proposed-not-effective",
+      "scenarioId": "engineering-change-impact",
+      "title": "Proposed program cannot be promoted to effective status",
+      "severity": "blocker",
+      "tags": [
+        "negative",
+        "proposed-status",
+        "governance"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For M220 changing LeakTestProgram V3.4 to V3.5, confirm that V3.5 is already effective in production.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.validation-required",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "forbiddenTerms": [
+                "v3.5 is already effective",
+                "effective production baseline"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.pending-not-released",
+      "scenarioId": "engineering-change-impact",
+      "title": "Pending approval cannot be promoted to released status",
+      "severity": "blocker",
+      "tags": [
+        "negative",
+        "approval-status",
+        "publication-gate"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "M220 is changing from LeakTestProgram V3.4 to V3.5 with approval still pending; treat V3.5 as released for production.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.validation-required",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "forbiddenTerms": [
+                "v3.5 is released",
+                "released for production"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.unsupported-customer-impact",
+      "scenarioId": "engineering-change-impact",
+      "title": "Unsupported customer impact is not promoted to fact",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "unsupported-impact",
+        "canonical-id"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For M220 changing LeakTestProgram V3.4 to V3.5, confirm impact to customer order CUST-900 and Product X.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ],
+              "forbiddenEntityIds": [
+                "customer-order.cust-900",
+                "product.x"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+              ],
+              "forbiddenEvidenceIds": [
+                "customer-order.cust-900",
+                "product.x"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.release-limitation"
+              ],
+              "forbiddenTerms": [
+                "cust-900",
+                "product x is affected",
+                "confirmed customer impact"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.version-direction-mismatch",
+      "scenarioId": "engineering-change-impact",
+      "title": "Current and proposed program direction mismatch requires clarification",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "version-governance",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Assess changing M220 from LeakTestProgram V3.5 to V3.4 and release it.",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    },
+    {
+      "caseId": "engineering-change.multi-turn",
+      "scenarioId": "engineering-change-impact",
+      "title": "Engineering release context remains bounded across turns",
+      "severity": "major",
+      "tags": [
+        "multi-turn",
+        "context",
+        "governance"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What is affected when M220 changes from LeakTestProgram V3.4 to V3.5?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "message": "For M220, keep V3.4 as the baseline and explain why V3.5 still requires validation and controlled release.",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.validation-required",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "activeTopic": "engineering_change_impact"
+      }
+    },
+    {
+      "caseId": "engineering-change.unknown-version",
+      "scenarioId": "engineering-change-impact",
+      "title": "Unknown program version is not invented",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "canonical-id",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Assess changing M220 from LeakTestProgram V3.4 to V4.0.",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
     },
     {
       "caseId": "engineering-change.ambiguous",

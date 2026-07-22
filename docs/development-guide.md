@@ -11,7 +11,7 @@
 - `packages/document-evidence`：受治理文档注册、确定性解析、chunk、索引和检索；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
-当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化，以及可选的 OpenAI structured-output adapters；真实 provider acceptance 尚未执行，外部向量数据库未接入。
+当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化，以及可选的 OpenAI/DeepSeek structured-output adapters。DeepSeek 已完成 Quality、Engineering Change、Bottleneck 与跨域真实 provider acceptance；OpenAI 仍为 pending，外部向量数据库未接入。
 
 ## 2. Prerequisites
 
@@ -163,7 +163,7 @@ Phase 5A 的 Agent release gate 使用版本化 dataset 和 policy，不依赖 L
 npm run agent:evaluate
 ```
 
-报告写入 `.data/evaluations/latest-report.json`。真实 Provider smoke 必须显式配置服务端 key 和模型，并分别运行 `npm run openai:acceptance` 或 `npm run deepseek:acceptance`；没有真实调用时对应的 Semantic Parser、Answer Composer 和 DeepSeek full pipeline acceptance 必须保持 `pending`。DeepSeek 配置和安全边界见 `docs/phase-4-provider-deepseek-extension.md`。
+报告写入 `.data/evaluations/latest-report.json`。真实 Provider smoke 必须显式配置服务端 key 和模型，并分别运行 `npm run openai:acceptance` 或 `npm run deepseek:acceptance`；没有真实调用时对应的 Semantic Parser、Answer Composer 和 full pipeline acceptance 必须保持 `pending`。Phase 5B 使用 `npm run phase5b:acceptance` 汇总三套数据集、runtime probes 和 provider 场景门禁，报告写入 `.data/evaluations/phase5b-formal-acceptance.json`。DeepSeek 配置和安全边界见 `docs/phase-4-provider-deepseek-extension.md`。
 
 `make build` 会验证 ontology、SHACL、mapping、contracts、competency queries、前端 tests/build，并打包 manifest/checksums。
 

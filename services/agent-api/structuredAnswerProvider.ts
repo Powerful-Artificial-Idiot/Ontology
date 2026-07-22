@@ -16,7 +16,7 @@ export class StructuredAnswerProvider implements LlmAnswerComposerProvider {
 
   async compose(input: LlmAnswerComposeInput, signal?: AbortSignal): Promise<unknown> {
     const result = await this.provider.generateStructured<unknown>({
-      instructions: answerComposerInstructions,
+      instructions: answerComposerInstructions(input.language),
       input,
       schemaName: "evidence_grounded_answer_draft",
       schema: answerDraftSchema(input),
@@ -28,15 +28,20 @@ export class StructuredAnswerProvider implements LlmAnswerComposerProvider {
   }
 }
 
-const answerComposerInstructions = [
-  "Return exactly one JSON object that matches the supplied JSON schema.",
-  "Compose an answer only from the supplied Evidence Context Projection.",
-  "Every summary, finding, and risk must reference governed claim IDs; every recommended action must reference evidence IDs.",
-  "Use only claim IDs, classifications, and evidence IDs allowed by the schema.",
-  "Keep assumptions and limitations explicit and do not present them as facts.",
-  "Do not search, generate Cypher, create facts, create references, call tools, decide publication, or include reasoning.",
-  "Write all user-facing text in the requested language.",
-].join(" ");
+function answerComposerInstructions(language: LlmAnswerComposeInput["language"]): string {
+  const languageRule = language === "en"
+    ? "The requested language is English. Write every user-facing string in English only, including summary, findings, actions, risks, assumptions, limitations, and claim text. Do not copy Chinese text from evidence or template guidance into those fields. Preserve canonical IDs and proper names without translating their identifiers. Before returning, verify that no user-facing string contains Chinese characters."
+    : "The requested language is Chinese. Write every user-facing string in Chinese, while preserving canonical IDs and proper names without translating their identifiers.";
+  return [
+    "Return exactly one JSON object that matches the supplied JSON schema.",
+    "Compose an answer only from the supplied Evidence Context Projection.",
+    "Every summary, finding, and risk must reference governed claim IDs; every recommended action must reference evidence IDs.",
+    "Use only claim IDs, classifications, and evidence IDs allowed by the schema.",
+    "Keep assumptions and limitations explicit and do not present them as facts.",
+    "Do not search, generate Cypher, create facts, create references, call tools, decide publication, or include reasoning.",
+    languageRule,
+  ].join(" ");
+}
 
 function answerDraftSchema(input: LlmAnswerComposeInput): Record<string, unknown> {
   const claimIds = input.evidence.claimPolicies.map((policy) => policy.claimId);

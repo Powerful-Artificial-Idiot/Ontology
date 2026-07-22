@@ -2,18 +2,39 @@
 
 ## Status
 
-Implemented for deterministic, governed execution on 2026-07-22.
+Implementation baseline frozen as commit `dadc484` on 2026-07-22. Formal acceptance closure is implemented as an uncommitted review layer on top of that baseline.
 
-- Engineering Change evaluation: `evaluation.engineering-change-impact@1.0.0`, 4/4 passed
-- Bottleneck evaluation: `evaluation.bottleneck-analysis@1.0.0`, 5/5 passed
-- Citation coverage: 100% for both datasets
-- Cross-domain bottleneck/quality multi-turn case: passed
+- Quality evaluation: `evaluation.leak-rate-quality-trace@1.0.0`, 6/6 passed
+- Engineering Change evaluation: `evaluation.engineering-change-impact@1.2.0`, 12/12 passed
+- Bottleneck evaluation: `evaluation.bottleneck-analysis@1.2.0`, 13/13 passed
+- Cross-domain evaluation: `evaluation.phase5b-cross-domain@1.1.0`, 7/7 passed
+- Citation coverage: 100% across all 38 deterministic cases
+- Formal release gate: passed with both Mock and Neo4j repositories
 - Ontology modules: Engineering and Value Stream
-- Competency queries: CQ-006 and CQ-007 passed
-- DeepSeek live acceptance for the two new domains: pending
-- OpenAI live acceptance for the two new domains: pending
+- Competency queries: CQ-001 through CQ-011 passed
+- DeepSeek Quality, Engineering Change, Bottleneck, and cross-domain live acceptance: passed
+- DeepSeek provider: `deepseek-chat-completions`, transport `chat-completions`, model `deepseek-v4-flash`, fallback used: false
+- DeepSeek citation coverage: 100% in every live scenario
+- OpenAI Semantic Parser and Answer Composer live acceptance: pending
 
-The earlier DeepSeek acceptance remains valid for Leak Rate Quality Issue Trace. It is not treated as evidence that the two new domain prompts and outputs have passed a live provider call.
+OpenAI and DeepSeek acceptance remain independent. No DeepSeek result is used to mark OpenAI as passed.
+
+## Formal Acceptance Closure
+
+The provider-aware policy `release-gate.phase5b-formal-acceptance@1.0.0` requires:
+
+- 100% deterministic case pass rate and citation coverage;
+- zero blocker or critical failures;
+- all runtime probes passing;
+- Semantic Parser, Answer Composer, and Full Pipeline live acceptance;
+- explicit Engineering Change, Bottleneck, and cross-domain scenario entries;
+- `fallbackUsed: false` and 100% citation coverage for every required live scenario.
+- minimum case counts of Quality 6, Engineering Change 12, Bottleneck 12, cross-domain 6, and total 36;
+- rejection of duplicate, skipped, empty-assertion, and missing-domain coverage.
+
+The formal runner passed with both Mock and Neo4j repositories and writes sanitized reports to `.data/evaluations/`. The real provider artifact and reports remain untracked.
+
+The first expanded live run exposed a Quality answer containing Chinese text for an English request. The existing language validator blocked publication. The shared Answer Composer prompt now makes the requested language authoritative for every user-facing field and requires an English-output character check. No schema, ontology, query, evidence, claim, or citation validation was relaxed. The credentialed rerun passed all four scenarios.
 
 ## Shared Architecture
 
@@ -71,6 +92,8 @@ The canonical seed command now loads the deduplicated union of all three scenari
 npm run phase5b:fixtures
 MKG_EVALUATION_DATASET_PATH=packages/demo-data/evaluations/engineering-change-impact.v1.json npm run agent:evaluate
 MKG_EVALUATION_DATASET_PATH=packages/demo-data/evaluations/bottleneck-analysis.v1.json npm run agent:evaluate
+npm run deepseek:acceptance
+npm run phase5b:acceptance
 npm run typecheck
 npm run lint
 npm test
@@ -78,4 +101,4 @@ npm run build
 make validate
 ```
 
-Live Neo4j acceptance requires the local Docker service and explicit server-side credentials. Live LLM acceptance for the two new domains remains a separate future gate and must run with fallback disabled.
+Live Neo4j acceptance requires the local Docker service and explicit server-side credentials. Live LLM acceptance must use server-side credentials and run with fallback disabled.
