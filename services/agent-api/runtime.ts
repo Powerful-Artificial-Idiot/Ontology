@@ -10,6 +10,7 @@ import {
   LlmEvidenceAnswerComposer,
   LlmSemanticParser,
   RepositoryGraphRetriever,
+  StrictCitationValidator,
   SystemAgentClock,
   createDeterministicAgentClient,
   type AnswerComposer,
@@ -37,6 +38,8 @@ import { InMemoryAgentTelemetrySink, LocalJsonlAgentTelemetrySink, RedactingAgen
 import { DeepSeekSemanticProvider } from "./deepSeekSemanticProvider";
 import { DeepSeekAnswerProvider } from "./deepSeekAnswerProvider";
 import { isDeepSeekModel, type DeepSeekModel } from "./deepSeekChatCompletionsClient";
+import { AuthorizationAwareCitationValidator, AuthorizedGraphRetriever } from "../../packages/agent-security/src/index";
+import { createAgentApiSecurity } from "./security";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
@@ -49,9 +52,11 @@ export type ConfiguredAgentApiRuntime = AgentApiRuntime & {
 export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
   const clock = new SystemAgentClock();
   const repository = new MockKnowledgeRepository();
+  const security = createAgentApiSecurity({ MKG_AGENT_AUTH_MODE: "disabled" });
   const core = createDeterministicAgentClient(clock, {
-    graphRetriever: new RepositoryGraphRetriever(repository),
+    graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(repository), security.authorizer),
     documentRetriever: createDefaultGovernedDocumentRetriever(),
+    citationValidator: new AuthorizationAwareCitationValidator(new StrictCitationValidator(), security.authorizer),
   });
   const runs = new InMemoryAgentRunStore();
   const runEvents = new InMemoryAgentRunEventStore();
@@ -66,6 +71,7 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
     semanticParserMode: "deterministic",
     answerComposerMode: "template",
     documentEvidenceMode: "governed",
+    security,
   };
 }
 
@@ -73,6 +79,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   const mode = parseRepositoryMode(environment.MKG_AGENT_KNOWLEDGE_MODE);
   const clock = new SystemAgentClock();
   const telemetry = telemetryFromEnvironment(environment);
+  const security = createAgentApiSecurity(environment);
   const semantic = semanticParserFromEnvironment(environment, telemetry);
   const answer = answerComposerFromEnvironment(environment, telemetry);
   const documentMode = parseDocumentEvidenceMode(environment.MKG_AGENT_DOCUMENT_MODE);
@@ -108,7 +115,13 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   const audit = persistentStore ? new FileAgentAuditStore(persistentStore) : undefined;
   const core = createDeterministicAgentClient(
     clock,
-    { graphRetriever: new RepositoryGraphRetriever(repository), documentRetriever, semanticParser: semantic.parser, answerComposer: answer.composer },
+    {
+      graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(repository), security.authorizer),
+      documentRetriever,
+      semanticParser: semantic.parser,
+      answerComposer: answer.composer,
+      citationValidator: new AuthorizationAwareCitationValidator(new StrictCitationValidator(), security.authorizer),
+    },
     { sessions, turns, audit },
   );
   const runs = persistentStore ? new FileAgentRunStore(persistentStore) : new InMemoryAgentRunStore();
@@ -127,6 +140,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
     answerComposerMode: answer.mode,
     documentEvidenceMode: documentMode,
     llmProviderType: semantic.providerType ?? answer.providerType,
+    security,
     close: () => repository instanceof Neo4jKnowledgeRepository ? repository.close() : Promise.resolve(),
   };
 }

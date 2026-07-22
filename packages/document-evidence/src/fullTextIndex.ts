@@ -62,9 +62,20 @@ function isGovernedAndEffective(chunk: GovernedDocumentChunk, asOf: string): boo
 
 function canAccess(chunk: GovernedDocumentChunk, context: DocumentAccessContext): boolean {
   if (chunk.access.classification === "public") return true;
+  if (context.roleIds.includes("agent-admin")) return true;
   const roleAllowed = chunk.access.allowedRoleIds.length === 0 || chunk.access.allowedRoleIds.some((role) => context.roleIds.includes(role));
-  const domainAllowed = chunk.access.allowedDomainIds.length === 0 || chunk.access.allowedDomainIds.some((domain) => context.domainIds.includes(domain));
-  return roleAllowed && domainAllowed;
+  const allowedDomains = new Set(context.domainIds.map(normalizeDomain));
+  const domainAllowed = chunk.access.allowedDomainIds.length === 0 || chunk.access.allowedDomainIds.some((domain) => allowedDomains.has(normalizeDomain(domain)));
+  const objectAllowed = !context.objectIds?.length
+    || context.objectIds.includes("*")
+    || chunk.linkedEntityIds.every((entityId) => context.objectIds!.includes(entityId));
+  return roleAllowed && domainAllowed && objectAllowed;
+}
+
+function normalizeDomain(domainId: string): string {
+  if (domainId === "production" || domainId === "manufacturing") return "manufacturing";
+  if (domainId === "valueStream" || domainId === "valuestream") return "value-stream";
+  return domainId;
 }
 
 function boundedInteger(value: number | undefined, fallback: number, minimum: number, maximum: number, name: string): number {

@@ -43,7 +43,12 @@ export class ApiAgentClient implements AgentClient {
   private readonly baseUrl: string;
   private scenarios: AgentScenario[] = [];
 
-  constructor(baseUrl: string, private readonly timeoutMs = 12_000, private readonly fetchImpl: FetchImplementation = fetch) {
+  constructor(
+    baseUrl: string,
+    private readonly timeoutMs = 12_000,
+    private readonly fetchImpl: FetchImplementation = fetch,
+    private readonly bearerToken?: string,
+  ) {
     this.baseUrl = baseUrl.replace(/\/$/u, "");
   }
 
@@ -265,7 +270,7 @@ export class ApiAgentClient implements AgentClient {
     try {
       await this.fetchImpl(`${this.baseUrl}/runs/${encodeURIComponent(runId)}/cancel`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: this.headers({ "Content-Type": "application/json" }),
         body: JSON.stringify({}),
       });
     } catch {
@@ -284,7 +289,7 @@ export class ApiAgentClient implements AgentClient {
       const response = await this.fetchImpl(`${this.baseUrl}${path}`, {
         ...init,
         signal: controller.signal,
-        headers: { "Content-Type": "application/json", ...init.headers },
+        headers: this.headers({ "Content-Type": "application/json", ...init.headers }),
       });
       const payload = await response.json() as T | AgentApiErrorResponse;
       if (!response.ok) {
@@ -309,7 +314,7 @@ export class ApiAgentClient implements AgentClient {
     while (!signal?.aborted) {
       try {
         const response = await this.fetchImpl(`${this.baseUrl}/runs/${encodeURIComponent(runId)}/events?after=${afterSequence}`, {
-          headers: { Accept: "text/event-stream", ...(afterSequence ? { "Last-Event-ID": `${runId}:${afterSequence}` } : {}) },
+          headers: this.headers({ Accept: "text/event-stream", ...(afterSequence ? { "Last-Event-ID": `${runId}:${afterSequence}` } : {}) }),
           signal,
         });
         if (!response.ok) {
@@ -345,6 +350,10 @@ export class ApiAgentClient implements AgentClient {
       await delay(Math.min(1_000, 100 * 2 ** (reconnects - 1)), signal);
     }
     throw new DOMException("Agent request was cancelled.", "AbortError");
+  }
+
+  private headers(headers: HeadersInit): HeadersInit {
+    return this.bearerToken ? { ...headers, Authorization: `Bearer ${this.bearerToken}` } : headers;
   }
 }
 

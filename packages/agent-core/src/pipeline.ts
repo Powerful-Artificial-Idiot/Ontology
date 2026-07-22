@@ -1,5 +1,6 @@
 import type {
   AgentTraceStage,
+  AgentAuthorizationContext,
   AgentTraceStageName,
   AgentPipelineEventHandler,
   AgentTurnRequest,
@@ -22,7 +23,7 @@ type StageDescriptor<T> = {
 export class DeterministicAgentPipeline {
   constructor(private readonly dependencies: AgentPipelineDependencies) {}
 
-  async run(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler): Promise<AgentTurnResponse> {
+  async run(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler, authorization?: AgentAuthorizationContext): Promise<AgentTurnResponse> {
     assertAgentRequest(request);
     const baseline = await this.dependencies.knowledgeSource.getBaseline(request.scenarioId);
     const identifiers = this.dependencies.ids.forRequest(request);
@@ -84,7 +85,7 @@ export class DeterministicAgentPipeline {
       inputRefs: [graphPlan.graphPlanId, ...graphPlan.seedEntityIds],
       outputRefs: (output) => [...output.entities.map((entity) => entity.id), ...output.relations.map((relation) => relation.id)],
       summary: (output) => `Retrieved ${output.entities.length} entities and ${output.relations.length} relations from ${output.repositoryType}.`,
-      execute: () => this.dependencies.graphRetriever.retrieve(graphPlan, baseline),
+      execute: () => this.dependencies.graphRetriever.retrieve(graphPlan, baseline, authorization),
     });
 
     const documents = await runStage({
@@ -93,7 +94,7 @@ export class DeterministicAgentPipeline {
       inputRefs: graph.entities.map((entity) => entity.id),
       outputRefs: (output) => output.items.map((item) => item.id),
       summary: (output) => `Retrieved ${output.items.length} governed evidence items.`,
-      execute: () => this.dependencies.documentRetriever.retrieve(graph, baseline),
+      execute: () => this.dependencies.documentRetriever.retrieve(graph, baseline, authorization),
     });
 
     const evidencePack = await runStage({
@@ -120,7 +121,7 @@ export class DeterministicAgentPipeline {
       inputRefs: [evidencePack.id, ...answer.claims.map((claim) => claim.id)],
       outputRefs: (output) => output.checkedClaimIds,
       summary: (output) => `Citation validation ${output.status} for ${output.checkedClaimIds.length} claims.`,
-      execute: () => this.dependencies.citationValidator.validate(answer, evidencePack),
+      execute: () => this.dependencies.citationValidator.validate(answer, evidencePack, authorization),
     });
 
     if (citationValidation.status !== "passed") {

@@ -1,10 +1,12 @@
 import { randomUUID } from "node:crypto";
 import type {
+  AgentAuthorizationContext,
   AgentError,
   AgentPipelineEvent,
   AgentRunEvent,
   AgentTurnRequest,
   AgentTurnRun,
+  PersistedAgentTurnRun,
 } from "../../packages/knowledge-contracts/src/index";
 import {
   AgentPipelineError,
@@ -36,16 +38,17 @@ export class AgentTurnRunService {
     this.now = options.now ?? (() => new Date());
   }
 
-  async create(request: AgentTurnRequest, retryOf?: AgentTurnRun): Promise<AgentTurnRun> {
+  async create(request: AgentTurnRequest, authorization?: AgentAuthorizationContext, retryOf?: PersistedAgentTurnRun): Promise<PersistedAgentTurnRun> {
     const createdAt = this.now().toISOString();
     const runId = `run.${randomUUID()}`;
     const turnId = expectedTurnId(request.requestId);
-    const run: AgentTurnRun = {
+    const run: PersistedAgentTurnRun = {
       id: runId,
       sessionId: request.sessionId ?? "",
       requestId: request.requestId,
       turnId,
       request: cloneJson(request),
+      authorizationContext: authorization ? cloneJson(authorization) : undefined,
       status: "queued",
       attempt: retryOf ? retryOf.attempt + 1 : 1,
       retryOfRunId: retryOf?.id,
@@ -57,7 +60,7 @@ export class AgentTurnRunService {
     return cloneJson(run);
   }
 
-  async retry(runId: string): Promise<AgentTurnRun> {
+  async retry(runId: string, authorization?: AgentAuthorizationContext): Promise<PersistedAgentTurnRun> {
     const previous = await this.options.runs.get(runId);
     if (!previous) throw new AgentPipelineError("RUN_NOT_FOUND", `Run not found: ${runId}`);
     if (previous.status !== "failed" && previous.status !== "cancelled") {
@@ -68,7 +71,7 @@ export class AgentTurnRunService {
       requestId: `${previous.request.requestId}.retry-${previous.attempt + 1}-${randomUUID().slice(0, 8)}`,
       requestedAt: this.now().toISOString(),
     };
-    return this.create(request, previous);
+    return this.create(request, authorization ?? previous.authorizationContext, previous);
   }
 
   async get(runId: string): Promise<AgentTurnRun | null> {
@@ -111,7 +114,7 @@ export class AgentTurnRunService {
       run.startedAt = this.now().toISOString();
       await this.options.runs.save(run);
       await this.appendEvent(run, "run-started");
-      await this.options.client.runTurn(run.request, controller.signal, (event) => this.appendPipelineEvent(run, event));
+      await this.options.client.runTurn(run.request, controller.signal, (event) => this.appendPipelineEvent(run, event), run.authorizationContext);
       run.status = "completed";
       run.completedAt = this.now().toISOString();
       await this.options.runs.save(run);
@@ -129,12 +132,12 @@ export class AgentTurnRunService {
     }
   }
 
-  private async appendPipelineEvent(run: AgentTurnRun, pipelineEvent: AgentPipelineEvent): Promise<void> {
+  private async appendPipelineEvent(run: PersistedAgentTurnRun, pipelineEvent: AgentPipelineEvent): Promise<void> {
     await this.appendEvent(run, "pipeline-event", pipelineEvent);
   }
 
   private async appendEvent(
-    run: AgentTurnRun,
+    run: PersistedAgentTurnRun,
     type: AgentRunEvent["type"],
     pipelineEvent?: AgentPipelineEvent,
     error?: AgentError,

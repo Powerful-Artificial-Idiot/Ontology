@@ -47,6 +47,25 @@ type AgentTurnRequest = {
 
 客户端上下文仅用于相关性，不用于授权。actor identity 和 authorization scope 由服务端建立。
 
+### AgentAuthorizationContext
+
+```ts
+type AgentAuthorizationContext = {
+  principal: {
+    id: string;
+    tenantId: string;
+    roleIds: string[];
+    domainIds: string[];
+    objectIds?: string[];
+    authenticationMethod: "none" | "static-bearer" | "oidc";
+  };
+  authenticatedAt: string;
+  requestId: string;
+};
+```
+
+该上下文由服务端 Authenticator 生成，不能从 `AgentTurnRequest` 接受。异步 Run 只持久化上述非 secret snapshot；Bearer token、Authorization header、raw identity assertion 均不得持久化或返回前端。
+
 ### SemanticQueryPlan
 
 ```ts

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/agent-session-security-context.schema.json",
+  "title": "AgentSessionSecurityContext",
+  "type": "object",
+  "required": ["ownerPrincipalId", "tenantId", "allowedDomainIds", "authenticationMethod"],
+  "properties": {
+    "ownerPrincipalId": { "type": "string", "minLength": 1 },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "allowedDomainIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
+    "authenticationMethod": { "enum": ["none", "static-bearer", "oidc"] }
+  },
+  "additionalProperties": false
+}

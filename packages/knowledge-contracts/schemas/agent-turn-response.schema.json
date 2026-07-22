@@ -62,7 +62,7 @@
             "required": ["claimId", "code", "message"],
             "properties": {
               "claimId": { "type": "string" },
-              "code": { "enum": ["missing-citation", "unknown-evidence", "unsupported-claim", "inactive-evidence", "ungoverned-evidence", "unknown-claim", "duplicate-claim", "missing-required-claim", "claim-classification-mismatch"] },
+              "code": { "enum": ["missing-citation", "unknown-evidence", "unsupported-claim", "inactive-evidence", "ungoverned-evidence", "access-denied", "unknown-claim", "duplicate-claim", "missing-required-claim", "claim-classification-mismatch"] },
               "message": { "type": "string" }
             },
             "additionalProperties": false

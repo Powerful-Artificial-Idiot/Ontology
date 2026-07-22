@@ -1,5 +1,6 @@
 import {
   AGENT_CONTRACT_VERSION,
+  type AgentAuthorizationContext,
   type AgentAuditEvent,
   type AgentLanguage,
   type AgentMode,
@@ -10,6 +11,7 @@ import {
   type AgentTurnRequest,
   type AgentTurnResponse,
   type AgentTurnRun,
+  type PersistedAgentTurnRun,
   type ContractAgentClient,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError } from "./errors";
@@ -58,9 +60,9 @@ export class InMemoryAgentTurnStore implements AgentTurnStore {
 }
 
 export class InMemoryAgentRunStore implements AgentRunStore {
-  private readonly runs = new Map<string, AgentTurnRun>();
+  private readonly runs = new Map<string, PersistedAgentTurnRun>();
 
-  async create(run: AgentTurnRun): Promise<void> {
+  async create(run: PersistedAgentTurnRun): Promise<void> {
     if (this.runs.has(run.id)) throw new AgentPipelineError("TURN_ALREADY_EXISTS", `Run already exists: ${run.id}`);
     this.runs.set(run.id, cloneJson(run));
   }
@@ -70,7 +72,7 @@ export class InMemoryAgentRunStore implements AgentRunStore {
     return run ? cloneJson(run) : null;
   }
 
-  async save(run: AgentTurnRun): Promise<void> {
+  async save(run: PersistedAgentTurnRun): Promise<void> {
     this.runs.set(run.id, cloneJson(run));
   }
 
@@ -118,6 +120,8 @@ export type StartDeterministicSessionOptions = {
   mode?: AgentMode;
   language?: AgentLanguage;
   activeTopic?: string;
+  authorization?: AgentAuthorizationContext;
+  domainIds?: string[];
 };
 
 export class DeterministicAgentClient implements ContractAgentClient {
@@ -140,6 +144,12 @@ export class DeterministicAgentClient implements ContractAgentClient {
       language: options.language ?? "zh",
       turnIds: [],
       context: { previousTurnIds: [], resolvedEntityIds: [], activeTopic: options.activeTopic, assumptions: [] },
+      security: options.authorization ? {
+        ownerPrincipalId: options.authorization.principal.id,
+        tenantId: options.authorization.principal.tenantId,
+        allowedDomainIds: [...(options.domainIds ?? options.authorization.principal.domainIds)],
+        authenticationMethod: options.authorization.principal.authenticationMethod,
+      } : undefined,
       createdAt: now,
       updatedAt: now,
     };
@@ -147,9 +157,15 @@ export class DeterministicAgentClient implements ContractAgentClient {
     return session;
   }
 
-  async runTurn(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler): Promise<AgentTurnResponse> {
+  async runTurn(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler, authorization?: AgentAuthorizationContext): Promise<AgentTurnResponse> {
     const session = request.sessionId ? await this.sessions.get(request.sessionId) : null;
     if (request.sessionId && !session) throw new AgentPipelineError("SESSION_NOT_FOUND", `Session not found: ${request.sessionId}`);
+    if (session?.security && authorization && (
+      session.security.ownerPrincipalId !== authorization.principal.id
+      || session.security.tenantId !== authorization.principal.tenantId
+    )) {
+      throw new AgentPipelineError("AUTHORIZATION_DENIED", "The authenticated principal does not own this Agent session.", undefined, { sessionId: session.id });
+    }
     try {
       const scenarioChanged = Boolean(session && request.scenarioId && request.scenarioId !== session.scenarioId);
       const resetContext = session && scenarioChanged ? {
@@ -160,7 +176,7 @@ export class DeterministicAgentClient implements ContractAgentClient {
       const contextualRequest = session
         ? { ...request, context: request.context ?? resetContext ?? session.context }
         : request;
-      const response = await this.pipeline.run(contextualRequest, signal, onEvent);
+      const response = await this.pipeline.run(contextualRequest, signal, onEvent, authorization);
       if (session) {
         const resolvedEntityIds = response.queryPlan.entities.map((entity) => entity.id);
         const updated: AgentSession = {
@@ -177,7 +193,7 @@ export class DeterministicAgentClient implements ContractAgentClient {
         };
         await this.sessions.save(updated);
       }
-      const auditEvent = this.auditEvent(request, response.trace.traceId, response.turnId, "completed", response.queryPlan.entities.map((entity) => entity.id));
+      const auditEvent = this.auditEvent(request, response.trace.traceId, response.turnId, "completed", response.queryPlan.entities.map((entity) => entity.id), undefined, authorization);
       await this.audit.append(auditEvent);
       if (request.sessionId) {
         await this.turns.create({
@@ -191,23 +207,29 @@ export class DeterministicAgentClient implements ContractAgentClient {
       }
       return response;
     } catch (error) {
-      await this.audit.append(this.auditEvent(request, `trace.${request.requestId}`, undefined, "failed", [], error instanceof AgentPipelineError ? error.detail.code : "PIPELINE_FAILED"));
+      await this.audit.append(this.auditEvent(request, `trace.${request.requestId}`, undefined, "failed", [], error instanceof AgentPipelineError ? error.detail.code : "PIPELINE_FAILED", authorization));
       throw error;
     }
   }
 
-  private auditEvent(request: AgentTurnRequest, traceId: string, turnId: string | undefined, outcome: AgentAuditEvent["outcome"], resourceIds: string[], errorCode?: string): AgentAuditEvent {
+  private auditEvent(request: AgentTurnRequest, traceId: string, turnId: string | undefined, outcome: AgentAuditEvent["outcome"], resourceIds: string[], errorCode?: string, authorization?: AgentAuthorizationContext): AgentAuditEvent {
     return {
       id: `audit.${request.requestId}.${outcome}`,
       traceId,
       sessionId: request.sessionId,
       turnId,
-      actorId: this.actorId,
+      actorId: authorization?.principal.id ?? this.actorId,
       action: "agent.turn.execute",
       resourceIds,
       outcome,
       occurredAt: this.clock.now().toISOString(),
-      metadata: { mode: request.mode, language: request.language, ...(errorCode ? { errorCode } : {}) },
+      metadata: {
+        mode: request.mode,
+        language: request.language,
+        tenantId: authorization?.principal.tenantId ?? "local-demo",
+        authenticationMethod: authorization?.principal.authenticationMethod ?? "none",
+        ...(errorCode ? { errorCode } : {}),
+      },
     };
   }
 }
@@ -222,6 +244,7 @@ function cloneSession(session: AgentSession): AgentSession {
       resolvedEntityIds: [...session.context.resolvedEntityIds],
       assumptions: [...session.context.assumptions],
     },
+    security: session.security ? { ...session.security, allowedDomainIds: [...session.security.allowedDomainIds] } : undefined,
   };
 }
 

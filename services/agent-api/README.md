@@ -8,6 +8,8 @@ npm run agent-api:dev
 
 The service listens on `http://127.0.0.1:4175/api/agent` by default. Mock repository and deterministic semantic parsing remain the defaults. Phase 3B can explicitly select the Neo4j pilot with `MKG_AGENT_KNOWLEDGE_MODE=neo4j`; failed connectivity stops service startup and never falls back to Mock.
 
+Phase 5C protects every Session, Turn, Run, SSE, Trace, Evidence, and Audit resource with a server-derived authorization context. `GET /health` and `GET /scenarios` remain public discovery endpoints. Local development defaults to explicit disabled authentication; `MKG_AGENT_SECURITY_PROFILE=production` fails startup unless an authenticator is configured. The built-in `static-bearer` adapter is for controlled acceptance only; enterprise OIDC remains pending. See [Phase 5C Security](../../docs/phase-5c-production-security-authorization.md).
+
 Phase 4C governed document retrieval is enabled by default. It validates a local controlled-document registry, checks content checksums and effective status, creates stable chunks, applies graph/full-text/access filters, and returns chunk-level EvidenceItems. Use `MKG_AGENT_DOCUMENT_MODE=canonical` only for explicit rollback testing.
 
 Primary endpoints:
@@ -62,7 +64,7 @@ MKG_AGENT_ANSWER_COMPOSER_MODE=hybrid   # template guidance -> evidence-grounded
 MKG_LLM_ANSWER_MODEL=<explicit-model-id>
 ```
 
-Both LLM modes still pass through the deterministic Citation Validator. Hybrid is not a silent availability fallback: provider or grounding failure fails the Turn and preserves the retry/audit behavior. The service still has no vector search, external identity, or enterprise data.
+Both LLM modes still pass through the deterministic Citation Validator. Hybrid is not a silent availability fallback: provider or grounding failure fails the Turn and preserves the retry/audit behavior. The service still has no vector search, enterprise identity-provider integration, or enterprise data.
 
 Verify the deterministic document subsystem independently:
 

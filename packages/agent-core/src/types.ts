@@ -1,10 +1,11 @@
 import type {
   AgentAnswer,
+  AgentAuthorizationContext,
   AgentAuditEvent,
   AgentRunEvent,
   AgentSession,
   AgentTurnRecord,
-  AgentTurnRun,
+  PersistedAgentTurnRun,
   AgentTurnRequest,
   CanonicalKnowledgeBaseline,
   CitationValidationResult,
@@ -59,7 +60,7 @@ export type GraphRetrievalResult = {
 };
 
 export interface GraphRetriever {
-  retrieve(plan: GraphQueryPlan, baseline: CanonicalKnowledgeBaseline): Promise<GraphRetrievalResult>;
+  retrieve(plan: GraphQueryPlan, baseline: CanonicalKnowledgeBaseline, authorization?: AgentAuthorizationContext): Promise<GraphRetrievalResult>;
 }
 
 export type DocumentRetrievalResult = {
@@ -69,7 +70,7 @@ export type DocumentRetrievalResult = {
 
 export interface DocumentEvidenceRetriever {
   readonly toolName?: string;
-  retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult>;
+  retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline, authorization?: AgentAuthorizationContext): Promise<DocumentRetrievalResult>;
 }
 
 export interface EvidencePackBuilder {
@@ -83,7 +84,7 @@ export interface AnswerComposer {
 }
 
 export interface CitationValidator {
-  validate(answer: AgentAnswer, evidencePack: EvidencePack): Promise<CitationValidationResult>;
+  validate(answer: AgentAnswer, evidencePack: EvidencePack, authorization?: AgentAuthorizationContext): Promise<CitationValidationResult>;
 }
 
 export interface AgentSessionStore {
@@ -103,10 +104,10 @@ export interface AgentTurnStore {
 }
 
 export interface AgentRunStore {
-  create(run: AgentTurnRun): Promise<void>;
-  get(runId: string): Promise<AgentTurnRun | null>;
-  save(run: AgentTurnRun): Promise<void>;
-  listBySession(sessionId: string): Promise<AgentTurnRun[]>;
+  create(run: PersistedAgentTurnRun): Promise<void>;
+  get(runId: string): Promise<PersistedAgentTurnRun | null>;
+  save(run: PersistedAgentTurnRun): Promise<void>;
+  listBySession(sessionId: string): Promise<PersistedAgentTurnRun[]>;
 }
 
 export interface AgentRunEventStore {

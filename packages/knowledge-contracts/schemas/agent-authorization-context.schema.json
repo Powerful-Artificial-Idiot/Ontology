@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/agent-authorization-context.schema.json",
+  "title": "AgentAuthorizationContext",
+  "type": "object",
+  "required": ["principal", "authenticatedAt", "requestId"],
+  "properties": {
+    "principal": {
+      "type": "object",
+      "required": ["id", "tenantId", "roleIds", "domainIds", "authenticationMethod"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tenantId": { "type": "string", "minLength": 1 },
+        "roleIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
+        "domainIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
+        "objectIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "authenticationMethod": { "enum": ["none", "static-bearer", "oidc"] }
+      },
+      "additionalProperties": false
+    },
+    "authenticatedAt": { "type": "string", "format": "date-time" },
+    "requestId": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

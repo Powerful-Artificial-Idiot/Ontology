@@ -24,6 +24,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run test
       - run: npm run agent:evaluate
+      - run: npm run security:acceptance
       - run: make validate PYTHON=python
       - run: npm run build
       - uses: actions/upload-artifact@v4

@@ -92,6 +92,7 @@ Infrastructure
 packages/
   knowledge-contracts/     # Shared transport contracts and JSON Schemas
   agent-core/              # Provider-neutral deterministic pipeline
+  agent-security/          # Authorization policy and retrieval/publication guards
   demo-data/               # Canonical governed demo facts and generated fixtures
   ontology-client/         # Existing Knowledge API client
 
@@ -134,6 +135,8 @@ infrastructure/
 - Neo4j 使用只读 service account；Agent runtime 不拥有 schema/write 权限。
 - LLM provider 只接收最小必要上下文，并遵守数据域和 redaction policy。
 - 每个调用记录 request ID、session ID、turn ID、trace ID、actor、scope、版本、模板和 evidence IDs。
+
+Phase 5C 已实现共享 Principal/Authorization Context、可替换 authentication adapter、Session ownership、tenant/role/domain/object policy、请求主体文档过滤、citation publication control 和结构化安全审计。当前 `static-bearer` 只用于受控验收；OIDC issuer/audience/JWKS 验证和企业组映射仍是 production gap，不能将当前状态表述为企业 IAM 已完成。
 
 ### Explicit prohibitions
 
@@ -185,7 +188,7 @@ Docker Compose 只用于本地开发和 Pilot packaging；生产拓扑、secret 
 3. Document content 与 metadata 的存储和访问控制模型。
 4. LLM provider、data residency、retention 和 redaction policy。
 5. Neo4j 是否通过 competency benchmark，或是否选择其他 graph runtime。
-6. Plant/tenant authorization model 与企业 IAM 接入方式。
+6. 企业 OIDC/JWKS、group mapping、token revocation 与 plant scope authority；Phase 5C 已固定下游 authorization contract。
 
 这些决定必须通过 ADR 记录，不能只通过实现代码隐式确定。
 

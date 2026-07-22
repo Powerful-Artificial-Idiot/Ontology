@@ -52,6 +52,7 @@ export type DocumentAccessContext = {
   principalId: string;
   roleIds: string[];
   domainIds: string[];
+  objectIds?: string[];
 };
 
 export type ParsedDocumentSection = {

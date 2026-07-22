@@ -7,6 +7,7 @@ import type {
   AgentSession,
   AgentTurnRecord,
   AgentTurnRun,
+  PersistedAgentTurnRun,
 } from "../../packages/knowledge-contracts/src/index";
 import type {
   AgentAuditQuery,
@@ -22,7 +23,7 @@ type PersistentAgentState = {
   sessions: Record<string, AgentSession>;
   turns: Record<string, AgentTurnRecord>;
   auditEvents: AgentAuditEvent[];
-  runs: Record<string, AgentTurnRun>;
+  runs: Record<string, PersistedAgentTurnRun>;
   runEvents: Record<string, AgentRunEvent[]>;
 };
 
@@ -43,7 +44,7 @@ export class FileAgentStore {
     await this.markInterruptedRuns();
   }
 
-  async create(value: AgentSession | AgentTurnRecord | AgentTurnRun): Promise<void> {
+  async create(value: AgentSession | AgentTurnRecord | PersistedAgentTurnRun): Promise<void> {
     if (isSession(value)) {
       if (this.state.sessions[value.id]) throw new Error(`Session already exists: ${value.id}`);
       this.state.sessions[value.id] = cloneJson(value);
@@ -58,18 +59,18 @@ export class FileAgentStore {
     await this.persist();
   }
 
-  async get(id: string): Promise<AgentSession | AgentTurnRecord | AgentTurnRun | null> {
+  async get(id: string): Promise<AgentSession | AgentTurnRecord | PersistedAgentTurnRun | null> {
     const value = this.state.sessions[id] ?? this.state.turns[id] ?? this.state.runs[id];
     return value ? cloneJson(value) : null;
   }
 
-  async save(value: AgentSession | AgentTurnRun): Promise<void> {
+  async save(value: AgentSession | PersistedAgentTurnRun): Promise<void> {
     if (isSession(value)) this.state.sessions[value.id] = cloneJson(value);
     else this.state.runs[value.id] = cloneJson(value);
     await this.persist();
   }
 
-  async listBySession(sessionId: string): Promise<Array<AgentTurnRecord | AgentTurnRun>> {
+  async listBySession(sessionId: string): Promise<Array<AgentTurnRecord | PersistedAgentTurnRun>> {
     const turns = Object.values(this.state.turns).filter((turn) => turn.sessionId === sessionId);
     const runs = Object.values(this.state.runs).filter((run) => run.sessionId === sessionId);
     return [...turns, ...runs].sort((left, right) => left.createdAt.localeCompare(right.createdAt)).map(cloneJson);
@@ -161,7 +162,7 @@ export class FileAgentTurnStore implements AgentTurnStore {
 export class FileAgentRunStore implements AgentRunStore {
   constructor(private readonly store: FileAgentStore) {}
   create(run: AgentTurnRun) { return this.store.create(run); }
-  async get(id: string) { return await this.store.get(id) as AgentTurnRun | null; }
+  async get(id: string) { return await this.store.get(id) as PersistedAgentTurnRun | null; }
   save(run: AgentTurnRun) { return this.store.save(run); }
   async listBySession(sessionId: string) {
     const values = await this.store.listBySession(sessionId);
@@ -193,15 +194,15 @@ function parseState(raw: string): PersistentAgentState {
   return value as PersistentAgentState;
 }
 
-function isSession(value: AgentSession | AgentTurnRecord | AgentTurnRun): value is AgentSession {
+function isSession(value: AgentSession | AgentTurnRecord | PersistedAgentTurnRun): value is AgentSession {
   return "turnIds" in value;
 }
 
-function isTurnRecord(value: AgentSession | AgentTurnRecord | AgentTurnRun): value is AgentTurnRecord {
+function isTurnRecord(value: AgentSession | AgentTurnRecord | PersistedAgentTurnRun): value is AgentTurnRecord {
   return "response" in value;
 }
 
-function isTurnRun(value: AgentTurnRecord | AgentTurnRun): value is AgentTurnRun {
+function isTurnRun(value: AgentTurnRecord | PersistedAgentTurnRun): value is PersistedAgentTurnRun {
   return "attempt" in value;
 }
 

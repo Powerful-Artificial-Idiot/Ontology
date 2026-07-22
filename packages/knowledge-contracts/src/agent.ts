@@ -1,4 +1,5 @@
 import type { KnowledgeEntity, KnowledgeRelation, ProvenanceReference } from "./index";
+import type { AgentAuthorizationContext, AgentSessionSecurityContext } from "./security";
 
 export const AGENT_CONTRACT_VERSION = "1.0.0" as const;
 
@@ -125,6 +126,9 @@ export type AgentErrorCode =
   | "LLM_RESPONSE_INVALID"
   | "LLM_ENTITY_UNRESOLVED"
   | "REQUEST_TIMEOUT"
+  | "AUTHENTICATION_REQUIRED"
+  | "AUTHENTICATION_INVALID"
+  | "AUTHORIZATION_DENIED"
   | "PIPELINE_CANCELLED"
   | "PIPELINE_FAILED";
 
@@ -208,7 +212,7 @@ export type AgentAnswer = {
 
 export type CitationValidationIssue = {
   claimId: string;
-  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence" | "ungoverned-evidence" | "unknown-claim" | "duplicate-claim" | "missing-required-claim" | "claim-classification-mismatch";
+  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence" | "ungoverned-evidence" | "access-denied" | "unknown-claim" | "duplicate-claim" | "missing-required-claim" | "claim-classification-mismatch";
   message: string;
 };
 
@@ -314,6 +318,7 @@ export type AgentSession = {
   language: AgentLanguage;
   turnIds: string[];
   context: AgentConversationContext;
+  security?: AgentSessionSecurityContext;
   createdAt: string;
   updatedAt: string;
 };
@@ -383,6 +388,10 @@ export type AgentTurnRun = {
   startedAt?: string;
   completedAt?: string;
   error?: AgentError;
+};
+
+export type PersistedAgentTurnRun = AgentTurnRun & {
+  authorizationContext?: AgentAuthorizationContext;
 };
 
 export type AgentRunEventType =

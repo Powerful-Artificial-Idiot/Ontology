@@ -8,7 +8,7 @@ import {
   type DocumentAccessContext,
   type DocumentIngestionResult,
 } from "../../packages/document-evidence/src/index";
-import type { CanonicalKnowledgeBaseline } from "../../packages/knowledge-contracts/src/index";
+import type { AgentAuthorizationContext, CanonicalKnowledgeBaseline } from "../../packages/knowledge-contracts/src/index";
 import type { DocumentEvidenceRetriever, DocumentRetrievalResult, GraphRetrievalResult } from "../../packages/agent-core/src/index";
 
 export type GovernedDocumentEvidenceRetrieverOptions = {
@@ -23,7 +23,7 @@ export class GovernedDocumentEvidenceRetriever implements DocumentEvidenceRetrie
 
   constructor(private readonly options: GovernedDocumentEvidenceRetrieverOptions) {}
 
-  async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult> {
+  async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline, authorization?: AgentAuthorizationContext): Promise<DocumentRetrievalResult> {
     void baseline;
     const store = await this.store();
     const asOf = this.now().toISOString();
@@ -31,7 +31,12 @@ export class GovernedDocumentEvidenceRetriever implements DocumentEvidenceRetrie
       linkedEntityIds: graph.entities.map((entity) => entity.id),
       searchTerms: graph.entities.flatMap((entity) => [entity.id, entity.label, entity.description ?? ""]),
       asOf,
-      access: this.options.access,
+      access: authorization ? {
+        principalId: authorization.principal.id,
+        roleIds: authorization.principal.roleIds,
+        domainIds: authorization.principal.domainIds,
+        objectIds: authorization.principal.objectIds,
+      } : this.options.access,
       limit: 20,
       perDocumentLimit: 2,
     });
@@ -62,8 +67,8 @@ export class ScenarioGovernedDocumentEvidenceRetriever implements DocumentEviden
 
   constructor(private readonly options: ScenarioGovernedDocumentEvidenceRetrieverOptions) {}
 
-  async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult> {
-    return this.retriever(baseline.scenario.id).retrieve(graph, baseline);
+  async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline, authorization?: AgentAuthorizationContext): Promise<DocumentRetrievalResult> {
+    return this.retriever(baseline.scenario.id).retrieve(graph, baseline, authorization);
   }
 
   async getIngestionResult(): Promise<DocumentIngestionResult> {

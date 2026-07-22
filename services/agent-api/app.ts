@@ -2,12 +2,16 @@ import { randomUUID } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import {
   AGENT_CONTRACT_VERSION,
+  type AgentAuthorizationContext,
   type AgentApiErrorResponse,
   type AgentAuditResource,
   type AgentErrorCode,
   type AgentEvidenceResource,
   type AgentScenarioDescriptor,
   type AgentRunEvent,
+  type AgentTurnRun,
+  type PersistedAgentTurnRun,
+  type AgentSession,
   type AgentSessionResource,
   type AgentTraceResource,
   type AgentTurnListResource,
@@ -29,6 +33,7 @@ import {
   type AnswerComposerMode,
 } from "../../packages/agent-core/src/index";
 import { AgentTurnRunService, isTerminalRun } from "./turnRunService";
+import { AgentAuthenticationError, createAgentApiSecurity, type AgentApiSecurityRuntime } from "./security";
 
 const qualityScenario: AgentScenarioDescriptor = {
   id: "quality-issue-trace",
@@ -92,11 +97,13 @@ export type AgentApiRuntime = {
   llmProviderType?: "openai-responses" | "deepseek-chat-completions";
   timeoutMs?: number;
   logger?: AgentApiLogger;
+  security?: AgentApiSecurityRuntime;
 };
 
 export function createAgentApi(runtime: AgentApiRuntime) {
   const timeoutMs = runtime.timeoutMs ?? 10_000;
   const logger = runtime.logger ?? noopLogger;
+  runtime.security ??= createAgentApiSecurity({ MKG_AGENT_AUTH_MODE: "disabled" });
   return (request: IncomingMessage, response: ServerResponse) => {
     const requestTraceId = `api-trace.${randomUUID()}`;
     const startedAt = Date.now();
@@ -108,8 +115,20 @@ export function createAgentApi(runtime: AgentApiRuntime) {
         durationMs: Date.now() - startedAt,
         traceId: requestTraceId,
       }))
-      .catch((error: unknown) => {
+      .catch(async (error: unknown) => {
         const mapped = mapError(error);
+        if (error instanceof AgentAuthenticationError) {
+          await runtime.audit.append({
+            id: `audit.security.${randomUUID()}`,
+            traceId: requestTraceId,
+            actorId: "anonymous",
+            action: "security.authenticate",
+            resourceIds: [safePath(request.url)],
+            outcome: "denied",
+            occurredAt: new Date().toISOString(),
+            metadata: { reasonCode: error.code, authenticationMethod: "unknown" },
+          });
+        }
         logger.error("Agent API request failed.", {
           method: request.method ?? "UNKNOWN",
           path: safePath(request.url),
@@ -154,6 +173,8 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
       answerComposer: runtime.answerComposerMode ?? "template",
       documentEvidence: runtime.documentEvidenceMode ?? "governed",
       llmProvider: runtime.llmProviderType,
+      authentication: runtime.security?.authenticator.mode ?? "disabled",
+      securityProfile: runtime.security?.profile ?? "development",
       capabilities: ["sessions", "turns", "runs", "sse", "event-replay", "retry", "trace", "evidence", "governed-document-chunks", "audit", "cancellation", "timeout"],
     }, traceId);
     return;
@@ -165,6 +186,8 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
     return;
   }
 
+  const authorization = await runtime.security!.authenticator.authenticate(request, traceId);
+
   if (segments.length === 1 && segments[0] === "sessions") {
     requireMethod(request, "POST");
     const body = assertCreateSessionRequest(await readJson(request));
@@ -175,12 +198,19 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
     if (body.mode !== "live") {
       throw new AgentApiError(422, "AGENT_REQUEST_INVALID", "The Agent API only accepts live mode sessions.", { mode: body.mode });
     }
+    await requireAuthorized(runtime, authorization, "session:create", {
+      type: "scenario",
+      id: scenario.id,
+      domainIds: [scenario.domain],
+    }, traceId);
     const session = await runtime.client.startSession({
       id: `session.${randomUUID()}`,
       scenarioId: body.scenarioId,
       mode: body.mode,
       language: body.language,
       activeTopic: scenario.title,
+      authorization,
+      domainIds: [scenario.domain],
     });
     sendJson<AgentSessionResource>(response, 201, { session }, traceId);
     return;
@@ -190,25 +220,29 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
     const sessionId = decodeURIComponent(segments[1]);
     const session = await runtime.sessions.get(sessionId);
     if (!session) throw new AgentApiError(404, "SESSION_NOT_FOUND", `Session not found: ${sessionId}`, { sessionId });
+    const sessionResource = resourceForSession(session);
 
     if (segments.length === 2) {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "session:read", sessionResource, traceId);
       sendJson<AgentSessionResource>(response, 200, { session }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "turns") {
       if (request.method === "GET") {
+        await requireAuthorized(runtime, authorization, "session:read", sessionResource, traceId);
         sendJson<AgentTurnListResource>(response, 200, { sessionId, turns: await runtime.turns.listBySession(sessionId) }, traceId);
         return;
       }
       requireMethod(request, "POST");
+      await requireAuthorized(runtime, authorization, "turn:execute", sessionResource, traceId);
       const body = assertTurnRequest(await readJson(request), sessionId, session.scenarioId);
       const expectedTurnId = `turn.${body.requestId.replace(/[^a-zA-Z0-9._-]/gu, "-")}`;
       if (await runtime.turns.get(expectedTurnId)) {
         throw new AgentApiError(409, "TURN_ALREADY_EXISTS", `A turn already exists for requestId ${body.requestId}.`, { turnId: expectedTurnId });
       }
-      const turnResponse = await runWithDeadline(request, response, timeoutMs, (signal) => runtime.client.runTurn(body, signal));
+      const turnResponse = await runWithDeadline(request, response, timeoutMs, (signal) => runtime.client.runTurn(body, signal, undefined, authorization));
       const turn = await runtime.turns.get(turnResponse.turnId);
       if (!turn) throw new AgentApiError(500, "PIPELINE_FAILED", "Completed turn was not persisted.", { turnId: turnResponse.turnId });
       sendJson<AgentTurnResource>(response, 201, { turn }, traceId);
@@ -217,20 +251,23 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
 
     if (segments.length === 3 && segments[2] === "runs") {
       if (request.method === "GET") {
-        sendJson<AgentTurnRunListResource>(response, 200, { sessionId, runs: await runtime.runs.listBySession(sessionId) }, traceId);
+        await requireAuthorized(runtime, authorization, "run:read", sessionResource, traceId);
+        sendJson<AgentTurnRunListResource>(response, 200, { sessionId, runs: (await runtime.runs.listBySession(sessionId)).map(publicRun) }, traceId);
         return;
       }
       requireMethod(request, "POST");
+      await requireAuthorized(runtime, authorization, "turn:execute", sessionResource, traceId);
       const body = assertTurnRequest(await readJson(request), sessionId, session.scenarioId);
       const existing = (await runtime.runs.listBySession(sessionId)).find((run) => run.requestId === body.requestId);
       if (existing) throw new AgentApiError(409, "TURN_ALREADY_EXISTS", `A run already exists for requestId ${body.requestId}.`, { runId: existing.id });
-      const run = await runtime.runService.create(body);
-      sendJson<AgentTurnRunResource>(response, 202, { run }, traceId);
+      const run = await runtime.runService.create(body, authorization);
+      sendJson<AgentTurnRunResource>(response, 202, { run: publicRun(run) }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "audit") {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "audit:read", { ...sessionResource, type: "audit" }, traceId);
       sendJson<AgentAuditResource>(response, 200, { sessionId, events: runtime.audit.list({ sessionId }) }, traceId);
       return;
     }
@@ -240,21 +277,26 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
     const turnId = decodeURIComponent(segments[1]);
     const turn = await runtime.turns.get(turnId);
     if (!turn) throw new AgentApiError(404, "TURN_NOT_FOUND", `Turn not found: ${turnId}`, { turnId });
+    const turnSession = await requiredSession(runtime, turn.sessionId);
+    const turnResource = { ...resourceForSession(turnSession), type: "turn" as const, id: turnId, turnId };
 
     if (segments.length === 2) {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "session:read", turnResource, traceId);
       sendJson<AgentTurnResource>(response, 200, { turn }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "trace") {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "trace:read", { ...turnResource, type: "trace" }, traceId);
       sendJson<AgentTraceResource>(response, 200, { turnId, trace: turn.response.trace }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "evidence") {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "evidence:read", { ...turnResource, type: "evidence", objectIds: turn.response.evidencePack.items.flatMap((item) => item.linkedEntityIds) }, traceId);
       sendJson<AgentEvidenceResource>(response, 200, {
         turnId,
         evidencePack: turn.response.evidencePack,
@@ -265,6 +307,7 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
 
     if (segments.length === 3 && segments[2] === "audit") {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "audit:read", { ...turnResource, type: "audit" }, traceId);
       sendJson<AgentAuditResource>(response, 200, { turnId, events: runtime.audit.list({ turnId }) }, traceId);
       return;
     }
@@ -274,30 +317,36 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
     const runId = decodeURIComponent(segments[1]);
     const run = await runtime.runs.get(runId);
     if (!run) throw new AgentApiError(404, "RUN_NOT_FOUND", `Run not found: ${runId}`, { runId });
+    const runSession = await requiredSession(runtime, run.sessionId);
+    const runResource = { ...resourceForSession(runSession), type: "run" as const, id: runId };
 
     if (segments.length === 2) {
       requireMethod(request, "GET");
-      sendJson<AgentTurnRunResource>(response, 200, { run }, traceId);
+      await requireAuthorized(runtime, authorization, "run:read", runResource, traceId);
+      sendJson<AgentTurnRunResource>(response, 200, { run: publicRun(run) }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "events") {
       requireMethod(request, "GET");
+      await requireAuthorized(runtime, authorization, "run:read", runResource, traceId);
       await streamRunEvents(runtime, request, response, runId, traceId, url);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "retry") {
       requireMethod(request, "POST");
-      const retry = await runtime.runService.retry(runId);
-      sendJson<AgentTurnRunResource>(response, 202, { run: retry }, traceId);
+      await requireAuthorized(runtime, authorization, "run:control", runResource, traceId);
+      const retry = await runtime.runService.retry(runId, authorization);
+      sendJson<AgentTurnRunResource>(response, 202, { run: publicRun(retry) }, traceId);
       return;
     }
 
     if (segments.length === 3 && segments[2] === "cancel") {
       requireMethod(request, "POST");
+      await requireAuthorized(runtime, authorization, "run:control", runResource, traceId);
       if (!runtime.runService.cancel(runId)) throw new AgentApiError(409, "RUN_NOT_RETRYABLE", `Run is not active: ${runId}`, { runId });
-      sendJson<AgentTurnRunResource>(response, 202, { run }, traceId);
+      sendJson<AgentTurnRunResource>(response, 202, { run: publicRun(run) }, traceId);
       return;
     }
   }
@@ -460,7 +509,7 @@ function parseEventCursor(lastEventId: string | string[] | undefined, after: str
 function corsHeaders(traceId: string) {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type,Last-Event-ID",
+    "Access-Control-Allow-Headers": "Authorization,Content-Type,Last-Event-ID",
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Cache-Control": "no-store",
     "X-Trace-Id": traceId,
@@ -469,6 +518,7 @@ function corsHeaders(traceId: string) {
 
 function mapError(error: unknown): AgentApiError {
   if (error instanceof AgentApiError) return error;
+  if (error instanceof AgentAuthenticationError) return new AgentApiError(401, error.code, error.message);
   if (error instanceof AgentPipelineError) {
     const statusByCode: Partial<Record<AgentErrorCode, number>> = {
       AGENT_CONTRACT_INCOMPATIBLE: 409,
@@ -489,6 +539,9 @@ function mapError(error: unknown): AgentApiError {
       LLM_RESPONSE_INVALID: 422,
       LLM_ENTITY_UNRESOLVED: 422,
       PIPELINE_CANCELLED: 499,
+      AUTHENTICATION_REQUIRED: 401,
+      AUTHENTICATION_INVALID: 401,
+      AUTHORIZATION_DENIED: 403,
     };
     return new AgentApiError(statusByCode[error.detail.code] ?? 500, error.detail.code, error.detail.message, error.detail.details, error.detail.stage);
   }
@@ -524,3 +577,62 @@ const noopLogger: AgentApiLogger = {
   info: () => undefined,
   error: () => undefined,
 };
+
+async function requiredSession(runtime: AgentApiRuntime, sessionId: string) {
+  const session = await runtime.sessions.get(sessionId);
+  if (!session) throw new AgentApiError(404, "SESSION_NOT_FOUND", `Session not found: ${sessionId}`, { sessionId });
+  return session;
+}
+
+function resourceForSession(session: AgentSession) {
+  return {
+    type: "session" as const,
+    id: session.id,
+    sessionId: session.id,
+    tenantId: session.security?.tenantId,
+    ownerPrincipalId: session.security?.ownerPrincipalId,
+    domainIds: session.security?.allowedDomainIds,
+  };
+}
+
+async function requireAuthorized(
+  runtime: AgentApiRuntime,
+  authorization: AgentAuthorizationContext,
+  action: Parameters<AgentApiSecurityRuntime["authorizer"]["authorize"]>[1],
+  resource: Parameters<AgentApiSecurityRuntime["authorizer"]["authorize"]>[2],
+  traceId: string,
+) {
+  const decision = runtime.security!.authorizer.authorize(authorization, action, resource);
+  if (runtime.security!.authenticator.mode !== "disabled" || decision.decision === "denied") {
+    await runtime.audit.append({
+      id: `audit.security.${randomUUID()}`,
+      traceId,
+      sessionId: resource.sessionId,
+      turnId: resource.turnId,
+      actorId: authorization.principal.id,
+      action: `security.${action}`,
+      resourceIds: [resource.id],
+      outcome: decision.decision,
+      occurredAt: new Date().toISOString(),
+      metadata: {
+        tenantId: authorization.principal.tenantId,
+        resourceType: resource.type,
+        reasonCode: decision.reasonCode,
+        authenticationMethod: authorization.principal.authenticationMethod,
+      },
+    });
+  }
+  if (decision.decision === "denied") {
+    throw new AgentApiError(403, "AUTHORIZATION_DENIED", "The authenticated principal is not authorized for this resource.", {
+      action,
+      resourceType: resource.type,
+      reasonCode: decision.reasonCode,
+    });
+  }
+}
+
+function publicRun(run: PersistedAgentTurnRun): AgentTurnRun {
+  const result = { ...run };
+  delete result.authorizationContext;
+  return result;
+}

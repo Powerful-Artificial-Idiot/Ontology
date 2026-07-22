@@ -6,6 +6,7 @@ export type AgentClientRuntimeConfig = {
   mode?: "scripted" | "api";
   apiBaseUrl?: string;
   timeoutMs?: number;
+  bearerToken?: string;
 };
 
 export function createAgentClient(config: AgentClientRuntimeConfig = {}): AgentClient {
@@ -14,6 +15,8 @@ export function createAgentClient(config: AgentClientRuntimeConfig = {}): AgentC
   return new ApiAgentClient(
     config.apiBaseUrl ?? import.meta.env.VITE_AGENT_API_BASE_URL ?? "http://127.0.0.1:4175/api/agent",
     validTimeout(config.timeoutMs ?? Number(import.meta.env.VITE_AGENT_TIMEOUT_MS ?? 12_000)),
+    fetch,
+    config.bearerToken ?? import.meta.env.VITE_AGENT_API_TOKEN,
   );
 }
 

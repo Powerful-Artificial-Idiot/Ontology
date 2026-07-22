@@ -7,11 +7,12 @@
 当前 workspace：
 
 - `packages/knowledge-contracts`：共享 TypeScript contracts 与 JSON Schemas；
+- `packages/agent-security`：provider-neutral role/tenant/owner/domain/object authorization policy 与 publication guards；
 - `packages/demo-data`：contract-aligned fixtures、generated ontology artifacts 和 scenarios；
 - `packages/document-evidence`：受治理文档注册、确定性解析、chunk、索引和检索；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
-当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化，以及可选的 OpenAI/DeepSeek structured-output adapters。DeepSeek 已完成 Quality、Engineering Change、Bottleneck 与跨域真实 provider acceptance；OpenAI 仍为 pending，外部向量数据库未接入。
+当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化、Phase 5C authorization context，以及可选的 OpenAI/DeepSeek structured-output adapters。DeepSeek 已完成 Quality、Engineering Change、Bottleneck 与跨域真实 provider acceptance；OpenAI 和企业 OIDC acceptance 仍为 pending，外部向量数据库未接入。
 
 ## 2. Prerequisites
 
@@ -78,6 +79,8 @@ npm run dev:agent
 
 创建 Turn 后 API 立即返回 run ID，浏览器再通过 SSE 接收阶段状态。事件流使用序列号和 `Last-Event-ID` 续传；失败或中断的 run 必须由用户显式 Retry。
 
+Phase 5C 的本地默认仍为 `MKG_AGENT_AUTH_MODE=disabled`，用于保持 scripted/demo 和开发回归。受控安全验收使用 `static-bearer`；`MKG_AGENT_SECURITY_PROFILE=production` 会拒绝 disabled authentication。Session ownership、tenant、role、domain、object、evidence 和 citation publication 均由服务端校验。该 adapter 不等同于企业 IAM，完整限制见 [Phase 5C](phase-5c-production-security-authorization.md)。
+
 Phase 4A 默认继续使用 deterministic semantic parser。启用受约束 LLM parser：
 
 ```bash
@@ -137,6 +140,7 @@ npm run test:agent-core
 npm run agent-api:test
 npm run documents:verify
 npm run agent:evaluate
+npm run security:acceptance
 npm run build
 ```
 
@@ -235,6 +239,18 @@ Generated fixtures -> canonical data/ontology sources
 - `VITE_AGENT_MODE`；
 - `VITE_AGENT_API_BASE_URL`；
 - `VITE_AGENT_TIMEOUT_MS`。
+- `VITE_AGENT_API_TOKEN`（仅受控 static-token Demo；不要嵌入长期凭据）。
+
+服务端 Agent security 配置：
+
+- `MKG_AGENT_SECURITY_PROFILE=development|production`；
+- `MKG_AGENT_AUTH_MODE=disabled|static-bearer`；
+- `MKG_AGENT_AUTH_STATIC_TOKEN`；
+- `MKG_AGENT_AUTH_PRINCIPAL_ID`；
+- `MKG_AGENT_AUTH_TENANT_ID`；
+- `MKG_AGENT_AUTH_ROLE_IDS`；
+- `MKG_AGENT_AUTH_DOMAIN_IDS`；
+- `MKG_AGENT_AUTH_OBJECT_IDS`（可选 allowlist）。
 
 服务端 Agent repository 配置：
 

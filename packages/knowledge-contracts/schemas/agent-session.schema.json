@@ -22,6 +22,7 @@
       },
       "additionalProperties": false
     },
+    "security": { "$ref": "https://example.com/mkg/contracts/agent-session-security-context.schema.json" },
     "createdAt": { "type": "string", "format": "date-time" },
     "updatedAt": { "type": "string", "format": "date-time" }
   },

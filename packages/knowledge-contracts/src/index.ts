@@ -239,4 +239,5 @@ export interface KnowledgeRepository {
   getEntityRelations(id: string): Promise<KnowledgeRelation[]>;
 }
 
+export * from "./security";
 export * from "./agent";
