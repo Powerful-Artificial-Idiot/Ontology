@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Page 4 / Section 3.2 Setup and Golden-Part Verification",
+      "heading": "Leak Test Setup",
+      "text": "Set up M220 with fixture FX-002 and released LeakTestProgram V3.4. Apply a test pressure of 2.5 bar and complete golden-part verification before processing production units."
+    }
+  ]
+}

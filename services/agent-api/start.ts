@@ -14,7 +14,7 @@ const server = createServer(createAgentApi({
 }));
 
 server.listen(port, host, () => {
-  console.info(`Agent API listening on http://${host}:${port}/api/agent using ${runtime.knowledgeRepositoryType} repository, ${runtime.semanticParserMode} semantic parser, and ${runtime.answerComposerMode} answer composer`);
+  console.info(`Agent API listening on http://${host}:${port}/api/agent using ${runtime.knowledgeRepositoryType} repository, ${runtime.documentEvidenceMode} document evidence, ${runtime.semanticParserMode} semantic parser, and ${runtime.answerComposerMode} answer composer`);
 });
 
 for (const signal of ["SIGINT", "SIGTERM"] as const) {

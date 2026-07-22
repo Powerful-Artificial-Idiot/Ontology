@@ -177,6 +177,8 @@ export class InMemoryCanonicalGraphRetriever implements GraphRetriever {
 }
 
 export class InMemoryCanonicalDocumentRetriever implements DocumentEvidenceRetriever {
+  readonly toolName = "in-memory-canonical-document-retriever.v1";
+
   async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult> {
     const entityIds = new Set(graph.entities.map((entity) => entity.id));
     const items = baseline.evidencePack.items
@@ -187,14 +189,21 @@ export class InMemoryCanonicalDocumentRetriever implements DocumentEvidenceRetri
 }
 
 export class CanonicalEvidencePackBuilder implements EvidencePackBuilder {
+  readonly toolName = "governed-evidence-pack-merger.v1";
+
   async build(plan: SemanticQueryPlan, _graph: GraphRetrievalResult, documents: DocumentRetrievalResult, baseline: CanonicalKnowledgeBaseline, generatedAt: string): Promise<EvidencePack> {
+    const items = new Map<string, EvidenceItem>();
+    baseline.evidencePack.items
+      .filter((item) => item.kind !== "document" && item.kind !== "system-record")
+      .forEach((item) => items.set(item.id, cloneEvidenceItem(item)));
+    documents.items.forEach((item) => items.set(item.id, cloneEvidenceItem(item)));
     return {
       id: `evidence-pack.${plan.planId}`,
       queryPlanId: plan.planId,
       generatedAt,
       ontologyVersion: baseline.ontologyVersion,
       dataVersion: baseline.dataVersion,
-      items: documents.items.map(cloneEvidenceItem),
+      items: [...items.values()],
       claimPolicies: baseline.evidencePack.claimPolicies?.map((policy) => ({ ...policy })),
       limitations: [...baseline.evidencePack.limitations],
     };
@@ -281,6 +290,8 @@ export class StrictCitationValidator implements CitationValidator {
           issues.push({ claimId: claim.id, code: "unknown-evidence", message: `Unknown evidence ID: ${citation.evidenceId}` });
         } else if (evidence.status && evidence.status !== "active") {
           issues.push({ claimId: claim.id, code: "inactive-evidence", message: `Evidence is not active: ${citation.evidenceId}` });
+        } else if ((evidence.kind === "document" || evidence.kind === "system-record") && !hasValidEvidenceGovernance(evidence)) {
+          issues.push({ claimId: claim.id, code: "ungoverned-evidence", message: `Document evidence has not passed governance validation: ${citation.evidenceId}` });
         } else if (!evidence.supportsClaimIds.includes(claim.id)) {
           issues.push({ claimId: claim.id, code: "unsupported-claim", message: `Evidence does not support claim: ${citation.evidenceId}` });
         }
@@ -311,7 +322,24 @@ function cloneEvidenceItem(item: EvidenceItem): EvidenceItem {
     source: { ...item.source },
     linkedEntityIds: [...item.linkedEntityIds],
     supportsClaimIds: [...item.supportsClaimIds],
+    governance: item.governance ? { ...item.governance } : undefined,
   };
+}
+
+function hasValidEvidenceGovernance(item: EvidenceItem): boolean {
+  const governance = item.governance;
+  return Boolean(governance
+    && governance.documentId
+    && governance.owner
+    && governance.parserId
+    && governance.parserVersion
+    && governance.approvalStatus === "approved"
+    && governance.lifecycleStatus === "effective"
+    && governance.accessDecision === "allowed"
+    && Boolean(item.source.locator)
+    && Number.isFinite(Date.parse(governance.ingestedAt))
+    && /^sha256:[a-f0-9]{64}$/u.test(governance.contentChecksum)
+    && /^sha256:[a-f0-9]{64}$/u.test(governance.chunkChecksum));
 }
 
 function isSafeIdentifier(value: string): boolean {

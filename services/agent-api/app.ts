@@ -60,6 +60,7 @@ export type AgentApiRuntime = {
   knowledgeRepositoryType?: "mock" | "neo4j";
   semanticParserMode?: SemanticParserMode;
   answerComposerMode?: AnswerComposerMode;
+  documentEvidenceMode?: "canonical" | "governed";
   llmProviderType?: "openai-responses";
   timeoutMs?: number;
   logger?: AgentApiLogger;
@@ -123,8 +124,9 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
       knowledgeRepository: runtime.knowledgeRepositoryType ?? "mock",
       semanticParser: runtime.semanticParserMode ?? "deterministic",
       answerComposer: runtime.answerComposerMode ?? "template",
+      documentEvidence: runtime.documentEvidenceMode ?? "governed",
       llmProvider: runtime.llmProviderType,
-      capabilities: ["sessions", "turns", "runs", "sse", "event-replay", "retry", "trace", "evidence", "audit", "cancellation", "timeout"],
+      capabilities: ["sessions", "turns", "runs", "sse", "event-replay", "retry", "trace", "evidence", "governed-document-chunks", "audit", "cancellation", "timeout"],
     }, traceId);
     return;
   }

@@ -8,6 +8,7 @@
 
 - `packages/knowledge-contracts`：共享 TypeScript contracts 与 JSON Schemas；
 - `packages/demo-data`：contract-aligned fixtures、generated ontology artifacts 和 scenarios；
+- `packages/document-evidence`：受治理文档注册、确定性解析、chunk、索引和检索；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
 当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传及单进程文件持久化；LLM 和外部向量数据库仍未接入。
@@ -100,6 +101,16 @@ npm run agent-api:dev
 
 `template` 是默认模式。`llm` 只接收 bounded Evidence Context Projection；`hybrid` 额外接收 deterministic template 作为 guidance。两种 LLM 模式都必须通过 runtime schema、governed claim policy 和最终 deterministic Citation Validator。
 
+### Governed document evidence
+
+Agent API 默认使用 Phase 4C governed document retriever。受控 demo 文档通过 registry 固定版本、审批、生效日期、checksum、parser、owner、实体链接、claim 支持和访问范围：
+
+```bash
+npm run documents:verify
+```
+
+可通过 `MKG_AGENT_DOCUMENT_MODE=canonical` 显式回退到旧的 canonical fixture retriever。详细边界见 [Phase 4C Governed Document Evidence](phase-4c-governed-document-evidence.md)。当前访问过滤是服务级 demo context，不代表生产身份认证。
+
 ### Agent API with Neo4j
 
 Phase 3B 可以将 Agent graph retrieval 显式切换到 Neo4j。完整步骤见 [Phase 3B Neo4j Repository](phase-3b-neo4j-repository.md)。服务端配置使用 `MKG_*`，不得写入前端 bundle：
@@ -124,6 +135,7 @@ npm run typecheck
 npm run test
 npm run test:agent-core
 npm run agent-api:test
+npm run documents:verify
 npm run build
 ```
 

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Sheet Process FMEA / Row OP30-Internal Leakage",
+      "heading": "Internal Leakage Failure Mode",
+      "text": "Internal Leakage can reduce brake booster performance. The governed detection control is the automatic leak test at OP30, with containment and cause verification required when the Leak Rate limit is exceeded."
+    }
+  ]
+}

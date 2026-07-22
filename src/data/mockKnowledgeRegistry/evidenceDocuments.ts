@@ -30,7 +30,7 @@ export const evidenceDocumentById = new Map(evidenceDocuments.map((item) => [ite
 function canonicalEvidence(id: string, type: MockEvidenceDocument["type"], supports: string, sourceViews: MockEvidenceDocument["sourceViews"]): MockEvidenceDocument {
   const item = getLeakRateCanonicalEvidence(id);
   return {
-    id: item.id,
+    id,
     title: item.title,
     type,
     version: item.version,

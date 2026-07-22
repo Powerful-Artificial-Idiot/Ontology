@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { leakRateQualityIssueTraceBaseline } from "../../packages/demo-data/src/index";
 import { RepositoryGraphRetriever, createDeterministicAgentPipeline } from "../../packages/agent-core/src/index";
 import { Neo4jKnowledgeRepository, seedLeakRateCanonicalBaselineWithCredentials } from "../../packages/neo4j-repository/src/index";
+import { createDefaultGovernedDocumentRetriever } from "../../services/agent-api/governedDocumentEvidence";
 
 const enabled = process.env.MKG_NEO4J_TEST === "1";
 
@@ -16,10 +17,14 @@ describe.runIf(enabled)("Neo4j live acceptance", () => {
     await seedLeakRateCanonicalBaselineWithCredentials(options);
     const repository = new Neo4jKnowledgeRepository(options);
     try {
-      const pipeline = createDeterministicAgentPipeline({ graphRetriever: new RepositoryGraphRetriever(repository) });
+      const pipeline = createDeterministicAgentPipeline({
+        graphRetriever: new RepositoryGraphRetriever(repository),
+        documentRetriever: createDefaultGovernedDocumentRetriever(),
+      });
       const response = await pipeline.run({ ...leakRateQualityIssueTraceBaseline.request, requestId: "request.neo4j-live", mode: "live" });
       expect(response.status).toBe("completed");
       expect(response.citationValidation.status).toBe("passed");
+      expect(response.evidencePack.items.filter((item) => item.kind === "document" || item.kind === "system-record").every((item) => item.id.startsWith("evidence-chunk.") && Boolean(item.governance))).toBe(true);
       expect(response.trace.stages.find((stage) => stage.stage === "graph-retrieval")?.summary).toContain("neo4j");
     } finally {
       await repository.close();

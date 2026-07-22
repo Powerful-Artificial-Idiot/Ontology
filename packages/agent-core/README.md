@@ -12,6 +12,8 @@ The LLM parser receives only a bounded candidate catalog and allowlists. Its dra
 
 Phase 4B adds a bounded `EvidenceContextProjector`, strict LLM answer draft validation, and template/LLM/hybrid composer modes. Visible summary, finding, and risk text must reference governed claim IDs; actions must reference Evidence Pack IDs. The final deterministic citation gate checks required claims, classification, evidence support, status, and duplicate/unknown IDs before publication.
 
+Phase 4C continues through the existing `DocumentEvidenceRetriever` boundary. Agent API injects the governed deterministic retriever, the Evidence Pack builder merges retrieved document chunks with graph evidence, and citation validation rejects ungoverned document/system-record evidence.
+
 Run the deterministic acceptance suite from the repository root:
 
 ```bash

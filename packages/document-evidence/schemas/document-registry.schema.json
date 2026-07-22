@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/document-registry.schema.json",
+  "title": "Governed Document Registry",
+  "type": "object",
+  "required": ["registryVersion", "documents"],
+  "properties": {
+    "registryVersion": { "const": "1.0.0" },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["documentId", "logicalDocumentId", "title", "documentType", "version", "approvalStatus", "lifecycleStatus", "effectiveFrom", "owner", "sourceSystem", "sourceId", "contentFile", "contentChecksum", "parserId", "parserVersion", "linkedEntityIds", "supportsClaimIds", "access"],
+        "properties": {
+          "documentId": { "type": "string", "pattern": "^[a-z][a-z0-9.-]*$" },
+          "logicalDocumentId": { "type": "string", "pattern": "^[a-z][a-z0-9.-]*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "documentType": { "enum": ["control-plan", "pfmea", "sop", "qms-record"] },
+          "version": { "type": "string", "minLength": 1 },
+          "approvalStatus": { "enum": ["approved", "draft", "rejected"] },
+          "lifecycleStatus": { "enum": ["effective", "superseded", "withdrawn"] },
+          "effectiveFrom": { "type": "string", "format": "date-time" },
+          "effectiveTo": { "type": "string", "format": "date-time" },
+          "owner": { "type": "string", "minLength": 1 },
+          "sourceSystem": { "type": "string", "minLength": 1 },
+          "sourceId": { "type": "string", "minLength": 1 },
+          "contentFile": { "type": "string", "minLength": 1 },
+          "contentChecksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "parserId": { "const": "controlled-json" },
+          "parserVersion": { "const": "1.0.0" },
+          "linkedEntityIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "supportsClaimIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "access": {
+            "type": "object",
+            "required": ["classification", "allowedRoleIds", "allowedDomainIds"],
+            "properties": {
+              "classification": { "enum": ["public", "internal", "restricted"] },
+              "allowedRoleIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "allowedDomainIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

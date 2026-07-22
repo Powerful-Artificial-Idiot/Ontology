@@ -35,7 +35,7 @@ describe("Deterministic Agent API", () => {
       fetchJson(`${baseUrl}/sessions/${sessionId}/audit`),
     ]);
 
-    expect(health.payload).toMatchObject({ status: "ok", contractVersion: "1.0.0", pipeline: "deterministic", semanticParser: "deterministic", answerComposer: "template", persistence: "in-memory" });
+    expect(health.payload).toMatchObject({ status: "ok", contractVersion: "1.0.0", pipeline: "deterministic", semanticParser: "deterministic", answerComposer: "template", documentEvidence: "governed", persistence: "in-memory" });
     expect(scenarios.payload.scenarios).toHaveLength(1);
     expect(first.response.status).toBe(201);
     expect(second.response.status).toBe(201);

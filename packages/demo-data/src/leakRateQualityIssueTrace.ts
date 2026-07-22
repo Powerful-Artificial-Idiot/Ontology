@@ -39,7 +39,9 @@ export function getLeakRateCanonicalEntity(id: string): KnowledgeEntity {
 }
 
 export function getLeakRateCanonicalEvidence(id: string): EvidenceItem {
-  const evidence = leakRateCanonicalEvidenceById.get(id);
+  const evidence = leakRateCanonicalEvidenceById.get(id)
+    ?? leakRateQualityIssueTraceBaseline.evidencePack.items.find((item) => item.governance?.documentId === id)
+    ?? (id === "evidence.qms.leak-rate.recent" ? leakRateCanonicalEvidenceById.get(leakRateQualityIssueTraceIds.evidence.recentQualityResults) : undefined);
   if (!evidence) throw new Error(`Canonical Leak Rate evidence not found: ${id}`);
   return evidence;
 }

@@ -52,7 +52,26 @@
           "supportsClaimIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
           "version": { "type": "string" },
           "effectiveAt": { "type": "string", "format": "date-time" },
-          "status": { "enum": ["draft", "active", "superseded"] }
+          "status": { "enum": ["draft", "active", "superseded"] },
+          "governance": {
+            "type": "object",
+            "required": ["documentId", "documentType", "approvalStatus", "lifecycleStatus", "owner", "contentChecksum", "chunkChecksum", "parserId", "parserVersion", "ingestedAt", "accessClassification", "accessDecision"],
+            "properties": {
+              "documentId": { "type": "string", "minLength": 1 },
+              "documentType": { "type": "string", "minLength": 1 },
+              "approvalStatus": { "enum": ["approved", "draft", "rejected"] },
+              "lifecycleStatus": { "enum": ["effective", "superseded", "withdrawn"] },
+              "owner": { "type": "string", "minLength": 1 },
+              "contentChecksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+              "chunkChecksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+              "parserId": { "type": "string", "minLength": 1 },
+              "parserVersion": { "type": "string", "minLength": 1 },
+              "ingestedAt": { "type": "string", "format": "date-time" },
+              "accessClassification": { "enum": ["public", "internal", "restricted"] },
+              "accessDecision": { "enum": ["allowed", "denied"] }
+            },
+            "additionalProperties": false
+          }
         },
         "additionalProperties": false
       }

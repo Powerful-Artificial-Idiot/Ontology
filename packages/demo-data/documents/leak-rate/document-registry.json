@@ -1,0 +1,101 @@
+{
+  "registryVersion": "1.0.0",
+  "documents": [
+    {
+      "documentId": "document.control-plan.cp-bb01.rev-a",
+      "logicalDocumentId": "document.control-plan.cp-bb01",
+      "title": "Control Plan CP-BB01 Rev.A",
+      "documentType": "control-plan",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-06-17T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "QMS",
+      "sourceId": "CP-BB01",
+      "contentFile": "content/control-plan-cp-bb01-rev-a.json",
+      "contentChecksum": "sha256:5a8b1e02b1eb40bfc376e01699aa49e6abb3853d38b7077abfb612fba4fee87d",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "control-method.automatic-leak-test"],
+      "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": ["agent-evidence-reader"],
+        "allowedDomainIds": ["quality", "manufacturing"]
+      }
+    },
+    {
+      "documentId": "document.pfmea.pf-bb01.rev-b",
+      "logicalDocumentId": "document.pfmea.pf-bb01",
+      "title": "PFMEA PF-BB01 Rev.B",
+      "documentType": "pfmea",
+      "version": "Rev.B",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-06-17T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "QMS",
+      "sourceId": "PF-BB01",
+      "contentFile": "content/pfmea-pf-bb01-rev-b.json",
+      "contentChecksum": "sha256:fc53370c0a712f9fbed14819b7b97ffd3b529135e587185d13176960e8a7eb4c",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "failure-mode.internal-leakage"],
+      "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": ["agent-evidence-reader"],
+        "allowedDomainIds": ["quality", "manufacturing"]
+      }
+    },
+    {
+      "documentId": "document.sop.op30-leak-test",
+      "logicalDocumentId": "document.sop.op30-leak-test",
+      "title": "SOP OP30 Leak Test",
+      "documentType": "sop",
+      "version": "Rev.3",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-06-03T00:00:00.000Z",
+      "owner": "Process Documentation",
+      "sourceSystem": "DMS",
+      "sourceId": "SOP-OP30",
+      "contentFile": "content/sop-op30-leak-test-rev-3.json",
+      "contentChecksum": "sha256:5f95e5265c6082aad57ede8b41d3188e66ffeb483240ca829265331ed72e5152",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"],
+      "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": ["agent-evidence-reader"],
+        "allowedDomainIds": ["engineering", "manufacturing", "quality"]
+      }
+    },
+    {
+      "documentId": "record.qms.leak-rate.2026-07-demo",
+      "logicalDocumentId": "record.qms.leak-rate",
+      "title": "Recent Leak Rate Results",
+      "documentType": "qms-record",
+      "version": "2026-07 Demo",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-16T00:00:00.000Z",
+      "owner": "Quality Systems",
+      "sourceSystem": "QMS Mock",
+      "sourceId": "QMS-DEMO-LEAK-RATE",
+      "contentFile": "content/qms-leak-rate-2026-07-demo.json",
+      "contentChecksum": "sha256:6c8fb8ea0093219d60a704a21e0abd6352f04e4e9354ac95c3863ae31b3684b3",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"],
+      "supportsClaimIds": ["claim.signal-limitation"],
+      "access": {
+        "classification": "restricted",
+        "allowedRoleIds": ["agent-evidence-reader"],
+        "allowedDomainIds": ["quality"]
+      }
+    }
+  ]
+}

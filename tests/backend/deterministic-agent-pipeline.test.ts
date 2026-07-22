@@ -25,10 +25,10 @@ describe("Phase 2 deterministic Agent pipeline", () => {
     expect(response.queryPlan.entities.map((entity) => entity.id)).toEqual(["operation.op30", "quality-characteristic.leak-rate"]);
     expect(response.evidencePack.items.map((item) => item.id)).toEqual([
       "evidence.route.brake-booster.rev-c",
-      "document.control-plan.cp-bb01.rev-a",
-      "document.pfmea.pf-bb01.rev-b",
-      "document.sop.op30-leak-test",
-      "evidence.qms.leak-rate.recent",
+      "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+      "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage",
+      "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification",
+      "evidence-chunk.record.qms.leak-rate.2026-07-demo.record-qms-lr-2026-0716-signal-summary",
     ]);
     expect(response.citationValidation.status).toBe("passed");
     expect(response.answer.claims).toHaveLength(5);

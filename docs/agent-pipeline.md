@@ -9,7 +9,7 @@
 
 企业事实、查询执行、权限判断、citation 校验和 trace 由后端负责。
 
-Phase 2 已在 `packages/agent-core` 实现 Leak Rate Quality Issue Trace 的 deterministic 版本。Phase 4A 增加受约束 LLM Semantic Parser；Phase 4B 增加 Evidence-grounded LLM Answer Composer。Retrieval、Evidence Pack ownership 和最终 Citation Validator 仍由后端控制。本阶段不包含向量数据库、LangGraph、Langfuse 或 Text-to-Cypher。
+Phase 2 已在 `packages/agent-core` 实现 Leak Rate Quality Issue Trace 的 deterministic 版本。Phase 4A 增加受约束 LLM Semantic Parser；Phase 4B 增加 Evidence-grounded LLM Answer Composer；Phase 4C 增加受治理的确定性文档 ingestion、chunk 和 retrieval。Retrieval、Evidence Pack ownership 和最终 Citation Validator 仍由后端控制。本阶段不包含向量数据库、LangGraph、Langfuse 或 Text-to-Cypher。
 
 ## 2. End-To-End Flow
 
@@ -179,6 +179,8 @@ type GraphQueryPlan = {
 
 embedding match 只是召回信号，不是事实证明。
 
+Phase 4C 当前不使用 embedding。`packages/document-evidence` 先校验 registry、审批、生效时间、checksum 和 parser，再生成稳定 locator-based chunk ID。全文关键词仅用于确定性排序；graph entity link、metadata 和 access policy 共同限制召回范围。正文不能声明 canonical link、claim 或权限，命中指令注入特征的 chunk 会被 quarantine。
+
 ### 4.10 Evidence Pack Builder
 
 Evidence Pack 必须区分：
@@ -215,6 +217,7 @@ Phase 4B 中，summary、finding 和 risk 必须关联 governed claim ID，recom
 3. actor 有权访问该 evidence；
 4. 引用版本仍是本轮检索时指定版本；
 5. unsupported claim 被删除、降级为 assumption/unknown 或阻止完成。
+6. document/system-record evidence 必须携带已批准、当前生效、checksum-valid 且 access allowed 的 governance metadata。
 
 `citationCoverage` 不应仅计算“有引用的句子比例”，还要验证引用语义是否支持 claim。
 

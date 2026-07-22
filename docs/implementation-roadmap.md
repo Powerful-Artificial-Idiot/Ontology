@@ -107,11 +107,11 @@ Exit gate：Neo4j 不可用时 deterministic local 与 Scripted 仍可运行；N
 
 ### P6 - Document Evidence Retrieval
 
-- [ ] 定义 document manifest、chunk、locator、checksum、version、validity 和 ACL metadata。
-- [ ] 实现 metadata-first document store 和 deterministic keyword retriever。
+- [x] 定义 governed document registry、chunk、locator、checksum、version、validity 和 access metadata。
+- [x] 实现 metadata-first document store、deterministic full-text index 和 graph-linked retriever。
 - [ ] 后续再增加 embedding/vector adapter，不把向量库作为唯一证据源。
-- [ ] Evidence Pack 保留原始 document ID、版本、页码/段落、checksum 和 retrieval trace。
-- [ ] 建立 citation coverage、stale version、ACL filtering 和 missing evidence tests。
+- [x] Evidence Pack 保留原始 document ID、版本、页码/段落、checksum、parser 和 access decision。
+- [x] 建立 approval/effective/checksum、stable chunk、access filtering、content quarantine 和 publication-gate tests。
 
 Exit gate：每个返回给 Answer Composer 的事实都能追溯到 graph fact 或 document evidence。
 

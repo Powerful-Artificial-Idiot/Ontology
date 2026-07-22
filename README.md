@@ -12,7 +12,7 @@ The repository demonstrates how manufacturing knowledge can be defined, validate
 > Git 管理企业如何定义、解释和展示知识；
 > 运行时知识图谱和源系统管理现实世界中的事实及其有效时间。
 
-The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. The deterministic pilot now includes optional Neo4j graph retrieval, persisted Agent sessions/audit, and SSE run streaming. Production identity, authorization, ingestion, vector retrieval, LLM execution, and production-grade multi-process persistence remain outside the present scope.
+The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. The deterministic pilot now includes optional Neo4j graph retrieval, governed local document ingestion/retrieval, persisted Agent sessions/audit, and SSE run streaming. Production identity, enterprise ingestion, vector retrieval, live LLM acceptance, and production-grade multi-process persistence remain outside the present scope.
 
 ## Implemented Pages
 
@@ -67,6 +67,7 @@ packages/knowledge-contracts/     Shared TypeScript and JSON Schema contracts
 packages/demo-data/               Contract-aligned graph, ontology, semantic, and scenario fixtures
 packages/ontology-client/         Future HTTP repository client
 packages/agent-core/              Deterministic provider-neutral Agent pipeline
+packages/document-evidence/       Governed deterministic document ingestion and retrieval
 packages/neo4j-repository/        Server-only Neo4j KnowledgeRepository pilot adapter
 ontology/                         Core, domain, and application OWL/Turtle modules
 shapes/                           SHACL constraints
@@ -116,6 +117,8 @@ The constrained semantic parser modes are documented in [Phase 4A - LLM Semantic
 
 Evidence-grounded answer generation is documented in [Phase 4B - Evidence-Grounded LLM Answer Composer](docs/phase-4b-evidence-grounded-answer-composer.md). Template composition remains the default.
 
+Governed chunk-level document evidence is documented in [Phase 4C - Governed Document Evidence](docs/phase-4c-governed-document-evidence.md). The controlled fixtures are deterministic demo data; no enterprise files, OCR, embeddings, or vector database are connected.
+
 ## Validation and Tests
 
 ```bash
@@ -138,6 +141,7 @@ npm run lint
 npm run typecheck
 npm run test
 npm run agent-api:test
+npm run documents:verify
 ```
 
 SHACL valid fixtures must pass and files under `examples/invalid` must fail. Frontend payloads are separately checked against JSON Schema; neither validation replaces the other.

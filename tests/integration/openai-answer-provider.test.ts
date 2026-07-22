@@ -16,7 +16,7 @@ describe("OpenAI Responses evidence-grounded answer provider", () => {
     const body = JSON.parse(String(init?.body));
     expect(body).toMatchObject({ model: "test-answer-model", store: false, text: { format: { type: "json_schema", strict: true, name: "evidence_grounded_answer_draft" } } });
     expect(body.text.format.schema.properties.confidence.enum).not.toContain("approved");
-    expect(JSON.stringify(body.text.format.schema)).toContain("document.sop.op30-leak-test");
+    expect(JSON.stringify(body.text.format.schema)).toContain("evidence-chunk.document.sop.op30-leak-test");
     expect(JSON.stringify(body.text.format.schema)).not.toMatch(/minItems|maxItems|uniqueItems|minLength|maxLength/u);
     expect(JSON.stringify(body)).not.toContain("test-key-not-a-secret");
     expect(JSON.stringify(body)).not.toContain("chain-of-thought");
@@ -46,11 +46,17 @@ function minimalDraft() {
     version: "1.0.0",
     summary: { text: "Grounded OP30 Leak Rate summary.", claimIds: claims.map((claim) => claim.id) },
     findings: [{ text: "OP30 is on the released route.", claimIds: ["claim.affected-product"] }],
-    recommendedActions: [{ text: "Apply the released containment control.", evidenceIds: ["document.control-plan.cp-bb01.rev-a"] }],
+    recommendedActions: [{ text: "Apply the released containment control.", evidenceIds: [evidenceIdForDocument("document.control-plan.cp-bb01.rev-a")] }],
     risks: [{ text: "Affected batches remain unknown.", claimIds: ["claim.signal-limitation"] }],
     assumptions: ["The pilot signal is used."],
     limitations: [...leakRateQualityIssueTraceBaseline.evidencePack.limitations],
     claims,
     confidence: "high",
   };
+}
+
+function evidenceIdForDocument(documentId: string): string {
+  const item = leakRateQualityIssueTraceBaseline.evidencePack.items.find((evidence) => evidence.governance?.documentId === documentId);
+  if (!item) throw new Error(`Missing canonical evidence chunk for ${documentId}`);
+  return item.id;
 }

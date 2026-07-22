@@ -21,6 +21,13 @@ export type ProjectedEvidenceItem = {
   locator?: string;
   version?: string;
   status?: string;
+  governance?: {
+    documentId: string;
+    approvalStatus: string;
+    lifecycleStatus: string;
+    owner: string;
+    accessDecision: string;
+  };
   linkedEntityIds: string[];
   supportsClaimIds: string[];
 };
@@ -105,6 +112,13 @@ export class EvidenceContextProjector {
         locator: item.source.locator,
         version: item.version,
         status: item.status,
+        governance: item.governance ? {
+          documentId: item.governance.documentId,
+          approvalStatus: item.governance.approvalStatus,
+          lifecycleStatus: item.governance.lifecycleStatus,
+          owner: item.governance.owner,
+          accessDecision: item.governance.accessDecision,
+        } : undefined,
         linkedEntityIds: [...item.linkedEntityIds],
         supportsClaimIds: [...item.supportsClaimIds],
       })),

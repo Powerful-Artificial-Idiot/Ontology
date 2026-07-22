@@ -89,7 +89,7 @@ export class DeterministicAgentPipeline {
 
     const documents = await runStage({
       name: "document-retrieval",
-      tool: "in-memory-canonical-document-retriever.v1",
+      tool: this.dependencies.documentRetriever.toolName ?? "document-evidence-retriever.v1",
       inputRefs: graph.entities.map((entity) => entity.id),
       outputRefs: (output) => output.items.map((item) => item.id),
       summary: (output) => `Retrieved ${output.items.length} governed evidence items.`,
@@ -98,7 +98,7 @@ export class DeterministicAgentPipeline {
 
     const evidencePack = await runStage({
       name: "evidence-pack",
-      tool: "canonical-evidence-pack-builder.v1",
+      tool: this.dependencies.evidencePackBuilder.toolName ?? "evidence-pack-builder.v1",
       inputRefs: [semanticPlan.planId, graph.graphPlanId, ...documents.items.map((item) => item.id)],
       outputRefs: (output) => [output.id],
       summary: (output) => `Built Evidence Pack with ${output.items.length} items and ${output.limitations.length} explicit limitations.`,

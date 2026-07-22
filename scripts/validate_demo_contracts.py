@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import sys
 
@@ -93,6 +94,14 @@ def main() -> int:
     validate_json(canonical, by_title["CanonicalKnowledgeBaseline"], registry, str(canonical_path))
     validate_canonical_baseline(canonical, terms)
 
+    document_schema_path = ROOT / "packages" / "document-evidence" / "schemas" / "document-registry.schema.json"
+    document_schema = json.loads(document_schema_path.read_text())
+    Draft202012Validator.check_schema(document_schema)
+    document_registry_path = ROOT / "packages" / "demo-data" / "documents" / "leak-rate" / "document-registry.json"
+    document_registry = json.loads(document_registry_path.read_text())
+    validate_json(document_registry, document_schema, Registry(), str(document_registry_path))
+    validate_document_registry(document_registry, document_registry_path.parent, canonical)
+
     alignment = yaml.safe_load((ROOT / "mappings" / "demo-type-mappings.yaml").read_text())
     source = (ROOT / "src" / "data" / "mockGraph.ts").read_text()
     runtime_types = set(re.findall(r'\btype:\s*"([^"]+)"', source))
@@ -126,7 +135,7 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, canonical Agent baseline, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, canonical Agent baseline, governed document registry, legacy mappings, and ontology alignment.")
     return 0
 
 
@@ -192,6 +201,41 @@ def validate_canonical_baseline(baseline: dict, terms: set) -> None:
     checked_ids = set(baseline["expectedResponse"]["citationValidation"]["checkedClaimIds"])
     if checked_ids != claim_ids:
         raise AssertionError("Citation validation must cover every canonical claim")
+
+
+def validate_document_registry(document_registry: dict, root, baseline: dict) -> None:
+    document_ids = set()
+    source_versions = set()
+    evidence_by_document = {
+        item.get("governance", {}).get("documentId"): item
+        for item in baseline["evidencePack"]["items"]
+        if item.get("governance")
+    }
+    for document in document_registry["documents"]:
+        document_id = document["documentId"]
+        if document_id in document_ids:
+            raise AssertionError(f"Document registry contains duplicate document ID: {document_id}")
+        document_ids.add(document_id)
+        source_version = (document["sourceSystem"], document["sourceId"], document["version"])
+        if source_version in source_versions:
+            raise AssertionError(f"Document registry contains duplicate source/version: {source_version}")
+        source_versions.add(source_version)
+        content_path = (root / document["contentFile"]).resolve()
+        if root.resolve() not in content_path.parents:
+            raise AssertionError(f"Document content escapes registry root: {document_id}")
+        actual_checksum = "sha256:" + hashlib.sha256(content_path.read_bytes()).hexdigest()
+        if actual_checksum != document["contentChecksum"]:
+            raise AssertionError(f"Document checksum mismatch: {document_id}")
+        evidence = evidence_by_document.get(document_id)
+        if not evidence:
+            raise AssertionError(f"Canonical Evidence Pack has no governed chunk for document: {document_id}")
+        if not evidence["id"].startswith("evidence-chunk.") or not evidence["source"].get("locator"):
+            raise AssertionError(f"Document evidence must use a stable chunk ID and locator: {document_id}")
+        governance = evidence["governance"]
+        for field in ("contentChecksum", "parserId", "parserVersion", "approvalStatus", "lifecycleStatus", "owner"):
+            expected = document[field]
+            if governance[field] != expected:
+                raise AssertionError(f"Document evidence governance mismatch for {document_id}: {field}")
 
 
 if __name__ == "__main__":

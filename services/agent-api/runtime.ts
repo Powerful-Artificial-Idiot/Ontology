@@ -4,6 +4,7 @@ import {
   InMemoryAgentRunStore,
   DeterministicLeakRateSemanticParser,
   DeterministicEvidenceAnswerComposer,
+  InMemoryCanonicalDocumentRetriever,
   HybridSemanticParser,
   HybridEvidenceAnswerComposer,
   LlmEvidenceAnswerComposer,
@@ -13,6 +14,7 @@ import {
   createDeterministicAgentClient,
   type AnswerComposer,
   type AnswerComposerMode,
+  type DocumentEvidenceRetriever,
   type SemanticParser,
   type SemanticParserMode,
 } from "../../packages/agent-core/src/index";
@@ -30,8 +32,10 @@ import {
 import { AgentTurnRunService } from "./turnRunService";
 import { OpenAiResponsesSemanticProvider } from "./openAiSemanticProvider";
 import { OpenAiResponsesAnswerProvider } from "./openAiAnswerProvider";
+import { createDefaultGovernedDocumentRetriever } from "./governedDocumentEvidence";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
+export type AgentDocumentEvidenceMode = "canonical" | "governed";
 
 export type ConfiguredAgentApiRuntime = AgentApiRuntime & {
   close(): Promise<void>;
@@ -40,7 +44,10 @@ export type ConfiguredAgentApiRuntime = AgentApiRuntime & {
 export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
   const clock = new SystemAgentClock();
   const repository = new MockKnowledgeRepository();
-  const core = createDeterministicAgentClient(clock, { graphRetriever: new RepositoryGraphRetriever(repository) });
+  const core = createDeterministicAgentClient(clock, {
+    graphRetriever: new RepositoryGraphRetriever(repository),
+    documentRetriever: createDefaultGovernedDocumentRetriever(),
+  });
   const runs = new InMemoryAgentRunStore();
   const runEvents = new InMemoryAgentRunEventStore();
   return {
@@ -52,6 +59,7 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
     persistenceType: "in-memory",
     semanticParserMode: "deterministic",
     answerComposerMode: "template",
+    documentEvidenceMode: "governed",
   };
 }
 
@@ -60,6 +68,18 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   const clock = new SystemAgentClock();
   const semantic = semanticParserFromEnvironment(environment);
   const answer = answerComposerFromEnvironment(environment);
+  const documentMode = parseDocumentEvidenceMode(environment.MKG_AGENT_DOCUMENT_MODE);
+  let documentRetriever: DocumentEvidenceRetriever;
+  if (documentMode === "governed") {
+    const governed = createDefaultGovernedDocumentRetriever(environment);
+    const ingestion = await governed.getIngestionResult();
+    if (ingestion.rejectedDocumentIds.length || ingestion.issues.length) {
+      throw new Error(`Governed document registry validation failed: ${JSON.stringify(ingestion.issues)}`);
+    }
+    documentRetriever = governed;
+  } else {
+    documentRetriever = new InMemoryCanonicalDocumentRetriever();
+  }
   const repository = mode === "neo4j"
     ? new Neo4jKnowledgeRepository(neo4jOptionsFromEnvironment(environment))
     : new MockKnowledgeRepository();
@@ -81,7 +101,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   const audit = persistentStore ? new FileAgentAuditStore(persistentStore) : undefined;
   const core = createDeterministicAgentClient(
     clock,
-    { graphRetriever: new RepositoryGraphRetriever(repository), semanticParser: semantic.parser, answerComposer: answer.composer },
+    { graphRetriever: new RepositoryGraphRetriever(repository), documentRetriever, semanticParser: semantic.parser, answerComposer: answer.composer },
     { sessions, turns, audit },
   );
   const runs = persistentStore ? new FileAgentRunStore(persistentStore) : new InMemoryAgentRunStore();
@@ -98,6 +118,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
     persistenceType: persistenceMode,
     semanticParserMode: semantic.mode,
     answerComposerMode: answer.mode,
+    documentEvidenceMode: documentMode,
     llmProviderType: semantic.providerType ?? answer.providerType,
     close: () => repository instanceof Neo4jKnowledgeRepository ? repository.close() : Promise.resolve(),
   };
@@ -156,6 +177,12 @@ function parseRepositoryMode(value?: string): AgentKnowledgeRepositoryMode {
   if (!value || value === "mock") return "mock";
   if (value === "neo4j") return "neo4j";
   throw new Error(`Unsupported MKG_AGENT_KNOWLEDGE_MODE ${value}. Use mock or neo4j.`);
+}
+
+function parseDocumentEvidenceMode(value?: string): AgentDocumentEvidenceMode {
+  if (!value || value === "governed") return "governed";
+  if (value === "canonical") return "canonical";
+  throw new Error(`Unsupported MKG_AGENT_DOCUMENT_MODE ${value}. Use governed or canonical.`);
 }
 
 function parseSemanticParserMode(value?: string): SemanticParserMode {

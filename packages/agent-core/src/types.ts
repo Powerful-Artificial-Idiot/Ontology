@@ -68,10 +68,12 @@ export type DocumentRetrievalResult = {
 };
 
 export interface DocumentEvidenceRetriever {
+  readonly toolName?: string;
   retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult>;
 }
 
 export interface EvidencePackBuilder {
+  readonly toolName?: string;
   build(plan: SemanticQueryPlan, graph: GraphRetrievalResult, documents: DocumentRetrievalResult, baseline: CanonicalKnowledgeBaseline, generatedAt: string): Promise<EvidencePack>;
 }
 

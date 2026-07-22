@@ -141,8 +141,8 @@ function validDraft() {
       { text: "Control Plan, PFMEA, and SOP are the governed investigation documents.", claimIds: ["claim.governed-documents"] },
     ],
     recommendedActions: [
-      { text: "Start containment under the released Control Plan.", evidenceIds: ["document.control-plan.cp-bb01.rev-a"] },
-      { text: "Verify M220, FX-002, the released program, and golden-part results.", evidenceIds: ["document.sop.op30-leak-test"] },
+      { text: "Start containment under the released Control Plan.", evidenceIds: [evidenceIdForDocument("document.control-plan.cp-bb01.rev-a")] },
+      { text: "Verify M220, FX-002, the released program, and golden-part results.", evidenceIds: [evidenceIdForDocument("document.sop.op30-leak-test")] },
     ],
     risks: [{ text: "The actual affected batch population remains unknown without live QMS and MES genealogy.", claimIds: ["claim.signal-limitation"] }],
     assumptions: ["The abnormal signal is the local QMS fixture signal supplied by this pilot."],
@@ -155,6 +155,12 @@ function validDraft() {
     })),
     confidence: "high",
   };
+}
+
+function evidenceIdForDocument(documentId: string): string {
+  const item = leakRateQualityIssueTraceBaseline.evidencePack.items.find((evidence) => evidence.governance?.documentId === documentId);
+  if (!item) throw new Error(`Missing canonical evidence chunk for ${documentId}`);
+  return item.id;
 }
 
 function request(requestId: string): AgentTurnRequest {

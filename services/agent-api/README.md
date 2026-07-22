@@ -8,6 +8,8 @@ npm run agent-api:dev
 
 The service listens on `http://127.0.0.1:4175/api/agent` by default. Mock repository and deterministic semantic parsing remain the defaults. Phase 3B can explicitly select the Neo4j pilot with `MKG_AGENT_KNOWLEDGE_MODE=neo4j`; failed connectivity stops service startup and never falls back to Mock.
 
+Phase 4C governed document retrieval is enabled by default. It validates a local controlled-document registry, checks content checksums and effective status, creates stable chunks, applies graph/full-text/access filters, and returns chunk-level EvidenceItems. Use `MKG_AGENT_DOCUMENT_MODE=canonical` only for explicit rollback testing.
+
 Primary endpoints:
 
 - `GET /health`
@@ -50,3 +52,9 @@ MKG_LLM_ANSWER_MODEL=<explicit-model-id>
 ```
 
 Both LLM modes still pass through the deterministic Citation Validator. Hybrid is not a silent availability fallback: provider or grounding failure fails the Turn and preserves the retry/audit behavior. The service still has no vector search, external identity, or enterprise data.
+
+Verify the deterministic document subsystem independently:
+
+```bash
+npm run documents:verify
+```

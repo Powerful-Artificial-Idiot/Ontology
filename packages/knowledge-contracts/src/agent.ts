@@ -137,6 +137,21 @@ export type AgentError = {
 
 export type EvidenceKind = "semantic" | "ontology" | "graph" | "document" | "system-record";
 
+export type EvidenceGovernanceMetadata = {
+  documentId: string;
+  documentType: string;
+  approvalStatus: "approved" | "draft" | "rejected";
+  lifecycleStatus: "effective" | "superseded" | "withdrawn";
+  owner: string;
+  contentChecksum: string;
+  chunkChecksum: string;
+  parserId: string;
+  parserVersion: string;
+  ingestedAt: string;
+  accessClassification: "public" | "internal" | "restricted";
+  accessDecision: "allowed" | "denied";
+};
+
 export type EvidenceItem = {
   id: string;
   kind: EvidenceKind;
@@ -148,6 +163,7 @@ export type EvidenceItem = {
   version?: string;
   effectiveAt?: string;
   status?: "draft" | "active" | "superseded";
+  governance?: EvidenceGovernanceMetadata;
 };
 
 export type EvidenceClaimPolicy = {
@@ -192,7 +208,7 @@ export type AgentAnswer = {
 
 export type CitationValidationIssue = {
   claimId: string;
-  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence" | "unknown-claim" | "duplicate-claim" | "missing-required-claim" | "claim-classification-mismatch";
+  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence" | "ungoverned-evidence" | "unknown-claim" | "duplicate-claim" | "missing-required-claim" | "claim-classification-mismatch";
   message: string;
 };
 
