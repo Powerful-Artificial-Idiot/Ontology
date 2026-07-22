@@ -58,3 +58,19 @@ Verify the deterministic document subsystem independently:
 ```bash
 npm run documents:verify
 ```
+
+Phase 5A adds local-first observability and a deterministic release gate:
+
+```bash
+npm run agent:evaluate
+```
+
+The configured API writes redacted run, stage, and provider metadata to `.data/agent-telemetry.jsonl` by default. Prompts, raw provider output, credentials, and chain-of-thought are not recorded. Set `MKG_AGENT_TELEMETRY_MODE=off` to disable the local sink or `MKG_AGENT_TELEMETRY_PATH` to select another server-side path.
+
+Real OpenAI acceptance is separate from mocked provider tests:
+
+```bash
+npm run openai:acceptance
+```
+
+Without a real server-side key and explicit models, both provider acceptance statuses remain `pending`.

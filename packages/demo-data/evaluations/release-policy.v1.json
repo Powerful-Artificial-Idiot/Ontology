@@ -1,0 +1,12 @@
+{
+  "policyId": "release-gate.deterministic-agent",
+  "version": "1.0.0",
+  "minimumCasePassRate": 1,
+  "minimumCitationCoverage": 1,
+  "maximumP95LatencyMs": 5000,
+  "allowBlockerFailures": 0,
+  "allowCriticalFailures": 0,
+  "requireRuntimeProbes": true,
+  "requireSemanticProviderAcceptance": false,
+  "requireAnswerProviderAcceptance": false
+}

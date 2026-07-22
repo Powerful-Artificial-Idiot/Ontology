@@ -33,6 +33,7 @@ import { AgentTurnRunService } from "./turnRunService";
 import { OpenAiResponsesSemanticProvider } from "./openAiSemanticProvider";
 import { OpenAiResponsesAnswerProvider } from "./openAiAnswerProvider";
 import { createDefaultGovernedDocumentRetriever } from "./governedDocumentEvidence";
+import { InMemoryAgentTelemetrySink, LocalJsonlAgentTelemetrySink, RedactingAgentTelemetrySink, type AgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
@@ -50,11 +51,12 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
   });
   const runs = new InMemoryAgentRunStore();
   const runEvents = new InMemoryAgentRunEventStore();
+  const telemetry = new RedactingAgentTelemetrySink(new InMemoryAgentTelemetrySink());
   return {
     ...core,
     runs,
     runEvents,
-    runService: new AgentTurnRunService({ client: core.client, runs, events: runEvents }),
+    runService: new AgentTurnRunService({ client: core.client, runs, events: runEvents, telemetry }),
     knowledgeRepositoryType: "mock",
     persistenceType: "in-memory",
     semanticParserMode: "deterministic",
@@ -66,8 +68,9 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
 export async function createConfiguredAgentApiRuntime(environment: NodeJS.ProcessEnv = process.env): Promise<ConfiguredAgentApiRuntime> {
   const mode = parseRepositoryMode(environment.MKG_AGENT_KNOWLEDGE_MODE);
   const clock = new SystemAgentClock();
-  const semantic = semanticParserFromEnvironment(environment);
-  const answer = answerComposerFromEnvironment(environment);
+  const telemetry = telemetryFromEnvironment(environment);
+  const semantic = semanticParserFromEnvironment(environment, telemetry);
+  const answer = answerComposerFromEnvironment(environment, telemetry);
   const documentMode = parseDocumentEvidenceMode(environment.MKG_AGENT_DOCUMENT_MODE);
   let documentRetriever: DocumentEvidenceRetriever;
   if (documentMode === "governed") {
@@ -112,7 +115,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
     ...core,
     runs,
     runEvents,
-    runService: new AgentTurnRunService({ client: core.client, runs, events: runEvents, timeoutMs }),
+    runService: new AgentTurnRunService({ client: core.client, runs, events: runEvents, timeoutMs, telemetry }),
     timeoutMs,
     knowledgeRepositoryType: mode,
     persistenceType: persistenceMode,
@@ -124,7 +127,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   };
 }
 
-export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = process.env): { mode: AnswerComposerMode; composer: AnswerComposer; providerType?: "openai-responses" } {
+export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: AnswerComposerMode; composer: AnswerComposer; providerType?: "openai-responses" } {
   const mode = parseAnswerComposerMode(environment.MKG_AGENT_ANSWER_COMPOSER_MODE);
   const template = new DeterministicEvidenceAnswerComposer();
   if (mode === "template") return { mode, composer: template };
@@ -139,11 +142,12 @@ export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = p
     model,
     baseUrl: environment.MKG_OPENAI_BASE_URL,
     timeoutMs: parsePositiveInteger(environment.MKG_LLM_ANSWER_TIMEOUT_MS ?? environment.MKG_LLM_TIMEOUT_MS, 30_000),
+    telemetry,
   }));
   return { mode, composer: mode === "hybrid" ? new HybridEvidenceAnswerComposer(template, llm) : llm, providerType: "openai-responses" };
 }
 
-export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = process.env): { mode: SemanticParserMode; parser: SemanticParser; providerType?: "openai-responses" } {
+export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: SemanticParserMode; parser: SemanticParser; providerType?: "openai-responses" } {
   const mode = parseSemanticParserMode(environment.MKG_AGENT_SEMANTIC_PARSER_MODE);
   const deterministic = new DeterministicLeakRateSemanticParser();
   if (mode === "deterministic") return { mode, parser: deterministic };
@@ -158,8 +162,14 @@ export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = p
     model,
     baseUrl: environment.MKG_OPENAI_BASE_URL,
     timeoutMs: parsePositiveInteger(environment.MKG_LLM_TIMEOUT_MS, 20_000),
+    telemetry,
   }));
   return { mode, parser: mode === "hybrid" ? new HybridSemanticParser(deterministic, llm) : llm, providerType: "openai-responses" };
+}
+
+function telemetryFromEnvironment(environment: NodeJS.ProcessEnv): AgentTelemetrySink {
+  if (environment.MKG_AGENT_TELEMETRY_MODE === "off") return { record() {} };
+  return new RedactingAgentTelemetrySink(new LocalJsonlAgentTelemetrySink(resolve(environment.MKG_AGENT_TELEMETRY_PATH ?? ".data/agent-telemetry.jsonl")));
 }
 
 export function neo4jOptionsFromEnvironment(environment: NodeJS.ProcessEnv = process.env): Neo4jKnowledgeRepositoryOptions {

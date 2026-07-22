@@ -68,6 +68,7 @@ packages/demo-data/               Contract-aligned graph, ontology, semantic, an
 packages/ontology-client/         Future HTTP repository client
 packages/agent-core/              Deterministic provider-neutral Agent pipeline
 packages/document-evidence/       Governed deterministic document ingestion and retrieval
+packages/agent-evaluation/        Versioned evaluation, observability, regression, and release gates
 packages/neo4j-repository/        Server-only Neo4j KnowledgeRepository pilot adapter
 ontology/                         Core, domain, and application OWL/Turtle modules
 shapes/                           SHACL constraints
@@ -142,7 +143,10 @@ npm run typecheck
 npm run test
 npm run agent-api:test
 npm run documents:verify
+npm run agent:evaluate
 ```
+
+Phase 5A evaluation is documented in [Agent Evaluation, Observability and Release Gates](docs/phase-5a-agent-evaluation-observability.md). The deterministic local gate is independent of real OpenAI smoke acceptance; both live provider statuses remain `pending` until `npm run openai:acceptance` completes with real server-side configuration.
 
 SHACL valid fixtures must pass and files under `examples/invalid` must fail. Frontend payloads are separately checked against JSON Schema; neither validation replaces the other.
 

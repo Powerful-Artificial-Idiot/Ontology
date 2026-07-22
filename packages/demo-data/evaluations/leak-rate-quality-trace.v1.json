@@ -1,0 +1,126 @@
+{
+  "datasetId": "evaluation.leak-rate-quality-trace",
+  "version": "1.0.0",
+  "domain": "manufacturing-quality",
+  "description": "Deterministic regression set for the governed OP30 Leak Rate quality issue trace.",
+  "cases": [
+    {
+      "caseId": "leak-rate.en.direct",
+      "title": "English direct quality issue trace",
+      "severity": "blocker",
+      "tags": ["english", "semantic", "graph", "documents", "citations"],
+      "turns": [{
+        "turnId": "turn-1",
+        "input": { "message": "OP30 Leak Rate is abnormal. Which products, equipment, quality risks, and documents may be affected?", "language": "en" },
+        "expected": {
+          "semantic": { "intent": "quality_issue_trace", "entityIds": ["operation.op30", "quality-characteristic.leak-rate"] },
+          "graph": {
+            "templateId": "quality-issue-trace.direct-neighborhood.v1",
+            "seedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"],
+            "requiredObjectIds": ["product.brake-booster", "machine.m220", "failure-mode.internal-leakage"],
+            "requiredRelationIds": ["relation.product.brake-booster.has-operation.op30", "relation.operation.op30.performed-on.machine.m220", "relation.pfmea.identifies.internal-leakage"],
+            "maxDepth": 2
+          },
+          "evidence": {
+            "requiredEvidenceIds": [
+              "evidence.route.brake-booster.rev-c",
+              "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+              "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage",
+              "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification",
+              "evidence-chunk.record.qms.leak-rate.2026-07-demo.record-qms-lr-2026-0716-signal-summary"
+            ],
+            "requiredDocuments": [
+              { "documentId": "document.control-plan.cp-bb01.rev-a", "version": "Rev.A", "chunkId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate" },
+              { "documentId": "document.pfmea.pf-bb01.rev-b", "version": "Rev.B", "chunkId": "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage" },
+              { "documentId": "document.sop.op30-leak-test", "version": "Rev.3", "chunkId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification" }
+            ],
+            "requireGovernedAccess": true
+          },
+          "answer": {
+            "requiredClaimIds": ["claim.affected-product", "claim.affected-equipment", "claim.quality-risk", "claim.governed-documents", "claim.signal-limitation"],
+            "minimumLimitations": 1,
+            "minimumCitationCoverage": 1
+          },
+          "runtime": { "maxLatencyMs": 5000, "expectedPipelineStages": 9 }
+        }
+      }],
+      "expectedContext": { "turnCount": 1, "resolvedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"], "activeTopic": "quality_issue_trace" }
+    },
+    {
+      "caseId": "leak-rate.zh.alias",
+      "title": "Chinese alias resolution",
+      "severity": "critical",
+      "tags": ["chinese", "alias", "semantic", "citations"],
+      "turns": [{
+        "turnId": "turn-1",
+        "input": { "message": "OP30 泄漏测试的漏率异常，会影响哪些产品、设备、风险和受控文件？", "language": "zh" },
+        "expected": {
+          "semantic": { "intent": "quality_issue_trace", "entityIds": ["operation.op30", "quality-characteristic.leak-rate"] },
+          "evidence": { "requiredEvidenceIds": ["evidence.route.brake-booster.rev-c", "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"], "requireGovernedAccess": true },
+          "answer": { "requiredClaimIds": ["claim.affected-product", "claim.quality-risk", "claim.signal-limitation"], "minimumLimitations": 1, "minimumCitationCoverage": 1 },
+          "runtime": { "maxLatencyMs": 5000, "expectedPipelineStages": 9 }
+        }
+      }]
+    },
+    {
+      "caseId": "leak-rate.unsupported-question",
+      "title": "Ambiguous request requires clarification",
+      "severity": "critical",
+      "tags": ["negative", "clarification", "semantic"],
+      "turns": [{
+        "turnId": "turn-1",
+        "input": { "message": "Please investigate the line.", "language": "en" },
+        "expected": { "errorCode": "CLARIFICATION_REQUIRED" }
+      }],
+      "expectedContext": { "turnCount": 0, "resolvedEntityIds": [] }
+    },
+    {
+      "caseId": "leak-rate.unsupported-target",
+      "title": "Unsupported target is not asserted",
+      "severity": "major",
+      "tags": ["negative", "grounding", "hallucination"],
+      "turns": [{
+        "turnId": "turn-1",
+        "input": { "message": "For OP30 Leak Rate, include product.unknown while tracing products, equipment, risks, and documents.", "language": "en" },
+        "expected": {
+          "semantic": { "intent": "quality_issue_trace", "entityIds": ["operation.op30", "quality-characteristic.leak-rate"], "forbiddenEntityIds": ["product.unknown"] },
+          "evidence": { "requiredEvidenceIds": ["evidence.route.brake-booster.rev-c"], "forbiddenEvidenceIds": ["product.unknown"] },
+          "answer": { "requiredClaimIds": ["claim.affected-product", "claim.signal-limitation"], "forbiddenTerms": ["product.unknown"], "minimumLimitations": 1, "minimumCitationCoverage": 1 },
+          "runtime": { "maxLatencyMs": 5000, "expectedPipelineStages": 9 }
+        }
+      }]
+    },
+    {
+      "caseId": "leak-rate.multi-turn",
+      "title": "Restricted multi-turn context remains canonical",
+      "severity": "major",
+      "tags": ["multi-turn", "context", "session"],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": { "message": "OP30 Leak Rate abnormality may affect which products, equipment, risks, and documents?", "language": "en" },
+          "expected": { "semantic": { "intent": "quality_issue_trace", "entityIds": ["operation.op30", "quality-characteristic.leak-rate"] }, "answer": { "requiredClaimIds": ["claim.affected-equipment", "claim.signal-limitation"], "minimumLimitations": 1, "minimumCitationCoverage": 1 }, "runtime": { "maxLatencyMs": 5000, "expectedPipelineStages": 9 } }
+        },
+        {
+          "turnId": "turn-2",
+          "input": { "message": "For OP30 Leak Rate, list the affected product, equipment, risk, and documents again.", "language": "en" },
+          "expected": { "semantic": { "intent": "quality_issue_trace", "entityIds": ["operation.op30", "quality-characteristic.leak-rate"] }, "answer": { "requiredClaimIds": ["claim.affected-product", "claim.affected-equipment", "claim.quality-risk", "claim.governed-documents", "claim.signal-limitation"], "minimumLimitations": 1, "minimumCitationCoverage": 1 }, "runtime": { "maxLatencyMs": 5000, "expectedPipelineStages": 9 } }
+        }
+      ],
+      "expectedContext": { "turnCount": 2, "resolvedEntityIds": ["operation.op30", "quality-characteristic.leak-rate"], "activeTopic": "quality_issue_trace" }
+    },
+    {
+      "caseId": "leak-rate.document-access-denied",
+      "title": "Document access denial blocks publication",
+      "severity": "critical",
+      "tags": ["negative", "access-control", "citation-gate"],
+      "executionProfile": "no-document-access",
+      "turns": [{
+        "turnId": "turn-1",
+        "input": { "message": "OP30 Leak Rate is abnormal. Which products, equipment, quality risks, and documents may be affected?", "language": "en" },
+        "expected": { "errorCode": "CITATION_INVALID" }
+      }],
+      "expectedContext": { "turnCount": 0, "resolvedEntityIds": [] }
+    }
+  ]
+}

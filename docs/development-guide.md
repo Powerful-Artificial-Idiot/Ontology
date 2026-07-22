@@ -11,7 +11,7 @@
 - `packages/document-evidence`：受治理文档注册、确定性解析、chunk、索引和检索；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
-当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传及单进程文件持久化；LLM 和外部向量数据库仍未接入。
+当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化，以及可选的 OpenAI structured-output adapters；真实 provider acceptance 尚未执行，外部向量数据库未接入。
 
 ## 2. Prerequisites
 
@@ -74,7 +74,7 @@ npm run agent-api:dev
 npm run dev:agent
 ```
 
-`VITE_AGENT_MODE=scripted|api` 只决定 frontend client adapter。API 模式当前只开放 `quality-issue-trace`。默认文件存储位于 `.data/agent-store.json`，服务重启后会恢复 Session、Turn、Trace、Evidence、Audit、Run 和可续传事件；设置 `MKG_AGENT_STORE_MODE=memory` 可使用临时内存模式。
+`VITE_AGENT_MODE=scripted|api` 只决定 frontend client adapter。API 模式当前只开放 `quality-issue-trace`。默认文件存储位于 `.data/agent-store.json`，服务重启后会恢复 Session、Turn、Trace、Evidence、Audit、Run 和可续传事件；设置 `MKG_AGENT_STORE_MODE=memory` 可使用临时内存模式。配置式 Agent API 默认将脱敏后的本地 telemetry 写入 `.data/agent-telemetry.jsonl`；设置 `MKG_AGENT_TELEMETRY_MODE=off` 可关闭。
 
 创建 Turn 后 API 立即返回 run ID，浏览器再通过 SSE 接收阶段状态。事件流使用序列号和 `Last-Event-ID` 续传；失败或中断的 run 必须由用户显式 Retry。
 
@@ -136,6 +136,7 @@ npm run test
 npm run test:agent-core
 npm run agent-api:test
 npm run documents:verify
+npm run agent:evaluate
 npm run build
 ```
 
@@ -155,6 +156,14 @@ make validate
 ```bash
 make build
 ```
+
+Phase 5A 的 Agent release gate 使用版本化 dataset 和 policy，不依赖 LLM Judge：
+
+```bash
+npm run agent:evaluate
+```
+
+报告写入 `.data/evaluations/latest-report.json`。真实 OpenAI smoke 必须显式配置服务端 key 和模型后单独运行 `npm run openai:acceptance`；没有真实调用时，Semantic Parser 与 Answer Composer acceptance 必须保持 `pending`。
 
 `make build` 会验证 ontology、SHACL、mapping、contracts、competency queries、前端 tests/build，并打包 manifest/checksums。
 

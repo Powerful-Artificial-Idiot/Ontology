@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manufacturing-graph-explorer.local/schemas/evaluation-dataset.schema.json",
+  "title": "Agent Evaluation Dataset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["datasetId", "version", "domain", "description", "cases"],
+  "properties": {
+    "datasetId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "domain": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "stringArray": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["caseId", "title", "severity", "tags", "turns"],
+      "properties": {
+        "caseId": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["blocker", "critical", "major", "minor"] },
+        "tags": { "$ref": "#/$defs/stringArray" },
+        "executionProfile": { "enum": ["default", "no-document-access"] },
+        "turns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/turn" } },
+        "expectedContext": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["turnCount", "resolvedEntityIds"],
+          "properties": {
+            "turnCount": { "type": "integer", "minimum": 0 },
+            "resolvedEntityIds": { "$ref": "#/$defs/stringArray" },
+            "activeTopic": { "type": "string" }
+          }
+        }
+      }
+    },
+    "turn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["turnId", "input", "expected"],
+      "properties": {
+        "turnId": { "type": "string", "minLength": 1 },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["message", "language"],
+          "properties": {
+            "message": { "type": "string", "minLength": 1 },
+            "language": { "enum": ["zh", "en"] },
+            "context": { "type": "object" }
+          }
+        },
+        "expected": { "$ref": "#/$defs/expectation" }
+      }
+    },
+    "expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "errorCode": { "type": "string" },
+        "semantic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["intent", "entityIds"],
+          "properties": {
+            "intent": { "type": "string" },
+            "entityIds": { "$ref": "#/$defs/stringArray" },
+            "forbiddenEntityIds": { "$ref": "#/$defs/stringArray" }
+          }
+        },
+        "graph": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["templateId", "seedEntityIds", "requiredObjectIds", "requiredRelationIds"],
+          "properties": {
+            "templateId": { "type": "string" },
+            "seedEntityIds": { "$ref": "#/$defs/stringArray" },
+            "requiredObjectIds": { "$ref": "#/$defs/stringArray" },
+            "requiredRelationIds": { "$ref": "#/$defs/stringArray" },
+            "maxDepth": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["requiredEvidenceIds"],
+          "properties": {
+            "requiredEvidenceIds": { "$ref": "#/$defs/stringArray" },
+            "forbiddenEvidenceIds": { "$ref": "#/$defs/stringArray" },
+            "requiredDocuments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["documentId", "version", "chunkId"],
+                "properties": {
+                  "documentId": { "type": "string" },
+                  "version": { "type": "string" },
+                  "chunkId": { "type": "string" }
+                }
+              }
+            },
+            "requireGovernedAccess": { "type": "boolean" }
+          }
+        },
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["requiredClaimIds"],
+          "properties": {
+            "requiredClaimIds": { "$ref": "#/$defs/stringArray" },
+            "forbiddenClaimIds": { "$ref": "#/$defs/stringArray" },
+            "forbiddenTerms": { "$ref": "#/$defs/stringArray" },
+            "minimumLimitations": { "type": "integer", "minimum": 0 },
+            "minimumCitationCoverage": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxLatencyMs": { "type": "integer", "minimum": 0 },
+            "expectedPipelineStages": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}

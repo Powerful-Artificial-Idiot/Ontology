@@ -1,5 +1,6 @@
 import { AgentPipelineError } from "../../packages/agent-core/src/index";
 import type { AgentTraceStageName } from "../../packages/knowledge-contracts/src/index";
+import type { AgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
 
 export type FetchImplementation = typeof fetch;
 
@@ -9,6 +10,7 @@ export type OpenAiStructuredOutputClientOptions = {
   baseUrl?: string;
   timeoutMs?: number;
   fetchImpl?: FetchImplementation;
+  telemetry?: AgentTelemetrySink;
 };
 
 export type OpenAiStructuredOutputRequest = {
@@ -36,6 +38,7 @@ export class OpenAiStructuredOutputClient {
   }
 
   async generate(request: OpenAiStructuredOutputRequest, signal?: AbortSignal): Promise<unknown> {
+    const startedAt = new Date();
     const controller = new AbortController();
     let timedOut = false;
     const abort = () => controller.abort(signal?.reason);
@@ -81,11 +84,14 @@ export class OpenAiStructuredOutputClient {
       const outputText = extractOutputText(payload);
       if (!outputText) throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI response did not contain structured ${request.operationLabel} output.`, request.stage, { provider: this.providerName });
       try {
-        return JSON.parse(outputText) as unknown;
+        const parsed = JSON.parse(outputText) as unknown;
+        await this.recordTelemetry(request, "completed", startedAt, tokenUsage(payload));
+        return parsed;
       } catch {
         throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI structured ${request.operationLabel} output is not valid JSON.`, request.stage, { provider: this.providerName });
       }
     } catch (error) {
+      await this.recordTelemetry(request, "failed", startedAt, {});
       if (error instanceof AgentPipelineError) throw error;
       if (signal?.aborted) throw new AgentPipelineError("PIPELINE_CANCELLED", `LLM ${request.operationLabel} was cancelled.`, request.stage);
       throw new AgentPipelineError(
@@ -99,6 +105,43 @@ export class OpenAiStructuredOutputClient {
       signal?.removeEventListener("abort", abort);
     }
   }
+
+  private async recordTelemetry(
+    request: OpenAiStructuredOutputRequest,
+    status: "completed" | "failed",
+    startedAt: Date,
+    usage: Record<string, number>,
+  ): Promise<void> {
+    const completedAt = new Date();
+    try {
+      await this.options.telemetry?.record({
+        eventVersion: "1.0.0",
+        id: `telemetry.provider.${request.stage}.${startedAt.getTime()}.${status}`,
+        type: "provider",
+        occurredAt: completedAt.toISOString(),
+        stage: request.stage,
+        durationMs: Math.max(0, completedAt.getTime() - startedAt.getTime()),
+        status,
+        attributes: {
+          provider: this.providerName,
+          model: this.options.model,
+          operation: request.operationLabel,
+          ...usage,
+        },
+      });
+    } catch {
+      // Telemetry is best-effort and must never alter provider execution semantics.
+    }
+  }
+}
+
+function tokenUsage(payload: unknown): Record<string, number> {
+  if (!isRecord(payload) || !isRecord(payload.usage)) return {};
+  const usage: Record<string, number> = {};
+  for (const [source, target] of [["input_tokens", "inputTokens"], ["output_tokens", "outputTokens"], ["total_tokens", "totalTokens"]] as const) {
+    if (typeof payload.usage[source] === "number") usage[target] = payload.usage[source];
+  }
+  return usage;
 }
 
 function extractOutputText(value: unknown): string | undefined {

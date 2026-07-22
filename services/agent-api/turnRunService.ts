@@ -12,6 +12,7 @@ import {
   type AgentRunStore,
   type DeterministicAgentClient,
 } from "../../packages/agent-core/src/index";
+import { runEventToTelemetry, type AgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
 
 type RunListener = (event: AgentRunEvent) => void;
 
@@ -21,6 +22,7 @@ export type AgentTurnRunServiceOptions = {
   events: AgentRunEventStore;
   timeoutMs?: number;
   now?: () => Date;
+  telemetry?: AgentTelemetrySink;
 };
 
 export class AgentTurnRunService {
@@ -151,6 +153,11 @@ export class AgentTurnRunService {
       error,
     };
     await this.options.events.append(event);
+    try {
+      await this.options.telemetry?.record(runEventToTelemetry(event));
+    } catch {
+      // Observability must not change persisted run state or delivery semantics.
+    }
     this.listeners.get(run.id)?.forEach((listener) => listener(cloneJson(event)));
   }
 }

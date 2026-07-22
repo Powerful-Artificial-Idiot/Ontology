@@ -24,6 +24,12 @@ jobs:
       - run: python -m pip install .
       - run: make build PYTHON=python
       - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent-evaluation-report-${{ github.ref_name }}
+          path: .data/evaluations/latest-report.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
         with:
           name: enterprise-knowledge-release-${{ github.ref_name }}
           path: dist/

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { LlmSemanticParseInput } from "../../packages/agent-core/src/index";
 import { OpenAiResponsesSemanticProvider } from "../../services/agent-api/openAiSemanticProvider";
 import { semanticParserFromEnvironment } from "../../services/agent-api/runtime";
+import { InMemoryAgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
 
 describe("OpenAI Responses semantic provider adapter", () => {
   it("requests strict structured output and returns only the parsed JSON value", async () => {
@@ -43,6 +44,29 @@ describe("OpenAI Responses semantic provider adapter", () => {
       fetchImpl: async () => new Response(JSON.stringify({ output_text: "not-json" }), { status: 200 }),
     });
     await expect(invalid.parse(input())).rejects.toMatchObject({ detail: { code: "LLM_RESPONSE_INVALID" } });
+  });
+
+  it("records provider latency and token counts without prompts or raw output", async () => {
+    const telemetry = new InMemoryAgentTelemetrySink();
+    const provider = new OpenAiResponsesSemanticProvider({
+      apiKey: "test-key-not-a-secret",
+      model: "test-model",
+      telemetry,
+      fetchImpl: async () => new Response(JSON.stringify({
+        output_text: JSON.stringify(validDraft()),
+        usage: { input_tokens: 30, output_tokens: 12, total_tokens: 42 },
+      }), { status: 200 }),
+    });
+
+    await provider.parse(input());
+
+    expect(telemetry.list()).toHaveLength(1);
+    expect(telemetry.list()[0]).toMatchObject({
+      type: "provider",
+      status: "completed",
+      attributes: { provider: "openai-responses", model: "test-model", inputTokens: 30, outputTokens: 12, totalTokens: 42 },
+    });
+    expect(JSON.stringify(telemetry.list())).not.toMatch(/test-key-not-a-secret|instructions|raw.?output/iu);
   });
 
   it("keeps deterministic as default and requires explicit server-only LLM configuration", () => {

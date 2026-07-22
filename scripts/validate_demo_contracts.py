@@ -94,6 +94,16 @@ def main() -> int:
     validate_json(canonical, by_title["CanonicalKnowledgeBaseline"], registry, str(canonical_path))
     validate_canonical_baseline(canonical, terms)
 
+    evaluation_schema_path = ROOT / "packages" / "agent-evaluation" / "schemas" / "evaluation-dataset.schema.json"
+    evaluation_schema = json.loads(evaluation_schema_path.read_text())
+    Draft202012Validator.check_schema(evaluation_schema)
+    evaluation_files = sorted((ROOT / "packages" / "demo-data" / "evaluations").glob("*.v*.json"))
+    evaluation_files = [path for path in evaluation_files if "release-policy" not in path.name]
+    for path in evaluation_files:
+        evaluation = json.loads(path.read_text())
+        validate_json(evaluation, evaluation_schema, Registry(), str(path))
+        validate_evaluation_dataset(evaluation, canonical)
+
     document_schema_path = ROOT / "packages" / "document-evidence" / "schemas" / "document-registry.schema.json"
     document_schema = json.loads(document_schema_path.read_text())
     Draft202012Validator.check_schema(document_schema)
@@ -135,7 +145,7 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, semantic fixtures, canonical Agent baseline, governed document registry, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, canonical Agent baseline, governed document registry, legacy mappings, and ontology alignment.")
     return 0
 
 
@@ -236,6 +246,37 @@ def validate_document_registry(document_registry: dict, root, baseline: dict) ->
             expected = document[field]
             if governance[field] != expected:
                 raise AssertionError(f"Document evidence governance mismatch for {document_id}: {field}")
+
+
+def validate_evaluation_dataset(dataset: dict, baseline: dict) -> None:
+    entity_ids = {entity["id"] for entity in baseline["entities"]}
+    relation_ids = {relation["id"] for relation in baseline["relations"]}
+    evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
+    claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+    for case in dataset["cases"]:
+        for turn in case["turns"]:
+            expected = turn["expected"]
+            semantic = expected.get("semantic", {})
+            unknown = set(semantic.get("entityIds", [])) - entity_ids
+            if unknown:
+                raise AssertionError(f"Evaluation case {case['caseId']} expects unknown semantic entities: {sorted(unknown)}")
+            graph = expected.get("graph", {})
+            unknown_objects = (set(graph.get("seedEntityIds", [])) | set(graph.get("requiredObjectIds", []))) - entity_ids
+            unknown_relations = set(graph.get("requiredRelationIds", [])) - relation_ids
+            if unknown_objects or unknown_relations:
+                raise AssertionError(f"Evaluation case {case['caseId']} has unknown graph IDs: objects={sorted(unknown_objects)}, relations={sorted(unknown_relations)}")
+            evidence_expectation = expected.get("evidence", {})
+            unknown_evidence = set(evidence_expectation.get("requiredEvidenceIds", [])) - set(evidence)
+            if unknown_evidence:
+                raise AssertionError(f"Evaluation case {case['caseId']} expects unknown evidence: {sorted(unknown_evidence)}")
+            for document in evidence_expectation.get("requiredDocuments", []):
+                item = evidence.get(document["chunkId"])
+                if not item or item.get("version") != document["version"] or item.get("governance", {}).get("documentId") != document["documentId"]:
+                    raise AssertionError(f"Evaluation case {case['caseId']} has a document version/chunk mismatch: {document['documentId']}")
+            answer = expected.get("answer", {})
+            unknown_claims = set(answer.get("requiredClaimIds", [])) - claim_ids
+            if unknown_claims:
+                raise AssertionError(f"Evaluation case {case['caseId']} expects unknown claims: {sorted(unknown_claims)}")
 
 
 if __name__ == "__main__":
