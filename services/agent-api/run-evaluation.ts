@@ -24,7 +24,8 @@ import { neo4jOptionsFromEnvironment } from "./runtime";
 const datasetPath = resolve(process.env.MKG_EVALUATION_DATASET_PATH ?? "packages/demo-data/evaluations/leak-rate-quality-trace.v1.json");
 const policyPath = resolve(process.env.MKG_RELEASE_POLICY_PATH ?? "packages/demo-data/evaluations/release-policy.v1.json");
 const outputPath = resolve(process.env.MKG_EVALUATION_REPORT_PATH ?? ".data/evaluations/latest-report.json");
-const acceptancePath = resolve(process.env.MKG_PROVIDER_ACCEPTANCE_PATH ?? ".data/evaluations/openai-provider-acceptance.json");
+const acceptanceProvider = process.env.MKG_LLM_PROVIDER === "deepseek" ? "deepseek" : "openai";
+const acceptancePath = resolve(process.env.MKG_PROVIDER_ACCEPTANCE_PATH ?? `.data/evaluations/${acceptanceProvider}-provider-acceptance.json`);
 
 await main();
 

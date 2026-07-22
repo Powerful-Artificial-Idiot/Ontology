@@ -96,6 +96,7 @@ export class FileAgentStore {
   }
 
   async listEvents(runId: string, afterSequence = 0): Promise<AgentRunEvent[]> {
+    await this.writeQueue;
     return (this.state.runEvents[runId] ?? []).filter((event) => event.sequence > afterSequence).map(cloneJson);
   }
 

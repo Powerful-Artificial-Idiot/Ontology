@@ -6,4 +6,5 @@ export * from "./llmAnswerComposer";
 export * from "./llmSemanticParser";
 export * from "./pipeline";
 export * from "./repositoryGraphRetriever";
+export * from "./structuredOutput";
 export * from "./types";

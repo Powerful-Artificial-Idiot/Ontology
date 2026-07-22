@@ -10,10 +10,13 @@ Implemented for the deterministic **Leak Rate Quality Issue Trace** baseline.
 - Document index: deterministic governed full-text retrieval
 - Semantic parser: deterministic
 - Answer composer: template
-- Semantic Parser live provider acceptance: **pending**
-- Answer Composer live provider acceptance: **pending**
+- DeepSeek Semantic Parser live provider acceptance: **passed**
+- DeepSeek Answer Composer live provider acceptance: **passed**
+- DeepSeek full pipeline live provider acceptance: **passed**
+- OpenAI Semantic Parser live provider acceptance: **pending**
+- OpenAI Answer Composer live provider acceptance: **pending**
 
-The live statuses remain pending because no real OpenAI key and model configuration were available during Phase 5A implementation. Provider mocks do not satisfy live acceptance.
+OpenAI and DeepSeek statuses are recorded independently. DeepSeek passed with real `deepseek-v4-flash` calls on 2026-07-22 and `fallbackUsed: false`; OpenAI remains pending. Provider mocks do not satisfy live acceptance.
 
 ## Architecture
 
@@ -100,7 +103,14 @@ export MKG_LLM_ANSWER_MODEL=<answer-model-id>
 npm run openai:acceptance
 ```
 
-The smoke command writes `.data/evaluations/openai-provider-acceptance.json`. The evaluation report consumes this artifact but never infers `passed` merely from environment configuration.
+```bash
+export MKG_DEEPSEEK_API_KEY=<server-secret>
+export MKG_DEEPSEEK_MODEL=deepseek-v4-flash
+export MKG_DEEPSEEK_ANSWER_MODEL=deepseek-v4-flash
+npm run deepseek:acceptance
+```
+
+The commands write separate artifacts under `.data/evaluations/`. The evaluation report consumes the artifact selected by `MKG_LLM_PROVIDER` (or an explicit `MKG_PROVIDER_ACCEPTANCE_PATH`) and never infers `passed` merely from environment configuration.
 
 ## Release Semantics
 

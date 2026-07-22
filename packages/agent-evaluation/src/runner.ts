@@ -60,8 +60,12 @@ export class AgentEvaluationRunner {
       generatedAt,
       environment: { ...this.options.environment },
       providerAcceptance: {
+        providerId: this.options.providerAcceptance.providerId,
+        transport: this.options.providerAcceptance.transport,
+        fallbackUsed: this.options.providerAcceptance.fallbackUsed,
         semanticParser: this.options.providerAcceptance.semanticParser,
         answerComposer: this.options.providerAcceptance.answerComposer,
+        fullPipeline: this.options.providerAcceptance.fullPipeline,
         modelIds: this.options.providerAcceptance.modelIds ? [...this.options.providerAcceptance.modelIds] : undefined,
         checkedAt: this.options.providerAcceptance.checkedAt,
         details: [...this.options.providerAcceptance.details],

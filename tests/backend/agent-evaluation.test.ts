@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   AgentEvaluationRunner,
@@ -7,6 +9,7 @@ import {
   compareEvaluationReports,
   evaluateReleaseGate,
   pendingProviderAcceptance,
+  validateProviderAcceptanceArtifact,
   validateEvaluationDataset,
   type EvaluationDataset,
   type EvaluationReport,
@@ -14,6 +17,7 @@ import {
 } from "../../packages/agent-evaluation/src/index";
 import { DeterministicEvaluationCaseExecutor } from "../../services/agent-api/evaluationExecutor";
 import { runAgentRuntimeProbes } from "../../services/agent-api/evaluationRuntimeProbes";
+import { runLiveProviderAcceptance } from "../../services/agent-api/providerLiveAcceptance";
 
 describe("Phase 5A deterministic Agent evaluation", () => {
   it("evaluates the versioned Leak Rate dataset and passes the local release gate", async () => {
@@ -33,7 +37,7 @@ describe("Phase 5A deterministic Agent evaluation", () => {
 
     expect(report.aggregate).toMatchObject({ totalCases: 6, passedCases: 6, passRate: 1, citationCoverage: 1, blockerFailures: 0, criticalFailures: 0 });
     expect(report.runtimeProbes).toHaveLength(5);
-    expect(report.runtimeProbes.every((probe) => probe.status === "passed")).toBe(true);
+    expect(report.runtimeProbes.every((probe) => probe.status === "passed"), JSON.stringify(report.runtimeProbes, null, 2)).toBe(true);
     expect(report.providerAcceptance).toMatchObject({ semanticParser: "pending", answerComposer: "pending" });
     expect(evaluateReleaseGate(report, policy).status).toBe("passed");
     expect(evaluateReleaseGate(report, { ...policy, requireSemanticProviderAcceptance: true, requireAnswerProviderAcceptance: true })).toMatchObject({
@@ -67,6 +71,50 @@ describe("Phase 5A deterministic Agent evaluation", () => {
       attributes: { model: "test-model", apiKey: "sensitive", rawOutput: "sensitive", inputTokens: 10 },
     });
     expect(memory.list()[0]?.attributes).toEqual({ model: "test-model", apiKey: "[REDACTED]", rawOutput: "[REDACTED]", inputTokens: 10 });
+  });
+
+  it("records DeepSeek acceptance independently and remains pending without a real key", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "deepseek-acceptance-"));
+    const outputPath = join(directory, "acceptance.json");
+    try {
+      const pending = pendingProviderAcceptance({ MKG_LLM_PROVIDER: "deepseek" });
+      expect(pending).toMatchObject({
+        providerId: "deepseek-chat-completions",
+        transport: "chat-completions",
+        fallbackUsed: false,
+        semanticParser: "pending",
+        answerComposer: "pending",
+        fullPipeline: "pending",
+        modelIds: ["deepseek-v4-flash"],
+      });
+
+      const artifact = await runLiveProviderAcceptance({ provider: "deepseek", outputPath, environment: {} });
+      expect(artifact).toMatchObject({
+        artifactVersion: "1.1.0",
+        providerId: "deepseek-chat-completions",
+        transport: "chat-completions",
+        fallbackUsed: false,
+        semanticParser: "pending",
+        answerComposer: "pending",
+        fullPipeline: "pending",
+      });
+      expect(JSON.parse(await readFile(outputPath, "utf8"))).toEqual(artifact);
+      expect(artifact.details.join(" ")).toContain("DeepSeek full pipeline live acceptance: pending");
+      expect(artifact.details.join(" ")).not.toContain("OpenAI");
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps pre-fallback-field provider acceptance artifacts readable", () => {
+    expect(validateProviderAcceptanceArtifact({
+      artifactVersion: "1.1.0",
+      providerId: "openai-responses",
+      transport: "responses-api",
+      semanticParser: "pending",
+      answerComposer: "pending",
+      details: [],
+    })).toMatchObject({ fallbackUsed: undefined, semanticParser: "pending", answerComposer: "pending" });
   });
 });
 

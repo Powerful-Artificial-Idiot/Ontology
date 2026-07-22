@@ -124,6 +124,8 @@ Exit gate：每个返回给 Answer Composer 的事实都能追溯到 graph fact 
 - [x] 第二阶段 LLM 只能接收 bounded Evidence Context Projection，并支持 template、llm、hybrid composer。
 - [x] Citation Validator 阻止 unknown、duplicate、missing、classification mismatch 和 unsupported claim 发布。
 - [x] 通过脱敏 provider telemetry 记录模型、token usage 和 latency，不记录 prompt、raw output 或 raw chain-of-thought。
+- [x] 增加 provider capability contract、原生 DeepSeek Chat Completions adapter 和 OpenAI/DeepSeek 独立 live acceptance artifacts。
+- [x] DeepSeek Semantic Parser、Answer Composer 和 full pipeline 真实调用验收；OpenAI 独立验收仍为 pending。
 
 Exit gate：禁用 LLM 时 deterministic pipeline 可运行；LLM 输出无法绕过 validation 和 evidence gate。
 

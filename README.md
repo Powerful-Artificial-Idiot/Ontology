@@ -118,6 +118,8 @@ The constrained semantic parser modes are documented in [Phase 4A - LLM Semantic
 
 Evidence-grounded answer generation is documented in [Phase 4B - Evidence-Grounded LLM Answer Composer](docs/phase-4b-evidence-grounded-answer-composer.md). Template composition remains the default.
 
+The provider-neutral OpenAI/DeepSeek boundary and separate live acceptance are documented in [Phase 4A/4B Provider Extension - DeepSeek Adapter](docs/phase-4-provider-deepseek-extension.md). DeepSeek uses its native Chat Completions API; deterministic and template modes remain the defaults.
+
 Governed chunk-level document evidence is documented in [Phase 4C - Governed Document Evidence](docs/phase-4c-governed-document-evidence.md). The controlled fixtures are deterministic demo data; no enterprise files, OCR, embeddings, or vector database are connected.
 
 ## Validation and Tests
@@ -144,9 +146,11 @@ npm run test
 npm run agent-api:test
 npm run documents:verify
 npm run agent:evaluate
+npm run openai:acceptance
+npm run deepseek:acceptance
 ```
 
-Phase 5A evaluation is documented in [Agent Evaluation, Observability and Release Gates](docs/phase-5a-agent-evaluation-observability.md). The deterministic local gate is independent of real OpenAI smoke acceptance; both live provider statuses remain `pending` until `npm run openai:acceptance` completes with real server-side configuration.
+Phase 5A evaluation is documented in [Agent Evaluation, Observability and Release Gates](docs/phase-5a-agent-evaluation-observability.md). The deterministic local gate is independent of real provider smoke acceptance. DeepSeek Semantic, Answer, and full-pipeline acceptance passed independently with `fallbackUsed: false`; OpenAI acceptance remains pending.
 
 SHACL valid fixtures must pass and files under `examples/invalid` must fail. Frontend payloads are separately checked against JSON Schema; neither validation replaces the other.
 

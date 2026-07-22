@@ -1,5 +1,11 @@
 import { AgentPipelineError } from "../../packages/agent-core/src/index";
-import type { AgentTraceStageName } from "../../packages/knowledge-contracts/src/index";
+import type {
+  StructuredGenerationRequest,
+  StructuredGenerationResult,
+  StructuredGenerationUsage,
+  StructuredOutputCapability,
+  StructuredOutputProvider,
+} from "../../packages/agent-core/src/index";
 import type { AgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
 
 export type FetchImplementation = typeof fetch;
@@ -13,18 +19,18 @@ export type OpenAiStructuredOutputClientOptions = {
   telemetry?: AgentTelemetrySink;
 };
 
-export type OpenAiStructuredOutputRequest = {
-  instructions: string;
-  input: unknown;
-  schemaName: string;
-  schema: Record<string, unknown>;
-  stage: AgentTraceStageName;
-  operationLabel: string;
-  maxOutputTokens: number;
-};
-
-export class OpenAiStructuredOutputClient {
+export class OpenAiStructuredOutputClient implements StructuredOutputProvider {
+  readonly providerId = "openai-responses";
   readonly providerName = "openai-responses";
+  readonly capabilities: StructuredOutputCapability = {
+    transport: "responses-api",
+    jsonMode: "strict-json-schema",
+    supportsServerSideJsonSchema: true,
+    supportsJsonObjectMode: false,
+    supportsThinkingControl: false,
+    supportsUsageMetadata: true,
+    supportsRequestCancellation: true,
+  };
   private readonly baseUrl: string;
   private readonly timeoutMs: number;
   private readonly fetchImpl: FetchImplementation;
@@ -37,7 +43,7 @@ export class OpenAiStructuredOutputClient {
     this.fetchImpl = options.fetchImpl ?? fetch;
   }
 
-  async generate(request: OpenAiStructuredOutputRequest, signal?: AbortSignal): Promise<unknown> {
+  async generateStructured<T>(request: StructuredGenerationRequest, signal?: AbortSignal): Promise<StructuredGenerationResult<T>> {
     const startedAt = new Date();
     const controller = new AbortController();
     let timedOut = false;
@@ -73,22 +79,23 @@ export class OpenAiStructuredOutputClient {
         }),
       });
       if (!response.ok) {
-        throw new AgentPipelineError("LLM_PROVIDER_UNAVAILABLE", `OpenAI Responses API returned HTTP ${response.status}.`, request.stage, { provider: this.providerName, status: response.status });
+        throw new AgentPipelineError("LLM_PROVIDER_UNAVAILABLE", `OpenAI Responses API returned HTTP ${response.status}.`, request.stage, { provider: this.providerId, status: response.status });
       }
       let payload: unknown;
       try {
         payload = await response.json() as unknown;
       } catch {
-        throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI ${request.operationLabel} response is not valid JSON.`, request.stage, { provider: this.providerName });
+        throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI ${request.operationLabel} response is not valid JSON.`, request.stage, { provider: this.providerId });
       }
       const outputText = extractOutputText(payload);
-      if (!outputText) throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI response did not contain structured ${request.operationLabel} output.`, request.stage, { provider: this.providerName });
+      if (!outputText) throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI response did not contain structured ${request.operationLabel} output.`, request.stage, { provider: this.providerId });
       try {
-        const parsed = JSON.parse(outputText) as unknown;
-        await this.recordTelemetry(request, "completed", startedAt, tokenUsage(payload));
-        return parsed;
+        const parsed = JSON.parse(outputText) as T;
+        const usage = tokenUsage(payload);
+        await this.recordTelemetry(request, "completed", startedAt, usage);
+        return { value: parsed, providerId: this.providerId, modelId: this.options.model, usage };
       } catch {
-        throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI structured ${request.operationLabel} output is not valid JSON.`, request.stage, { provider: this.providerName });
+        throw new AgentPipelineError("LLM_RESPONSE_INVALID", `OpenAI structured ${request.operationLabel} output is not valid JSON.`, request.stage, { provider: this.providerId });
       }
     } catch (error) {
       await this.recordTelemetry(request, "failed", startedAt, {});
@@ -98,7 +105,7 @@ export class OpenAiStructuredOutputClient {
         "LLM_PROVIDER_UNAVAILABLE",
         timedOut ? `OpenAI ${request.operationLabel} exceeded ${this.timeoutMs} ms.` : `OpenAI ${request.operationLabel} request failed.`,
         request.stage,
-        { provider: this.providerName, timeoutMs: this.timeoutMs },
+        { provider: this.providerId, timeoutMs: this.timeoutMs },
       );
     } finally {
       globalThis.clearTimeout(timeout);
@@ -107,10 +114,10 @@ export class OpenAiStructuredOutputClient {
   }
 
   private async recordTelemetry(
-    request: OpenAiStructuredOutputRequest,
+    request: StructuredGenerationRequest,
     status: "completed" | "failed",
     startedAt: Date,
-    usage: Record<string, number>,
+    usage: StructuredGenerationUsage,
   ): Promise<void> {
     const completedAt = new Date();
     try {
@@ -123,7 +130,7 @@ export class OpenAiStructuredOutputClient {
         durationMs: Math.max(0, completedAt.getTime() - startedAt.getTime()),
         status,
         attributes: {
-          provider: this.providerName,
+          provider: this.providerId,
           model: this.options.model,
           operation: request.operationLabel,
           ...usage,
@@ -135,9 +142,9 @@ export class OpenAiStructuredOutputClient {
   }
 }
 
-function tokenUsage(payload: unknown): Record<string, number> {
+function tokenUsage(payload: unknown): StructuredGenerationUsage {
   if (!isRecord(payload) || !isRecord(payload.usage)) return {};
-  const usage: Record<string, number> = {};
+  const usage: StructuredGenerationUsage = {};
   for (const [source, target] of [["input_tokens", "inputTokens"], ["output_tokens", "outputTokens"], ["total_tokens", "totalTokens"]] as const) {
     if (typeof payload.usage[source] === "number") usage[target] = payload.usage[source];
   }

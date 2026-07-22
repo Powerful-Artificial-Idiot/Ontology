@@ -61,7 +61,7 @@ export type AgentApiRuntime = {
   semanticParserMode?: SemanticParserMode;
   answerComposerMode?: AnswerComposerMode;
   documentEvidenceMode?: "canonical" | "governed";
-  llmProviderType?: "openai-responses";
+  llmProviderType?: "openai-responses" | "deepseek-chat-completions";
   timeoutMs?: number;
   logger?: AgentApiLogger;
 };

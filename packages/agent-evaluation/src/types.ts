@@ -129,8 +129,12 @@ export type RuntimeProbeResult = {
 };
 
 export type EvaluationProviderAcceptance = {
+  providerId?: string;
+  transport?: "responses-api" | "chat-completions";
+  fallbackUsed?: boolean;
   semanticParser: ProviderAcceptanceStatus;
   answerComposer: ProviderAcceptanceStatus;
+  fullPipeline?: ProviderAcceptanceStatus;
   modelIds?: string[];
   checkedAt?: string;
   details: string[];

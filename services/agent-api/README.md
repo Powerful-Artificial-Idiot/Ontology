@@ -40,6 +40,17 @@ MKG_LLM_MODEL=<explicit-model-id>
 MKG_OPENAI_API_KEY=<server-secret>
 ```
 
+DeepSeek is an independent native Chat Completions adapter, not an OpenAI base URL override:
+
+```bash
+MKG_LLM_PROVIDER=deepseek
+MKG_DEEPSEEK_API_KEY=<server-secret>
+MKG_DEEPSEEK_MODEL=deepseek-v4-flash
+MKG_DEEPSEEK_ANSWER_MODEL=deepseek-v4-flash
+```
+
+Only `deepseek-v4-flash` and `deepseek-v4-pro` are accepted. DeepSeek JSON Object output is always passed through the same strict local Semantic Plan and Evidence Answer validators.
+
 LLM/hybrid startup requires explicit model and server-only key configuration. Provider failure is surfaced and never reported as a successful deterministic fallback. Neo4j pilot startup is documented in `docs/phase-3b-neo4j-repository.md`.
 
 Phase 4B answer composer modes:
@@ -67,10 +78,11 @@ npm run agent:evaluate
 
 The configured API writes redacted run, stage, and provider metadata to `.data/agent-telemetry.jsonl` by default. Prompts, raw provider output, credentials, and chain-of-thought are not recorded. Set `MKG_AGENT_TELEMETRY_MODE=off` to disable the local sink or `MKG_AGENT_TELEMETRY_PATH` to select another server-side path.
 
-Real OpenAI acceptance is separate from mocked provider tests:
+Real provider acceptance is separate from mocked provider tests:
 
 ```bash
 npm run openai:acceptance
+npm run deepseek:acceptance
 ```
 
-Without a real server-side key and explicit models, both provider acceptance statuses remain `pending`.
+Without a real server-side key and model configuration, provider acceptance remains `pending`. DeepSeek additionally records a separate full-pipeline status; no provider is allowed to borrow another provider's acceptance result.

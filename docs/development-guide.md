@@ -163,7 +163,7 @@ Phase 5A 的 Agent release gate 使用版本化 dataset 和 policy，不依赖 L
 npm run agent:evaluate
 ```
 
-报告写入 `.data/evaluations/latest-report.json`。真实 OpenAI smoke 必须显式配置服务端 key 和模型后单独运行 `npm run openai:acceptance`；没有真实调用时，Semantic Parser 与 Answer Composer acceptance 必须保持 `pending`。
+报告写入 `.data/evaluations/latest-report.json`。真实 Provider smoke 必须显式配置服务端 key 和模型，并分别运行 `npm run openai:acceptance` 或 `npm run deepseek:acceptance`；没有真实调用时对应的 Semantic Parser、Answer Composer 和 DeepSeek full pipeline acceptance 必须保持 `pending`。DeepSeek 配置和安全边界见 `docs/phase-4-provider-deepseek-extension.md`。
 
 `make build` 会验证 ontology、SHACL、mapping、contracts、competency queries、前端 tests/build，并打包 manifest/checksums。
 

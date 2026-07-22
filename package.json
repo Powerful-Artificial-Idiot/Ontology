@@ -25,6 +25,7 @@
     "agent-api:test": "vitest run tests/integration/agent-api.test.ts tests/frontend/api-agent-client.test.ts",
     "agent:evaluate": "vite-node services/agent-api/run-evaluation.ts",
     "openai:acceptance": "vite-node services/agent-api/verify-openai-providers.ts",
+    "deepseek:acceptance": "vite-node services/agent-api/verify-deepseek-provider.ts",
     "documents:verify": "vite-node services/agent-api/verify-documents.ts",
     "neo4j:up": "docker compose -f compose.neo4j.yml up -d",
     "neo4j:down": "docker compose -f compose.neo4j.yml down",

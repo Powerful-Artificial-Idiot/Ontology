@@ -34,9 +34,13 @@ import { OpenAiResponsesSemanticProvider } from "./openAiSemanticProvider";
 import { OpenAiResponsesAnswerProvider } from "./openAiAnswerProvider";
 import { createDefaultGovernedDocumentRetriever } from "./governedDocumentEvidence";
 import { InMemoryAgentTelemetrySink, LocalJsonlAgentTelemetrySink, RedactingAgentTelemetrySink, type AgentTelemetrySink } from "../../packages/agent-evaluation/src/index";
+import { DeepSeekSemanticProvider } from "./deepSeekSemanticProvider";
+import { DeepSeekAnswerProvider } from "./deepSeekAnswerProvider";
+import { isDeepSeekModel, type DeepSeekModel } from "./deepSeekChatCompletionsClient";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
+export type AgentLlmProviderType = "openai-responses" | "deepseek-chat-completions";
 
 export type ConfiguredAgentApiRuntime = AgentApiRuntime & {
   close(): Promise<void>;
@@ -127,44 +131,57 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   };
 }
 
-export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: AnswerComposerMode; composer: AnswerComposer; providerType?: "openai-responses" } {
+export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: AnswerComposerMode; composer: AnswerComposer; providerType?: AgentLlmProviderType } {
   const mode = parseAnswerComposerMode(environment.MKG_AGENT_ANSWER_COMPOSER_MODE);
   const template = new DeterministicEvidenceAnswerComposer();
   if (mode === "template") return { mode, composer: template };
   const provider = environment.MKG_LLM_PROVIDER ?? "openai";
-  if (provider !== "openai") throw new Error(`Unsupported MKG_LLM_PROVIDER ${provider}. Use openai.`);
-  const apiKey = environment.MKG_OPENAI_API_KEY;
-  const model = environment.MKG_LLM_ANSWER_MODEL ?? environment.MKG_LLM_MODEL;
-  if (!apiKey) throw new Error("MKG_OPENAI_API_KEY is required when the answer composer mode uses an LLM.");
-  if (!model) throw new Error("MKG_LLM_ANSWER_MODEL or MKG_LLM_MODEL is required when the answer composer mode uses an LLM.");
-  const llm = new LlmEvidenceAnswerComposer(new OpenAiResponsesAnswerProvider({
-    apiKey,
-    model,
-    baseUrl: environment.MKG_OPENAI_BASE_URL,
-    timeoutMs: parsePositiveInteger(environment.MKG_LLM_ANSWER_TIMEOUT_MS ?? environment.MKG_LLM_TIMEOUT_MS, 30_000),
-    telemetry,
-  }));
-  return { mode, composer: mode === "hybrid" ? new HybridEvidenceAnswerComposer(template, llm) : llm, providerType: "openai-responses" };
+  const timeoutMs = parsePositiveInteger(environment.MKG_LLM_ANSWER_TIMEOUT_MS ?? environment.MKG_LLM_TIMEOUT_MS, 30_000);
+  if (provider === "openai") {
+    const apiKey = environment.MKG_OPENAI_API_KEY;
+    const model = environment.MKG_LLM_ANSWER_MODEL ?? environment.MKG_LLM_MODEL;
+    if (!apiKey) throw new Error("MKG_OPENAI_API_KEY is required when the answer composer mode uses an LLM.");
+    if (!model) throw new Error("MKG_LLM_ANSWER_MODEL or MKG_LLM_MODEL is required when the answer composer mode uses an LLM.");
+    const llm = new LlmEvidenceAnswerComposer(new OpenAiResponsesAnswerProvider({ apiKey, model, baseUrl: environment.MKG_OPENAI_BASE_URL, timeoutMs, telemetry }));
+    return { mode, composer: mode === "hybrid" ? new HybridEvidenceAnswerComposer(template, llm) : llm, providerType: "openai-responses" };
+  }
+  if (provider === "deepseek") {
+    const apiKey = environment.MKG_DEEPSEEK_API_KEY;
+    if (!apiKey) throw new Error("MKG_DEEPSEEK_API_KEY is required when the answer composer uses DeepSeek.");
+    const model = deepSeekModel(environment.MKG_DEEPSEEK_ANSWER_MODEL ?? environment.MKG_DEEPSEEK_MODEL ?? "deepseek-v4-flash");
+    const llm = new LlmEvidenceAnswerComposer(new DeepSeekAnswerProvider({ apiKey, model, baseUrl: environment.MKG_DEEPSEEK_BASE_URL, timeoutMs, telemetry }));
+    return { mode, composer: mode === "hybrid" ? new HybridEvidenceAnswerComposer(template, llm) : llm, providerType: "deepseek-chat-completions" };
+  }
+  throw new Error(`Unsupported MKG_LLM_PROVIDER ${provider}. Use openai or deepseek.`);
 }
 
-export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: SemanticParserMode; parser: SemanticParser; providerType?: "openai-responses" } {
+export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: SemanticParserMode; parser: SemanticParser; providerType?: AgentLlmProviderType } {
   const mode = parseSemanticParserMode(environment.MKG_AGENT_SEMANTIC_PARSER_MODE);
   const deterministic = new DeterministicLeakRateSemanticParser();
   if (mode === "deterministic") return { mode, parser: deterministic };
   const provider = environment.MKG_LLM_PROVIDER ?? "openai";
-  if (provider !== "openai") throw new Error(`Unsupported MKG_LLM_PROVIDER ${provider}. Use openai.`);
-  const apiKey = environment.MKG_OPENAI_API_KEY;
-  const model = environment.MKG_LLM_MODEL;
-  if (!apiKey) throw new Error("MKG_OPENAI_API_KEY is required when the semantic parser mode uses an LLM.");
-  if (!model) throw new Error("MKG_LLM_MODEL is required when the semantic parser mode uses an LLM.");
-  const llm = new LlmSemanticParser(new OpenAiResponsesSemanticProvider({
-    apiKey,
-    model,
-    baseUrl: environment.MKG_OPENAI_BASE_URL,
-    timeoutMs: parsePositiveInteger(environment.MKG_LLM_TIMEOUT_MS, 20_000),
-    telemetry,
-  }));
-  return { mode, parser: mode === "hybrid" ? new HybridSemanticParser(deterministic, llm) : llm, providerType: "openai-responses" };
+  const timeoutMs = parsePositiveInteger(environment.MKG_LLM_TIMEOUT_MS, 20_000);
+  if (provider === "openai") {
+    const apiKey = environment.MKG_OPENAI_API_KEY;
+    const model = environment.MKG_LLM_MODEL;
+    if (!apiKey) throw new Error("MKG_OPENAI_API_KEY is required when the semantic parser mode uses an LLM.");
+    if (!model) throw new Error("MKG_LLM_MODEL is required when the semantic parser mode uses an LLM.");
+    const llm = new LlmSemanticParser(new OpenAiResponsesSemanticProvider({ apiKey, model, baseUrl: environment.MKG_OPENAI_BASE_URL, timeoutMs, telemetry }));
+    return { mode, parser: mode === "hybrid" ? new HybridSemanticParser(deterministic, llm) : llm, providerType: "openai-responses" };
+  }
+  if (provider === "deepseek") {
+    const apiKey = environment.MKG_DEEPSEEK_API_KEY;
+    if (!apiKey) throw new Error("MKG_DEEPSEEK_API_KEY is required when the semantic parser uses DeepSeek.");
+    const model = deepSeekModel(environment.MKG_DEEPSEEK_MODEL ?? "deepseek-v4-flash");
+    const llm = new LlmSemanticParser(new DeepSeekSemanticProvider({ apiKey, model, baseUrl: environment.MKG_DEEPSEEK_BASE_URL, timeoutMs, telemetry }));
+    return { mode, parser: mode === "hybrid" ? new HybridSemanticParser(deterministic, llm) : llm, providerType: "deepseek-chat-completions" };
+  }
+  throw new Error(`Unsupported MKG_LLM_PROVIDER ${provider}. Use openai or deepseek.`);
+}
+
+function deepSeekModel(value: string): DeepSeekModel {
+  if (!isDeepSeekModel(value)) throw new Error(`Unsupported DeepSeek model ${value}. Use deepseek-v4-flash or deepseek-v4-pro.`);
+  return value;
 }
 
 function telemetryFromEnvironment(environment: NodeJS.ProcessEnv): AgentTelemetrySink {
