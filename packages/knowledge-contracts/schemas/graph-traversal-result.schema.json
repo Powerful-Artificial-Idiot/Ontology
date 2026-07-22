@@ -18,7 +18,7 @@
       "additionalProperties": false
     },
     "graphPlanId": { "type": "string", "minLength": 1 },
-    "templateId": { "const": "quality-issue-trace.direct-neighborhood.v1" },
+    "templateId": { "enum": ["quality-issue-trace.direct-neighborhood.v1", "engineering-change-impact.dependency-scope.v1", "bottleneck-analysis.flow-metrics.v1"] },
     "repositoryType": { "enum": ["mock", "http", "neo4j"] },
     "entities": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-entity.schema.json" } },
     "relations": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-relation.schema.json" } }

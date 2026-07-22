@@ -36,7 +36,11 @@ describe("Deterministic Agent API", () => {
     ]);
 
     expect(health.payload).toMatchObject({ status: "ok", contractVersion: "1.0.0", pipeline: "deterministic", semanticParser: "deterministic", answerComposer: "template", documentEvidence: "governed", persistence: "in-memory" });
-    expect(scenarios.payload.scenarios).toHaveLength(1);
+    expect(scenarios.payload.scenarios.map((scenario: { id: string }) => scenario.id)).toEqual([
+      "quality-issue-trace",
+      "engineering-change-impact",
+      "bottleneck-analysis",
+    ]);
     expect(first.response.status).toBe(201);
     expect(second.response.status).toBe(201);
     expect(session.payload.session.turnIds).toHaveLength(2);
@@ -72,6 +76,34 @@ describe("Deterministic Agent API", () => {
     expect(clarification.payload.error).toMatchObject({ code: "CLARIFICATION_REQUIRED", stage: "semantic-parsing" });
     const turns = await fetchJson(`${baseUrl}/sessions/${sessionId}/turns`);
     expect(turns.payload.turns).toHaveLength(0);
+  });
+
+  it.each([
+    ["engineering-change-impact", "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?", "engineering_change_impact"],
+    ["bottleneck-analysis", "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?", "bottleneck_analysis"],
+  ])("executes %s through the unchanged session and turn API", async (scenarioId, message, intent) => {
+    const { baseUrl } = await startApi();
+    const created = await fetchJson(`${baseUrl}/sessions`, {
+      method: "POST",
+      body: JSON.stringify({ contractVersion: AGENT_CONTRACT_VERSION, scenarioId, mode: "live", language: "en" }),
+    });
+    const sessionId = created.payload.session.id as string;
+    const result = await fetchJson(`${baseUrl}/sessions/${sessionId}/turns`, {
+      method: "POST",
+      body: JSON.stringify({
+        contractVersion: AGENT_CONTRACT_VERSION,
+        requestId: `api-${scenarioId}`,
+        sessionId,
+        scenarioId,
+        mode: "live",
+        language: "en",
+        message,
+      }),
+    });
+
+    expect(result.response.status).toBe(201);
+    expect(result.payload.turn.response.queryPlan.intent).toBe(intent);
+    expect(result.payload.turn.response.citationValidation.status).toBe("passed");
   });
 
   it("cancels a turn when the server deadline expires", async () => {

@@ -26,5 +26,6 @@ qual:hasControlPlanVersion a owl:ObjectProperty ; rdfs:domain qual:ControlPlan ;
 qual:measuresCharacteristic a owl:ObjectProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range qual:QualityCharacteristic ; rdfs:label "measures characteristic" .
 qual:associatedFailureMode a owl:ObjectProperty ; rdfs:domain mfg:Machine ; rdfs:range qual:FailureMode ; rdfs:label "associated failure mode" .
 qual:mayAffect a owl:ObjectProperty ; rdfs:domain qual:FailureMode ; rdfs:range qual:QualityCharacteristic ; rdfs:label "may affect" .
+qual:governedBy a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range core:Document ; rdfs:label "governed by" .
 qual:unit a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:string ; rdfs:label "unit" .
 qual:numericValue a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:decimal ; rdfs:label "numeric value" .

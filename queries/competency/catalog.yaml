@@ -25,3 +25,13 @@ questions:
     query_file: cq-005-machine-configuration.rq
     demo_scenario: machine-impact-analysis
     frontend_route: /ontology-explorer
+  - id: CQ-006
+    question: Which governed objects and validation records are affected by a proposed engineering change?
+    query_file: cq-006-engineering-change-impact.rq
+    demo_scenario: engineering-change-impact
+    frontend_route: /agent-demo
+  - id: CQ-007
+    question: Which bounded metrics identify an operation as a bottleneck candidate?
+    query_file: cq-007-bottleneck-evidence.rq
+    demo_scenario: bottleneck-analysis
+    frontend_route: /agent-demo

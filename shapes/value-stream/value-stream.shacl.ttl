@@ -1,0 +1,20 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix vs: <https://example.com/mkg/value-stream#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+vs:ValueStreamMetricShape a sh:NodeShape ;
+  sh:targetClass vs:ValueStreamMetric ;
+  sh:property [
+    sh:path vs:metricValue ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:decimal ;
+    sh:message "A value-stream metric must have one numeric value." ;
+  ] ;
+  sh:property [
+    sh:path vs:unit ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A value-stream metric must have one unit." ;
+  ] .

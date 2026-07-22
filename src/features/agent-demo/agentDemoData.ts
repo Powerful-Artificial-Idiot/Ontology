@@ -1,4 +1,4 @@
-import { leakRateQualityIssueTraceBaseline } from "../../../packages/demo-data/src/index";
+import { canonicalKnowledgeBaselineByScenarioId } from "../../../packages/demo-data/src/index";
 import { agentRelatedObject } from "../../data/mockKnowledgeRegistry/agentAdapters";
 import { knowledgeIds as id } from "../../data/mockKnowledgeRegistry/ids";
 import { agentSourceCatalog, agentToolCatalog } from "./agentUiCatalog";
@@ -60,15 +60,14 @@ const scenarioDefinitions: Array<{
 export const agentDemoScenarios: AgentScenario[] = scenarioDefinitions.map((definition) => {
   const firstTurn = scriptedTurnsByScenario[definition.id]?.[0];
   if (!firstTurn) throw new Error(`Missing scripted turns for Agent scenario: ${definition.id}`);
-  const canonicalBaseline = definition.id === "quality-issue-trace"
-    ? {
-        baselineId: leakRateQualityIssueTraceBaseline.baselineId,
-        request: leakRateQualityIssueTraceBaseline.request,
-        queryPlan: leakRateQualityIssueTraceBaseline.queryPlan,
-        graphQueryPlan: leakRateQualityIssueTraceBaseline.graphQueryPlan,
-        evidencePack: leakRateQualityIssueTraceBaseline.evidencePack,
-      }
-    : undefined;
+  const baseline = canonicalKnowledgeBaselineByScenarioId.get(definition.id);
+  const canonicalBaseline = baseline ? {
+    baselineId: baseline.baselineId,
+    request: baseline.request,
+    queryPlan: baseline.queryPlan,
+    graphQueryPlan: baseline.graphQueryPlan,
+    evidencePack: baseline.evidencePack,
+  } : undefined;
   return {
     id: definition.id,
     title: definition.title,

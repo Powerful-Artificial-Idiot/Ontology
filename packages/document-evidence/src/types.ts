@@ -1,6 +1,16 @@
 import type { EvidenceItem } from "../../knowledge-contracts/src/index";
 
-export type DocumentType = "control-plan" | "pfmea" | "sop" | "qms-record";
+export type DocumentType =
+  | "control-plan"
+  | "pfmea"
+  | "sop"
+  | "qms-record"
+  | "engineering-change-request"
+  | "validation-record"
+  | "line-balance-study"
+  | "value-stream-map"
+  | "standard-work"
+  | "mes-record";
 export type DocumentApprovalStatus = "approved" | "draft" | "rejected";
 export type DocumentLifecycleStatus = "effective" | "superseded" | "withdrawn";
 export type DocumentAccessClassification = "public" | "internal" | "restricted";

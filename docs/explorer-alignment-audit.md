@@ -13,7 +13,7 @@ This audit separates governed enterprise semantics from application compatibilit
 ## Inventory Summary
 
 - Explorer compatibility properties: **127**
-- Legacy type and relation mappings: **88**
+- Legacy type and relation mappings: **103**
 - Contract and view-model fields: **14**
 - Approved replacement paths: **5**
 
@@ -42,7 +42,7 @@ This audit separates governed enterprise semantics from application compatibilit
 | ux:controllerType | Controller or PLC type. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:controlMethod | Control method used for this characteristic.; Control method used. (reference) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:controlMethodId | Control method identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
-| ux:controlPlanItemId | Control plan row identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
+| ux:controlPlanItemId | Control plan identifier.; Control plan row identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:controlType | Prevention or detection control type. (enum) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:customerId | Customer identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:customerName | Customer name. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
@@ -51,7 +51,7 @@ This audit separates governed enterprise semantics from application compatibilit
 | ux:demandRate | Demand rate. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:demandVariation | Demand variation band. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:detection | Detection score. (number) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
-| ux:documentId | Document identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
+| ux:documentId | Document identifier.; SOP identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:documentName | Document title. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:documentType | Document type. (enum) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:effect | Failure effect. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
@@ -118,7 +118,7 @@ This audit separates governed enterprise semantics from application compatibilit
 | ux:releaseStatus | Program release status.; Release state for finished product.; Release state.; Release status.; Route release status. (enum) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:requiredQty | Quantity required by a consuming operation.; Quantity required by the consuming operation. (number) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:revision | Component revision.; Released product revision.; Revision label.; Route revision. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
-| ux:riskId | Risk identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
+| ux:riskId | PFMEA identifier.; Risk identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:routeId | Unique route identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:routeName | Route display name. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:rpn | Risk priority number. (number) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
@@ -143,7 +143,7 @@ This audit separates governed enterprise semantics from application compatibilit
 | ux:url | Document link. (string) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:value | Metric value. (number) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:valueAddedTime | Value-added processing time. (duration) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
-| ux:version | Version or revision used to align engineering and execution systems. (string) | Ontology Explorer property metadata | Ontology Explorer | deprecated | Enterprise Core Ontology | replace | core:versionIdentifier | Ontology Working Group | high |
+| ux:version | Released revision.; Version or revision used to align engineering and execution systems. (string) | Ontology Explorer property metadata | Ontology Explorer | deprecated | Enterprise Core Ontology | replace | core:versionIdentifier | Ontology Working Group | high |
 | ux:versionId | Version identifier. (string) | Ontology Explorer property metadata | Ontology Explorer | deprecated | Enterprise Core Ontology | replace | core:versionIdentifier | Ontology Working Group | high |
 | ux:waitingTime | Average queue waiting time.; Average waiting time.; Waiting time before shipment. (duration) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
 | ux:wipQty | WIP quantity. (number) | Ontology Explorer property metadata | Ontology Explorer | application-ontology | Explorer Application Ontology | needs-domain-review | - | Ontology Working Group | medium |
@@ -153,6 +153,7 @@ This audit separates governed enterprise semantics from application compatibilit
 
 | Identifier | Current definition | Current usage | Pages | Classification | Target layer | Action | Replacement | Owner | Risk |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| demo_type_mappings:Bottleneck Marker | Maps the frontend type to app:QualityRisk. | Legacy adapter translation | Route Explorer | legacy-mapping | Application Ontology | retain | app:QualityRisk | Knowledge Integration Owner | low |
 | demo_type_mappings:Component | Maps the frontend type to mfg:Material. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Material | Knowledge Integration Owner | low |
 | demo_type_mappings:Control Method | Maps the frontend type to qual:InspectionMethod. | Legacy adapter translation | Route Explorer | legacy-mapping | Quality Domain Ontology | retain | qual:InspectionMethod | Knowledge Integration Owner | low |
 | demo_type_mappings:Customer | Maps the frontend type to core:Agent. | Legacy adapter translation | Route Explorer | legacy-mapping | Enterprise Core Ontology | retain | core:Agent | Knowledge Integration Owner | low |
@@ -165,6 +166,7 @@ This audit separates governed enterprise semantics from application compatibilit
 | demo_type_mappings:Machine | Maps the frontend type to mfg:Machine. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Machine | Knowledge Integration Owner | low |
 | demo_type_mappings:Material | Maps the frontend type to mfg:Material. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Material | Knowledge Integration Owner | low |
 | demo_type_mappings:Operation | Maps the frontend type to mfg:Operation. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Operation | Knowledge Integration Owner | low |
+| demo_type_mappings:PFMEA | Maps the frontend type to app:QualityRisk. | Legacy adapter translation | Route Explorer | legacy-mapping | Application Ontology | retain | app:QualityRisk | Knowledge Integration Owner | low |
 | demo_type_mappings:PFMEA Risk | Maps the frontend type to app:QualityRisk. | Legacy adapter translation | Route Explorer | legacy-mapping | Application Ontology | retain | app:QualityRisk | Knowledge Integration Owner | low |
 | demo_type_mappings:Process Box | Maps the frontend type to mfg:Operation. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Operation | Knowledge Integration Owner | low |
 | demo_type_mappings:Product | Maps the frontend type to mfg:Product. | Legacy adapter translation | Route Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Product | Knowledge Integration Owner | low |
@@ -197,6 +199,9 @@ This audit separates governed enterprise semantics from application compatibilit
 | ontology_explorer_type_mappings:Inventory Buffer | Maps the frontend type to mfg:Material. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Material | Knowledge Integration Owner | low |
 | ontology_explorer_type_mappings:Machine | Maps the frontend type to mfg:Machine. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Machine | Knowledge Integration Owner | low |
 | ontology_explorer_type_mappings:Material | Maps the frontend type to mfg:Material. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Material | Knowledge Integration Owner | low |
+| ontology_explorer_type_mappings:ontology.object.control-plan | Maps the frontend type to qual:ControlPlanVersion. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Quality Domain Ontology | retain | qual:ControlPlanVersion | Knowledge Integration Owner | low |
+| ontology_explorer_type_mappings:ontology.object.pfmea | Maps the frontend type to app:QualityRisk. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Application Ontology | retain | app:QualityRisk | Knowledge Integration Owner | low |
+| ontology_explorer_type_mappings:ontology.object.sop | Maps the frontend type to core:Document. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Enterprise Core Ontology | retain | core:Document | Knowledge Integration Owner | low |
 | ontology_explorer_type_mappings:Operation | Maps the frontend type to mfg:Operation. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:Operation | Knowledge Integration Owner | low |
 | ontology_explorer_type_mappings:Owner | Maps the frontend type to core:Agent. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Enterprise Core Ontology | retain | core:Agent | Knowledge Integration Owner | low |
 | ontology_explorer_type_mappings:PFMEA Risk | Maps the frontend type to app:QualityRisk. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Application Ontology | retain | app:QualityRisk | Knowledge Integration Owner | low |
@@ -241,6 +246,16 @@ This audit separates governed enterprise semantics from application compatibilit
 | ontology_explorer_relation_mappings:link-supplier-feeds-inventory | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
 | ontology_explorer_relation_mappings:link-vsm-metric-measures-operation | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
 | ontology_explorer_relation_mappings:link-wip-feeds-operation | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.affects | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.contributes-to | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.controls | Maps the frontend relation to qual:controlsCharacteristic. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Quality Domain Ontology | retain | qual:controlsCharacteristic | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.described-by | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.governed-by | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.next-operation | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.performed-on | Maps the frontend relation to mfg:executedBy. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:executedBy | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.requires-validation | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.risk-analyzed-by | Maps the frontend relation to mfg:flowsTo. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:flowsTo | Knowledge Integration Owner | low |
+| ontology_explorer_relation_mappings:ontology.relationship.uses-program | Maps the frontend relation to mfg:usesParameter. | Legacy adapter translation | Ontology Explorer | legacy-mapping | Manufacturing Domain Ontology | retain | mfg:usesParameter | Knowledge Integration Owner | low |
 
 ## Contract And View-Model Audit
 

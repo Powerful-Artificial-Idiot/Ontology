@@ -43,6 +43,34 @@ const qualityScenario: AgentScenarioDescriptor = {
   }],
 };
 
+const agentScenarios: AgentScenarioDescriptor[] = [
+  qualityScenario,
+  {
+    id: "engineering-change-impact",
+    title: "Engineering Change Impact Analysis",
+    description: "Assess governed operation, quality-control, document, validation, and release impacts for an M220 program change.",
+    domain: "engineering",
+    supportedModes: ["live"],
+    supportedLanguages: ["zh", "en"],
+    suggestedQuestions: [{
+      zh: "M220 的程序版本从 V3.4 变更到 V3.5，会影响哪些工序、质量控制和放行文件？",
+      en: "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+    }],
+  },
+  {
+    id: "bottleneck-analysis",
+    title: "Bottleneck Analysis",
+    description: "Analyze bounded value-stream evidence for OP20 and the downstream constraint-shift risk from OP30 retest.",
+    domain: "valueStream",
+    supportedModes: ["live"],
+    supportedLanguages: ["zh", "en"],
+    suggestedQuestions: [{
+      zh: "OP20 是当前瓶颈吗？如果 OP30 漏率复测增加，瓶颈会不会转移？",
+      en: "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+    }],
+  },
+];
+
 export type AgentApiLogger = {
   info(message: string, metadata: Record<string, string | number | boolean>): void;
   error(message: string, metadata: Record<string, string | number | boolean>): void;
@@ -133,14 +161,15 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
 
   if (segments.length === 1 && segments[0] === "scenarios") {
     requireMethod(request, "GET");
-    sendJson(response, 200, { scenarios: [qualityScenario] }, traceId);
+    sendJson(response, 200, { scenarios: agentScenarios }, traceId);
     return;
   }
 
   if (segments.length === 1 && segments[0] === "sessions") {
     requireMethod(request, "POST");
     const body = assertCreateSessionRequest(await readJson(request));
-    if (body.scenarioId !== qualityScenario.id) {
+    const scenario = agentScenarios.find((candidate) => candidate.id === body.scenarioId);
+    if (!scenario) {
       throw new AgentApiError(404, "SCENARIO_NOT_FOUND", `Scenario not found: ${body.scenarioId}`, { scenarioId: body.scenarioId });
     }
     if (body.mode !== "live") {
@@ -151,7 +180,7 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
       scenarioId: body.scenarioId,
       mode: body.mode,
       language: body.language,
-      activeTopic: "Leak Rate quality issue trace",
+      activeTopic: scenario.title,
     });
     sendJson<AgentSessionResource>(response, 201, { session }, traceId);
     return;

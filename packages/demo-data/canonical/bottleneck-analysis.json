@@ -1,0 +1,1229 @@
+{
+  "baselineId": "canonical-baseline.bottleneck-analysis",
+  "baselineVersion": "1.0.0",
+  "agentContractVersion": "1.0.0",
+  "ontologyVersion": "1.2.0",
+  "dataVersion": "0.6.0",
+  "scenario": {
+    "id": "bottleneck-analysis",
+    "title": "Bottleneck Analysis",
+    "question": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+    "intent": "bottleneck_analysis",
+    "seedEntityIds": [
+      "operation.op20"
+    ]
+  },
+  "ids": {
+    "product": {
+      "brakeBooster": "product.brake-booster"
+    },
+    "operation": {
+      "op20": "operation.op20",
+      "op30": "operation.op30"
+    },
+    "metrics": {
+      "cycleTime": "value-stream.metric.op20-cycle-time",
+      "wip": "value-stream.wip-before-op20",
+      "waiting": "value-stream.metric.waiting-time-before-op20"
+    }
+  },
+  "semanticAliases": {
+    "operation.op20": [
+      "OP20",
+      "Diaphragm Assembly",
+      "瓶颈",
+      "bottleneck"
+    ]
+  },
+  "entities": [
+    {
+      "id": "product.brake-booster",
+      "type": "mfg:Product",
+      "label": "Brake Booster Assembly",
+      "description": "Brake Booster Assembly",
+      "domain": "production",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op10",
+      "type": "mfg:Operation",
+      "label": "OP10 Housing Press Fit",
+      "description": "OP10 Housing Press Fit",
+      "domain": "production",
+      "properties": {
+        "cycleTimeSeconds": 35
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op20",
+      "type": "mfg:Operation",
+      "label": "OP20 Diaphragm Assembly",
+      "description": "OP20 Diaphragm Assembly",
+      "domain": "production",
+      "properties": {
+        "cycleTimeSeconds": 48,
+        "taktSeconds": 45
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op30",
+      "type": "mfg:Operation",
+      "label": "OP30 Leak Test",
+      "description": "OP30 Leak Test",
+      "domain": "production",
+      "properties": {
+        "cycleTimeSeconds": 42
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op40",
+      "type": "mfg:Operation",
+      "label": "OP40 Final Inspection",
+      "description": "OP40 Final Inspection",
+      "domain": "production",
+      "properties": {
+        "cycleTimeSeconds": 25
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "quality-characteristic.leak-rate",
+      "type": "qual:QualityCharacteristic",
+      "label": "Leak Rate",
+      "description": "Leak Rate",
+      "domain": "quality",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.metric.op20-cycle-time",
+      "type": "vs:ValueStreamMetric",
+      "label": "OP20 Cycle Time",
+      "description": "OP20 Cycle Time",
+      "domain": "valueStream",
+      "properties": {
+        "metricValue": 48,
+        "unit": "seconds",
+        "asOf": "2026-07-22T00:00:00.000Z"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.wip-before-op20",
+      "type": "vs:WIPBuffer",
+      "label": "WIP before OP20",
+      "description": "WIP before OP20",
+      "domain": "valueStream",
+      "properties": {
+        "quantity": 36,
+        "unit": "pieces"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.metric.waiting-time-before-op20",
+      "type": "vs:ValueStreamMetric",
+      "label": "Waiting Time before OP20",
+      "description": "Waiting Time before OP20",
+      "domain": "valueStream",
+      "properties": {
+        "metricValue": 18,
+        "unit": "minutes",
+        "asOf": "2026-07-22T00:00:00.000Z"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.metric.line-bottleneck-risk",
+      "type": "vs:BottleneckRisk",
+      "label": "Line Bottleneck Risk",
+      "description": "Line Bottleneck Risk",
+      "domain": "valueStream",
+      "properties": {
+        "metricValue": 0.7,
+        "unit": "bounded-score",
+        "asOf": "2026-07-22T00:00:00.000Z"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.metric.rework-retest-load",
+      "type": "vs:ValueStreamMetric",
+      "label": "Rework / Retest Load",
+      "description": "Rework / Retest Load",
+      "domain": "valueStream",
+      "properties": {
+        "metricValue": 0,
+        "unit": "unconnected-live-count",
+        "asOf": "2026-07-22T00:00:00.000Z"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "value-stream.metric.waiting-time-before-op40",
+      "type": "vs:ValueStreamMetric",
+      "label": "Waiting Time before OP40",
+      "description": "Waiting Time before OP40",
+      "domain": "valueStream",
+      "properties": {
+        "metricValue": 0,
+        "unit": "unconnected-live-minutes",
+        "asOf": "2026-07-22T00:00:00.000Z"
+      },
+      "version": "1",
+      "status": "active"
+    }
+  ],
+  "relations": [
+    {
+      "id": "relation.product.brake-booster.has-operation.op20",
+      "sourceId": "product.brake-booster",
+      "targetId": "operation.op20",
+      "label": "hasOperation",
+      "predicate": "mfg:requiresOperation",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op10.next-operation.op20",
+      "sourceId": "operation.op10",
+      "targetId": "operation.op20",
+      "label": "nextOperation",
+      "predicate": "mfg:flowsTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op20.next-operation.op30",
+      "sourceId": "operation.op20",
+      "targetId": "operation.op30",
+      "label": "nextOperation",
+      "predicate": "mfg:flowsTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op30.next-operation.op40",
+      "sourceId": "operation.op30",
+      "targetId": "operation.op40",
+      "label": "nextOperation",
+      "predicate": "mfg:flowsTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op20.contributes-to.cycle-time",
+      "sourceId": "operation.op20",
+      "targetId": "value-stream.metric.op20-cycle-time",
+      "label": "contributesTo",
+      "predicate": "vs:contributesTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op20.affects.wip-before-op20",
+      "sourceId": "operation.op20",
+      "targetId": "value-stream.wip-before-op20",
+      "label": "affectsFlow",
+      "predicate": "vs:affectsFlow",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op20.contributes-to.waiting",
+      "sourceId": "operation.op20",
+      "targetId": "value-stream.metric.waiting-time-before-op20",
+      "label": "contributesTo",
+      "predicate": "vs:contributesTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op20.contributes-to.bottleneck-risk",
+      "sourceId": "operation.op20",
+      "targetId": "value-stream.metric.line-bottleneck-risk",
+      "label": "contributesTo",
+      "predicate": "vs:contributesTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.leak-rate.affects.retest-load",
+      "sourceId": "quality-characteristic.leak-rate",
+      "targetId": "value-stream.metric.rework-retest-load",
+      "label": "affectsFlow",
+      "predicate": "vs:affectsFlow",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.retest-load.contributes-to.op40-waiting",
+      "sourceId": "value-stream.metric.rework-retest-load",
+      "targetId": "value-stream.metric.waiting-time-before-op40",
+      "label": "contributesTo",
+      "predicate": "vs:contributesTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.op30-retest.contributes-to.bottleneck-risk",
+      "sourceId": "value-stream.metric.rework-retest-load",
+      "targetId": "value-stream.metric.line-bottleneck-risk",
+      "label": "contributesTo",
+      "predicate": "vs:contributesTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    }
+  ],
+  "request": {
+    "contractVersion": "1.0.0",
+    "requestId": "canonical.bottleneck-analysis.001",
+    "scenarioId": "bottleneck-analysis",
+    "mode": "live",
+    "language": "en",
+    "message": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+    "requestedAt": "2026-07-22T00:00:00.000Z"
+  },
+  "queryPlan": {
+    "planId": "query-plan.bottleneck-analysis.001",
+    "planVersion": "1.0.0",
+    "intent": "bottleneck_analysis",
+    "originalQuestion": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+    "entities": [
+      {
+        "id": "operation.op20",
+        "label": "OP20 Diaphragm Assembly",
+        "type": "mfg:Operation",
+        "role": "subject"
+      }
+    ],
+    "relationTypes": [
+      "ontology.relationship.next-operation",
+      "ontology.relationship.contributes-to",
+      "ontology.relationship.affects"
+    ],
+    "requestedFacets": [
+      "production",
+      "valueStream",
+      "quality",
+      "engineering"
+    ],
+    "constraints": [
+      {
+        "key": "entity.status",
+        "operator": "eq",
+        "value": "active"
+      }
+    ],
+    "assumptions": [
+      "The local OP20 and OP30 samples are bounded demo signals, not live enterprise telemetry."
+    ]
+  },
+  "graphQueryPlan": {
+    "graphPlanId": "graph-query-plan.bottleneck-analysis.001",
+    "graphPlanVersion": "1.0.0",
+    "semanticPlanId": "query-plan.bottleneck-analysis.001",
+    "intent": "bottleneck_analysis",
+    "templateId": "bottleneck-analysis.flow-metrics.v1",
+    "readOnly": true,
+    "seedEntityIds": [
+      "operation.op20"
+    ],
+    "allowedRelationTypes": [
+      "hasOperation",
+      "nextOperation",
+      "contributesTo",
+      "affectsFlow"
+    ],
+    "maxDepth": 3,
+    "resultLimit": 80,
+    "parameters": {
+      "status": "active"
+    }
+  },
+  "evidencePack": {
+    "id": "evidence-pack.bottleneck-analysis.001",
+    "queryPlanId": "query-plan.bottleneck-analysis.001",
+    "generatedAt": "2026-07-22T00:00:00.000Z",
+    "ontologyVersion": "1.2.0",
+    "dataVersion": "0.6.0",
+    "items": [
+      {
+        "id": "evidence.graph.brake-booster-value-stream",
+        "kind": "graph",
+        "title": "Brake Booster Value Stream Graph",
+        "excerpt": "The released route flows OP10 to OP20 to OP30 to OP40 and connects OP20/OP30 to governed capacity, WIP, waiting and retest metrics.",
+        "source": {
+          "sourceType": "canonical-knowledge-graph",
+          "sourceId": "evidence.graph.brake-booster-value-stream",
+          "sourceSystem": "Manufacturing Knowledge Graph",
+          "locator": "OP10 -> OP20 -> OP30 -> OP40"
+        },
+        "linkedEntityIds": [
+          "product.brake-booster",
+          "operation.op10",
+          "operation.op20",
+          "operation.op30",
+          "operation.op40"
+        ],
+        "supportsClaimIds": [
+          "claim.route-impact",
+          "claim.shift-risk"
+        ],
+        "version": "1.0.0",
+        "status": "active"
+      },
+      {
+        "id": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+        "kind": "document",
+        "title": "Line Balance Study BB01 - OP20 Capacity Comparison",
+        "excerpt": "The governed sample records OP20 median cycle time at 48 seconds against a 45 second takt. OP10 and OP30 nominal cycle times are lower, making OP20 the current bounded bottleneck candidate rather than a confirmed live constraint.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "LB-BB01",
+          "sourceSystem": "IE Repository",
+          "documentName": "Line Balance Study BB01",
+          "locator": "Section 3 / OP20 Capacity Comparison"
+        },
+        "linkedEntityIds": [
+          "operation.op20",
+          "value-stream.metric.op20-cycle-time",
+          "value-stream.metric.line-bottleneck-risk"
+        ],
+        "supportsClaimIds": [
+          "claim.bottleneck-candidate",
+          "claim.route-impact"
+        ],
+        "version": "Rev.1",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "doc.line-balance-study-lb-bb01",
+          "documentType": "line-balance-study",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Industrial Engineering",
+          "contentChecksum": "sha256:b0eead57d8611fbeae7943731c5ce00098f113a43a7f72b4fd5b915395aaab5b",
+          "chunkChecksum": "sha256:9813d81a34911ee44c674b1073f548f281f8bd09112229c86ed0d73519134217",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+        "kind": "document",
+        "title": "Value Stream Map BB01 - OP20 WIP and Waiting",
+        "excerpt": "The current-state demo map shows 36 pieces of WIP and approximately 18 minutes waiting before OP20. OP30 retest load and waiting before OP40 are tracked separately as a possible bottleneck-shift signal.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "VS-BB01",
+          "sourceSystem": "Lean VSM",
+          "documentName": "Value Stream Map BB01",
+          "locator": "Current State / OP20 Buffer"
+        },
+        "linkedEntityIds": [
+          "operation.op20",
+          "operation.op30",
+          "value-stream.wip-before-op20",
+          "value-stream.metric.waiting-time-before-op20",
+          "value-stream.metric.waiting-time-before-op40",
+          "value-stream.metric.rework-retest-load"
+        ],
+        "supportsClaimIds": [
+          "claim.bottleneck-candidate",
+          "claim.route-impact",
+          "claim.shift-risk"
+        ],
+        "version": "Rev.2",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "doc.value-stream-map-vs-bb01",
+          "documentType": "value-stream-map",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Lean Office",
+          "contentChecksum": "sha256:32a3ea14bf08b707b3dfaa0b6a73e99dde9eef73940dbb0d2dcb5a56fab18866",
+          "chunkChecksum": "sha256:fbf37b0fdf2d105bd114566171b23838354040677ba9e730173825e6970f9fa4",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+        "kind": "document",
+        "title": "Standard Work OP20 Diaphragm Assembly - Manual Assembly Work Content",
+        "excerpt": "The released OP20 sequence includes manual diaphragm positioning and fixture reset. These elements must be time-observed before assigning a corrective action or capacity commitment.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "SW-OP20",
+          "sourceSystem": "DMS",
+          "documentName": "Standard Work OP20 Diaphragm Assembly",
+          "locator": "Section 2 / Work Sequence"
+        },
+        "linkedEntityIds": [
+          "operation.op20",
+          "value-stream.metric.op20-cycle-time"
+        ],
+        "supportsClaimIds": [
+          "claim.verification-required"
+        ],
+        "version": "Rev.B",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "doc.standard-work-op20",
+          "documentType": "standard-work",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Production Engineering",
+          "contentChecksum": "sha256:f27b072a8a9f0229e6abef5c3a0fae6ea7327034338d9d62d74360579a08d73f",
+          "chunkChecksum": "sha256:ba65eceb4baaa8438255381aff375e3d66a41d09efe31de24efeafc6bf483257",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+        "kind": "system-record",
+        "title": "MES OP20 Shift Sample - Bounded Shift Sample",
+        "excerpt": "The local fixture contains a bounded OP20 sample with median cycle time 48 seconds. It is not a live or statistically complete production history and cannot establish a sustained enterprise bottleneck by itself.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "MES-OP20-DEMO",
+          "sourceSystem": "MES Mock",
+          "documentName": "MES OP20 Shift Sample",
+          "locator": "Shift Sample / OP20 Metrics"
+        },
+        "linkedEntityIds": [
+          "operation.op20",
+          "value-stream.metric.op20-cycle-time"
+        ],
+        "supportsClaimIds": [
+          "claim.verification-required",
+          "claim.live-data-limitation"
+        ],
+        "version": "2026-07 Demo",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "record.mes.op20-shift.2026-07-demo",
+          "documentType": "mes-record",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Manufacturing Systems",
+          "contentChecksum": "sha256:f515979d16f9c05a1b9f91ce6ab3f17c713701ba71423846ece826a8c26d0046",
+          "chunkChecksum": "sha256:86ea89beca9d706588688f2fd25871ae3a138682d856164afd4b3cbafa7acd69",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "restricted",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest",
+        "kind": "system-record",
+        "title": "QMS OP30 Retest Signal - Potential Bottleneck Shift Signal",
+        "excerpt": "The demo signal indicates that elevated Leak Rate retest could reduce effective OP30 capacity and increase waiting before OP40. No live retest distribution or confirmed shift event is connected.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "QMS-OP30-RETEST",
+          "sourceSystem": "QMS Mock",
+          "documentName": "QMS OP30 Retest Signal",
+          "locator": "Signal Summary / OP30 Retest"
+        },
+        "linkedEntityIds": [
+          "operation.op30",
+          "quality-characteristic.leak-rate",
+          "value-stream.metric.rework-retest-load",
+          "value-stream.metric.waiting-time-before-op40"
+        ],
+        "supportsClaimIds": [
+          "claim.shift-risk",
+          "claim.live-data-limitation"
+        ],
+        "version": "2026-07 Demo",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "record.qms.op30-retest.2026-07-demo",
+          "documentType": "qms-record",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Quality Systems",
+          "contentChecksum": "sha256:1cc74759c0d405a783b828b9e2291ece71584a2ee17e813b209d3c28dbb068d6",
+          "chunkChecksum": "sha256:d339286f5357206e16ddf055919d69f248c33498f3ff581109ec6b5446479310",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "restricted",
+          "accessDecision": "allowed"
+        }
+      }
+    ],
+    "claimPolicies": [
+      {
+        "claimId": "claim.bottleneck-candidate",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.route-impact",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.shift-risk",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.verification-required",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.live-data-limitation",
+        "classification": "limitation",
+        "required": true
+      }
+    ],
+    "limitations": [
+      "No live shift history, downtime distribution, staffing state or confirmed OP30 retest population is connected."
+    ]
+  },
+  "expectedResponse": {
+    "contractVersion": "1.0.0",
+    "requestId": "canonical.bottleneck-analysis.001",
+    "turnId": "turn.canonical.bottleneck-analysis.001",
+    "status": "completed",
+    "queryPlan": {
+      "planId": "query-plan.bottleneck-analysis.001",
+      "planVersion": "1.0.0",
+      "intent": "bottleneck_analysis",
+      "originalQuestion": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+      "entities": [
+        {
+          "id": "operation.op20",
+          "label": "OP20 Diaphragm Assembly",
+          "type": "mfg:Operation",
+          "role": "subject"
+        }
+      ],
+      "relationTypes": [
+        "ontology.relationship.next-operation",
+        "ontology.relationship.contributes-to",
+        "ontology.relationship.affects"
+      ],
+      "requestedFacets": [
+        "production",
+        "valueStream",
+        "quality",
+        "engineering"
+      ],
+      "constraints": [
+        {
+          "key": "entity.status",
+          "operator": "eq",
+          "value": "active"
+        }
+      ],
+      "assumptions": [
+        "The local OP20 and OP30 samples are bounded demo signals, not live enterprise telemetry."
+      ]
+    },
+    "graphQueryPlan": {
+      "graphPlanId": "graph-query-plan.bottleneck-analysis.001",
+      "graphPlanVersion": "1.0.0",
+      "semanticPlanId": "query-plan.bottleneck-analysis.001",
+      "intent": "bottleneck_analysis",
+      "templateId": "bottleneck-analysis.flow-metrics.v1",
+      "readOnly": true,
+      "seedEntityIds": [
+        "operation.op20"
+      ],
+      "allowedRelationTypes": [
+        "hasOperation",
+        "nextOperation",
+        "contributesTo",
+        "affectsFlow"
+      ],
+      "maxDepth": 3,
+      "resultLimit": 80,
+      "parameters": {
+        "status": "active"
+      }
+    },
+    "evidencePack": {
+      "id": "evidence-pack.bottleneck-analysis.001",
+      "queryPlanId": "query-plan.bottleneck-analysis.001",
+      "generatedAt": "2026-07-22T00:00:00.000Z",
+      "ontologyVersion": "1.2.0",
+      "dataVersion": "0.6.0",
+      "items": [
+        {
+          "id": "evidence.graph.brake-booster-value-stream",
+          "kind": "graph",
+          "title": "Brake Booster Value Stream Graph",
+          "excerpt": "The released route flows OP10 to OP20 to OP30 to OP40 and connects OP20/OP30 to governed capacity, WIP, waiting and retest metrics.",
+          "source": {
+            "sourceType": "canonical-knowledge-graph",
+            "sourceId": "evidence.graph.brake-booster-value-stream",
+            "sourceSystem": "Manufacturing Knowledge Graph",
+            "locator": "OP10 -> OP20 -> OP30 -> OP40"
+          },
+          "linkedEntityIds": [
+            "product.brake-booster",
+            "operation.op10",
+            "operation.op20",
+            "operation.op30",
+            "operation.op40"
+          ],
+          "supportsClaimIds": [
+            "claim.route-impact",
+            "claim.shift-risk"
+          ],
+          "version": "1.0.0",
+          "status": "active"
+        },
+        {
+          "id": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+          "kind": "document",
+          "title": "Line Balance Study BB01 - OP20 Capacity Comparison",
+          "excerpt": "The governed sample records OP20 median cycle time at 48 seconds against a 45 second takt. OP10 and OP30 nominal cycle times are lower, making OP20 the current bounded bottleneck candidate rather than a confirmed live constraint.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "LB-BB01",
+            "sourceSystem": "IE Repository",
+            "documentName": "Line Balance Study BB01",
+            "locator": "Section 3 / OP20 Capacity Comparison"
+          },
+          "linkedEntityIds": [
+            "operation.op20",
+            "value-stream.metric.op20-cycle-time",
+            "value-stream.metric.line-bottleneck-risk"
+          ],
+          "supportsClaimIds": [
+            "claim.bottleneck-candidate",
+            "claim.route-impact"
+          ],
+          "version": "Rev.1",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "doc.line-balance-study-lb-bb01",
+            "documentType": "line-balance-study",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Industrial Engineering",
+            "contentChecksum": "sha256:b0eead57d8611fbeae7943731c5ce00098f113a43a7f72b4fd5b915395aaab5b",
+            "chunkChecksum": "sha256:9813d81a34911ee44c674b1073f548f281f8bd09112229c86ed0d73519134217",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+          "kind": "document",
+          "title": "Value Stream Map BB01 - OP20 WIP and Waiting",
+          "excerpt": "The current-state demo map shows 36 pieces of WIP and approximately 18 minutes waiting before OP20. OP30 retest load and waiting before OP40 are tracked separately as a possible bottleneck-shift signal.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "VS-BB01",
+            "sourceSystem": "Lean VSM",
+            "documentName": "Value Stream Map BB01",
+            "locator": "Current State / OP20 Buffer"
+          },
+          "linkedEntityIds": [
+            "operation.op20",
+            "operation.op30",
+            "value-stream.wip-before-op20",
+            "value-stream.metric.waiting-time-before-op20",
+            "value-stream.metric.waiting-time-before-op40",
+            "value-stream.metric.rework-retest-load"
+          ],
+          "supportsClaimIds": [
+            "claim.bottleneck-candidate",
+            "claim.route-impact",
+            "claim.shift-risk"
+          ],
+          "version": "Rev.2",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "doc.value-stream-map-vs-bb01",
+            "documentType": "value-stream-map",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Lean Office",
+            "contentChecksum": "sha256:32a3ea14bf08b707b3dfaa0b6a73e99dde9eef73940dbb0d2dcb5a56fab18866",
+            "chunkChecksum": "sha256:fbf37b0fdf2d105bd114566171b23838354040677ba9e730173825e6970f9fa4",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+          "kind": "document",
+          "title": "Standard Work OP20 Diaphragm Assembly - Manual Assembly Work Content",
+          "excerpt": "The released OP20 sequence includes manual diaphragm positioning and fixture reset. These elements must be time-observed before assigning a corrective action or capacity commitment.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "SW-OP20",
+            "sourceSystem": "DMS",
+            "documentName": "Standard Work OP20 Diaphragm Assembly",
+            "locator": "Section 2 / Work Sequence"
+          },
+          "linkedEntityIds": [
+            "operation.op20",
+            "value-stream.metric.op20-cycle-time"
+          ],
+          "supportsClaimIds": [
+            "claim.verification-required"
+          ],
+          "version": "Rev.B",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "doc.standard-work-op20",
+            "documentType": "standard-work",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Production Engineering",
+            "contentChecksum": "sha256:f27b072a8a9f0229e6abef5c3a0fae6ea7327034338d9d62d74360579a08d73f",
+            "chunkChecksum": "sha256:ba65eceb4baaa8438255381aff375e3d66a41d09efe31de24efeafc6bf483257",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+          "kind": "system-record",
+          "title": "MES OP20 Shift Sample - Bounded Shift Sample",
+          "excerpt": "The local fixture contains a bounded OP20 sample with median cycle time 48 seconds. It is not a live or statistically complete production history and cannot establish a sustained enterprise bottleneck by itself.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "MES-OP20-DEMO",
+            "sourceSystem": "MES Mock",
+            "documentName": "MES OP20 Shift Sample",
+            "locator": "Shift Sample / OP20 Metrics"
+          },
+          "linkedEntityIds": [
+            "operation.op20",
+            "value-stream.metric.op20-cycle-time"
+          ],
+          "supportsClaimIds": [
+            "claim.verification-required",
+            "claim.live-data-limitation"
+          ],
+          "version": "2026-07 Demo",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "record.mes.op20-shift.2026-07-demo",
+            "documentType": "mes-record",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Manufacturing Systems",
+            "contentChecksum": "sha256:f515979d16f9c05a1b9f91ce6ab3f17c713701ba71423846ece826a8c26d0046",
+            "chunkChecksum": "sha256:86ea89beca9d706588688f2fd25871ae3a138682d856164afd4b3cbafa7acd69",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "restricted",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest",
+          "kind": "system-record",
+          "title": "QMS OP30 Retest Signal - Potential Bottleneck Shift Signal",
+          "excerpt": "The demo signal indicates that elevated Leak Rate retest could reduce effective OP30 capacity and increase waiting before OP40. No live retest distribution or confirmed shift event is connected.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "QMS-OP30-RETEST",
+            "sourceSystem": "QMS Mock",
+            "documentName": "QMS OP30 Retest Signal",
+            "locator": "Signal Summary / OP30 Retest"
+          },
+          "linkedEntityIds": [
+            "operation.op30",
+            "quality-characteristic.leak-rate",
+            "value-stream.metric.rework-retest-load",
+            "value-stream.metric.waiting-time-before-op40"
+          ],
+          "supportsClaimIds": [
+            "claim.shift-risk",
+            "claim.live-data-limitation"
+          ],
+          "version": "2026-07 Demo",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "record.qms.op30-retest.2026-07-demo",
+            "documentType": "qms-record",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Quality Systems",
+            "contentChecksum": "sha256:1cc74759c0d405a783b828b9e2291ece71584a2ee17e813b209d3c28dbb068d6",
+            "chunkChecksum": "sha256:d339286f5357206e16ddf055919d69f248c33498f3ff581109ec6b5446479310",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "restricted",
+            "accessDecision": "allowed"
+          }
+        }
+      ],
+      "claimPolicies": [
+        {
+          "claimId": "claim.bottleneck-candidate",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.route-impact",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.shift-risk",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.verification-required",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.live-data-limitation",
+          "classification": "limitation",
+          "required": true
+        }
+      ],
+      "limitations": [
+        "No live shift history, downtime distribution, staffing state or confirmed OP30 retest population is connected."
+      ]
+    },
+    "answer": {
+      "summary": "OP20 is the current bounded bottleneck candidate; elevated OP30 retest could shift or extend the constraint, but live confirmation requires current flow and quality data.",
+      "findings": [
+        "OP20 sample cycle time is 48 seconds against 45 second takt.",
+        "WIP and waiting accumulate before OP20.",
+        "OP30 retest is a governed downstream shift risk, not a confirmed event."
+      ],
+      "recommendedActions": [
+        "Collect current cycle and downtime distributions.",
+        "Observe OP20 work content and resource availability.",
+        "Monitor OP30 retest load and waiting before OP40."
+      ],
+      "risks": [
+        "Treating a bounded sample as a confirmed bottleneck could misdirect capacity investment."
+      ],
+      "assumptions": [
+        "The local OP20 and OP30 samples are bounded demo signals, not live enterprise telemetry."
+      ],
+      "limitations": [
+        "No live shift history, downtime distribution, staffing state or confirmed OP30 retest population is connected."
+      ],
+      "claims": [
+        {
+          "id": "claim.bottleneck-candidate",
+          "text": "OP20 is the current bounded bottleneck candidate because its 48 second sample exceeds 45 second takt and coincides with upstream WIP and waiting.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison"
+            },
+            {
+              "evidenceId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+            }
+          ]
+        },
+        {
+          "id": "claim.route-impact",
+          "text": "An OP20 constraint can limit flow into OP30 on the released Brake Booster route.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence.graph.brake-booster-value-stream"
+            },
+            {
+              "evidenceId": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison"
+            },
+            {
+              "evidenceId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+            }
+          ]
+        },
+        {
+          "id": "claim.shift-risk",
+          "text": "Elevated OP30 Leak Rate retest could shift or extend the active constraint toward OP30.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence.graph.brake-booster-value-stream"
+            },
+            {
+              "evidenceId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+            },
+            {
+              "evidenceId": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+            }
+          ]
+        },
+        {
+          "id": "claim.verification-required",
+          "text": "A live decision requires current cycle, downtime, WIP, waiting and resource-state observations.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence"
+            },
+            {
+              "evidenceId": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+            }
+          ]
+        },
+        {
+          "id": "claim.live-data-limitation",
+          "text": "The local MES/QMS fixtures do not prove a sustained live bottleneck or an actual bottleneck shift.",
+          "classification": "limitation",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+            },
+            {
+              "evidenceId": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+            }
+          ]
+        }
+      ],
+      "confidence": "high"
+    },
+    "citationValidation": {
+      "status": "passed",
+      "checkedClaimIds": [
+        "claim.bottleneck-candidate",
+        "claim.route-impact",
+        "claim.shift-risk",
+        "claim.verification-required",
+        "claim.live-data-limitation"
+      ],
+      "issues": []
+    },
+    "trace": {
+      "traceId": "trace.canonical.bottleneck-analysis.001",
+      "requestId": "canonical.bottleneck-analysis.001",
+      "stages": [
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.1",
+          "stage": "semantic-parsing",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.semantic-parsing.v1",
+          "inputRefs": [
+            "canonical.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "summary": "semantic-parsing completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.2",
+          "stage": "query-plan-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.query-plan-validation.v1",
+          "inputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "summary": "query-plan-validation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.3",
+          "stage": "ontology-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.ontology-validation.v1",
+          "inputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "bottleneck-analysis.flow-metrics.v1"
+          ],
+          "summary": "ontology-validation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.4",
+          "stage": "query-compilation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.query-compilation.v1",
+          "inputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "graph-query-plan.bottleneck-analysis.001"
+          ],
+          "summary": "query-compilation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.5",
+          "stage": "graph-retrieval",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.graph-retrieval.v1",
+          "inputRefs": [
+            "graph-query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "operation.op20"
+          ],
+          "summary": "graph-retrieval completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.6",
+          "stage": "document-retrieval",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.document-retrieval.v1",
+          "inputRefs": [
+            "graph-query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+            "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+            "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+            "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+            "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+          ],
+          "summary": "document-retrieval completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.7",
+          "stage": "evidence-pack",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.evidence-pack.v1",
+          "inputRefs": [
+            "query-plan.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "evidence-pack.bottleneck-analysis.001"
+          ],
+          "summary": "evidence-pack completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.8",
+          "stage": "answer-composition",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.answer-composition.v1",
+          "inputRefs": [
+            "evidence-pack.bottleneck-analysis.001"
+          ],
+          "outputRefs": [
+            "claim.bottleneck-candidate",
+            "claim.route-impact",
+            "claim.shift-risk",
+            "claim.verification-required",
+            "claim.live-data-limitation"
+          ],
+          "summary": "answer-composition completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.bottleneck-analysis.001.9",
+          "stage": "citation-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.citation-validation.v1",
+          "inputRefs": [
+            "claim.bottleneck-candidate",
+            "claim.route-impact",
+            "claim.shift-risk",
+            "claim.verification-required",
+            "claim.live-data-limitation"
+          ],
+          "outputRefs": [
+            "claim.bottleneck-candidate",
+            "claim.route-impact",
+            "claim.shift-risk",
+            "claim.verification-required",
+            "claim.live-data-limitation"
+          ],
+          "summary": "citation-validation completed against the governed Phase 5B baseline."
+        }
+      ]
+    },
+    "completedAt": "2026-07-22T00:00:00.000Z"
+  }
+}

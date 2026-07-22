@@ -1,0 +1,1140 @@
+{
+  "baselineId": "canonical-baseline.engineering-change-impact",
+  "baselineVersion": "1.0.0",
+  "agentContractVersion": "1.0.0",
+  "ontologyVersion": "1.2.0",
+  "dataVersion": "0.6.0",
+  "scenario": {
+    "id": "engineering-change-impact",
+    "title": "Engineering Change Impact Analysis",
+    "question": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+    "intent": "engineering_change_impact",
+    "seedEntityIds": [
+      "machine.m220",
+      "program.leak-test.v3-4",
+      "program.leak-test.v3-5"
+    ]
+  },
+  "ids": {
+    "machine": {
+      "m220": "machine.m220"
+    },
+    "operation": {
+      "op30": "operation.op30"
+    },
+    "program": {
+      "released": "program.leak-test.v3-4",
+      "proposed": "program.leak-test.v3-5"
+    },
+    "change": {
+      "m220V35": "engineering-change.m220-program-v3-5"
+    }
+  },
+  "semanticAliases": {
+    "machine.m220": [
+      "M220",
+      "leak test bench"
+    ],
+    "program.leak-test.v3-4": [
+      "V3.4",
+      "current program"
+    ],
+    "program.leak-test.v3-5": [
+      "V3.5",
+      "proposed program",
+      "程序版本变更"
+    ]
+  },
+  "entities": [
+    {
+      "id": "machine.m220",
+      "type": "mfg:Machine",
+      "label": "M220 Leak Test Bench",
+      "description": "M220 Leak Test Bench",
+      "domain": "engineering",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "operation.op30",
+      "type": "mfg:Operation",
+      "label": "OP30 Leak Test",
+      "description": "OP30 Leak Test",
+      "domain": "production",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "program.leak-test.v3-4",
+      "type": "mfg:ProcessParameter",
+      "label": "LeakTestProgram V3.4",
+      "description": "LeakTestProgram V3.4",
+      "domain": "engineering",
+      "properties": {
+        "releaseStatus": "released"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "program.leak-test.v3-5",
+      "type": "mfg:ProcessParameter",
+      "label": "LeakTestProgram V3.5",
+      "description": "LeakTestProgram V3.5",
+      "domain": "engineering",
+      "properties": {
+        "releaseStatus": "proposed"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "quality-characteristic.leak-rate",
+      "type": "qual:QualityCharacteristic",
+      "label": "Leak Rate",
+      "description": "Leak Rate",
+      "domain": "quality",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "engineering-change.m220-program-v3-5",
+      "type": "eng:EngineeringChange",
+      "label": "M220 Program V3.5 Engineering Change",
+      "description": "M220 Program V3.5 Engineering Change",
+      "domain": "engineering",
+      "properties": {
+        "changeStatus": "validation-required"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "doc.engineering-change-request-m220-program",
+      "type": "eng:EngineeringChangeRecord",
+      "label": "Engineering Change Request M220 Program",
+      "description": "Engineering Change Request M220 Program",
+      "domain": "engineering",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "doc.validation-record-m220-program-v3-5",
+      "type": "eng:ValidationRecord",
+      "label": "Validation Record M220 Program V3.5",
+      "description": "Validation Record M220 Program V3.5",
+      "domain": "engineering",
+      "properties": {
+        "releaseDecision": "not-released"
+      },
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "document.control-plan.cp-bb01.rev-a",
+      "type": "qual:ControlPlanVersion",
+      "label": "Control Plan CP-BB01 Rev.A",
+      "description": "Control Plan CP-BB01 Rev.A",
+      "domain": "quality",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    },
+    {
+      "id": "document.sop.op30-leak-test",
+      "type": "core:Document",
+      "label": "SOP OP30 Leak Test",
+      "description": "SOP OP30 Leak Test",
+      "domain": "engineering",
+      "properties": {},
+      "version": "1",
+      "status": "active"
+    }
+  ],
+  "relations": [
+    {
+      "id": "relation.operation.op30.performed-on.machine.m220",
+      "sourceId": "operation.op30",
+      "targetId": "machine.m220",
+      "label": "performedOn",
+      "predicate": "mfg:executedBy",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op30.uses-program.v3-4",
+      "sourceId": "operation.op30",
+      "targetId": "program.leak-test.v3-4",
+      "label": "usesProgram",
+      "predicate": "mfg:usesParameter",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.change.m220-v3-5.affects.program.v3-5",
+      "sourceId": "engineering-change.m220-program-v3-5",
+      "targetId": "program.leak-test.v3-5",
+      "label": "affects",
+      "predicate": "eng:affects",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.change.m220-v3-5.affects.operation.op30",
+      "sourceId": "engineering-change.m220-program-v3-5",
+      "targetId": "operation.op30",
+      "label": "affects",
+      "predicate": "eng:affects",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.program.v3-5.requires-validation",
+      "sourceId": "program.leak-test.v3-5",
+      "targetId": "doc.validation-record-m220-program-v3-5",
+      "label": "requiresValidation",
+      "predicate": "eng:requiresValidation",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.program.v3-5.supersedes.v3-4",
+      "sourceId": "program.leak-test.v3-5",
+      "targetId": "program.leak-test.v3-4",
+      "label": "supersedes",
+      "predicate": "core:supersedes",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op30.controls.leak-rate",
+      "sourceId": "operation.op30",
+      "targetId": "quality-characteristic.leak-rate",
+      "label": "controls",
+      "predicate": "qual:controlsCharacteristic",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.leak-rate.governed-by.control-plan",
+      "sourceId": "quality-characteristic.leak-rate",
+      "targetId": "document.control-plan.cp-bb01.rev-a",
+      "label": "governedBy",
+      "predicate": "qual:governedBy",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    },
+    {
+      "id": "relation.operation.op30.described-by.sop",
+      "sourceId": "operation.op30",
+      "targetId": "document.sop.op30-leak-test",
+      "label": "describedBy",
+      "predicate": "mfg:flowsTo",
+      "properties": {},
+      "assertionType": "asserted",
+      "confidence": 1
+    }
+  ],
+  "request": {
+    "contractVersion": "1.0.0",
+    "requestId": "canonical.engineering-change-impact.001",
+    "scenarioId": "engineering-change-impact",
+    "mode": "live",
+    "language": "en",
+    "message": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+    "requestedAt": "2026-07-22T00:00:00.000Z"
+  },
+  "queryPlan": {
+    "planId": "query-plan.engineering-change-impact.001",
+    "planVersion": "1.0.0",
+    "intent": "engineering_change_impact",
+    "originalQuestion": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+    "entities": [
+      {
+        "id": "machine.m220",
+        "label": "M220 Leak Test Bench",
+        "type": "mfg:Machine",
+        "role": "subject"
+      },
+      {
+        "id": "program.leak-test.v3-4",
+        "label": "LeakTestProgram V3.4",
+        "type": "mfg:ProcessParameter",
+        "role": "subject"
+      },
+      {
+        "id": "program.leak-test.v3-5",
+        "label": "LeakTestProgram V3.5",
+        "type": "mfg:ProcessParameter",
+        "role": "subject"
+      }
+    ],
+    "relationTypes": [
+      "ontology.relationship.performed-on",
+      "ontology.relationship.uses-program",
+      "ontology.relationship.affects",
+      "ontology.relationship.requires-validation",
+      "ontology.relationship.controls",
+      "ontology.relationship.governed-by",
+      "ontology.relationship.described-by"
+    ],
+    "requestedFacets": [
+      "engineering",
+      "production",
+      "quality",
+      "governance"
+    ],
+    "constraints": [
+      {
+        "key": "entity.status",
+        "operator": "eq",
+        "value": "active"
+      }
+    ],
+    "assumptions": [
+      "V3.5 is a proposed demo change and V3.4 remains the released production baseline."
+    ]
+  },
+  "graphQueryPlan": {
+    "graphPlanId": "graph-query-plan.engineering-change-impact.001",
+    "graphPlanVersion": "1.0.0",
+    "semanticPlanId": "query-plan.engineering-change-impact.001",
+    "intent": "engineering_change_impact",
+    "templateId": "engineering-change-impact.dependency-scope.v1",
+    "readOnly": true,
+    "seedEntityIds": [
+      "machine.m220",
+      "program.leak-test.v3-4",
+      "program.leak-test.v3-5"
+    ],
+    "allowedRelationTypes": [
+      "performedOn",
+      "usesProgram",
+      "affects",
+      "requiresValidation",
+      "supersedes",
+      "controls",
+      "governedBy",
+      "describedBy"
+    ],
+    "maxDepth": 3,
+    "resultLimit": 80,
+    "parameters": {
+      "status": "active"
+    }
+  },
+  "evidencePack": {
+    "id": "evidence-pack.engineering-change-impact.001",
+    "queryPlanId": "query-plan.engineering-change-impact.001",
+    "generatedAt": "2026-07-22T00:00:00.000Z",
+    "ontologyVersion": "1.2.0",
+    "dataVersion": "0.6.0",
+    "items": [
+      {
+        "id": "evidence.graph.m220-program-change-scope",
+        "kind": "graph",
+        "title": "M220 Program Change Dependency Graph",
+        "excerpt": "M220 executes OP30, OP30 uses the released V3.4 program and controls Leak Rate; proposed V3.5 requires governed validation before release.",
+        "source": {
+          "sourceType": "canonical-knowledge-graph",
+          "sourceId": "evidence.graph.m220-program-change-scope",
+          "sourceSystem": "Manufacturing Knowledge Graph",
+          "locator": "M220 -> OP30 -> Program / Leak Rate"
+        },
+        "linkedEntityIds": [
+          "machine.m220",
+          "operation.op30",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5",
+          "quality-characteristic.leak-rate"
+        ],
+        "supportsClaimIds": [
+          "claim.change-scope",
+          "claim.quality-control-impact"
+        ],
+        "version": "1.0.0",
+        "status": "active"
+      },
+      {
+        "id": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+        "kind": "document",
+        "title": "Engineering Change Request M220 Program - M220 Program V3.5 Change Scope",
+        "excerpt": "ECR-M220-01 proposes changing LeakTestProgram V3.4 to V3.5 on M220 for OP30. The scope includes OP30 execution logic, Leak Rate judgement, SOP consistency and rollback to V3.4. V3.5 is not released until validation and approval are complete.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "ECR-M220-01",
+          "sourceSystem": "PLM Change Control",
+          "documentName": "Engineering Change Request M220 Program",
+          "locator": "Section 2 / Change Scope"
+        },
+        "linkedEntityIds": [
+          "engineering-change.m220-program-v3-5",
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5",
+          "operation.op30"
+        ],
+        "supportsClaimIds": [
+          "claim.change-scope",
+          "claim.release-governance"
+        ],
+        "version": "ECR-01",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "doc.engineering-change-request-m220-program",
+          "documentType": "engineering-change-request",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Manufacturing Engineering",
+          "contentChecksum": "sha256:f42dc01b04911a30eaba97df5d66bdbac7fa15d3426afc6e32dfac713cb87d68",
+          "chunkChecksum": "sha256:097130a45533bc63cbc508400f9e140588a68a6d68917a985c2fda6a707b2754",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+        "kind": "document",
+        "title": "Validation Record M220 Program V3.5 - Required Regression Evidence",
+        "excerpt": "The approved validation protocol requires golden-part, reject-part, repeatability, threshold comparison and rollback checks for V3.5. No completed V3.5 validation result is present in the demo baseline, so production release remains prohibited.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "VAL-M220-V35",
+          "sourceSystem": "Validation Repository",
+          "documentName": "Validation Record M220 Program V3.5",
+          "locator": "Section 4 / Required Validation and Release"
+        },
+        "linkedEntityIds": [
+          "program.leak-test.v3-5",
+          "machine.m220",
+          "operation.op30",
+          "quality-characteristic.leak-rate"
+        ],
+        "supportsClaimIds": [
+          "claim.validation-required",
+          "claim.release-limitation"
+        ],
+        "version": "Protocol Rev.1",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "doc.validation-record-m220-program-v3-5",
+          "documentType": "validation-record",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Validation Engineering",
+          "contentChecksum": "sha256:738aa2b1f582985417f5d78df304ae6899a84b7f46a95ffb4bb2691f9f4ba014",
+          "chunkChecksum": "sha256:25f5cffacff211c99f4c86613e45b16455133a74b2badc7eddebec5c718434cc",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+        "kind": "document",
+        "title": "Control Plan CP-BB01 Rev.A - OP30 Leak Rate Release Control",
+        "excerpt": "Leak Rate remains a 100% controlled characteristic. A program change cannot alter released thresholds or reaction rules without approved Control Plan review and validation evidence.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "CP-BB01",
+          "sourceSystem": "QMS",
+          "documentName": "Control Plan CP-BB01 Rev.A",
+          "locator": "Sheet Process Control / Row OP30-Leak Rate"
+        },
+        "linkedEntityIds": [
+          "operation.op30",
+          "quality-characteristic.leak-rate",
+          "program.leak-test.v3-5"
+        ],
+        "supportsClaimIds": [
+          "claim.quality-control-impact",
+          "claim.release-governance"
+        ],
+        "version": "Rev.A",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "document.control-plan.cp-bb01.rev-a",
+          "documentType": "control-plan",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Quality Engineering",
+          "contentChecksum": "sha256:a5de343146010851b318f5d0f657b0b89e102f496208aecf9de360f90068654f",
+          "chunkChecksum": "sha256:f0fbd21fb3abb8cd9a73fbd27efb11089fb6388315a8b875d2a6663cd9ac3e79",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      },
+      {
+        "id": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup",
+        "kind": "document",
+        "title": "SOP OP30 Leak Test - Current Released Program",
+        "excerpt": "The current released OP30 setup uses M220, FX-002 and LeakTestProgram V3.4. Any V3.5 deployment requires an approved change, completed validation and updated controlled work instructions.",
+        "source": {
+          "sourceType": "controlled-document-chunk",
+          "sourceId": "SOP-OP30",
+          "sourceSystem": "DMS",
+          "documentName": "SOP OP30 Leak Test",
+          "locator": "Page 4 / Section 3.2 Current Released Setup"
+        },
+        "linkedEntityIds": [
+          "operation.op30",
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "supportsClaimIds": [
+          "claim.change-scope",
+          "claim.validation-required"
+        ],
+        "version": "Rev.3",
+        "effectiveAt": "2026-07-01T00:00:00.000Z",
+        "status": "active",
+        "governance": {
+          "documentId": "document.sop.op30-leak-test",
+          "documentType": "sop",
+          "approvalStatus": "approved",
+          "lifecycleStatus": "effective",
+          "owner": "Process Documentation",
+          "contentChecksum": "sha256:2a5c1b0b893d1a9f03e3270f79a8ff3a449165489c90665fdac4d6fb3a851169",
+          "chunkChecksum": "sha256:5a9a761b4512c9adc514ceb9ed9409374de548014e8353299fa9c79119c074c0",
+          "parserId": "controlled-json",
+          "parserVersion": "1.0.0",
+          "ingestedAt": "2026-07-22T00:00:00.000Z",
+          "accessClassification": "internal",
+          "accessDecision": "allowed"
+        }
+      }
+    ],
+    "claimPolicies": [
+      {
+        "claimId": "claim.change-scope",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.validation-required",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.quality-control-impact",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.release-governance",
+        "classification": "fact",
+        "required": true
+      },
+      {
+        "claimId": "claim.release-limitation",
+        "classification": "limitation",
+        "required": true
+      }
+    ],
+    "limitations": [
+      "No completed V3.5 validation result or live deployment history is connected."
+    ]
+  },
+  "expectedResponse": {
+    "contractVersion": "1.0.0",
+    "requestId": "canonical.engineering-change-impact.001",
+    "turnId": "turn.canonical.engineering-change-impact.001",
+    "status": "completed",
+    "queryPlan": {
+      "planId": "query-plan.engineering-change-impact.001",
+      "planVersion": "1.0.0",
+      "intent": "engineering_change_impact",
+      "originalQuestion": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+      "entities": [
+        {
+          "id": "machine.m220",
+          "label": "M220 Leak Test Bench",
+          "type": "mfg:Machine",
+          "role": "subject"
+        },
+        {
+          "id": "program.leak-test.v3-4",
+          "label": "LeakTestProgram V3.4",
+          "type": "mfg:ProcessParameter",
+          "role": "subject"
+        },
+        {
+          "id": "program.leak-test.v3-5",
+          "label": "LeakTestProgram V3.5",
+          "type": "mfg:ProcessParameter",
+          "role": "subject"
+        }
+      ],
+      "relationTypes": [
+        "ontology.relationship.performed-on",
+        "ontology.relationship.uses-program",
+        "ontology.relationship.affects",
+        "ontology.relationship.requires-validation",
+        "ontology.relationship.controls",
+        "ontology.relationship.governed-by",
+        "ontology.relationship.described-by"
+      ],
+      "requestedFacets": [
+        "engineering",
+        "production",
+        "quality",
+        "governance"
+      ],
+      "constraints": [
+        {
+          "key": "entity.status",
+          "operator": "eq",
+          "value": "active"
+        }
+      ],
+      "assumptions": [
+        "V3.5 is a proposed demo change and V3.4 remains the released production baseline."
+      ]
+    },
+    "graphQueryPlan": {
+      "graphPlanId": "graph-query-plan.engineering-change-impact.001",
+      "graphPlanVersion": "1.0.0",
+      "semanticPlanId": "query-plan.engineering-change-impact.001",
+      "intent": "engineering_change_impact",
+      "templateId": "engineering-change-impact.dependency-scope.v1",
+      "readOnly": true,
+      "seedEntityIds": [
+        "machine.m220",
+        "program.leak-test.v3-4",
+        "program.leak-test.v3-5"
+      ],
+      "allowedRelationTypes": [
+        "performedOn",
+        "usesProgram",
+        "affects",
+        "requiresValidation",
+        "supersedes",
+        "controls",
+        "governedBy",
+        "describedBy"
+      ],
+      "maxDepth": 3,
+      "resultLimit": 80,
+      "parameters": {
+        "status": "active"
+      }
+    },
+    "evidencePack": {
+      "id": "evidence-pack.engineering-change-impact.001",
+      "queryPlanId": "query-plan.engineering-change-impact.001",
+      "generatedAt": "2026-07-22T00:00:00.000Z",
+      "ontologyVersion": "1.2.0",
+      "dataVersion": "0.6.0",
+      "items": [
+        {
+          "id": "evidence.graph.m220-program-change-scope",
+          "kind": "graph",
+          "title": "M220 Program Change Dependency Graph",
+          "excerpt": "M220 executes OP30, OP30 uses the released V3.4 program and controls Leak Rate; proposed V3.5 requires governed validation before release.",
+          "source": {
+            "sourceType": "canonical-knowledge-graph",
+            "sourceId": "evidence.graph.m220-program-change-scope",
+            "sourceSystem": "Manufacturing Knowledge Graph",
+            "locator": "M220 -> OP30 -> Program / Leak Rate"
+          },
+          "linkedEntityIds": [
+            "machine.m220",
+            "operation.op30",
+            "program.leak-test.v3-4",
+            "program.leak-test.v3-5",
+            "quality-characteristic.leak-rate"
+          ],
+          "supportsClaimIds": [
+            "claim.change-scope",
+            "claim.quality-control-impact"
+          ],
+          "version": "1.0.0",
+          "status": "active"
+        },
+        {
+          "id": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+          "kind": "document",
+          "title": "Engineering Change Request M220 Program - M220 Program V3.5 Change Scope",
+          "excerpt": "ECR-M220-01 proposes changing LeakTestProgram V3.4 to V3.5 on M220 for OP30. The scope includes OP30 execution logic, Leak Rate judgement, SOP consistency and rollback to V3.4. V3.5 is not released until validation and approval are complete.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "ECR-M220-01",
+            "sourceSystem": "PLM Change Control",
+            "documentName": "Engineering Change Request M220 Program",
+            "locator": "Section 2 / Change Scope"
+          },
+          "linkedEntityIds": [
+            "engineering-change.m220-program-v3-5",
+            "machine.m220",
+            "program.leak-test.v3-4",
+            "program.leak-test.v3-5",
+            "operation.op30"
+          ],
+          "supportsClaimIds": [
+            "claim.change-scope",
+            "claim.release-governance"
+          ],
+          "version": "ECR-01",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "doc.engineering-change-request-m220-program",
+            "documentType": "engineering-change-request",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Manufacturing Engineering",
+            "contentChecksum": "sha256:f42dc01b04911a30eaba97df5d66bdbac7fa15d3426afc6e32dfac713cb87d68",
+            "chunkChecksum": "sha256:097130a45533bc63cbc508400f9e140588a68a6d68917a985c2fda6a707b2754",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+          "kind": "document",
+          "title": "Validation Record M220 Program V3.5 - Required Regression Evidence",
+          "excerpt": "The approved validation protocol requires golden-part, reject-part, repeatability, threshold comparison and rollback checks for V3.5. No completed V3.5 validation result is present in the demo baseline, so production release remains prohibited.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "VAL-M220-V35",
+            "sourceSystem": "Validation Repository",
+            "documentName": "Validation Record M220 Program V3.5",
+            "locator": "Section 4 / Required Validation and Release"
+          },
+          "linkedEntityIds": [
+            "program.leak-test.v3-5",
+            "machine.m220",
+            "operation.op30",
+            "quality-characteristic.leak-rate"
+          ],
+          "supportsClaimIds": [
+            "claim.validation-required",
+            "claim.release-limitation"
+          ],
+          "version": "Protocol Rev.1",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "doc.validation-record-m220-program-v3-5",
+            "documentType": "validation-record",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Validation Engineering",
+            "contentChecksum": "sha256:738aa2b1f582985417f5d78df304ae6899a84b7f46a95ffb4bb2691f9f4ba014",
+            "chunkChecksum": "sha256:25f5cffacff211c99f4c86613e45b16455133a74b2badc7eddebec5c718434cc",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+          "kind": "document",
+          "title": "Control Plan CP-BB01 Rev.A - OP30 Leak Rate Release Control",
+          "excerpt": "Leak Rate remains a 100% controlled characteristic. A program change cannot alter released thresholds or reaction rules without approved Control Plan review and validation evidence.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "CP-BB01",
+            "sourceSystem": "QMS",
+            "documentName": "Control Plan CP-BB01 Rev.A",
+            "locator": "Sheet Process Control / Row OP30-Leak Rate"
+          },
+          "linkedEntityIds": [
+            "operation.op30",
+            "quality-characteristic.leak-rate",
+            "program.leak-test.v3-5"
+          ],
+          "supportsClaimIds": [
+            "claim.quality-control-impact",
+            "claim.release-governance"
+          ],
+          "version": "Rev.A",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "document.control-plan.cp-bb01.rev-a",
+            "documentType": "control-plan",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Quality Engineering",
+            "contentChecksum": "sha256:a5de343146010851b318f5d0f657b0b89e102f496208aecf9de360f90068654f",
+            "chunkChecksum": "sha256:f0fbd21fb3abb8cd9a73fbd27efb11089fb6388315a8b875d2a6663cd9ac3e79",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        },
+        {
+          "id": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup",
+          "kind": "document",
+          "title": "SOP OP30 Leak Test - Current Released Program",
+          "excerpt": "The current released OP30 setup uses M220, FX-002 and LeakTestProgram V3.4. Any V3.5 deployment requires an approved change, completed validation and updated controlled work instructions.",
+          "source": {
+            "sourceType": "controlled-document-chunk",
+            "sourceId": "SOP-OP30",
+            "sourceSystem": "DMS",
+            "documentName": "SOP OP30 Leak Test",
+            "locator": "Page 4 / Section 3.2 Current Released Setup"
+          },
+          "linkedEntityIds": [
+            "operation.op30",
+            "machine.m220",
+            "program.leak-test.v3-4",
+            "program.leak-test.v3-5"
+          ],
+          "supportsClaimIds": [
+            "claim.change-scope",
+            "claim.validation-required"
+          ],
+          "version": "Rev.3",
+          "effectiveAt": "2026-07-01T00:00:00.000Z",
+          "status": "active",
+          "governance": {
+            "documentId": "document.sop.op30-leak-test",
+            "documentType": "sop",
+            "approvalStatus": "approved",
+            "lifecycleStatus": "effective",
+            "owner": "Process Documentation",
+            "contentChecksum": "sha256:2a5c1b0b893d1a9f03e3270f79a8ff3a449165489c90665fdac4d6fb3a851169",
+            "chunkChecksum": "sha256:5a9a761b4512c9adc514ceb9ed9409374de548014e8353299fa9c79119c074c0",
+            "parserId": "controlled-json",
+            "parserVersion": "1.0.0",
+            "ingestedAt": "2026-07-22T00:00:00.000Z",
+            "accessClassification": "internal",
+            "accessDecision": "allowed"
+          }
+        }
+      ],
+      "claimPolicies": [
+        {
+          "claimId": "claim.change-scope",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.validation-required",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.quality-control-impact",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.release-governance",
+          "classification": "fact",
+          "required": true
+        },
+        {
+          "claimId": "claim.release-limitation",
+          "classification": "limitation",
+          "required": true
+        }
+      ],
+      "limitations": [
+        "No completed V3.5 validation result or live deployment history is connected."
+      ]
+    },
+    "answer": {
+      "summary": "The proposed V3.5 program change affects M220 and OP30, but release remains blocked until validation and controlled quality/document alignment are complete.",
+      "findings": [
+        "V3.4 remains released while V3.5 is proposed.",
+        "OP30 and Leak Rate controls are in scope.",
+        "ECR, validation, SOP and Control Plan evidence are required."
+      ],
+      "recommendedActions": [
+        "Complete the approved V3.5 validation protocol.",
+        "Review Control Plan and SOP alignment.",
+        "Keep V3.4 as the rollback baseline until release approval."
+      ],
+      "risks": [
+        "Unvalidated program logic could change Leak Rate judgement or false-reject behavior."
+      ],
+      "assumptions": [
+        "V3.5 is a proposed demo change and V3.4 remains the released production baseline."
+      ],
+      "limitations": [
+        "No completed V3.5 validation result or live deployment history is connected."
+      ],
+      "claims": [
+        {
+          "id": "claim.change-scope",
+          "text": "The proposed V3.5 change directly affects M220 and OP30 while V3.4 remains the released program.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence.graph.m220-program-change-scope"
+            },
+            {
+              "evidenceId": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+            },
+            {
+              "evidenceId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+            }
+          ]
+        },
+        {
+          "id": "claim.validation-required",
+          "text": "V3.5 requires governed regression validation before release.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+            },
+            {
+              "evidenceId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+            }
+          ]
+        },
+        {
+          "id": "claim.quality-control-impact",
+          "text": "Leak Rate thresholds and reaction rules remain governed by the released Control Plan.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence.graph.m220-program-change-scope"
+            },
+            {
+              "evidenceId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+            }
+          ]
+        },
+        {
+          "id": "claim.release-governance",
+          "text": "Release requires approved ECR, validation evidence and controlled-document alignment.",
+          "classification": "fact",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+            },
+            {
+              "evidenceId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+            }
+          ]
+        },
+        {
+          "id": "claim.release-limitation",
+          "text": "The demo has no completed V3.5 validation result, so it cannot recommend production release.",
+          "classification": "limitation",
+          "citations": [
+            {
+              "evidenceId": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+            }
+          ]
+        }
+      ],
+      "confidence": "high"
+    },
+    "citationValidation": {
+      "status": "passed",
+      "checkedClaimIds": [
+        "claim.change-scope",
+        "claim.validation-required",
+        "claim.quality-control-impact",
+        "claim.release-governance",
+        "claim.release-limitation"
+      ],
+      "issues": []
+    },
+    "trace": {
+      "traceId": "trace.canonical.engineering-change-impact.001",
+      "requestId": "canonical.engineering-change-impact.001",
+      "stages": [
+        {
+          "id": "trace.canonical.engineering-change-impact.001.1",
+          "stage": "semantic-parsing",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.semantic-parsing.v1",
+          "inputRefs": [
+            "canonical.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "summary": "semantic-parsing completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.2",
+          "stage": "query-plan-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.query-plan-validation.v1",
+          "inputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "summary": "query-plan-validation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.3",
+          "stage": "ontology-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.ontology-validation.v1",
+          "inputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "engineering-change-impact.dependency-scope.v1"
+          ],
+          "summary": "ontology-validation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.4",
+          "stage": "query-compilation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.query-compilation.v1",
+          "inputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "graph-query-plan.engineering-change-impact.001"
+          ],
+          "summary": "query-compilation completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.5",
+          "stage": "graph-retrieval",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.graph-retrieval.v1",
+          "inputRefs": [
+            "graph-query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "machine.m220",
+            "program.leak-test.v3-4",
+            "program.leak-test.v3-5"
+          ],
+          "summary": "graph-retrieval completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.6",
+          "stage": "document-retrieval",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.document-retrieval.v1",
+          "inputRefs": [
+            "graph-query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+            "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+            "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+            "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+          ],
+          "summary": "document-retrieval completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.7",
+          "stage": "evidence-pack",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.evidence-pack.v1",
+          "inputRefs": [
+            "query-plan.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "evidence-pack.engineering-change-impact.001"
+          ],
+          "summary": "evidence-pack completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.8",
+          "stage": "answer-composition",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.answer-composition.v1",
+          "inputRefs": [
+            "evidence-pack.engineering-change-impact.001"
+          ],
+          "outputRefs": [
+            "claim.change-scope",
+            "claim.validation-required",
+            "claim.quality-control-impact",
+            "claim.release-governance",
+            "claim.release-limitation"
+          ],
+          "summary": "answer-composition completed against the governed Phase 5B baseline."
+        },
+        {
+          "id": "trace.canonical.engineering-change-impact.001.9",
+          "stage": "citation-validation",
+          "status": "completed",
+          "startedAt": "2026-07-22T00:00:00.000Z",
+          "completedAt": "2026-07-22T00:00:00.000Z",
+          "durationMs": 0,
+          "tool": "phase5b.citation-validation.v1",
+          "inputRefs": [
+            "claim.change-scope",
+            "claim.validation-required",
+            "claim.quality-control-impact",
+            "claim.release-governance",
+            "claim.release-limitation"
+          ],
+          "outputRefs": [
+            "claim.change-scope",
+            "claim.validation-required",
+            "claim.quality-control-impact",
+            "claim.release-governance",
+            "claim.release-limitation"
+          ],
+          "summary": "citation-validation completed against the governed Phase 5B baseline."
+        }
+      ]
+    },
+    "completedAt": "2026-07-22T00:00:00.000Z"
+  }
+}

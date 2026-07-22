@@ -79,7 +79,7 @@ export interface EvidencePackBuilder {
 
 export interface AnswerComposer {
   readonly toolName?: string;
-  compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, signal?: AbortSignal): Promise<AgentAnswer>;
+  compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, signal?: AbortSignal, baseline?: CanonicalKnowledgeBaseline): Promise<AgentAnswer>;
 }
 
 export interface CitationValidator {

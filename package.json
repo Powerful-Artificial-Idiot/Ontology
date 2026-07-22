@@ -24,6 +24,7 @@
     "agent-api:neo4j": "MKG_AGENT_KNOWLEDGE_MODE=neo4j vite-node services/agent-api/start.ts",
     "agent-api:test": "vitest run tests/integration/agent-api.test.ts tests/frontend/api-agent-client.test.ts",
     "agent:evaluate": "vite-node services/agent-api/run-evaluation.ts",
+    "phase5b:fixtures": "node scripts/build_phase5b_fixtures.mjs",
     "openai:acceptance": "vite-node services/agent-api/verify-openai-providers.ts",
     "deepseek:acceptance": "vite-node services/agent-api/verify-deepseek-provider.ts",
     "documents:verify": "vite-node services/agent-api/verify-documents.ts",

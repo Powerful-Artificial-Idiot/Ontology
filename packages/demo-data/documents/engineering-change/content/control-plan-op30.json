@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Sheet Process Control / Row OP30-Leak Rate",
+      "heading": "OP30 Leak Rate Release Control",
+      "text": "Leak Rate remains a 100% controlled characteristic. A program change cannot alter released thresholds or reaction rules without approved Control Plan review and validation evidence."
+    }
+  ]
+}

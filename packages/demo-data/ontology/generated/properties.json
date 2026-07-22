@@ -183,6 +183,78 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/engineering#EngineeringChange"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#affects",
+    "label": "affects",
+    "module": "engineering",
+    "name": "affects",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/engineering#EngineeringChange"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#changeStatus",
+    "label": "change status",
+    "module": "engineering",
+    "name": "changeStatus",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/engineering#ValidationRecord"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#releaseDecision",
+    "label": "release decision",
+    "module": "engineering",
+    "name": "releaseDecision",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#requiresValidation",
+    "label": "requires validation",
+    "module": "engineering",
+    "name": "requiresValidation",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/engineering#ValidationRecord"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/manufacturing#Machine"
     ],
     "inverseOf": [],
@@ -2187,6 +2259,24 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#governedBy",
+    "label": "governed by",
+    "module": "quality",
+    "name": "governedBy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#Document"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/quality#ControlPlan"
     ],
     "inverseOf": [],
@@ -2267,6 +2357,96 @@
     "iri": "https://example.com/mkg/quality#unit",
     "label": "unit",
     "module": "quality",
+    "name": "unit",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/value-stream#affectsFlow",
+    "label": "affects flow",
+    "module": "value-stream",
+    "name": "affectsFlow",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/value-stream#asOf",
+    "label": "as of",
+    "module": "value-stream",
+    "name": "asOf",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#dateTime"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/value-stream#contributesTo",
+    "label": "contributes to",
+    "module": "value-stream",
+    "name": "contributesTo",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/value-stream#metricValue",
+    "label": "metric value",
+    "module": "value-stream",
+    "name": "metricValue",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#decimal"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/value-stream#unit",
+    "label": "unit",
+    "module": "value-stream",
     "name": "unit",
     "parentProperties": [],
     "propertyType": "datatype",

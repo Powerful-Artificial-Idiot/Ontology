@@ -25,7 +25,18 @@ function validateDefinition(value: unknown, index: number): GovernedDocumentDefi
   const documentId = stableId(value.documentId, `documents[${index}].documentId`);
   const logicalDocumentId = stableId(value.logicalDocumentId, `documents[${index}].logicalDocumentId`);
   const title = text(value.title, `documents[${index}].title`);
-  if (!isOneOf(value.documentType, ["control-plan", "pfmea", "sop", "qms-record"])) throw new Error(`documents[${index}].documentType is unsupported.`);
+  if (!isOneOf(value.documentType, [
+    "control-plan",
+    "pfmea",
+    "sop",
+    "qms-record",
+    "engineering-change-request",
+    "validation-record",
+    "line-balance-study",
+    "value-stream-map",
+    "standard-work",
+    "mes-record",
+  ])) throw new Error(`documents[${index}].documentType is unsupported.`);
   const version = text(value.version, `documents[${index}].version`);
   if (!isOneOf(value.approvalStatus, ["approved", "draft", "rejected"])) throw new Error(`documents[${index}].approvalStatus is unsupported.`);
   if (!isOneOf(value.lifecycleStatus, ["effective", "superseded", "withdrawn"])) throw new Error(`documents[${index}].lifecycleStatus is unsupported.`);

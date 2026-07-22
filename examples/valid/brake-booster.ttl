@@ -1,8 +1,10 @@
 @prefix core: <https://example.com/mkg/core#> .
 @prefix demo: <https://example.com/mkg/demo#> .
 @prefix equip: <https://example.com/mkg/equipment#> .
+@prefix eng: <https://example.com/mkg/engineering#> .
 @prefix mfg: <https://example.com/mkg/manufacturing#> .
 @prefix qual: <https://example.com/mkg/quality#> .
+@prefix vs: <https://example.com/mkg/value-stream#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 demo:MES a core:SourceSystem .
@@ -55,3 +57,24 @@ demo:M220ConfigV2 a equip:MachineConfigurationVersion ;
   core:versionIdentifier "2" ;
   core:validFrom "2026-06-01"^^xsd:date ;
   core:supersedes demo:M220ConfigV1 .
+
+demo:ProgramChangeV35 a eng:EngineeringChange ;
+  eng:affects demo:M220, demo:OP30 ;
+  eng:requiresValidation demo:ProgramValidationV35 ;
+  eng:changeStatus "proposed" ;
+  core:versionIdentifier "V3.5" ;
+  core:validFrom "2026-07-22"^^xsd:date .
+
+demo:ProgramValidationV35 a eng:ValidationRecord ;
+  eng:releaseDecision "pending" .
+
+demo:OP20 a mfg:Operation .
+demo:OP20CycleTime a vs:ValueStreamMetric ;
+  vs:contributesTo demo:OP20 ;
+  vs:metricValue 48.0 ;
+  vs:unit "seconds" .
+
+demo:OP20BottleneckRisk a vs:BottleneckRisk ;
+  vs:affectsFlow demo:OP20 ;
+  vs:metricValue 0.82 ;
+  vs:unit "ratio" .

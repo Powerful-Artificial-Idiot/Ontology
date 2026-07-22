@@ -70,6 +70,34 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/engineering#affects",
+    "inverseOf": [],
+    "label": "affects",
+    "module": "engineering",
+    "name": "affects",
+    "predicate": "https://example.com/mkg/engineering#affects",
+    "sourceClasses": [
+      "https://example.com/mkg/engineering#EngineeringChange"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/engineering#requiresValidation",
+    "inverseOf": [],
+    "label": "requires validation",
+    "module": "engineering",
+    "name": "requiresValidation",
+    "predicate": "https://example.com/mkg/engineering#requiresValidation",
+    "sourceClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/engineering#ValidationRecord"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/equipment#hasConfiguration",
     "inverseOf": [],
     "label": "has configuration",
@@ -210,6 +238,20 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/quality#governedBy",
+    "inverseOf": [],
+    "label": "governed by",
+    "module": "quality",
+    "name": "governedBy",
+    "predicate": "https://example.com/mkg/quality#governedBy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#Document"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/quality#hasControlPlanVersion",
     "inverseOf": [],
     "label": "has control plan version",
@@ -249,6 +291,34 @@
     ],
     "targetClasses": [
       "https://example.com/mkg/quality#QualityCharacteristic"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/value-stream#affectsFlow",
+    "inverseOf": [],
+    "label": "affects flow",
+    "module": "value-stream",
+    "name": "affectsFlow",
+    "predicate": "https://example.com/mkg/value-stream#affectsFlow",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/value-stream#contributesTo",
+    "inverseOf": [],
+    "label": "contributes to",
+    "module": "value-stream",
+    "name": "contributesTo",
+    "predicate": "https://example.com/mkg/value-stream#contributesTo",
+    "sourceClasses": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
     ]
   }
 ]

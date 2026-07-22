@@ -43,7 +43,7 @@ function toEvidenceItem(chunk: DocumentIngestionResult["chunks"][number]): Evide
   };
   return {
     id: chunk.id,
-    kind: chunk.documentType === "qms-record" ? "system-record" : "document",
+    kind: chunk.documentType === "qms-record" || chunk.documentType === "mes-record" ? "system-record" : "document",
     title: chunk.title,
     excerpt: chunk.content,
     source: {

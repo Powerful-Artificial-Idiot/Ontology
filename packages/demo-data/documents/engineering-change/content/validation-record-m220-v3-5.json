@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 4 / Required Validation and Release",
+      "heading": "Required Regression Evidence",
+      "text": "The approved validation protocol requires golden-part, reject-part, repeatability, threshold comparison and rollback checks for V3.5. No completed V3.5 validation result is present in the demo baseline, so production release remains prohibited."
+    }
+  ]
+}

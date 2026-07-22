@@ -1,0 +1,8 @@
+{
+  "id": "bottleneck-analysis",
+  "title": "OP20 Bottleneck and OP30 Constraint Shift",
+  "graphView": "valueStream",
+  "frontendRoute": "/agent-demo",
+  "seedEntityIds": ["operation.op20"],
+  "competencyQuestionIds": ["CQ-007"]
+}

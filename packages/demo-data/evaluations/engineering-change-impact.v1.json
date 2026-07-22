@@ -1,0 +1,224 @@
+{
+  "datasetId": "evaluation.engineering-change-impact",
+  "version": "1.0.0",
+  "domain": "manufacturing-engineering",
+  "description": "Governed regression set for M220 program engineering-change impact analysis.",
+  "cases": [
+    {
+      "caseId": "engineering-change.en.direct",
+      "scenarioId": "engineering-change-impact",
+      "title": "English engineering change impact",
+      "severity": "blocker",
+      "tags": [
+        "english",
+        "engineering",
+        "documents",
+        "citations"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "graph": {
+              "templateId": "engineering-change-impact.dependency-scope.v1",
+              "seedEntityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ],
+              "requiredObjectIds": [
+                "operation.op30",
+                "quality-characteristic.leak-rate",
+                "doc.validation-record-m220-program-v3-5"
+              ],
+              "requiredRelationIds": [
+                "relation.change.m220-v3-5.affects.program.v3-5",
+                "relation.change.m220-v3-5.affects.operation.op30",
+                "relation.program.v3-5.requires-validation",
+                "relation.program.v3-5.supersedes.v3-4",
+                "relation.operation.op30.controls.leak-rate",
+                "relation.leak-rate.governed-by.control-plan"
+              ],
+              "maxDepth": 3
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.m220-program-change-scope",
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release",
+                "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+                "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.engineering-change-request-m220-program",
+                  "version": "ECR-01",
+                  "chunkId": "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope"
+                },
+                {
+                  "documentId": "doc.validation-record-m220-program-v3-5",
+                  "version": "Protocol Rev.1",
+                  "chunkId": "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+                },
+                {
+                  "documentId": "document.control-plan.cp-bb01.rev-a",
+                  "version": "Rev.A",
+                  "chunkId": "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"
+                },
+                {
+                  "documentId": "document.sop.op30-leak-test",
+                  "version": "Rev.3",
+                  "chunkId": "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-current-released-setup"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.validation-required",
+                "claim.quality-control-impact",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 1,
+        "resolvedEntityIds": [
+          "machine.m220",
+          "program.leak-test.v3-4",
+          "program.leak-test.v3-5"
+        ],
+        "activeTopic": "engineering_change_impact"
+      }
+    },
+    {
+      "caseId": "engineering-change.zh.alias",
+      "scenarioId": "engineering-change-impact",
+      "title": "Chinese program change aliases",
+      "severity": "critical",
+      "tags": [
+        "chinese",
+        "engineering",
+        "semantic"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "M220 的程序版本从 V3.4 变更到 V3.5，会影响哪些工序、质量控制和放行文件？",
+            "language": "zh"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "engineering_change_impact",
+              "entityIds": [
+                "machine.m220",
+                "program.leak-test.v3-4",
+                "program.leak-test.v3-5"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.m220-program-change-scope",
+                "evidence-chunk.doc.engineering-change-request-m220-program.section-2-change-scope",
+                "evidence-chunk.doc.validation-record-m220-program-v3-5.section-4-required-validation-and-release"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.change-scope",
+                "claim.validation-required",
+                "claim.quality-control-impact",
+                "claim.release-governance",
+                "claim.release-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "engineering-change.ambiguous",
+      "scenarioId": "engineering-change-impact",
+      "title": "Unresolved change requires clarification",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Assess the proposed change.",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    },
+    {
+      "caseId": "engineering-change.document-access-denied",
+      "scenarioId": "engineering-change-impact",
+      "title": "Engineering evidence access denial blocks publication",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "access-control",
+        "citation-gate"
+      ],
+      "executionProfile": "no-document-access",
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What operations, quality controls, documents and release gates are affected by changing M220 from LeakTestProgram V3.4 to V3.5?",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CITATION_INVALID"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    }
+  ]
+}

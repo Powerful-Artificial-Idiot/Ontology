@@ -1,0 +1,20 @@
+@prefix core: <https://example.com/mkg/core#> .
+@prefix eng: <https://example.com/mkg/engineering#> .
+@prefix mfg: <https://example.com/mkg/manufacturing#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.com/mkg/engineering> a owl:Ontology ;
+  owl:imports <https://example.com/mkg/core>, <https://example.com/mkg/manufacturing> ;
+  owl:versionIRI <https://example.com/mkg/engineering/1.2.0> ;
+  owl:versionInfo "1.2.0" .
+
+eng:EngineeringChange a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Engineering Change" .
+eng:EngineeringChangeRecord a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Engineering Change Record" .
+eng:ValidationRecord a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Validation Record" .
+
+eng:affects a owl:ObjectProperty ; rdfs:domain eng:EngineeringChange ; rdfs:range core:EnterpriseEntity ; rdfs:label "affects" .
+eng:requiresValidation a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range eng:ValidationRecord ; rdfs:label "requires validation" .
+eng:changeStatus a owl:DatatypeProperty ; rdfs:domain eng:EngineeringChange ; rdfs:range xsd:string ; rdfs:label "change status" .
+eng:releaseDecision a owl:DatatypeProperty ; rdfs:domain eng:ValidationRecord ; rdfs:range xsd:string ; rdfs:label "release decision" .

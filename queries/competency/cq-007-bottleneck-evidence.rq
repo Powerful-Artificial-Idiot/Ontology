@@ -1,0 +1,9 @@
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+PREFIX vs: <https://example.com/mkg/value-stream#>
+SELECT ?operation ?metric ?value ?unit WHERE {
+  ?operation a mfg:Operation .
+  ?metric a vs:ValueStreamMetric ;
+    vs:contributesTo ?operation ;
+    vs:metricValue ?value ;
+    vs:unit ?unit .
+}

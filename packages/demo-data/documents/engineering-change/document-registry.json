@@ -1,0 +1,156 @@
+{
+  "registryVersion": "1.0.0",
+  "documents": [
+    {
+      "documentId": "doc.engineering-change-request-m220-program",
+      "logicalDocumentId": "doc.engineering-change-request-m220-program",
+      "title": "Engineering Change Request M220 Program",
+      "documentType": "engineering-change-request",
+      "version": "ECR-01",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Manufacturing Engineering",
+      "sourceSystem": "PLM Change Control",
+      "sourceId": "ECR-M220-01",
+      "contentFile": "content/ecr-m220-program-v3-5.json",
+      "contentChecksum": "sha256:f42dc01b04911a30eaba97df5d66bdbac7fa15d3426afc6e32dfac713cb87d68",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "engineering-change.m220-program-v3-5",
+        "machine.m220",
+        "program.leak-test.v3-4",
+        "program.leak-test.v3-5",
+        "operation.op30"
+      ],
+      "supportsClaimIds": [
+        "claim.change-scope",
+        "claim.release-governance"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "engineering",
+          "manufacturing",
+          "quality"
+        ]
+      }
+    },
+    {
+      "documentId": "doc.validation-record-m220-program-v3-5",
+      "logicalDocumentId": "doc.validation-record-m220-program-v3-5",
+      "title": "Validation Record M220 Program V3.5",
+      "documentType": "validation-record",
+      "version": "Protocol Rev.1",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Validation Engineering",
+      "sourceSystem": "Validation Repository",
+      "sourceId": "VAL-M220-V35",
+      "contentFile": "content/validation-record-m220-v3-5.json",
+      "contentChecksum": "sha256:738aa2b1f582985417f5d78df304ae6899a84b7f46a95ffb4bb2691f9f4ba014",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "program.leak-test.v3-5",
+        "machine.m220",
+        "operation.op30",
+        "quality-characteristic.leak-rate"
+      ],
+      "supportsClaimIds": [
+        "claim.validation-required",
+        "claim.release-limitation"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "engineering",
+          "quality"
+        ]
+      }
+    },
+    {
+      "documentId": "document.control-plan.cp-bb01.rev-a",
+      "logicalDocumentId": "document.control-plan.cp-bb01",
+      "title": "Control Plan CP-BB01 Rev.A",
+      "documentType": "control-plan",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "QMS",
+      "sourceId": "CP-BB01",
+      "contentFile": "content/control-plan-op30.json",
+      "contentChecksum": "sha256:a5de343146010851b318f5d0f657b0b89e102f496208aecf9de360f90068654f",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op30",
+        "quality-characteristic.leak-rate",
+        "program.leak-test.v3-5"
+      ],
+      "supportsClaimIds": [
+        "claim.quality-control-impact",
+        "claim.release-governance"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "engineering",
+          "quality",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.sop.op30-leak-test",
+      "logicalDocumentId": "document.sop.op30-leak-test",
+      "title": "SOP OP30 Leak Test",
+      "documentType": "sop",
+      "version": "Rev.3",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Process Documentation",
+      "sourceSystem": "DMS",
+      "sourceId": "SOP-OP30",
+      "contentFile": "content/sop-op30-current.json",
+      "contentChecksum": "sha256:2a5c1b0b893d1a9f03e3270f79a8ff3a449165489c90665fdac4d6fb3a851169",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op30",
+        "machine.m220",
+        "program.leak-test.v3-4",
+        "program.leak-test.v3-5"
+      ],
+      "supportsClaimIds": [
+        "claim.change-scope",
+        "claim.validation-required"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "engineering",
+          "manufacturing",
+          "quality"
+        ]
+      }
+    }
+  ]
+}

@@ -16,7 +16,7 @@
           "documentId": { "type": "string", "pattern": "^[a-z][a-z0-9.-]*$" },
           "logicalDocumentId": { "type": "string", "pattern": "^[a-z][a-z0-9.-]*$" },
           "title": { "type": "string", "minLength": 1 },
-          "documentType": { "enum": ["control-plan", "pfmea", "sop", "qms-record"] },
+          "documentType": { "enum": ["control-plan", "pfmea", "sop", "qms-record", "engineering-change-request", "validation-record", "line-balance-study", "value-stream-map", "standard-work", "mes-record"] },
           "version": { "type": "string", "minLength": 1 },
           "approvalStatus": { "enum": ["approved", "draft", "rejected"] },
           "lifecycleStatus": { "enum": ["effective", "superseded", "withdrawn"] },

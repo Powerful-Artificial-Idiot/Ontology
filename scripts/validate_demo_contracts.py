@@ -89,10 +89,16 @@ def main() -> int:
     if assertion_types != {"asserted", "inferred"} or any(not result.get("evidence") or not result.get("explanation") for result in generated_search["results"]):
         raise AssertionError("Generated CQ-004 scenario must preserve asserted, inferred, evidence, and explanation metadata")
 
-    canonical_path = ROOT / "packages" / "demo-data" / "canonical" / "leak-rate-quality-issue-trace.json"
-    canonical = json.loads(canonical_path.read_text())
-    validate_json(canonical, by_title["CanonicalKnowledgeBaseline"], registry, str(canonical_path))
-    validate_canonical_baseline(canonical, terms)
+    canonical_files = sorted((ROOT / "packages" / "demo-data" / "canonical").glob("*.json"))
+    canonicals = {}
+    for canonical_path in canonical_files:
+        canonical = json.loads(canonical_path.read_text())
+        validate_json(canonical, by_title["CanonicalKnowledgeBaseline"], registry, str(canonical_path))
+        validate_canonical_baseline(canonical, terms)
+        scenario_id = canonical["scenario"]["id"]
+        if scenario_id in canonicals:
+            raise AssertionError(f"Duplicate canonical scenario ID: {scenario_id}")
+        canonicals[scenario_id] = canonical
 
     evaluation_schema_path = ROOT / "packages" / "agent-evaluation" / "schemas" / "evaluation-dataset.schema.json"
     evaluation_schema = json.loads(evaluation_schema_path.read_text())
@@ -102,15 +108,24 @@ def main() -> int:
     for path in evaluation_files:
         evaluation = json.loads(path.read_text())
         validate_json(evaluation, evaluation_schema, Registry(), str(path))
-        validate_evaluation_dataset(evaluation, canonical)
+        validate_evaluation_dataset(evaluation, canonicals)
 
     document_schema_path = ROOT / "packages" / "document-evidence" / "schemas" / "document-registry.schema.json"
     document_schema = json.loads(document_schema_path.read_text())
     Draft202012Validator.check_schema(document_schema)
-    document_registry_path = ROOT / "packages" / "demo-data" / "documents" / "leak-rate" / "document-registry.json"
-    document_registry = json.loads(document_registry_path.read_text())
-    validate_json(document_registry, document_schema, Registry(), str(document_registry_path))
-    validate_document_registry(document_registry, document_registry_path.parent, canonical)
+    scenario_by_document_directory = {
+        "leak-rate": "quality-issue-trace",
+        "engineering-change": "engineering-change-impact",
+        "bottleneck": "bottleneck-analysis",
+    }
+    document_registry_files = sorted((ROOT / "packages" / "demo-data" / "documents").glob("*/document-registry.json"))
+    for document_registry_path in document_registry_files:
+        document_registry = json.loads(document_registry_path.read_text())
+        validate_json(document_registry, document_schema, Registry(), str(document_registry_path))
+        scenario_id = scenario_by_document_directory.get(document_registry_path.parent.name)
+        if not scenario_id or scenario_id not in canonicals:
+            raise AssertionError(f"No canonical scenario mapping for document registry: {document_registry_path}")
+        validate_document_registry(document_registry, document_registry_path.parent, canonicals[scenario_id])
 
     alignment = yaml.safe_load((ROOT / "mappings" / "demo-type-mappings.yaml").read_text())
     source = (ROOT / "src" / "data" / "mockGraph.ts").read_text()
@@ -145,7 +160,7 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, canonical Agent baseline, governed document registry, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, {len(canonical_files)} canonical Agent baselines, {len(document_registry_files)} governed document registries, legacy mappings, and ontology alignment.")
     return 0
 
 
@@ -248,12 +263,16 @@ def validate_document_registry(document_registry: dict, root, baseline: dict) ->
                 raise AssertionError(f"Document evidence governance mismatch for {document_id}: {field}")
 
 
-def validate_evaluation_dataset(dataset: dict, baseline: dict) -> None:
-    entity_ids = {entity["id"] for entity in baseline["entities"]}
-    relation_ids = {relation["id"] for relation in baseline["relations"]}
-    evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
-    claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+def validate_evaluation_dataset(dataset: dict, baselines: dict[str, dict]) -> None:
     for case in dataset["cases"]:
+        scenario_id = case.get("scenarioId", "quality-issue-trace")
+        baseline = baselines.get(scenario_id)
+        if not baseline:
+            raise AssertionError(f"Evaluation case {case['caseId']} references unknown scenario: {scenario_id}")
+        entity_ids = {entity["id"] for entity in baseline["entities"]}
+        relation_ids = {relation["id"] for relation in baseline["relations"]}
+        evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
+        claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
         for turn in case["turns"]:
             expected = turn["expected"]
             semantic = expected.get("semantic", {})

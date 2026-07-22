@@ -6,7 +6,7 @@
   "required": ["graphPlanId", "templateId", "readOnly", "seedEntityIds", "allowedRelationTypes", "maxDepth", "resultLimit"],
   "properties": {
     "graphPlanId": { "type": "string", "minLength": 1 },
-    "templateId": { "const": "quality-issue-trace.direct-neighborhood.v1" },
+    "templateId": { "enum": ["quality-issue-trace.direct-neighborhood.v1", "engineering-change-impact.dependency-scope.v1", "bottleneck-analysis.flow-metrics.v1"] },
     "readOnly": { "const": true },
     "seedEntityIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
     "allowedRelationTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9.-]*$" } },

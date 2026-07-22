@@ -1,21 +1,40 @@
 export const QUALITY_TRACE_TEMPLATE_ID = "quality-issue-trace.direct-neighborhood.v1";
+export const ENGINEERING_CHANGE_TEMPLATE_ID = "engineering-change-impact.dependency-scope.v1";
+export const BOTTLENECK_ANALYSIS_TEMPLATE_ID = "bottleneck-analysis.flow-metrics.v1";
+export const NEO4J_ALLOWLISTED_TEMPLATE_IDS = new Set([
+  QUALITY_TRACE_TEMPLATE_ID,
+  ENGINEERING_CHANGE_TEMPLATE_ID,
+  BOTTLENECK_ANALYSIS_TEMPLATE_ID,
+]);
+export const NEO4J_SCENARIO_BY_TEMPLATE_ID: Record<string, string> = {
+  [QUALITY_TRACE_TEMPLATE_ID]: "quality-issue-trace",
+  [ENGINEERING_CHANGE_TEMPLATE_ID]: "engineering-change-impact",
+  [BOTTLENECK_ANALYSIS_TEMPLATE_ID]: "bottleneck-analysis",
+};
 
-export const NEO4J_READ_QUERIES = {
-  traverseQualityIssueNodes: `
+const CANONICAL_TRAVERSAL_QUERY = `
 UNWIND $seedEntityIds AS seedId
 MATCH (seed:KnowledgeEntity {id: seedId})
-MATCH path = (seed)-[:RELATED_TO*0..2]-(entity:KnowledgeEntity)
-WHERE all(relation IN relationships(path) WHERE relation.businessType IN $allowedRelationTypes)
+WHERE $scenarioId IN seed.scenarioIds
+MATCH path = (seed)-[:RELATED_TO*0..3]-(entity:KnowledgeEntity)
+WHERE length(path) <= $maxDepth
+  AND all(node IN nodes(path) WHERE $scenarioId IN node.scenarioIds)
+  AND all(relation IN relationships(path) WHERE relation.businessType IN $allowedRelationTypes AND $scenarioId IN relation.scenarioIds)
   AND ($status IS NULL OR entity.status = $status)
 WITH DISTINCT entity
 ORDER BY entity.id
 LIMIT $resultLimit
-RETURN entity`,
+RETURN entity`;
+
+export const NEO4J_READ_QUERIES = {
+  traverseCanonicalNodes: CANONICAL_TRAVERSAL_QUERY,
+  traverseQualityIssueNodes: CANONICAL_TRAVERSAL_QUERY,
   relationsForEntities: `
 MATCH (source:KnowledgeEntity)-[relation:RELATED_TO]->(target:KnowledgeEntity)
 WHERE source.id IN $entityIds
   AND target.id IN $entityIds
   AND relation.businessType IN $allowedRelationTypes
+  AND $scenarioId IN relation.scenarioIds
 RETURN source.id AS sourceId, relation, target.id AS targetId
 ORDER BY relation.id`,
   entityById: `
@@ -48,7 +67,8 @@ CREATE (entity:KnowledgeEntity {
   version: row.version,
   status: row.status,
   ontologyVersion: row.ontologyVersion,
-  dataVersion: row.dataVersion
+  dataVersion: row.dataVersion,
+  scenarioIds: row.scenarioIds
 })`,
   relations: `
 UNWIND $relations AS row
@@ -65,6 +85,7 @@ CREATE (source)-[relation:RELATED_TO {
   confidence: row.confidence,
   evidenceType: row.evidenceType,
   assertionType: row.assertionType,
-  baselineId: row.baselineId
+  baselineId: row.baselineId,
+  scenarioIds: row.scenarioIds
 }]->(target)`,
 } as const;

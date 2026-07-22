@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 2 / Change Scope",
+      "heading": "M220 Program V3.5 Change Scope",
+      "text": "ECR-M220-01 proposes changing LeakTestProgram V3.4 to V3.5 on M220 for OP30. The scope includes OP30 execution logic, Leak Rate judgement, SOP consistency and rollback to V3.4. V3.5 is not released until validation and approval are complete."
+    }
+  ]
+}

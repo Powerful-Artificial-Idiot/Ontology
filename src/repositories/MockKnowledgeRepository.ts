@@ -13,7 +13,7 @@ import type {
   SemanticSearchRequest,
   SemanticSearchResponse,
 } from "../../packages/knowledge-contracts/src/index";
-import { leakRateQualityIssueTraceBaseline } from "../../packages/demo-data/src/index";
+import { canonicalKnowledgeBaselines } from "../../packages/demo-data/src/index";
 import cq004MachineQualityImpact from "../../packages/demo-data/semantic/generated/cq-004-machine-quality-impact.json";
 import { ontologyRelations } from "../data/mockKnowledgeRegistry/ontologyRelations";
 import { resolveCanonicalKnowledgeId } from "../data/mockKnowledgeRegistry/ids";
@@ -44,7 +44,9 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
     if (!request.readOnly || request.maxDepth < 0 || request.maxDepth > 3 || request.resultLimit < 1 || request.resultLimit > 200) {
       throw new Error("Mock graph traversal rejected an unsafe request.");
     }
-    const entityById = new Map(leakRateQualityIssueTraceBaseline.entities.map((entity) => [entity.id, entity]));
+    const baseline = canonicalKnowledgeBaselines.find((candidate) => candidate.graphQueryPlan.templateId === request.templateId);
+    if (!baseline) throw new Error(`Mock graph traversal template is not registered: ${request.templateId}`);
+    const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
     request.seedEntityIds.forEach((id) => {
       if (!entityById.has(id)) throw new Error(`Mock graph traversal seed not found: ${id}`);
     });
@@ -53,7 +55,7 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
     let frontier = new Set(request.seedEntityIds);
     for (let depth = 0; depth < request.maxDepth && frontier.size > 0; depth += 1) {
       const next = new Set<string>();
-      leakRateQualityIssueTraceBaseline.relations.forEach((relation) => {
+      baseline.relations.forEach((relation) => {
         if (!allowed.has(relation.label ?? relation.predicate)) return;
         if (frontier.has(relation.sourceId) && !visited.has(relation.targetId)) next.add(relation.targetId);
         if (frontier.has(relation.targetId) && !visited.has(relation.sourceId)) next.add(relation.sourceId);
@@ -62,11 +64,11 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
       frontier = next;
     }
     if (visited.size > request.resultLimit) throw new Error("Mock graph traversal exceeded its result limit.");
-    const entities = leakRateQualityIssueTraceBaseline.entities.filter((entity) => visited.has(entity.id) && (!request.status || entity.status === request.status));
+    const entities = baseline.entities.filter((entity) => visited.has(entity.id) && (!request.status || entity.status === request.status));
     const entityIds = new Set(entities.map((entity) => entity.id));
-    const relations = leakRateQualityIssueTraceBaseline.relations.filter((relation) => entityIds.has(relation.sourceId) && entityIds.has(relation.targetId) && allowed.has(relation.label ?? relation.predicate));
+    const relations = baseline.relations.filter((relation) => entityIds.has(relation.sourceId) && entityIds.has(relation.targetId) && allowed.has(relation.label ?? relation.predicate));
     return {
-      metadata: { ...metadata(), dataVersion: leakRateQualityIssueTraceBaseline.dataVersion, ontologyVersion: leakRateQualityIssueTraceBaseline.ontologyVersion },
+      metadata: { ...metadata(), dataVersion: baseline.dataVersion, ontologyVersion: baseline.ontologyVersion },
       graphPlanId: request.graphPlanId,
       templateId: request.templateId,
       repositoryType: "mock",

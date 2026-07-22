@@ -1,0 +1,191 @@
+{
+  "registryVersion": "1.0.0",
+  "documents": [
+    {
+      "documentId": "doc.line-balance-study-lb-bb01",
+      "logicalDocumentId": "doc.line-balance-study-lb-bb01",
+      "title": "Line Balance Study BB01",
+      "documentType": "line-balance-study",
+      "version": "Rev.1",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Industrial Engineering",
+      "sourceSystem": "IE Repository",
+      "sourceId": "LB-BB01",
+      "contentFile": "content/line-balance-study.json",
+      "contentChecksum": "sha256:b0eead57d8611fbeae7943731c5ce00098f113a43a7f72b4fd5b915395aaab5b",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op20",
+        "value-stream.metric.op20-cycle-time",
+        "value-stream.metric.line-bottleneck-risk"
+      ],
+      "supportsClaimIds": [
+        "claim.bottleneck-candidate",
+        "claim.route-impact"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "valueStream",
+          "manufacturing",
+          "engineering"
+        ]
+      }
+    },
+    {
+      "documentId": "doc.value-stream-map-vs-bb01",
+      "logicalDocumentId": "doc.value-stream-map-vs-bb01",
+      "title": "Value Stream Map BB01",
+      "documentType": "value-stream-map",
+      "version": "Rev.2",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Lean Office",
+      "sourceSystem": "Lean VSM",
+      "sourceId": "VS-BB01",
+      "contentFile": "content/value-stream-map.json",
+      "contentChecksum": "sha256:32a3ea14bf08b707b3dfaa0b6a73e99dde9eef73940dbb0d2dcb5a56fab18866",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op20",
+        "operation.op30",
+        "value-stream.wip-before-op20",
+        "value-stream.metric.waiting-time-before-op20",
+        "value-stream.metric.waiting-time-before-op40",
+        "value-stream.metric.rework-retest-load"
+      ],
+      "supportsClaimIds": [
+        "claim.bottleneck-candidate",
+        "claim.route-impact",
+        "claim.shift-risk"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "valueStream",
+          "manufacturing",
+          "quality"
+        ]
+      }
+    },
+    {
+      "documentId": "doc.standard-work-op20",
+      "logicalDocumentId": "doc.standard-work-op20",
+      "title": "Standard Work OP20 Diaphragm Assembly",
+      "documentType": "standard-work",
+      "version": "Rev.B",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Production Engineering",
+      "sourceSystem": "DMS",
+      "sourceId": "SW-OP20",
+      "contentFile": "content/standard-work-op20.json",
+      "contentChecksum": "sha256:f27b072a8a9f0229e6abef5c3a0fae6ea7327034338d9d62d74360579a08d73f",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op20",
+        "value-stream.metric.op20-cycle-time"
+      ],
+      "supportsClaimIds": [
+        "claim.verification-required"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "engineering",
+          "manufacturing",
+          "valueStream"
+        ]
+      }
+    },
+    {
+      "documentId": "record.mes.op20-shift.2026-07-demo",
+      "logicalDocumentId": "record.mes.op20-shift.2026-07-demo",
+      "title": "MES OP20 Shift Sample",
+      "documentType": "mes-record",
+      "version": "2026-07 Demo",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Manufacturing Systems",
+      "sourceSystem": "MES Mock",
+      "sourceId": "MES-OP20-DEMO",
+      "contentFile": "content/mes-op20-shift.json",
+      "contentChecksum": "sha256:f515979d16f9c05a1b9f91ce6ab3f17c713701ba71423846ece826a8c26d0046",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op20",
+        "value-stream.metric.op20-cycle-time"
+      ],
+      "supportsClaimIds": [
+        "claim.verification-required",
+        "claim.live-data-limitation"
+      ],
+      "access": {
+        "classification": "restricted",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "manufacturing",
+          "valueStream"
+        ]
+      }
+    },
+    {
+      "documentId": "record.qms.op30-retest.2026-07-demo",
+      "logicalDocumentId": "record.qms.op30-retest.2026-07-demo",
+      "title": "QMS OP30 Retest Signal",
+      "documentType": "qms-record",
+      "version": "2026-07 Demo",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Systems",
+      "sourceSystem": "QMS Mock",
+      "sourceId": "QMS-OP30-RETEST",
+      "contentFile": "content/qms-op30-retest.json",
+      "contentChecksum": "sha256:1cc74759c0d405a783b828b9e2291ece71584a2ee17e813b209d3c28dbb068d6",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op30",
+        "quality-characteristic.leak-rate",
+        "value-stream.metric.rework-retest-load",
+        "value-stream.metric.waiting-time-before-op40"
+      ],
+      "supportsClaimIds": [
+        "claim.shift-risk",
+        "claim.live-data-limitation"
+      ],
+      "access": {
+        "classification": "restricted",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "valueStream",
+          "manufacturing"
+        ]
+      }
+    }
+  ]
+}

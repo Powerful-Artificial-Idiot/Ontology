@@ -14,7 +14,7 @@ import type {
   SemanticSearchRequest,
   SemanticSearchResponse,
 } from "../../knowledge-contracts/src/index";
-import { NEO4J_READ_QUERIES, QUALITY_TRACE_TEMPLATE_ID } from "./queries";
+import { NEO4J_ALLOWLISTED_TEMPLATE_IDS, NEO4J_READ_QUERIES, NEO4J_SCENARIO_BY_TEMPLATE_ID } from "./queries";
 
 export type Neo4jKnowledgeRepositoryOptions = {
   uri?: string;
@@ -65,16 +65,22 @@ export class Neo4jKnowledgeRepository implements KnowledgeRepository {
   async traverseGraph(request: GraphTraversalRequest): Promise<GraphTraversalResult> {
     assertTraversal(request);
     return this.withReadSession(async (session) => {
-      const nodeResult = await session.run(NEO4J_READ_QUERIES.traverseQualityIssueNodes, {
+      const nodeResult = await session.run(NEO4J_READ_QUERIES.traverseCanonicalNodes, {
         seedEntityIds: request.seedEntityIds,
+        scenarioId: NEO4J_SCENARIO_BY_TEMPLATE_ID[request.templateId],
         allowedRelationTypes: request.allowedRelationTypes,
         status: request.status ?? null,
+        maxDepth: neo4j.int(request.maxDepth),
         resultLimit: neo4j.int(request.resultLimit),
       });
       const entities = nodeResult.records.map((record) => decodeEntity(record.get("entity") as Node));
       const entityIds = entities.map((entity) => entity.id);
       const relationResult = entityIds.length
-        ? await session.run(NEO4J_READ_QUERIES.relationsForEntities, { entityIds, allowedRelationTypes: request.allowedRelationTypes })
+        ? await session.run(NEO4J_READ_QUERIES.relationsForEntities, {
+            entityIds,
+            allowedRelationTypes: request.allowedRelationTypes,
+            scenarioId: NEO4J_SCENARIO_BY_TEMPLATE_ID[request.templateId],
+          })
         : { records: [] };
       const relations = relationResult.records.map((record) => decodeRelation(
         record.get("sourceId") as string,
@@ -152,9 +158,9 @@ export class Neo4jRepositoryCapabilityError extends Error {
 }
 
 function assertTraversal(request: GraphTraversalRequest) {
-  if (request.templateId !== QUALITY_TRACE_TEMPLATE_ID) throw new Error(`Neo4j query template is not allowlisted: ${request.templateId}`);
+  if (!NEO4J_ALLOWLISTED_TEMPLATE_IDS.has(request.templateId)) throw new Error(`Neo4j query template is not allowlisted: ${request.templateId}`);
   if (request.readOnly !== true) throw new Error("Neo4j traversal requires readOnly=true.");
-  if (request.maxDepth !== 2) throw new Error("The Phase 3B Neo4j template supports exactly maxDepth=2.");
+  if (request.maxDepth < 1 || request.maxDepth > 3) throw new Error("Neo4j traversal maxDepth must be between 1 and 3.");
   if (request.resultLimit < 1 || request.resultLimit > 200) throw new Error("Neo4j traversal resultLimit must be between 1 and 200.");
   if (!request.seedEntityIds.length || !request.allowedRelationTypes.length) throw new Error("Neo4j traversal requires seeds and allowed relationship types.");
   if (!request.allowedRelationTypes.every((value) => /^[A-Za-z][A-Za-z0-9.-]*$/u.test(value))) throw new Error("Neo4j traversal contains an invalid relationship type.");

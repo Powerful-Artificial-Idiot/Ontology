@@ -50,15 +50,65 @@ export class GovernedDocumentEvidenceRetriever implements DocumentEvidenceRetrie
   private now = (): Date => this.options.now?.() ?? new Date();
 }
 
-export function createDefaultGovernedDocumentRetriever(environment: NodeJS.ProcessEnv = process.env): GovernedDocumentEvidenceRetriever {
-  const registryPath = resolve(environment.MKG_DOCUMENT_REGISTRY_PATH ?? "packages/demo-data/documents/leak-rate/document-registry.json");
-  return new GovernedDocumentEvidenceRetriever({
-    registryPath,
-    access: {
-      principalId: environment.MKG_DOCUMENT_PRINCIPAL_ID ?? "demo-agent-service",
-      roleIds: splitList(environment.MKG_DOCUMENT_ROLE_IDS, ["agent-evidence-reader"]),
-      domainIds: splitList(environment.MKG_DOCUMENT_DOMAIN_IDS, ["quality", "manufacturing", "engineering"]),
+export type ScenarioGovernedDocumentEvidenceRetrieverOptions = {
+  registryPaths: Record<string, string>;
+  access: DocumentAccessContext;
+  now?: () => Date;
+};
+
+export class ScenarioGovernedDocumentEvidenceRetriever implements DocumentEvidenceRetriever {
+  readonly toolName = "scenario-governed-document-evidence-retriever.v1";
+  private readonly retrievers = new Map<string, GovernedDocumentEvidenceRetriever>();
+
+  constructor(private readonly options: ScenarioGovernedDocumentEvidenceRetrieverOptions) {}
+
+  async retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline): Promise<DocumentRetrievalResult> {
+    return this.retriever(baseline.scenario.id).retrieve(graph, baseline);
+  }
+
+  async getIngestionResult(): Promise<DocumentIngestionResult> {
+    const results = await this.getIngestionResults();
+    return {
+      registryVersion: "1.0.0",
+      ingestedAt: results[0]?.ingestedAt ?? this.now().toISOString(),
+      chunks: results.flatMap((result) => result.chunks),
+      acceptedDocumentIds: results.flatMap((result) => result.acceptedDocumentIds),
+      rejectedDocumentIds: results.flatMap((result) => result.rejectedDocumentIds),
+      issues: results.flatMap((result) => result.issues),
+    };
+  }
+
+  async getIngestionResults(): Promise<DocumentIngestionResult[]> {
+    return Promise.all(Object.keys(this.options.registryPaths).sort().map((scenarioId) => this.retriever(scenarioId).getIngestionResult()));
+  }
+
+  private retriever(scenarioId: string): GovernedDocumentEvidenceRetriever {
+    const registryPath = this.options.registryPaths[scenarioId];
+    if (!registryPath) throw new Error(`No governed document registry is configured for scenario: ${scenarioId}`);
+    let retriever = this.retrievers.get(scenarioId);
+    if (!retriever) {
+      retriever = new GovernedDocumentEvidenceRetriever({ registryPath, access: this.options.access, now: this.options.now });
+      this.retrievers.set(scenarioId, retriever);
+    }
+    return retriever;
+  }
+
+  private now = (): Date => this.options.now?.() ?? new Date();
+}
+
+export function createDefaultGovernedDocumentRetriever(environment: NodeJS.ProcessEnv = process.env): ScenarioGovernedDocumentEvidenceRetriever {
+  const access = {
+    principalId: environment.MKG_DOCUMENT_PRINCIPAL_ID ?? "demo-agent-service",
+    roleIds: splitList(environment.MKG_DOCUMENT_ROLE_IDS, ["agent-evidence-reader"]),
+    domainIds: splitList(environment.MKG_DOCUMENT_DOMAIN_IDS, ["quality", "manufacturing", "engineering", "value-stream"]),
+  };
+  return new ScenarioGovernedDocumentEvidenceRetriever({
+    registryPaths: {
+      "quality-issue-trace": resolve(environment.MKG_DOCUMENT_REGISTRY_PATH ?? "packages/demo-data/documents/leak-rate/document-registry.json"),
+      "engineering-change-impact": resolve(environment.MKG_ENGINEERING_CHANGE_DOCUMENT_REGISTRY_PATH ?? "packages/demo-data/documents/engineering-change/document-registry.json"),
+      "bottleneck-analysis": resolve(environment.MKG_BOTTLENECK_DOCUMENT_REGISTRY_PATH ?? "packages/demo-data/documents/bottleneck/document-registry.json"),
     },
+    access,
   });
 }
 

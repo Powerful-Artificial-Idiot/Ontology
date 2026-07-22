@@ -1,0 +1,308 @@
+{
+  "datasetId": "evaluation.bottleneck-analysis",
+  "version": "1.0.0",
+  "domain": "manufacturing-value-stream",
+  "description": "Governed regression set for OP20 bottleneck and OP30 shift-risk analysis.",
+  "cases": [
+    {
+      "caseId": "bottleneck.en.direct",
+      "scenarioId": "bottleneck-analysis",
+      "title": "English bottleneck analysis",
+      "severity": "blocker",
+      "tags": [
+        "english",
+        "value-stream",
+        "documents",
+        "citations"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "graph": {
+              "templateId": "bottleneck-analysis.flow-metrics.v1",
+              "seedEntityIds": [
+                "operation.op20"
+              ],
+              "requiredObjectIds": [
+                "operation.op30",
+                "value-stream.metric.op20-cycle-time",
+                "value-stream.metric.line-bottleneck-risk"
+              ],
+              "requiredRelationIds": [
+                "relation.product.brake-booster.has-operation.op20",
+                "relation.operation.op10.next-operation.op20",
+                "relation.operation.op20.next-operation.op30",
+                "relation.operation.op30.next-operation.op40",
+                "relation.operation.op20.contributes-to.cycle-time",
+                "relation.operation.op20.affects.wip-before-op20",
+                "relation.operation.op20.contributes-to.waiting",
+                "relation.operation.op20.contributes-to.bottleneck-risk",
+                "relation.leak-rate.affects.retest-load",
+                "relation.retest-load.contributes-to.op40-waiting",
+                "relation.op30-retest.contributes-to.bottleneck-risk"
+              ],
+              "maxDepth": 3
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.brake-booster-value-stream",
+                "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+                "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer",
+                "evidence-chunk.doc.standard-work-op20.section-2-work-sequence",
+                "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics",
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requiredDocuments": [
+                {
+                  "documentId": "doc.line-balance-study-lb-bb01",
+                  "version": "Rev.1",
+                  "chunkId": "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison"
+                },
+                {
+                  "documentId": "doc.value-stream-map-vs-bb01",
+                  "version": "Rev.2",
+                  "chunkId": "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+                },
+                {
+                  "documentId": "doc.standard-work-op20",
+                  "version": "Rev.B",
+                  "chunkId": "evidence-chunk.doc.standard-work-op20.section-2-work-sequence"
+                },
+                {
+                  "documentId": "record.mes.op20-shift.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.mes.op20-shift.2026-07-demo.shift-sample-op20-metrics"
+                },
+                {
+                  "documentId": "record.qms.op30-retest.2026-07-demo",
+                  "version": "2026-07 Demo",
+                  "chunkId": "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+                }
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.route-impact",
+                "claim.shift-risk",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 1,
+        "resolvedEntityIds": [
+          "operation.op20"
+        ],
+        "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "bottleneck.zh.alias",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Chinese bottleneck alias",
+      "severity": "critical",
+      "tags": [
+        "chinese",
+        "value-stream",
+        "semantic"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP20 是当前瓶颈吗？如果 OP30 漏率复测增加，瓶颈会不会转移？",
+            "language": "zh"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence.graph.brake-booster-value-stream",
+                "evidence-chunk.doc.line-balance-study-lb-bb01.section-3-op20-capacity-comparison",
+                "evidence-chunk.doc.value-stream-map-vs-bb01.current-state-op20-buffer"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.route-impact",
+                "claim.shift-risk",
+                "claim.verification-required",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "bottleneck.cross-domain-multi-turn",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Bottleneck and quality shift multi-turn",
+      "severity": "major",
+      "tags": [
+        "multi-turn",
+        "cross-domain",
+        "quality",
+        "value-stream"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP20 the current bottleneck?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.bottleneck-candidate",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        },
+        {
+          "turnId": "turn-2",
+          "input": {
+            "message": "For OP20, could OP30 Leak Rate retest shift the bottleneck downstream?",
+            "language": "en"
+          },
+          "expected": {
+            "semantic": {
+              "intent": "bottleneck_analysis",
+              "entityIds": [
+                "operation.op20"
+              ]
+            },
+            "evidence": {
+              "requiredEvidenceIds": [
+                "evidence-chunk.record.qms.op30-retest.2026-07-demo.signal-summary-op30-retest"
+              ],
+              "requireGovernedAccess": true
+            },
+            "answer": {
+              "requiredClaimIds": [
+                "claim.shift-risk",
+                "claim.live-data-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 2,
+        "resolvedEntityIds": [
+          "operation.op20"
+        ],
+        "activeTopic": "bottleneck_analysis"
+      }
+    },
+    {
+      "caseId": "bottleneck.ambiguous",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Unresolved line question requires clarification",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "clarification"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Where is the problem?",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CLARIFICATION_REQUIRED"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    },
+    {
+      "caseId": "bottleneck.document-access-denied",
+      "scenarioId": "bottleneck-analysis",
+      "title": "Value-stream evidence access denial blocks publication",
+      "severity": "critical",
+      "tags": [
+        "negative",
+        "access-control",
+        "citation-gate"
+      ],
+      "executionProfile": "no-document-access",
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP20 the current bottleneck, and could OP30 Leak Rate retest shift the constraint downstream?",
+            "language": "en"
+          },
+          "expected": {
+            "errorCode": "CITATION_INVALID"
+          }
+        }
+      ],
+      "expectedContext": {
+        "turnCount": 0,
+        "resolvedEntityIds": []
+      }
+    }
+  ]
+}

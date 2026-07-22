@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 3 / OP20 Capacity Comparison",
+      "heading": "OP20 Capacity Comparison",
+      "text": "The governed sample records OP20 median cycle time at 48 seconds against a 45 second takt. OP10 and OP30 nominal cycle times are lower, making OP20 the current bounded bottleneck candidate rather than a confirmed live constraint."
+    }
+  ]
+}

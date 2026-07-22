@@ -1,38 +1,38 @@
 {
   "artifactFormatVersion": "1.0.0",
   "counts": {
-    "classes": 40,
-    "modules": 6,
-    "properties": 154,
-    "relations": 18
+    "classes": 46,
+    "modules": 8,
+    "properties": 164,
+    "relations": 23
   },
   "files": [
     {
-      "bytes": 13949,
+      "bytes": 16470,
       "path": "classes.json",
-      "sha256": "8ca89856628fc634987a5b75d4ff7bf40621c3c701fda88e8692e219ef79fb3e"
+      "sha256": "a85f09aea25996b1dddeb1fb36ed01194f849a06967ae1d9d5fc56795733bdb9"
     },
     {
-      "bytes": 1798,
+      "bytes": 2481,
       "path": "modules.json",
-      "sha256": "17df266e1b12acefee22f7e3ae0786c814ba119720cf347bf2c7a8dcaea6e6a7"
+      "sha256": "3fb7722e7af1e4aa33613fcaa0f0cc6637f81025ad5e3fa611366ee865d874a5"
     },
     {
-      "bytes": 57104,
+      "bytes": 61747,
       "path": "properties.json",
-      "sha256": "7ffe3a29247694b67d5340f51144d02f16265bfca3375526454c59cc66356f0b"
+      "sha256": "f2a4e98f31523a641119b5f656fc49896eeaf530c3ccec55a0405ba1ffe500d9"
     },
     {
-      "bytes": 7682,
+      "bytes": 9769,
       "path": "relations.json",
-      "sha256": "166d7501404d18335d2052498384e4b7d94a763f3bc25fbc0f869c6de833513e"
+      "sha256": "fa83e2f8e6b7f706ccfb0157d0cd6a28cc33ff98d38b517f6499d2ba03244b0e"
     },
     {
       "bytes": 123,
       "path": "version.json",
-      "sha256": "a0d7980ef155b4867eb48b43b5cd26918118303f7b8d0acb91b9da21880e9c63"
+      "sha256": "ca256d51b27cbdbaa77ee17bfc1419b5cf547ed9bb8319a92c05460d65181cbf"
     }
   ],
   "generator": "scripts/build_ontology_artifacts.py",
-  "ontologyVersion": "1.1.0"
+  "ontologyVersion": "1.2.0"
 }

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Page 4 / Section 3.2 Current Released Setup",
+      "heading": "Current Released Program",
+      "text": "The current released OP30 setup uses M220, FX-002 and LeakTestProgram V3.4. Any V3.5 deployment requires an approved change, completed validation and updated controlled work instructions."
+    }
+  ]
+}

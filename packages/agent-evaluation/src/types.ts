@@ -20,6 +20,7 @@ export type EvaluationDataset = {
 
 export type EvaluationCase = {
   caseId: string;
+  scenarioId?: string;
   title: string;
   severity: EvaluationSeverity;
   tags: string[];

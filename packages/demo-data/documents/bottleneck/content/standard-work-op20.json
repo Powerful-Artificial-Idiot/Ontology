@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 2 / Work Sequence",
+      "heading": "Manual Assembly Work Content",
+      "text": "The released OP20 sequence includes manual diaphragm positioning and fixture reset. These elements must be time-observed before assigning a corrective action or capacity commitment."
+    }
+  ]
+}

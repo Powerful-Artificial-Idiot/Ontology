@@ -1,4 +1,7 @@
-import { leakRateQualityIssueTraceBaseline } from "../../demo-data/src/index";
+import {
+  canonicalKnowledgeBaselineByScenarioId,
+  leakRateQualityIssueTraceBaseline,
+} from "../../demo-data/src/index";
 import {
   AGENT_CONTRACT_VERSION,
   type AgentAnswer,
@@ -33,7 +36,11 @@ import type {
   SemanticParser,
 } from "./types";
 
-const QUALITY_TRACE_TEMPLATE = "quality-issue-trace.direct-neighborhood.v1";
+const SUPPORTED_DETERMINISTIC_INTENTS = new Set([
+  "quality_issue_trace",
+  "engineering_change_impact",
+  "bottleneck_analysis",
+]);
 
 export class SystemAgentClock implements AgentClock {
   now(): Date {
@@ -48,28 +55,40 @@ export class StableAgentIdFactory implements AgentIdFactory {
   }
 }
 
-export class LeakRateCanonicalKnowledgeSource implements AgentKnowledgeSource {
+export class RegisteredCanonicalKnowledgeSource implements AgentKnowledgeSource {
   async getBaseline(scenarioId?: string): Promise<CanonicalKnowledgeBaseline> {
-    if (scenarioId && scenarioId !== leakRateQualityIssueTraceBaseline.scenario.id) {
-      throw new AgentPipelineError("QUERY_INTENT_UNSUPPORTED", `No canonical baseline is registered for scenario: ${scenarioId}`);
-    }
-    return leakRateQualityIssueTraceBaseline;
+    const resolvedId = scenarioId ?? leakRateQualityIssueTraceBaseline.scenario.id;
+    const baseline = canonicalKnowledgeBaselineByScenarioId.get(resolvedId);
+    if (!baseline) throw new AgentPipelineError("QUERY_INTENT_UNSUPPORTED", `No canonical baseline is registered for scenario: ${resolvedId}`);
+    return baseline;
   }
 }
 
-export class DeterministicLeakRateSemanticParser implements SemanticParser {
-  readonly toolName = "deterministic-leak-rate-parser.v1";
+export class LeakRateCanonicalKnowledgeSource extends RegisteredCanonicalKnowledgeSource {}
+
+export class DeterministicScenarioSemanticParser implements SemanticParser {
+  readonly toolName: string = "deterministic-canonical-scenario-parser.v1";
 
   async parse(request: AgentTurnRequest, baseline: CanonicalKnowledgeBaseline): Promise<SemanticQueryPlan> {
     const normalized = request.message.normalize("NFKC").toLowerCase();
-    const hasOperation = /\bop\s*30\b/u.test(normalized) || normalized.includes("leak test") || normalized.includes("泄漏测试");
-    const hasCharacteristic = ["leak rate", "air leak", "leakage", "泄漏率", "漏率", "泄漏"].some((term) => normalized.includes(term));
-    if (!hasOperation || !hasCharacteristic) {
+    const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
+    const missingSeedEntityIds = baseline.scenario.seedEntityIds.filter((entityId) => {
+      if (baseline.scenario.id === "quality-issue-trace") {
+        if (entityId === "operation.op30") return !(/\bop\s*30\b/u.test(normalized) || normalized.includes("leak test") || normalized.includes("泄漏测试"));
+        if (entityId === "quality-characteristic.leak-rate") return !["leak rate", "air leak", "leakage", "泄漏率", "漏率", "泄漏"].some((term) => normalized.includes(term));
+      }
+      const entity = entityById.get(entityId);
+      const terms = [entityId, entity?.label ?? "", ...(baseline.semanticAliases?.[entityId] ?? [])]
+        .map((term) => term.normalize("NFKC").toLowerCase())
+        .filter(Boolean);
+      return !terms.some((term) => normalized.includes(term));
+    });
+    if (missingSeedEntityIds.length) {
       throw new AgentPipelineError(
         "CLARIFICATION_REQUIRED",
-        "The deterministic parser requires an OP30 and Leak Rate reference.",
+        `The deterministic parser requires explicit references for scenario ${baseline.scenario.id}.`,
         "semantic-parsing",
-        { hasOperation, hasCharacteristic },
+        { missingSeedEntityIds: missingSeedEntityIds.join(",") },
       );
     }
 
@@ -84,17 +103,19 @@ export class DeterministicLeakRateSemanticParser implements SemanticParser {
         ...constraint,
         value: Array.isArray(constraint.value) ? [...constraint.value] : constraint.value,
       })),
-      assumptions: request.language === "en"
-        ? ["The recent abnormality is a local QMS fixture signal; no live time series is connected."]
-        : [...baseline.queryPlan.assumptions],
+      assumptions: [...baseline.queryPlan.assumptions],
     };
   }
+}
+
+export class DeterministicLeakRateSemanticParser extends DeterministicScenarioSemanticParser {
+  override readonly toolName = "deterministic-leak-rate-parser.v1";
 }
 
 export class StrictQueryPlanValidator implements QueryPlanSchemaValidator {
   async validate(plan: SemanticQueryPlan): Promise<SemanticQueryPlan> {
     assertPipeline(plan.planVersion === "1.0.0", "QUERY_PLAN_INVALID", "Unsupported semantic query plan version.", "query-plan-validation");
-    assertPipeline(plan.intent === "quality_issue_trace", "QUERY_INTENT_UNSUPPORTED", `Unsupported deterministic intent: ${plan.intent}`, "query-plan-validation");
+    assertPipeline(SUPPORTED_DETERMINISTIC_INTENTS.has(plan.intent), "QUERY_INTENT_UNSUPPORTED", `Unsupported deterministic intent: ${plan.intent}`, "query-plan-validation");
     assertPipeline(plan.originalQuestion.trim().length > 0, "QUERY_PLAN_INVALID", "The original question is required.", "query-plan-validation");
     assertPipeline(plan.entities.length > 0, "QUERY_PLAN_INVALID", "At least one canonical entity is required.", "query-plan-validation");
     assertPipeline(new Set(plan.entities.map((entity) => entity.id)).size === plan.entities.length, "QUERY_PLAN_INVALID", "Semantic query plan contains duplicate entities.", "query-plan-validation");
@@ -106,6 +127,7 @@ export class StrictQueryPlanValidator implements QueryPlanSchemaValidator {
 
 export class CanonicalOntologyValidator implements OntologyQueryPlanValidator {
   async validate(plan: SemanticQueryPlan, baseline: CanonicalKnowledgeBaseline): Promise<ValidatedQueryPlan> {
+    assertPipeline(plan.intent === baseline.scenario.intent, "QUERY_INTENT_UNSUPPORTED", `Intent ${plan.intent} does not match scenario ${baseline.scenario.id}.`, "ontology-validation");
     const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
     const allowedRelationTypes = new Set(baseline.queryPlan.relationTypes);
     for (const reference of plan.entities) {
@@ -123,7 +145,7 @@ export class CanonicalOntologyValidator implements OntologyQueryPlanValidator {
       status: "valid",
       ontologyVersion: baseline.ontologyVersion,
       authorizedEntityIds: baseline.entities.map((entity) => entity.id),
-      queryTemplateId: QUALITY_TRACE_TEMPLATE,
+      queryTemplateId: baseline.graphQueryPlan.templateId,
       parameters: { seedEntityIds: plan.entities.map((entity) => entity.id), status: "active" },
       warnings: [],
     };
@@ -132,8 +154,8 @@ export class CanonicalOntologyValidator implements OntologyQueryPlanValidator {
 
 export class AllowlistedGraphQueryCompiler implements GraphQueryCompiler {
   async compile(validated: ValidatedQueryPlan, baseline: CanonicalKnowledgeBaseline): Promise<GraphQueryPlan> {
-    assertPipeline(validated.plan.intent === "quality_issue_trace", "QUERY_INTENT_UNSUPPORTED", `No graph template for intent: ${validated.plan.intent}`, "query-compilation");
-    assertPipeline(validated.queryTemplateId === QUALITY_TRACE_TEMPLATE, "QUERY_INTENT_UNSUPPORTED", `Graph template is not allowlisted: ${validated.queryTemplateId}`, "query-compilation");
+    assertPipeline(validated.plan.intent === baseline.scenario.intent, "QUERY_INTENT_UNSUPPORTED", `No graph template for intent: ${validated.plan.intent}`, "query-compilation");
+    assertPipeline(validated.queryTemplateId === baseline.graphQueryPlan.templateId, "QUERY_INTENT_UNSUPPORTED", `Graph template is not allowlisted: ${validated.queryTemplateId}`, "query-compilation");
     const seedEntityIds = validated.plan.entities.map((entity) => entity.id);
     assertPipeline(seedEntityIds.every((id) => validated.authorizedEntityIds.includes(id)), "ONTOLOGY_TERM_INVALID", "Graph plan contains an entity outside the validated scope.", "query-compilation");
     return {
@@ -213,7 +235,10 @@ export class CanonicalEvidencePackBuilder implements EvidencePackBuilder {
 export class DeterministicEvidenceAnswerComposer implements AnswerComposer {
   readonly toolName = "deterministic-evidence-answer-composer.v1";
 
-  async compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack): Promise<AgentAnswer> {
+  async compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, _signal?: AbortSignal, baseline?: CanonicalKnowledgeBaseline): Promise<AgentAnswer> {
+    if (baseline && baseline.scenario.intent !== "quality_issue_trace") {
+      return composeCanonicalScenarioAnswer(request, evidencePack, baseline);
+    }
     const entityByType = new Map(graph.entities.map((entity) => [entity.type, entity]));
     const product = entityByType.get("mfg:Product")?.label ?? "Brake Booster Assembly";
     const machine = entityByType.get("mfg:Machine")?.label ?? "M220 Leak Test Bench";
@@ -314,6 +339,77 @@ export function assertAgentRequest(request: AgentTurnRequest): void {
 
 function fact(id: string, text: string, citations: AgentCitation[]): AgentClaim {
   return { id, text, classification: "fact", citations };
+}
+
+function composeCanonicalScenarioAnswer(
+  request: AgentTurnRequest,
+  evidencePack: EvidencePack,
+  baseline: CanonicalKnowledgeBaseline,
+): AgentAnswer {
+  const availableEvidence = new Map(evidencePack.items.map((item) => [item.id, item]));
+  const expected = baseline.expectedResponse.answer;
+  const claims = expected.claims.map((claim) => ({
+    ...claim,
+    citations: claim.citations.flatMap((citation) => {
+      const evidence = availableEvidence.get(citation.evidenceId);
+      return evidence ? [{ evidenceId: evidence.id, locator: evidence.source.locator }] : [];
+    }),
+  }));
+
+  if (request.language === "en") {
+    return {
+      ...expected,
+      findings: [...expected.findings],
+      recommendedActions: [...expected.recommendedActions],
+      risks: [...expected.risks],
+      assumptions: [...expected.assumptions],
+      limitations: [...(expected.limitations ?? [])],
+      claims,
+    };
+  }
+
+  const localized = baseline.scenario.intent === "engineering_change_impact"
+    ? {
+        summary: "拟议的 V3.5 程序变更影响 M220 与 OP30；在完成验证并同步受控质量文件前，不得批准发布。",
+        findings: ["V3.4 仍是已发布基线，V3.5 处于拟议状态。", "OP30 与 Leak Rate 控制属于变更影响范围。", "发布需要 ECR、验证记录、SOP 与 Control Plan 证据。"],
+        recommendedActions: ["完成 V3.5 受控验证方案。", "复核 Control Plan 与 SOP 的一致性。", "在批准发布前保留 V3.4 作为回退基线。"],
+        risks: ["未经验证的程序逻辑可能改变 Leak Rate 判定或误拒行为。"],
+        assumptions: ["V3.5 是演示中的拟议变更，V3.4 仍是生产发布基线。"],
+        limitations: ["当前未接入已完成的 V3.5 验证结果或真实部署历史。"],
+        claimTexts: [
+          "拟议的 V3.5 变更直接影响 M220 与 OP30，V3.4 仍是已发布程序。",
+          "V3.5 在发布前必须完成受控回归验证。",
+          "Leak Rate 阈值与反应规则仍由已发布 Control Plan 管理。",
+          "发布需要已批准的 ECR、验证证据及受控文件一致性。",
+          "演示数据没有已完成的 V3.5 验证结果，因此不能建议生产发布。",
+        ],
+      }
+    : {
+        summary: "OP20 是当前有边界证据支持的瓶颈候选；OP30 复测增加可能使约束下移或扩大，但仍需实时流动与质量数据确认。",
+        findings: ["OP20 样本节拍为 48 秒，高于 45 秒 takt。", "OP20 前存在 WIP 与等待累积。", "OP30 复测是受控的下游转移风险，并非已确认事件。"],
+        recommendedActions: ["采集当前周期与停机时间分布。", "观察 OP20 作业内容与资源可用性。", "监控 OP30 复测负荷与 OP40 前等待。"],
+        risks: ["将有限样本误判为已确认瓶颈，可能导致错误的产能投资。"],
+        assumptions: ["本地 OP20 与 OP30 样本是有边界的演示信号，不是实时企业遥测。"],
+        limitations: ["当前未接入实时班次历史、停机分布、人员状态或已确认的 OP30 复测群体。"],
+        claimTexts: [
+          "OP20 当前是有边界证据支持的瓶颈候选：48 秒样本超过 45 秒 takt，且上游存在 WIP 与等待。",
+          "OP20 约束会限制已发布 Brake Booster 路线流向 OP30 的产出。",
+          "OP30 Leak Rate 复测增加可能使当前约束向 OP30 转移或扩大。",
+          "实时决策需要当前周期、停机、WIP、等待及资源状态观测。",
+          "本地 MES/QMS fixture 不能证明持续的实时瓶颈或实际瓶颈转移。",
+        ],
+      };
+
+  return {
+    summary: localized.summary,
+    findings: localized.findings,
+    recommendedActions: localized.recommendedActions,
+    risks: localized.risks,
+    assumptions: localized.assumptions,
+    limitations: localized.limitations,
+    claims: claims.map((claim, index) => ({ ...claim, text: localized.claimTexts[index] ?? claim.text })),
+    confidence: expected.confidence,
+  };
 }
 
 function cloneEvidenceItem(item: EvidenceItem): EvidenceItem {

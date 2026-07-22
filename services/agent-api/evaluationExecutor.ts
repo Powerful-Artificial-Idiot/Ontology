@@ -1,4 +1,3 @@
-import { resolve } from "node:path";
 import {
   RepositoryGraphRetriever,
   SystemAgentClock,
@@ -16,9 +15,7 @@ import type {
   AgentTelemetrySink,
 } from "../../packages/agent-evaluation/src/index";
 import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRepository";
-import { GovernedDocumentEvidenceRetriever } from "./governedDocumentEvidence";
-
-const registryPath = resolve("packages/demo-data/documents/leak-rate/document-registry.json");
+import { ScenarioGovernedDocumentEvidenceRetriever, createDefaultGovernedDocumentRetriever } from "./governedDocumentEvidence";
 
 export type DeterministicEvaluationCaseExecutorOptions = {
   repository?: KnowledgeRepository;
@@ -30,12 +27,14 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
 
   async execute(testCase: EvaluationCase): Promise<EvaluationCaseExecution> {
     const clock = new SystemAgentClock();
-    const documentRetriever = new GovernedDocumentEvidenceRetriever({
-      registryPath,
-      access: testCase.executionProfile === "no-document-access"
-        ? { principalId: "evaluation-denied", roleIds: [], domainIds: [] }
-        : { principalId: "evaluation-runner", roleIds: ["agent-evidence-reader"], domainIds: ["quality", "manufacturing", "engineering"] },
-    });
+    const scenarioId = testCase.scenarioId ?? "quality-issue-trace";
+    const defaultRetriever = createDefaultGovernedDocumentRetriever();
+    const documentRetriever = testCase.executionProfile === "no-document-access"
+      ? new ScenarioGovernedDocumentEvidenceRetriever({
+          registryPaths: defaultRegistryPaths(),
+          access: { principalId: "evaluation-denied", roleIds: [], domainIds: [] },
+        })
+      : defaultRetriever;
     const core = createDeterministicAgentClient(clock, {
       graphRetriever: new RepositoryGraphRetriever(this.options.repository ?? new MockKnowledgeRepository()),
       documentRetriever,
@@ -43,7 +42,7 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
     const sessionId = `evaluation-session.${testCase.caseId}`;
     await core.client.startSession({
       id: sessionId,
-      scenarioId: "quality-issue-trace",
+      scenarioId,
       mode: "live",
       language: testCase.turns[0]?.input.language ?? "en",
     });
@@ -56,7 +55,7 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
         contractVersion: AGENT_CONTRACT_VERSION,
         requestId: `evaluation.${testCase.caseId}.${turnCase.turnId}`,
         sessionId,
-        scenarioId: "quality-issue-trace",
+        scenarioId,
         mode: "live",
         language: turnCase.input.language,
         message: turnCase.input.message,
@@ -86,4 +85,12 @@ export class DeterministicEvaluationCaseExecutor implements EvaluationCaseExecut
       finalContext: (await core.sessions.get(sessionId))?.context,
     };
   }
+}
+
+function defaultRegistryPaths(): Record<string, string> {
+  return {
+    "quality-issue-trace": "packages/demo-data/documents/leak-rate/document-registry.json",
+    "engineering-change-impact": "packages/demo-data/documents/engineering-change/document-registry.json",
+    "bottleneck-analysis": "packages/demo-data/documents/bottleneck/document-registry.json",
+  };
 }

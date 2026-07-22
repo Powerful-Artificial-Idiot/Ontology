@@ -111,7 +111,7 @@ export class DeterministicAgentPipeline {
       inputRefs: [evidencePack.id],
       outputRefs: (output) => output.claims.map((claim) => claim.id),
       summary: (output) => `Composed ${output.claims.length} structured claims from the Evidence Pack.`,
-      execute: () => this.dependencies.answerComposer.compose(request, graph, evidencePack, signal),
+      execute: () => this.dependencies.answerComposer.compose(request, graph, evidencePack, signal, baseline),
     });
 
     const citationValidation = await runStage({

@@ -1,0 +1,23 @@
+@prefix eng: <https://example.com/mkg/engineering#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+eng:EngineeringChangeShape a sh:NodeShape ;
+  sh:targetClass eng:EngineeringChange ;
+  sh:property [
+    sh:path eng:changeStatus ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "An engineering change must have one governed change status." ;
+  ] .
+
+eng:ValidationRecordShape a sh:NodeShape ;
+  sh:targetClass eng:ValidationRecord ;
+  sh:property [
+    sh:path eng:releaseDecision ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A validation record must state a release decision." ;
+  ] .

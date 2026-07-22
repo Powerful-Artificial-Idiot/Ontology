@@ -11,7 +11,8 @@ describe("Neo4jKnowledgeRepository", () => {
       expect(query).not.toMatch(/\b(CREATE|MERGE|DELETE|DETACH|SET|REMOVE|DROP|CALL|LOAD\s+CSV)\b/iu);
       expect(query).not.toContain("${");
     }
-    expect(NEO4J_READ_QUERIES.traverseQualityIssueNodes).toContain("[:RELATED_TO*0..2]");
+    expect(NEO4J_READ_QUERIES.traverseQualityIssueNodes).toContain("[:RELATED_TO*0..3]");
+    expect(NEO4J_READ_QUERIES.traverseQualityIssueNodes).toContain("length(path) <= $maxDepth");
     expect(NEO4J_READ_QUERIES.traverseQualityIssueNodes).toContain("$allowedRelationTypes");
     expect(NEO4J_READ_QUERIES.traverseQualityIssueNodes).toContain("$resultLimit");
   });
@@ -34,6 +35,7 @@ describe("Neo4jKnowledgeRepository", () => {
     expect(calls[0].parameters.seedEntityIds).toEqual(["operation.op30", "quality-characteristic.leak-rate"]);
     expect(calls[0].parameters.allowedRelationTypes).toEqual(leakRateQualityIssueTraceBaseline.graphQueryPlan.allowedRelationTypes);
     expect(neo4j.isInt(calls[0].parameters.resultLimit)).toBe(true);
+    expect(neo4j.isInt(calls[0].parameters.maxDepth)).toBe(true);
     expect((calls[0].parameters.resultLimit as ReturnType<typeof neo4j.int>).toNumber()).toBe(50);
     expect(JSON.stringify(calls[0].parameters)).not.toMatch(/MATCH|RETURN|CREATE/iu);
   });

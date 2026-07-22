@@ -42,7 +42,11 @@ describe("ApiAgentClient", () => {
     const completed = events.find((event) => event.type === "turn-completed");
     const accepted = events.find((event) => event.type === "run-accepted");
     expect(client.runtimeMode).toBe("api");
-    expect(scenarios.map((scenario) => scenario.id)).toEqual(["quality-issue-trace"]);
+    expect(scenarios.map((scenario) => scenario.id)).toEqual([
+      "quality-issue-trace",
+      "engineering-change-impact",
+      "bottleneck-analysis",
+    ]);
     expect(completed?.type).toBe("turn-completed");
     expect(accepted).toMatchObject({ type: "run-accepted", turnId: expect.stringMatching(/^turn\./u), runId: expect.stringMatching(/^run\./u) });
     if (!completed || completed.type !== "turn-completed") throw new Error("Missing completed event.");

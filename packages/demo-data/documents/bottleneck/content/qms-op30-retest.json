@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Signal Summary / OP30 Retest",
+      "heading": "Potential Bottleneck Shift Signal",
+      "text": "The demo signal indicates that elevated Leak Rate retest could reduce effective OP30 capacity and increase waiting before OP40. No live retest distribution or confirmed shift event is connected."
+    }
+  ]
+}

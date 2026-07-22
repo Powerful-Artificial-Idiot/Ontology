@@ -96,6 +96,7 @@ export function validateEvaluationDataset(dataset: unknown): asserts dataset is 
     if (!isRecord(testCase) || !isString(testCase.caseId) || !isString(testCase.title) || !isSeverity(testCase.severity) || !stringArray(testCase.tags) || !testCase.tags.length || !Array.isArray(testCase.turns) || !testCase.turns.length) {
       throw new Error("Each evaluation case requires an ID, title, severity, tags, and turns.");
     }
+    if (testCase.scenarioId !== undefined && !isString(testCase.scenarioId)) throw new Error(`Evaluation case ${testCase.caseId} has an invalid scenario ID.`);
     const turnIds = testCase.turns.map((turn) => turn.turnId);
     if (new Set(turnIds).size !== turnIds.length) throw new Error(`Evaluation case ${testCase.caseId} contains duplicate turn IDs.`);
     testCase.turns.forEach((turn) => {

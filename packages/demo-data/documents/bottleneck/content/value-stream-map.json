@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Current State / OP20 Buffer",
+      "heading": "OP20 WIP and Waiting",
+      "text": "The current-state demo map shows 36 pieces of WIP and approximately 18 minutes waiting before OP20. OP30 retest load and waiting before OP40 are tracked separately as a possible bottleneck-shift signal."
+    }
+  ]
+}

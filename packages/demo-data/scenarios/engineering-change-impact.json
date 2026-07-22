@@ -1,0 +1,8 @@
+{
+  "id": "engineering-change-impact",
+  "title": "M220 Program Engineering Change Impact",
+  "graphView": "engineering",
+  "frontendRoute": "/agent-demo",
+  "seedEntityIds": ["machine.m220", "program.leak-test.v3-4", "program.leak-test.v3-5"],
+  "competencyQuestionIds": ["CQ-006"]
+}

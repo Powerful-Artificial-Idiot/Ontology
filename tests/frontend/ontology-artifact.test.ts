@@ -11,8 +11,8 @@ const manifest = JSON.parse(readFileSync(`${artifactRoot}/manifest.json`, "utf8"
 
 describe("TTL-derived ontology artifact", () => {
   it("has stable governed counts and version metadata", () => {
-    expect(manifest.ontologyVersion).toBe("1.1.0");
-    expect(manifest.counts).toEqual({ classes: 40, modules: 6, properties: 154, relations: 18 });
+    expect(manifest.ontologyVersion).toBe("1.2.0");
+    expect(manifest.counts).toEqual({ classes: 46, modules: 8, properties: 164, relations: 23 });
   });
 
   it("matches every declared checksum", () => {

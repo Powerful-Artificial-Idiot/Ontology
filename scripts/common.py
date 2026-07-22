@@ -11,6 +11,8 @@ NAMESPACES = {
     "mfg": "https://example.com/mkg/manufacturing#",
     "qual": "https://example.com/mkg/quality#",
     "equip": "https://example.com/mkg/equipment#",
+    "eng": "https://example.com/mkg/engineering#",
+    "vs": "https://example.com/mkg/value-stream#",
     "app": "https://example.com/mkg/application#",
     "ux": "https://example.com/mkg/explorer#",
 }

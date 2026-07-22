@@ -2,7 +2,7 @@ import { resolve } from "node:path";
 import {
   InMemoryAgentRunEventStore,
   InMemoryAgentRunStore,
-  DeterministicLeakRateSemanticParser,
+  DeterministicScenarioSemanticParser,
   DeterministicEvidenceAnswerComposer,
   InMemoryCanonicalDocumentRetriever,
   HybridSemanticParser,
@@ -157,7 +157,7 @@ export function answerComposerFromEnvironment(environment: NodeJS.ProcessEnv = p
 
 export function semanticParserFromEnvironment(environment: NodeJS.ProcessEnv = process.env, telemetry?: AgentTelemetrySink): { mode: SemanticParserMode; parser: SemanticParser; providerType?: AgentLlmProviderType } {
   const mode = parseSemanticParserMode(environment.MKG_AGENT_SEMANTIC_PARSER_MODE);
-  const deterministic = new DeterministicLeakRateSemanticParser();
+  const deterministic = new DeterministicScenarioSemanticParser();
   if (mode === "deterministic") return { mode, parser: deterministic };
   const provider = environment.MKG_LLM_PROVIDER ?? "openai";
   const timeoutMs = parsePositiveInteger(environment.MKG_LLM_TIMEOUT_MS, 20_000);

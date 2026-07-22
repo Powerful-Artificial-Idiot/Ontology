@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Shift Sample / OP20 Metrics",
+      "heading": "Bounded Shift Sample",
+      "text": "The local fixture contains a bounded OP20 sample with median cycle time 48 seconds. It is not a live or statistically complete production history and cannot establish a sustained enterprise bottleneck by itself."
+    }
+  ]
+}
