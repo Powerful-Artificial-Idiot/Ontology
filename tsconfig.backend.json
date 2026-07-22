@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "types": ["node", "vite/client"]
+  },
+  "include": ["packages/**/*.ts", "services/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
+}

@@ -1,7 +1,10 @@
 import type {
   AgentAnswer,
   AgentAuditEvent,
+  AgentRunEvent,
   AgentSession,
+  AgentTurnRecord,
+  AgentTurnRun,
   AgentTurnRequest,
   CanonicalKnowledgeBaseline,
   CitationValidationResult,
@@ -32,7 +35,8 @@ export interface AgentKnowledgeSource {
 }
 
 export interface SemanticParser {
-  parse(request: AgentTurnRequest, baseline: CanonicalKnowledgeBaseline): Promise<SemanticQueryPlan>;
+  readonly toolName?: string;
+  parse(request: AgentTurnRequest, baseline: CanonicalKnowledgeBaseline, signal?: AbortSignal): Promise<SemanticQueryPlan>;
 }
 
 export interface QueryPlanSchemaValidator {
@@ -49,6 +53,7 @@ export interface GraphQueryCompiler {
 
 export type GraphRetrievalResult = {
   graphPlanId: string;
+  repositoryType: string;
   entities: KnowledgeEntity[];
   relations: KnowledgeRelation[];
 };
@@ -71,7 +76,8 @@ export interface EvidencePackBuilder {
 }
 
 export interface AnswerComposer {
-  compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack): Promise<AgentAnswer>;
+  readonly toolName?: string;
+  compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, signal?: AbortSignal): Promise<AgentAnswer>;
 }
 
 export interface CitationValidator {
@@ -86,6 +92,34 @@ export interface AgentSessionStore {
 
 export interface AgentAuditSink {
   append(event: AgentAuditEvent): Promise<void>;
+}
+
+export interface AgentTurnStore {
+  create(turn: AgentTurnRecord): Promise<void>;
+  get(turnId: string): Promise<AgentTurnRecord | null>;
+  listBySession(sessionId: string): Promise<AgentTurnRecord[]>;
+}
+
+export interface AgentRunStore {
+  create(run: AgentTurnRun): Promise<void>;
+  get(runId: string): Promise<AgentTurnRun | null>;
+  save(run: AgentTurnRun): Promise<void>;
+  listBySession(sessionId: string): Promise<AgentTurnRun[]>;
+}
+
+export interface AgentRunEventStore {
+  append(event: AgentRunEvent): Promise<void>;
+  list(runId: string, afterSequence?: number): Promise<AgentRunEvent[]>;
+}
+
+export type AgentAuditQuery = {
+  sessionId?: string;
+  turnId?: string;
+  traceId?: string;
+};
+
+export interface AgentAuditStore extends AgentAuditSink {
+  list(query?: AgentAuditQuery): AgentAuditEvent[];
 }
 
 export type AgentPipelineDependencies = {

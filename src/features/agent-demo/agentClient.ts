@@ -5,6 +5,7 @@ export type { AgentTurnRequest, AgentTurnResponse, ContractAgentClient } from ".
 export type AgentRunEvent =
   | { type: "session-started"; session: AgentConversationSession }
   | { type: "turn-started"; turn: AgentConversationTurn }
+  | { type: "run-accepted"; provisionalTurnId: string; runId: string; turnId: string }
   | { type: "step-started"; turnId: string; step: AgentReasoningStep }
   | { type: "step-completed"; turnId: string; step: AgentReasoningStep }
   | { type: "turn-completed"; turn: AgentConversationTurn; sharedContext: AgentSharedContext }
@@ -21,8 +22,14 @@ export type AgentRunTurnOptions = {
   signal?: AbortSignal;
 };
 
+export type AgentTurnDetails = Pick<AgentConversationTurn, "trace" | "references">;
+
 export interface AgentClient {
+  readonly runtimeMode: "scripted" | "api";
   listScenarios(): Promise<AgentScenario[]>;
-  startSession(scenarioId: string): Promise<AgentConversationSession>;
+  resumeSession?(scenarioId: string, language?: AgentLanguage): Promise<AgentConversationSession | null>;
+  startSession(scenarioId: string, language?: AgentLanguage): Promise<AgentConversationSession>;
   runTurn(options: AgentRunTurnOptions): Promise<void>;
+  retryRun?(runId: string, options: AgentRunTurnOptions): Promise<void>;
+  getTurnDetails(turnId: string): Promise<AgentTurnDetails | null>;
 }

@@ -12,13 +12,14 @@ The repository demonstrates how manufacturing knowledge can be defined, validate
 > Git 管理企业如何定义、解释和展示知识；
 > 运行时知识图谱和源系统管理现实世界中的事实及其有效时间。
 
-The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. Production identity, authorization, graph persistence, audit, ingestion, document retrieval, and AI execution are outside the present scope.
+The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. The deterministic pilot now includes optional Neo4j graph retrieval, persisted Agent sessions/audit, and SSE run streaming. Production identity, authorization, ingestion, vector retrieval, LLM execution, and production-grade multi-process persistence remain outside the present scope.
 
 ## Implemented Pages
 
 - **Route Explorer**: left-to-right manufacturing flow with Production, Quality, Engineering, and Value Stream views, stack nodes, edge metadata, Focus Mode, search, detail panels, and one-hop highlighting.
 - **Ontology Explorer**: object types, properties, relationships, domains, search, focus, highlighting, and detail inspection.
 - **Semantic Explorer**: business terms, aliases, ontology mappings, system fields, evidence, and agent-ready context across five semantic lanes.
+- **Agent Demo**: Scripted Demo by default, with an optional Agent API mode backed by constrained semantic parsing, evidence-grounded template/LLM answer composition, deterministic citation publication gates, persistent sessions, SSE stage updates, replay, and controlled retry.
 
 Page-level URLs preserve the active Explorer and supported view, selection, scenario, query, and focus state. The legacy root entry remains compatible, while routes such as `/routes/quality`, `/ontology/classes/Operation`, and `/semantic/scenarios/machine-impact-analysis` can be opened directly and restored with browser Back/Forward.
 
@@ -65,6 +66,8 @@ src/repositories/                 Repository interface adapters and legacy fixtu
 packages/knowledge-contracts/     Shared TypeScript and JSON Schema contracts
 packages/demo-data/               Contract-aligned graph, ontology, semantic, and scenario fixtures
 packages/ontology-client/         Future HTTP repository client
+packages/agent-core/              Deterministic provider-neutral Agent pipeline
+packages/neo4j-repository/        Server-only Neo4j KnowledgeRepository pilot adapter
 ontology/                         Core, domain, and application OWL/Turtle modules
 shapes/                           SHACL constraints
 mappings/                         MES, QMS, PLM, and Demo alignment mappings
@@ -75,6 +78,7 @@ reference-data/                   Governed example code lists
 migrations/                       Ontology migration records
 scripts/                          Validation, query, documentation, and release tooling
 tests/                            Frontend and integration regression tests
+services/agent-api/               Deterministic HTTP Agent API, SSE runs, and file persistence
 docs/                             Architecture, governance, API, and roadmap documentation
 .github/workflows/                Frontend, integration, and release CI
 ```
@@ -99,6 +103,19 @@ npm run build
 npm run preview
 ```
 
+Run the deterministic Agent API mode in two terminals:
+
+```bash
+npm run agent-api:dev
+npm run dev:agent
+```
+
+The optional Neo4j pilot is documented in [Phase 3B - Neo4j Knowledge Repository](docs/phase-3b-neo4j-repository.md). SSE and persistent-session behavior is documented in [Phase 3C - SSE Streaming and Persistent Sessions](docs/phase-3c-sse-persistence.md). Mock retrieval remains the default.
+
+The constrained semantic parser modes are documented in [Phase 4A - LLM Semantic Parser](docs/phase-4a-llm-semantic-parser.md). Deterministic parsing remains the default; enabling an LLM requires explicit server-only provider configuration.
+
+Evidence-grounded answer generation is documented in [Phase 4B - Evidence-Grounded LLM Answer Composer](docs/phase-4b-evidence-grounded-answer-composer.md). Template composition remains the default.
+
 ## Validation and Tests
 
 ```bash
@@ -120,6 +137,7 @@ make mock-api-test
 npm run lint
 npm run typecheck
 npm run test
+npm run agent-api:test
 ```
 
 SHACL valid fixtures must pass and files under `examples/invalid` must fail. Frontend payloads are separately checked against JSON Schema; neither validation replaces the other.

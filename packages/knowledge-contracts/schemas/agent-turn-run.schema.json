@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/agent-turn-run.schema.json",
+  "title": "AgentTurnRun",
+  "type": "object",
+  "required": ["id", "sessionId", "requestId", "turnId", "request", "status", "attempt", "createdAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "requestId": { "type": "string", "minLength": 1 },
+    "turnId": { "type": "string", "minLength": 1 },
+    "request": { "$ref": "https://example.com/mkg/contracts/agent-turn-request.schema.json" },
+    "status": { "enum": ["queued", "running", "completed", "failed", "cancelled"] },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "retryOfRunId": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "error": { "$ref": "#/$defs/error" }
+  },
+  "$defs": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "details"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string" },
+        "stage": { "type": "string" },
+        "details": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

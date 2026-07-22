@@ -53,6 +53,28 @@ describe("Mock Knowledge API", () => {
     expect(payload.total).toBeGreaterThan(0);
   });
 
+  it("serves bounded graph traversal through the shared repository contract", async () => {
+    const response = await fetch(`${baseUrl}/api/graph/traverse`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        graphPlanId: "graph-query-plan.http-test",
+        templateId: "quality-issue-trace.direct-neighborhood.v1",
+        readOnly: true,
+        seedEntityIds: ["operation.op30", "quality-characteristic.leak-rate"],
+        allowedRelationTypes: ["hasOperation", "nextOperation", "performedOn", "requiresFixture", "usesProgram", "controls", "controlledBy", "governedBy", "riskAnalyzedBy", "identifiesFailureMode", "describedBy"],
+        maxDepth: 2,
+        resultLimit: 50,
+        status: "active",
+      }),
+    });
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.repositoryType).toBe("mock");
+    expect(payload.entities.map((entity: { id: string }) => entity.id)).toContain("machine.m220");
+  });
+
   it("returns stable 400, 404, and 405 error envelopes", async () => {
     const responses = await Promise.all([
       fetch(`${baseUrl}/api/graph/views/unknown`),

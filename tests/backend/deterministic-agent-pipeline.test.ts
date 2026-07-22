@@ -9,7 +9,7 @@ import {
   createDeterministicAgentPipeline,
 } from "../../packages/agent-core/src/index";
 import { leakRateQualityIssueTraceBaseline } from "../../packages/demo-data/src/index";
-import { AGENT_CONTRACT_VERSION, type AgentClock, type AgentTurnRequest, type SemanticQueryPlan } from "../../packages/knowledge-contracts/src/index";
+import { AGENT_CONTRACT_VERSION, type AgentClock, type AgentPipelineEvent, type AgentTurnRequest, type SemanticQueryPlan } from "../../packages/knowledge-contracts/src/index";
 
 const question = "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险和文件？";
 
@@ -55,6 +55,18 @@ describe("Phase 2 deterministic Agent pipeline", () => {
     expect(en.evidencePack.items.map((item) => item.id)).toEqual(zh.evidencePack.items.map((item) => item.id));
     expect(en.answer.claims.map((claim) => claim.citations)).toEqual(zh.answer.claims.map((claim) => claim.citations));
     expect(JSON.stringify(en.answer)).not.toMatch(/[\u3400-\u9fff]/u);
+  });
+
+  it("publishes transport-neutral lifecycle events for every deterministic stage", async () => {
+    const pipeline = createDeterministicAgentPipeline({ clock: new SteppingClock() });
+    const events: AgentPipelineEvent[] = [];
+    await pipeline.run(request("pipeline-events", "en"), undefined, (event) => events.push(event));
+
+    expect(events[0]?.type).toBe("pipeline-started");
+    expect(events.at(-1)?.type).toBe("pipeline-completed");
+    expect(events.filter((event) => event.type === "stage-started")).toHaveLength(9);
+    expect(events.filter((event) => event.type === "stage-completed")).toHaveLength(9);
+    expect(JSON.stringify(events)).not.toMatch(/chain.of.thought|reasoningTokens|rawPrompt/i);
   });
 
   it("compiles only an allowlisted bounded read-only Graph Query Plan", async () => {
@@ -131,7 +143,7 @@ describe("Phase 2 deterministic Agent pipeline", () => {
   it("persists bounded multi-turn context and an audit event per turn", async () => {
     const clock = new SteppingClock();
     const { client, sessions, audit } = createDeterministicAgentClient(clock);
-    await client.startSession({ id: "session-001", mode: "live", language: "en", activeTopic: "Leak Rate investigation" });
+    await client.startSession({ id: "session-001", scenarioId: "quality-issue-trace", mode: "live", language: "en", activeTopic: "Leak Rate investigation" });
     await client.runTurn({ ...request("session-turn-1", "en"), sessionId: "session-001", mode: "live", message: "OP30 Leak Rate abnormality may affect which products, equipment, risks, and documents?" });
     await client.runTurn({ ...request("session-turn-2", "en"), sessionId: "session-001", mode: "live", message: "For OP30 Leak Rate, list the affected product, equipment, risk, and documents again." });
 

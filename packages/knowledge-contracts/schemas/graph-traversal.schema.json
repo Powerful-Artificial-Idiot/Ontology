@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/graph-traversal.schema.json",
+  "title": "GraphTraversalRequest",
+  "type": "object",
+  "required": ["graphPlanId", "templateId", "readOnly", "seedEntityIds", "allowedRelationTypes", "maxDepth", "resultLimit"],
+  "properties": {
+    "graphPlanId": { "type": "string", "minLength": 1 },
+    "templateId": { "const": "quality-issue-trace.direct-neighborhood.v1" },
+    "readOnly": { "const": true },
+    "seedEntityIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "allowedRelationTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9.-]*$" } },
+    "maxDepth": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "resultLimit": { "type": "integer", "minimum": 1, "maximum": 200 },
+    "status": { "type": "string" }
+  },
+  "not": { "anyOf": [{ "required": ["cypher"] }, { "required": ["query"] }, { "required": ["sql"] }] },
+  "additionalProperties": false
+}

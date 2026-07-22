@@ -23,6 +23,14 @@
       "additionalProperties": false
     },
     "ids": { "type": "object" },
+    "semanticAliases": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 },
+        "uniqueItems": true
+      }
+    },
     "entities": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-entity.schema.json" } },
     "relations": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-relation.schema.json" } },
     "request": { "$ref": "https://example.com/mkg/contracts/agent-turn-request.schema.json" },

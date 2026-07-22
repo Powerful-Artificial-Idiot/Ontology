@@ -52,6 +52,7 @@ export type AgentFinalAnswer = {
   recommendedActions: string[];
   risks?: string[];
   assumptions?: string[];
+  limitations?: string[];
   citations: Array<{
     claim: string;
     referenceIds: string[];
@@ -171,6 +172,7 @@ export type AgentSharedContext = {
 
 export type AgentConversationTurn = {
   id: string;
+  runId?: string;
   order: number;
   userMessage: AgentUserMessage;
   agentResponse: AgentResponseMessage | null;

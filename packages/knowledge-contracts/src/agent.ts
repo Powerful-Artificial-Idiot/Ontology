@@ -106,13 +106,25 @@ export type GraphQueryPlan = {
 
 export type AgentErrorCode =
   | "AGENT_CONTRACT_INCOMPATIBLE"
+  | "AGENT_REQUEST_INVALID"
   | "CLARIFICATION_REQUIRED"
   | "QUERY_PLAN_INVALID"
   | "ONTOLOGY_TERM_INVALID"
   | "QUERY_INTENT_UNSUPPORTED"
   | "EVIDENCE_INSUFFICIENT"
   | "CITATION_INVALID"
+  | "SCENARIO_NOT_FOUND"
   | "SESSION_NOT_FOUND"
+  | "SESSION_ALREADY_EXISTS"
+  | "TURN_NOT_FOUND"
+  | "TURN_ALREADY_EXISTS"
+  | "RUN_NOT_FOUND"
+  | "RUN_NOT_RETRYABLE"
+  | "RUN_INTERRUPTED"
+  | "LLM_PROVIDER_UNAVAILABLE"
+  | "LLM_RESPONSE_INVALID"
+  | "LLM_ENTITY_UNRESOLVED"
+  | "REQUEST_TIMEOUT"
   | "PIPELINE_CANCELLED"
   | "PIPELINE_FAILED";
 
@@ -138,6 +150,12 @@ export type EvidenceItem = {
   status?: "draft" | "active" | "superseded";
 };
 
+export type EvidenceClaimPolicy = {
+  claimId: string;
+  classification: AgentClaim["classification"];
+  required: boolean;
+};
+
 export type EvidencePack = {
   id: string;
   queryPlanId: string;
@@ -145,6 +163,7 @@ export type EvidencePack = {
   ontologyVersion: string;
   dataVersion: string;
   items: EvidenceItem[];
+  claimPolicies?: EvidenceClaimPolicy[];
   limitations: string[];
 };
 
@@ -166,13 +185,14 @@ export type AgentAnswer = {
   recommendedActions: string[];
   risks: string[];
   assumptions: string[];
+  limitations?: string[];
   claims: AgentClaim[];
   confidence: AgentConfidence;
 };
 
 export type CitationValidationIssue = {
   claimId: string;
-  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence";
+  code: "missing-citation" | "unknown-evidence" | "unsupported-claim" | "inactive-evidence" | "unknown-claim" | "duplicate-claim" | "missing-required-claim" | "claim-classification-mismatch";
   message: string;
 };
 
@@ -213,6 +233,48 @@ export type StructuredAgentTrace = {
   stages: AgentTraceStage[];
 };
 
+export type AgentPipelineStageStart = {
+  id: string;
+  stage: AgentTraceStageName;
+  startedAt: string;
+  tool?: string;
+  inputRefs: string[];
+};
+
+export type AgentPipelineEvent =
+  | {
+      type: "pipeline-started";
+      requestId: string;
+      turnId: string;
+      traceId: string;
+      occurredAt: string;
+    }
+  | {
+      type: "stage-started";
+      requestId: string;
+      turnId: string;
+      traceId: string;
+      stage: AgentPipelineStageStart;
+      occurredAt: string;
+    }
+  | {
+      type: "stage-completed" | "stage-failed";
+      requestId: string;
+      turnId: string;
+      traceId: string;
+      stage: AgentTraceStage;
+      occurredAt: string;
+    }
+  | {
+      type: "pipeline-completed";
+      requestId: string;
+      turnId: string;
+      traceId: string;
+      occurredAt: string;
+    };
+
+export type AgentPipelineEventHandler = (event: AgentPipelineEvent) => void | Promise<void>;
+
 export type AgentTurnResponse = {
   contractVersion: AgentContractVersion;
   requestId: string;
@@ -231,6 +293,7 @@ export type AgentTurnResponse = {
 export type AgentSession = {
   id: string;
   contractVersion: AgentContractVersion;
+  scenarioId: string;
   mode: AgentMode;
   language: AgentLanguage;
   turnIds: string[];
@@ -252,6 +315,126 @@ export type AgentAuditEvent = {
   metadata: Record<string, string | number | boolean>;
 };
 
+export type AgentScenarioDescriptor = {
+  id: string;
+  title: string;
+  description: string;
+  domain: AgentDomain;
+  supportedModes: AgentMode[];
+  supportedLanguages: AgentLanguage[];
+  suggestedQuestions: Array<{
+    zh: string;
+    en: string;
+  }>;
+};
+
+export type AgentScenarioListResource = {
+  scenarios: AgentScenarioDescriptor[];
+};
+
+export type CreateAgentSessionRequest = {
+  contractVersion: AgentContractVersion;
+  scenarioId: string;
+  mode: AgentMode;
+  language: AgentLanguage;
+};
+
+export type AgentSessionResource = {
+  session: AgentSession;
+};
+
+export type AgentTurnRecord = {
+  sessionId: string;
+  request: AgentTurnRequest;
+  response: AgentTurnResponse;
+  auditEventIds: string[];
+  createdAt: string;
+  persistedAt: string;
+};
+
+export type AgentTurnRunStatus = "queued" | "running" | "completed" | "failed" | "cancelled";
+
+export type AgentTurnRun = {
+  id: string;
+  sessionId: string;
+  requestId: string;
+  turnId: string;
+  request: AgentTurnRequest;
+  status: AgentTurnRunStatus;
+  attempt: number;
+  retryOfRunId?: string;
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  error?: AgentError;
+};
+
+export type AgentRunEventType =
+  | "run-queued"
+  | "run-started"
+  | "pipeline-event"
+  | "run-completed"
+  | "run-failed"
+  | "run-cancelled";
+
+export type AgentRunEvent = {
+  id: string;
+  sequence: number;
+  runId: string;
+  sessionId: string;
+  turnId: string;
+  type: AgentRunEventType;
+  occurredAt: string;
+  pipelineEvent?: AgentPipelineEvent;
+  error?: AgentError;
+};
+
+export type AgentTurnRunResource = {
+  run: AgentTurnRun;
+};
+
+export type AgentTurnRunListResource = {
+  sessionId: string;
+  runs: AgentTurnRun[];
+};
+
+export type AgentRunEventListResource = {
+  runId: string;
+  events: AgentRunEvent[];
+};
+
+export type AgentTurnResource = {
+  turn: AgentTurnRecord;
+};
+
+export type AgentTurnListResource = {
+  sessionId: string;
+  turns: AgentTurnRecord[];
+};
+
+export type AgentTraceResource = {
+  turnId: string;
+  trace: StructuredAgentTrace;
+};
+
+export type AgentEvidenceResource = {
+  turnId: string;
+  evidencePack: EvidencePack;
+  citationValidation: CitationValidationResult;
+};
+
+export type AgentAuditResource = {
+  sessionId?: string;
+  turnId?: string;
+  events: AgentAuditEvent[];
+};
+
+export type AgentApiErrorResponse = {
+  error: AgentError;
+  requestId?: string;
+  traceId?: string;
+};
+
 export type CanonicalKnowledgeBaseline = {
   baselineId: string;
   baselineVersion: string;
@@ -266,6 +449,7 @@ export type CanonicalKnowledgeBaseline = {
     seedEntityIds: string[];
   };
   ids: Record<string, unknown>;
+  semanticAliases?: Record<string, string[]>;
   entities: KnowledgeEntity[];
   relations: KnowledgeRelation[];
   request: AgentTurnRequest;
@@ -276,5 +460,5 @@ export type CanonicalKnowledgeBaseline = {
 };
 
 export interface ContractAgentClient {
-  runTurn(request: AgentTurnRequest, signal?: AbortSignal): Promise<AgentTurnResponse>;
+  runTurn(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler): Promise<AgentTurnResponse>;
 }

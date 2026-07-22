@@ -120,6 +120,26 @@ export type GraphViewResponse = {
   edges: GraphEdge[];
 };
 
+export type GraphTraversalRequest = {
+  graphPlanId: string;
+  templateId: string;
+  readOnly: true;
+  seedEntityIds: string[];
+  allowedRelationTypes: string[];
+  maxDepth: number;
+  resultLimit: number;
+  status?: string;
+};
+
+export type GraphTraversalResult = {
+  metadata: ContractMetadata;
+  graphPlanId: string;
+  templateId: string;
+  repositoryType: "mock" | "http" | "neo4j";
+  entities: KnowledgeEntity[];
+  relations: KnowledgeRelation[];
+};
+
 export type OntologyGraphRequest = {
   domain?: string;
   version?: string;
@@ -210,6 +230,7 @@ export type SemanticCatalogResponse = {
 };
 
 export interface KnowledgeRepository {
+  traverseGraph(request: GraphTraversalRequest): Promise<GraphTraversalResult>;
   getGraphView(request: GraphViewRequest): Promise<GraphViewResponse>;
   getEntityById(id: string): Promise<KnowledgeEntity | null>;
   getOntologyGraph(request: OntologyGraphRequest): Promise<OntologyGraphResponse>;

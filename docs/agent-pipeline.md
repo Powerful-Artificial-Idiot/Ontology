@@ -9,7 +9,7 @@
 
 企业事实、查询执行、权限判断、citation 校验和 trace 由后端负责。
 
-Phase 2 已在 `packages/agent-core` 实现 Leak Rate Quality Issue Trace 的 deterministic 版本。当前 parser、retrievers 和 composer 只读取 local canonical baseline；本实现不包含 LLM、Neo4j、向量数据库、LangGraph、Langfuse、外部服务或 Text-to-Cypher。
+Phase 2 已在 `packages/agent-core` 实现 Leak Rate Quality Issue Trace 的 deterministic 版本。Phase 4A 增加受约束 LLM Semantic Parser；Phase 4B 增加 Evidence-grounded LLM Answer Composer。Retrieval、Evidence Pack ownership 和最终 Citation Validator 仍由后端控制。本阶段不包含向量数据库、LangGraph、Langfuse 或 Text-to-Cypher。
 
 ## 2. End-To-End Flow
 
@@ -80,7 +80,7 @@ type StageResult<T> =
 - expected evidence types；
 - ambiguity 和 clarification requirement。
 
-第一版可使用 deterministic parser。LLM parser 后续通过 provider interface 接入。
+Phase 4A 支持 deterministic、llm 和 hybrid parser。LLM 只选择后端提供的 candidate ID 与 allowlist；后端拒绝未知字段并重新装配 canonical label/type。原始模型输出不进入 trace 或持久化。
 
 ### 4.3 Query Plan Schema Validator
 
@@ -203,6 +203,8 @@ LLM 或 deterministic composer 只能看到：
 - output schema 和 style constraints。
 
 不得向 composer 提供数据库凭据、不可见文档、完整企业数据或未校验 Query Plan。
+
+Phase 4B 中，summary、finding 和 risk 必须关联 governed claim ID，recommended action 必须关联 Evidence Pack ID。Provider 输出只形成临时 draft；后端重新构建 citation locator，并拒绝 unknown evidence、unknown claim、classification mismatch、缺失必需 claim 及额外字段。
 
 ### 4.12 Citation Validator
 

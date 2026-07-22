@@ -1,4 +1,4 @@
-import type { AgentClient, AgentRunTurnOptions } from "./agentClient";
+import type { AgentClient, AgentRunTurnOptions, AgentTurnDetails } from "./agentClient";
 import { selectScriptedTurnTemplate, type ScriptedTurnTemplate } from "./agentConversationData";
 import { agentDemoScenarios } from "./agentDemoData";
 import type { AgentConversationSession, AgentConversationTurn, AgentLanguage, AgentReasoningStep, AgentReference, AgentRelatedObject, AgentSharedContext } from "./agentDemoTypes";
@@ -7,6 +7,9 @@ import { localizeAgentResponse } from "./agentResponseLocalizations";
 let sessionSequence = 0;
 
 export class ScriptedAgentClient implements AgentClient {
+  readonly runtimeMode = "scripted" as const;
+  private readonly turnDetails = new Map<string, AgentTurnDetails>();
+
   constructor(private readonly latencyScale = 1) {}
 
   async listScenarios() {
@@ -103,7 +106,13 @@ export class ScriptedAgentClient implements AgentClient {
       completedAt,
     };
     const sharedContext = mergeSharedContext(options.sharedContext, template);
+    this.turnDetails.set(turnId, { trace: completedTurn.trace, references: completedTurn.references });
     options.onEvent({ type: "turn-completed", turn: completedTurn, sharedContext });
+  }
+
+  async getTurnDetails(turnId: string): Promise<AgentTurnDetails | null> {
+    const details = this.turnDetails.get(turnId);
+    return details ? { trace: details.trace.map((step) => ({ ...step })), references: details.references.map((reference) => ({ ...reference })) } : null;
   }
 }
 

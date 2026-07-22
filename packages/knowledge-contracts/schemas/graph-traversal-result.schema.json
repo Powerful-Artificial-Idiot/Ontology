@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/graph-traversal-result.schema.json",
+  "title": "GraphTraversalResult",
+  "type": "object",
+  "required": ["metadata", "graphPlanId", "templateId", "repositoryType", "entities", "relations"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["contractVersion", "ontologyVersion", "dataVersion", "traceId", "generatedAt"],
+      "properties": {
+        "contractVersion": { "type": "string" },
+        "ontologyVersion": { "type": "string" },
+        "dataVersion": { "type": "string" },
+        "traceId": { "type": "string", "minLength": 1 },
+        "generatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "graphPlanId": { "type": "string", "minLength": 1 },
+    "templateId": { "const": "quality-issue-trace.direct-neighborhood.v1" },
+    "repositoryType": { "enum": ["mock", "http", "neo4j"] },
+    "entities": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-entity.schema.json" } },
+    "relations": { "type": "array", "items": { "$ref": "https://example.com/mkg/contracts/knowledge-relation.schema.json" } }
+  },
+  "additionalProperties": false
+}

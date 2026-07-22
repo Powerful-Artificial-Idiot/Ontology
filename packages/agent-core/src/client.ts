@@ -3,14 +3,18 @@ import {
   type AgentAuditEvent,
   type AgentLanguage,
   type AgentMode,
+  type AgentPipelineEventHandler,
+  type AgentRunEvent,
   type AgentSession,
+  type AgentTurnRecord,
   type AgentTurnRequest,
   type AgentTurnResponse,
+  type AgentTurnRun,
   type ContractAgentClient,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError } from "./errors";
 import { DeterministicAgentPipeline } from "./pipeline";
-import type { AgentAuditSink, AgentClock, AgentSessionStore } from "./types";
+import type { AgentAuditQuery, AgentAuditStore, AgentClock, AgentRunEventStore, AgentRunStore, AgentSessionStore, AgentTurnStore } from "./types";
 
 export class InMemoryAgentSessionStore implements AgentSessionStore {
   private readonly sessions = new Map<string, AgentSession>();
@@ -30,20 +34,87 @@ export class InMemoryAgentSessionStore implements AgentSessionStore {
   }
 }
 
-export class InMemoryAgentAuditSink implements AgentAuditSink {
+export class InMemoryAgentTurnStore implements AgentTurnStore {
+  private readonly turns = new Map<string, AgentTurnRecord>();
+
+  async create(turn: AgentTurnRecord): Promise<void> {
+    if (this.turns.has(turn.response.turnId)) {
+      throw new AgentPipelineError("TURN_ALREADY_EXISTS", `Turn already exists: ${turn.response.turnId}`);
+    }
+    this.turns.set(turn.response.turnId, cloneJson(turn));
+  }
+
+  async get(turnId: string): Promise<AgentTurnRecord | null> {
+    const turn = this.turns.get(turnId);
+    return turn ? cloneJson(turn) : null;
+  }
+
+  async listBySession(sessionId: string): Promise<AgentTurnRecord[]> {
+    return [...this.turns.values()]
+      .filter((turn) => turn.sessionId === sessionId)
+      .sort((left, right) => left.createdAt.localeCompare(right.createdAt))
+      .map(cloneJson);
+  }
+}
+
+export class InMemoryAgentRunStore implements AgentRunStore {
+  private readonly runs = new Map<string, AgentTurnRun>();
+
+  async create(run: AgentTurnRun): Promise<void> {
+    if (this.runs.has(run.id)) throw new AgentPipelineError("TURN_ALREADY_EXISTS", `Run already exists: ${run.id}`);
+    this.runs.set(run.id, cloneJson(run));
+  }
+
+  async get(runId: string): Promise<AgentTurnRun | null> {
+    const run = this.runs.get(runId);
+    return run ? cloneJson(run) : null;
+  }
+
+  async save(run: AgentTurnRun): Promise<void> {
+    this.runs.set(run.id, cloneJson(run));
+  }
+
+  async listBySession(sessionId: string): Promise<AgentTurnRun[]> {
+    return [...this.runs.values()]
+      .filter((run) => run.sessionId === sessionId)
+      .sort((left, right) => left.createdAt.localeCompare(right.createdAt))
+      .map(cloneJson);
+  }
+}
+
+export class InMemoryAgentRunEventStore implements AgentRunEventStore {
+  private readonly events = new Map<string, AgentRunEvent[]>();
+
+  async append(event: AgentRunEvent): Promise<void> {
+    const current = this.events.get(event.runId) ?? [];
+    if (current.some((item) => item.sequence === event.sequence)) return;
+    this.events.set(event.runId, [...current, cloneJson(event)].sort((left, right) => left.sequence - right.sequence));
+  }
+
+  async list(runId: string, afterSequence = 0): Promise<AgentRunEvent[]> {
+    return (this.events.get(runId) ?? []).filter((event) => event.sequence > afterSequence).map(cloneJson);
+  }
+}
+
+export class InMemoryAgentAuditSink implements AgentAuditStore {
   private readonly records: AgentAuditEvent[] = [];
 
   async append(event: AgentAuditEvent): Promise<void> {
     this.records.push({ ...event, resourceIds: [...event.resourceIds], metadata: { ...event.metadata } });
   }
 
-  list(): AgentAuditEvent[] {
-    return this.records.map((event) => ({ ...event, resourceIds: [...event.resourceIds], metadata: { ...event.metadata } }));
+  list(query: AgentAuditQuery = {}): AgentAuditEvent[] {
+    return this.records
+      .filter((event) => !query.sessionId || event.sessionId === query.sessionId)
+      .filter((event) => !query.turnId || event.turnId === query.turnId)
+      .filter((event) => !query.traceId || event.traceId === query.traceId)
+      .map((event) => ({ ...event, resourceIds: [...event.resourceIds], metadata: { ...event.metadata } }));
   }
 }
 
 export type StartDeterministicSessionOptions = {
   id: string;
+  scenarioId: string;
   mode?: AgentMode;
   language?: AgentLanguage;
   activeTopic?: string;
@@ -53,7 +124,8 @@ export class DeterministicAgentClient implements ContractAgentClient {
   constructor(
     private readonly pipeline: DeterministicAgentPipeline,
     private readonly sessions: AgentSessionStore,
-    private readonly audit: AgentAuditSink,
+    private readonly turns: AgentTurnStore,
+    private readonly audit: AgentAuditStore,
     private readonly clock: AgentClock,
     private readonly actorId = "demo-user",
   ) {}
@@ -63,6 +135,7 @@ export class DeterministicAgentClient implements ContractAgentClient {
     const session: AgentSession = {
       id: options.id,
       contractVersion: AGENT_CONTRACT_VERSION,
+      scenarioId: options.scenarioId,
       mode: options.mode ?? "live",
       language: options.language ?? "zh",
       turnIds: [],
@@ -74,14 +147,14 @@ export class DeterministicAgentClient implements ContractAgentClient {
     return session;
   }
 
-  async runTurn(request: AgentTurnRequest, signal?: AbortSignal): Promise<AgentTurnResponse> {
+  async runTurn(request: AgentTurnRequest, signal?: AbortSignal, onEvent?: AgentPipelineEventHandler): Promise<AgentTurnResponse> {
     const session = request.sessionId ? await this.sessions.get(request.sessionId) : null;
     if (request.sessionId && !session) throw new AgentPipelineError("SESSION_NOT_FOUND", `Session not found: ${request.sessionId}`);
     try {
       const contextualRequest = session
         ? { ...request, context: request.context ?? session.context }
         : request;
-      const response = await this.pipeline.run(contextualRequest, signal);
+      const response = await this.pipeline.run(contextualRequest, signal, onEvent);
       if (session) {
         const resolvedEntityIds = response.queryPlan.entities.map((entity) => entity.id);
         const updated: AgentSession = {
@@ -97,7 +170,18 @@ export class DeterministicAgentClient implements ContractAgentClient {
         };
         await this.sessions.save(updated);
       }
-      await this.audit.append(this.auditEvent(request, response.trace.traceId, response.turnId, "completed", response.queryPlan.entities.map((entity) => entity.id)));
+      const auditEvent = this.auditEvent(request, response.trace.traceId, response.turnId, "completed", response.queryPlan.entities.map((entity) => entity.id));
+      await this.audit.append(auditEvent);
+      if (request.sessionId) {
+        await this.turns.create({
+          sessionId: request.sessionId,
+          request: contextualRequest,
+          response,
+          auditEventIds: [auditEvent.id],
+          createdAt: request.requestedAt ?? response.completedAt,
+          persistedAt: this.clock.now().toISOString(),
+        });
+      }
       return response;
     } catch (error) {
       await this.audit.append(this.auditEvent(request, `trace.${request.requestId}`, undefined, "failed", [], error instanceof AgentPipelineError ? error.detail.code : "PIPELINE_FAILED"));
@@ -132,4 +216,8 @@ function cloneSession(session: AgentSession): AgentSession {
       assumptions: [...session.context.assumptions],
     },
   };
+}
+
+function cloneJson<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/create-agent-session-request.schema.json",
+  "title": "CreateAgentSessionRequest",
+  "type": "object",
+  "required": ["contractVersion", "scenarioId", "mode", "language"],
+  "properties": {
+    "contractVersion": { "const": "1.0.0" },
+    "scenarioId": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["scripted", "live"] },
+    "language": { "enum": ["zh", "en"] }
+  },
+  "additionalProperties": false
+}

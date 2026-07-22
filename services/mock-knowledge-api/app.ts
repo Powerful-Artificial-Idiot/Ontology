@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { GraphViewRequest, KnowledgeRepository, SemanticSearchRequest } from "../../packages/knowledge-contracts/src/index";
+import type { GraphTraversalRequest, GraphViewRequest, KnowledgeRepository, SemanticSearchRequest } from "../../packages/knowledge-contracts/src/index";
 import { supportedKnowledgeVersions } from "../../src/repositories/semanticCatalogValidation";
 
 type ApiErrorPayload = {
@@ -102,6 +102,14 @@ async function handleRequest(repository: KnowledgeRepository, request: IncomingM
     return;
   }
 
+  if (segments.length === 2 && segments[0] === "graph" && segments[1] === "traverse") {
+    requireMethod(request, "POST");
+    const body = await readJson(request);
+    if (!isGraphTraversalRequest(body)) throw new ApiError(400, "INVALID_GRAPH_TRAVERSAL", "A bounded read-only graph traversal request is required.");
+    sendJson(response, 200, await repository.traverseGraph(body), traceId);
+    return;
+  }
+
   if (segments.length === 2 && segments[0] === "ontology" && segments[1] === "graph") {
     requireMethod(request, "GET");
     sendJson(response, 200, await repository.getOntologyGraph({
@@ -174,4 +182,18 @@ function corsHeaders(traceId: string) {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function isGraphTraversalRequest(value: unknown): value is GraphTraversalRequest {
+  return isRecord(value)
+    && typeof value.graphPlanId === "string"
+    && typeof value.templateId === "string"
+    && value.readOnly === true
+    && Array.isArray(value.seedEntityIds)
+    && value.seedEntityIds.every((id) => typeof id === "string")
+    && Array.isArray(value.allowedRelationTypes)
+    && value.allowedRelationTypes.every((type) => typeof type === "string")
+    && typeof value.maxDepth === "number" && value.maxDepth >= 0 && value.maxDepth <= 3
+    && typeof value.resultLimit === "number" && value.resultLimit >= 1 && value.resultLimit <= 200
+    && (value.status === undefined || typeof value.status === "string");
 }

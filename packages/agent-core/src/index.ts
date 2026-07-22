@@ -2,5 +2,8 @@ export * from "./client";
 export * from "./deterministicComponents";
 export * from "./errors";
 export * from "./factory";
+export * from "./llmAnswerComposer";
+export * from "./llmSemanticParser";
 export * from "./pipeline";
+export * from "./repositoryGraphRetriever";
 export * from "./types";

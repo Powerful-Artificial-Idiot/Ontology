@@ -2,6 +2,8 @@ import type {
   ContractMetadata,
   GraphViewRequest,
   GraphViewResponse,
+  GraphTraversalRequest,
+  GraphTraversalResult,
   KnowledgeEntity,
   KnowledgeRelation,
   KnowledgeRepository,
@@ -46,6 +48,11 @@ export class HttpKnowledgeRepository implements KnowledgeRepository {
     this.fetcher = options.fetcher ?? fetch;
     this.timeoutMs = options.timeoutMs ?? 5_000;
     this.expectedVersions = options.expectedVersions ?? { contractMajor: 1, ontologyVersion: "1.1.0", dataVersion: "0.5.0" };
+  }
+
+  async traverseGraph(request: GraphTraversalRequest): Promise<GraphTraversalResult> {
+    const result = await this.send<GraphTraversalResult>("/graph/traverse", request);
+    return { ...result, repositoryType: "http" };
   }
 
   getGraphView(request: GraphViewRequest) {

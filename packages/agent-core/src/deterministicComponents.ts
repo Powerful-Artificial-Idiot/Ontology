@@ -58,6 +58,8 @@ export class LeakRateCanonicalKnowledgeSource implements AgentKnowledgeSource {
 }
 
 export class DeterministicLeakRateSemanticParser implements SemanticParser {
+  readonly toolName = "deterministic-leak-rate-parser.v1";
+
   async parse(request: AgentTurnRequest, baseline: CanonicalKnowledgeBaseline): Promise<SemanticQueryPlan> {
     const normalized = request.message.normalize("NFKC").toLowerCase();
     const hasOperation = /\bop\s*30\b/u.test(normalized) || normalized.includes("leak test") || normalized.includes("泄漏测试");
@@ -170,7 +172,7 @@ export class InMemoryCanonicalGraphRetriever implements GraphRetriever {
     assertPipeline(visited.size <= plan.resultLimit, "QUERY_PLAN_INVALID", "Graph result exceeds the bounded result limit.", "graph-retrieval", { resultCount: visited.size });
     const entities = baseline.entities.filter((entity) => visited.has(entity.id));
     const relations = baseline.relations.filter((relation) => visited.has(relation.sourceId) && visited.has(relation.targetId) && allowedRelations.has(relation.label ?? relation.predicate));
-    return { graphPlanId: plan.graphPlanId, entities, relations };
+    return { graphPlanId: plan.graphPlanId, repositoryType: "canonical-fixture", entities, relations };
   }
 }
 
@@ -193,12 +195,15 @@ export class CanonicalEvidencePackBuilder implements EvidencePackBuilder {
       ontologyVersion: baseline.ontologyVersion,
       dataVersion: baseline.dataVersion,
       items: documents.items.map(cloneEvidenceItem),
+      claimPolicies: baseline.evidencePack.claimPolicies?.map((policy) => ({ ...policy })),
       limitations: [...baseline.evidencePack.limitations],
     };
   }
 }
 
 export class DeterministicEvidenceAnswerComposer implements AnswerComposer {
+  readonly toolName = "deterministic-evidence-answer-composer.v1";
+
   async compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack): Promise<AgentAnswer> {
     const entityByType = new Map(graph.entities.map((entity) => [entity.type, entity]));
     const product = entityByType.get("mfg:Product")?.label ?? "Brake Booster Assembly";
@@ -227,6 +232,7 @@ export class DeterministicEvidenceAnswerComposer implements AnswerComposer {
         recommendedActions: ["Start containment under the Control Plan.", "Verify M220, FX-002, the active program version, and golden-part results.", "Add QMS results and MES genealogy before confirming the actual affected population."],
         risks: ["Without live batch and equipment data, the pipeline cannot claim that every product is affected."],
         assumptions: ["The abnormal signal comes from the Phase 2 local QMS fixture."],
+        limitations: [...evidencePack.limitations],
         claims,
         confidence: "high",
       };
@@ -238,6 +244,7 @@ export class DeterministicEvidenceAnswerComposer implements AnswerComposer {
       recommendedActions: ["按 Control Plan 启动围堵。", "核对 M220、FX-002、程序版本和 golden-part 结果。", "补充 QMS 结果与 MES genealogy 后再确认实际影响范围。"],
       risks: ["缺少实时批次和设备数据时，不能断言全部产品均已受影响。"],
       assumptions: ["异常信号来自 Phase 2 本地 QMS fixture。"],
+      limitations: [...evidencePack.limitations],
       claims,
       confidence: "high",
     };
@@ -247,8 +254,24 @@ export class DeterministicEvidenceAnswerComposer implements AnswerComposer {
 export class StrictCitationValidator implements CitationValidator {
   async validate(answer: AgentAnswer, evidencePack: EvidencePack): Promise<CitationValidationResult> {
     const evidenceById = new Map(evidencePack.items.map((item) => [item.id, item]));
+    const policyById = new Map(evidencePack.claimPolicies?.map((policy) => [policy.claimId, policy]) ?? []);
     const issues: CitationValidationIssue[] = [];
+    const claimIds = answer.claims.map((claim) => claim.id);
+    const seenClaimIds = new Set<string>();
+    claimIds.forEach((claimId) => {
+      if (seenClaimIds.has(claimId)) issues.push({ claimId, code: "duplicate-claim", message: `Answer contains duplicate claim ID: ${claimId}` });
+      seenClaimIds.add(claimId);
+    });
+    evidencePack.claimPolicies?.filter((policy) => policy.required && !seenClaimIds.has(policy.claimId)).forEach((policy) => {
+      issues.push({ claimId: policy.claimId, code: "missing-required-claim", message: `Answer omitted required governed claim: ${policy.claimId}` });
+    });
     answer.claims.forEach((claim) => {
+      const policy = policyById.get(claim.id);
+      if (evidencePack.claimPolicies && !policy) {
+        issues.push({ claimId: claim.id, code: "unknown-claim", message: `Claim is not declared by the Evidence Pack: ${claim.id}` });
+      } else if (policy && policy.classification !== claim.classification) {
+        issues.push({ claimId: claim.id, code: "claim-classification-mismatch", message: `Claim classification does not match the Evidence Pack policy: ${claim.id}` });
+      }
       if (claim.classification === "fact" && claim.citations.length === 0) {
         issues.push({ claimId: claim.id, code: "missing-citation", message: "Factual claim has no evidence citation." });
       }
@@ -265,7 +288,7 @@ export class StrictCitationValidator implements CitationValidator {
     });
     return {
       status: issues.length ? "failed" : "passed",
-      checkedClaimIds: answer.claims.map((claim) => claim.id),
+      checkedClaimIds: [...new Set(answer.claims.map((claim) => claim.id))],
       issues,
     };
   }

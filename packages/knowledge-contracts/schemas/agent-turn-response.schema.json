@@ -22,6 +22,7 @@
         "recommendedActions": { "type": "array", "items": { "type": "string" } },
         "risks": { "type": "array", "items": { "type": "string" } },
         "assumptions": { "type": "array", "items": { "type": "string" } },
+        "limitations": { "type": "array", "items": { "type": "string" } },
         "confidence": { "enum": ["low", "medium", "high", "approved"] },
         "claims": {
           "type": "array",
@@ -61,7 +62,7 @@
             "required": ["claimId", "code", "message"],
             "properties": {
               "claimId": { "type": "string" },
-              "code": { "enum": ["missing-citation", "unknown-evidence", "unsupported-claim", "inactive-evidence"] },
+              "code": { "enum": ["missing-citation", "unknown-evidence", "unsupported-claim", "inactive-evidence", "unknown-claim", "duplicate-claim", "missing-required-claim", "claim-classification-mismatch"] },
               "message": { "type": "string" }
             },
             "additionalProperties": false

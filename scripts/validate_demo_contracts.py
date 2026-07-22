@@ -39,8 +39,15 @@ def main() -> int:
         "agent-turn-request.schema.json",
         "semantic-query-plan.schema.json",
         "graph-query-plan.schema.json",
+        "graph-traversal.schema.json",
+        "graph-traversal-result.schema.json",
         "evidence-pack.schema.json",
         "agent-turn-response.schema.json",
+        "create-agent-session-request.schema.json",
+        "agent-session.schema.json",
+        "agent-turn-record.schema.json",
+        "agent-turn-run.schema.json",
+        "agent-run-event.schema.json",
         "canonical-knowledge-baseline.schema.json",
     )]
     registry = schema_registry(schemas)
@@ -127,6 +134,9 @@ def validate_canonical_baseline(baseline: dict, terms: set) -> None:
     entity_ids = {entity["id"] for entity in baseline["entities"]}
     if len(entity_ids) != len(baseline["entities"]):
         raise AssertionError("Canonical baseline contains duplicate entity IDs")
+    unknown_alias_ids = set(baseline.get("semanticAliases", {})) - entity_ids
+    if unknown_alias_ids:
+        raise AssertionError(f"Canonical semantic aliases reference unknown entities: {sorted(unknown_alias_ids)}")
     relation_ids = {relation["id"] for relation in baseline["relations"]}
     if len(relation_ids) != len(baseline["relations"]):
         raise AssertionError("Canonical baseline contains duplicate relation IDs")
@@ -156,6 +166,16 @@ def validate_canonical_baseline(baseline: dict, terms: set) -> None:
 
     evidence_ids = {item["id"] for item in baseline["evidencePack"]["items"]}
     claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+    claim_policies = baseline["evidencePack"].get("claimPolicies", [])
+    policy_ids = {policy["claimId"] for policy in claim_policies}
+    if len(policy_ids) != len(claim_policies):
+        raise AssertionError("Canonical Evidence Pack contains duplicate claim policies")
+    if policy_ids != claim_ids:
+        raise AssertionError("Canonical Evidence Pack claim policies must cover every expected answer claim")
+    expected_classification = {claim["id"]: claim["classification"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+    for policy in claim_policies:
+        if policy["classification"] != expected_classification[policy["claimId"]]:
+            raise AssertionError(f"Claim policy classification mismatch: {policy['claimId']}")
     for item in baseline["evidencePack"]["items"]:
         unknown_entities = set(item["linkedEntityIds"]) - entity_ids
         if unknown_entities:

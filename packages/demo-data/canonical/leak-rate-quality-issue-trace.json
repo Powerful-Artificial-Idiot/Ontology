@@ -37,6 +37,18 @@
       "recentQualityResults": "evidence.qms.leak-rate.recent"
     }
   },
+  "semanticAliases": {
+    "operation.op30": ["OP30", "OP 30", "Leak Test Operation", "Automatic Leak Test Step", "泄漏测试工序", "气密测试工序"],
+    "quality-characteristic.leak-rate": ["Leak Rate", "Leakage Rate", "Air Leak", "Leak Test Result", "泄漏率", "漏率", "气密性"],
+    "machine.m220": ["M220", "Leak Test Bench", "M220 泄漏测试台"],
+    "fixture.fx-002": ["FX-002", "Leak Test Fixture", "泄漏测试工装"],
+    "program.leak-test.v3-4": ["LeakTestProgram V3.4", "Leak Test Program", "泄漏测试程序"],
+    "product.brake-booster": ["Brake Booster", "Brake Booster Assembly", "制动助力器总成"],
+    "failure-mode.internal-leakage": ["Internal Leakage", "Internal Leak", "内泄漏"],
+    "document.control-plan.cp-bb01.rev-a": ["Control Plan", "CP-BB01", "控制计划"],
+    "document.pfmea.pf-bb01.rev-b": ["PFMEA", "PF-BB01", "过程失效模式分析"],
+    "document.sop.op30-leak-test": ["SOP-OP30", "OP30 SOP", "OP30 作业指导书"]
+  },
   "entities": [
     {
       "id": "product.brake-booster",
@@ -246,6 +258,13 @@
       { "id": "document.sop.op30-leak-test", "kind": "document", "title": "SOP OP30 Leak Test", "excerpt": "M220 uses FX-002, LeakTestProgram V3.4 and a 2.5 bar test pressure with golden-part verification.", "source": { "sourceType": "document", "sourceId": "SOP-OP30", "sourceSystem": "DMS", "locator": "Setup and golden-part verification" }, "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"], "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"], "version": "Rev.3", "status": "active" },
       { "id": "evidence.qms.leak-rate.recent", "kind": "system-record", "title": "Recent Leak Rate Results", "excerpt": "The demo baseline contains an abnormal Leak Rate signal but no live QMS time-series connection.", "source": { "sourceType": "system-record", "sourceId": "QMS-DEMO-LEAK-RATE", "sourceSystem": "QMS Mock" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"], "supportsClaimIds": ["claim.signal-limitation"], "version": "2026-07 Demo", "status": "active" }
     ],
+    "claimPolicies": [
+      { "claimId": "claim.affected-product", "classification": "fact", "required": true },
+      { "claimId": "claim.affected-equipment", "classification": "fact", "required": true },
+      { "claimId": "claim.quality-risk", "classification": "fact", "required": true },
+      { "claimId": "claim.governed-documents", "classification": "fact", "required": true },
+      { "claimId": "claim.signal-limitation", "classification": "limitation", "required": true }
+    ],
     "limitations": ["No live QMS time-series, batch genealogy or equipment telemetry is connected in Phase 1."]
   },
   "expectedResponse": {
@@ -280,6 +299,13 @@
         { "id": "document.sop.op30-leak-test", "kind": "document", "title": "SOP OP30 Leak Test", "excerpt": "M220 uses FX-002, LeakTestProgram V3.4 and a 2.5 bar test pressure with golden-part verification.", "source": { "sourceType": "document", "sourceId": "SOP-OP30", "sourceSystem": "DMS", "locator": "Setup and golden-part verification" }, "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"], "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"], "version": "Rev.3", "status": "active" },
         { "id": "evidence.qms.leak-rate.recent", "kind": "system-record", "title": "Recent Leak Rate Results", "excerpt": "The demo baseline contains an abnormal Leak Rate signal but no live QMS time-series connection.", "source": { "sourceType": "system-record", "sourceId": "QMS-DEMO-LEAK-RATE", "sourceSystem": "QMS Mock" }, "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"], "supportsClaimIds": ["claim.signal-limitation"], "version": "2026-07 Demo", "status": "active" }
       ],
+      "claimPolicies": [
+        { "claimId": "claim.affected-product", "classification": "fact", "required": true },
+        { "claimId": "claim.affected-equipment", "classification": "fact", "required": true },
+        { "claimId": "claim.quality-risk", "classification": "fact", "required": true },
+        { "claimId": "claim.governed-documents", "classification": "fact", "required": true },
+        { "claimId": "claim.signal-limitation", "classification": "limitation", "required": true }
+      ],
       "limitations": ["No live QMS time-series, batch genealogy or equipment telemetry is connected in Phase 1."]
     },
     "answer": {
@@ -288,6 +314,7 @@
       "recommendedActions": ["按 Control Plan 启动围堵。", "核对 M220、FX-002、程序版本和 golden-part 结果。", "按批次补充 QMS 与 MES genealogy 后再确认实际影响范围。"],
       "risks": ["在缺少实时批次和设备数据时，不能断言全部产品均已受影响。"],
       "assumptions": ["异常信号来自 Phase 1 Mock QMS 记录。"],
+      "limitations": ["当前未连接实时 QMS 时间序列、批次 genealogy 或设备 telemetry。"],
       "claims": [
         { "id": "claim.affected-product", "text": "OP30 belongs to the released Brake Booster Assembly route.", "classification": "fact", "citations": [{ "evidenceId": "evidence.route.brake-booster.rev-c" }] },
         { "id": "claim.affected-equipment", "text": "OP30 uses M220, FX-002 and LeakTestProgram V3.4.", "classification": "fact", "citations": [{ "evidenceId": "document.sop.op30-leak-test" }] },

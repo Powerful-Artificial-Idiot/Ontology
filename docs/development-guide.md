@@ -10,7 +10,7 @@
 - `packages/demo-data`：contract-aligned fixtures、generated ontology artifacts 和 scenarios；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
-当前服务只有 `services/mock-knowledge-api`。`services/agent-api`、Neo4j、LLM 和 Docker Compose 是规划项，不是已实现命令。
+当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传及单进程文件持久化；LLM 和外部向量数据库仍未接入。
 
 ## 2. Prerequisites
 
@@ -55,9 +55,64 @@ npm run dev:http
 
 当前 HTTP API 仍由同一 Mock repository 驱动，用于验证 transport boundary，不是 production backend。
 
-### Agent mode
+### Agent modes
 
-Agent Workspace 当前固定使用 `ScriptedAgentClient`。Live Agent mode 和 `ApiAgentClient` 尚未实现，开发文档不得假设存在 `VITE_AGENT_MODE`，直到对应 factory、tests 和 fallback UI 合并。
+默认的 Agent Workspace 保持 Scripted Demo：
+
+```bash
+npm run dev
+```
+
+运行 deterministic API 需要两个终端：
+
+```bash
+# terminal 1
+npm run agent-api:dev
+
+# terminal 2
+npm run dev:agent
+```
+
+`VITE_AGENT_MODE=scripted|api` 只决定 frontend client adapter。API 模式当前只开放 `quality-issue-trace`。默认文件存储位于 `.data/agent-store.json`，服务重启后会恢复 Session、Turn、Trace、Evidence、Audit、Run 和可续传事件；设置 `MKG_AGENT_STORE_MODE=memory` 可使用临时内存模式。
+
+创建 Turn 后 API 立即返回 run ID，浏览器再通过 SSE 接收阶段状态。事件流使用序列号和 `Last-Event-ID` 续传；失败或中断的 run 必须由用户显式 Retry。
+
+Phase 4A 默认继续使用 deterministic semantic parser。启用受约束 LLM parser：
+
+```bash
+export MKG_AGENT_SEMANTIC_PARSER_MODE=llm # or hybrid
+export MKG_LLM_PROVIDER=openai
+export MKG_LLM_MODEL=<explicit-model-id>
+export MKG_OPENAI_API_KEY=<server-secret>
+npm run agent-api:dev
+```
+
+`llm` 始终调用 provider；`hybrid` 先运行 deterministic parser，仅在其返回 `CLARIFICATION_REQUIRED` 时调用 provider。Provider 不可用、超时或输出非法时会失败，不做静默降级。
+
+启用 Evidence-grounded LLM Answer Composer：
+
+```bash
+export MKG_AGENT_ANSWER_COMPOSER_MODE=llm # or hybrid
+export MKG_LLM_ANSWER_MODEL=<explicit-model-id>
+export MKG_OPENAI_API_KEY=<server-secret>
+npm run agent-api:dev
+```
+
+`template` 是默认模式。`llm` 只接收 bounded Evidence Context Projection；`hybrid` 额外接收 deterministic template 作为 guidance。两种 LLM 模式都必须通过 runtime schema、governed claim policy 和最终 deterministic Citation Validator。
+
+### Agent API with Neo4j
+
+Phase 3B 可以将 Agent graph retrieval 显式切换到 Neo4j。完整步骤见 [Phase 3B Neo4j Repository](phase-3b-neo4j-repository.md)。服务端配置使用 `MKG_*`，不得写入前端 bundle：
+
+```bash
+export MKG_NEO4J_PASSWORD=development-password
+npm run neo4j:up
+npm run neo4j:seed
+npm run neo4j:verify
+npm run agent-api:neo4j
+```
+
+如果 Neo4j 不可用，Agent API 启动失败，不会回退为 Mock。
 
 ## 4. Validation Commands
 
@@ -68,6 +123,7 @@ npm run lint
 npm run typecheck
 npm run test
 npm run test:agent-core
+npm run agent-api:test
 npm run build
 ```
 
@@ -155,6 +211,32 @@ Generated fixtures -> canonical data/ontology sources
 - `VITE_KNOWLEDGE_MODE`；
 - `VITE_KNOWLEDGE_API_BASE_URL`；
 - `VITE_KNOWLEDGE_TIMEOUT_MS`。
+- `VITE_AGENT_MODE`；
+- `VITE_AGENT_API_BASE_URL`；
+- `VITE_AGENT_TIMEOUT_MS`。
+
+服务端 Agent repository 配置：
+
+- `MKG_AGENT_KNOWLEDGE_MODE=mock|neo4j`；
+- `MKG_NEO4J_URI`；
+- `MKG_NEO4J_USERNAME`；
+- `MKG_NEO4J_PASSWORD`；
+- `MKG_NEO4J_DATABASE`。
+
+服务端 Semantic Parser 配置：
+
+- `MKG_AGENT_SEMANTIC_PARSER_MODE=deterministic|llm|hybrid`；
+- `MKG_LLM_PROVIDER=openai`；
+- `MKG_LLM_MODEL`；
+- `MKG_OPENAI_API_KEY`；
+- `MKG_OPENAI_BASE_URL`；
+- `MKG_LLM_TIMEOUT_MS`。
+
+服务端 Answer Composer 配置：
+
+- `MKG_AGENT_ANSWER_COMPOSER_MODE=template|llm|hybrid`；
+- `MKG_LLM_ANSWER_MODEL`（未设置时使用 `MKG_LLM_MODEL`）；
+- `MKG_LLM_ANSWER_TIMEOUT_MS`。
 
 未来 server-only 配置不得使用 `VITE_` 前缀。Neo4j password、LLM API key、session credentials 和 telemetry tokens 只进入服务端 secret store/environment，并保持 `.gitignore` 覆盖。
 
@@ -182,7 +264,7 @@ Generated fixtures -> canonical data/ontology sources
 | --- | --- |
 | Unit | parser、validator、compiler、retriever normalization、citation rules |
 | Contract | JSON Schema、client/service parity、version mismatch |
-| Integration | Agent API SSE、repository mode parity、Neo4j adapter、session store |
+| Integration | Agent API HTTP resources、repository mode parity、session/turn stores；SSE 与 Neo4j adapter 为后续阶段 |
 | Competency | CQ-001 至 CQ-005 business results |
 | Frontend | Scripted/Live Turn Bundle parity、loading/error/cancel/retry |
 | Release | manifest、checksums、no secrets、deep links、health checks |

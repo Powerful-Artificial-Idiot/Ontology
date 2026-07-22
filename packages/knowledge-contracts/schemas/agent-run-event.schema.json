@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/agent-run-event.schema.json",
+  "title": "AgentRunEvent",
+  "type": "object",
+  "required": ["id", "sequence", "runId", "sessionId", "turnId", "type", "occurredAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "turnId": { "type": "string", "minLength": 1 },
+    "type": { "enum": ["run-queued", "run-started", "pipeline-event", "run-completed", "run-failed", "run-cancelled"] },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "pipelineEvent": { "$ref": "#/$defs/pipelineEvent" },
+    "error": { "$ref": "https://example.com/mkg/contracts/agent-turn-run.schema.json#/$defs/error" }
+  },
+  "$defs": {
+    "pipelineEvent": {
+      "type": "object",
+      "required": ["type", "requestId", "turnId", "traceId", "occurredAt"],
+      "properties": {
+        "type": { "enum": ["pipeline-started", "stage-started", "stage-completed", "stage-failed", "pipeline-completed"] },
+        "requestId": { "type": "string", "minLength": 1 },
+        "turnId": { "type": "string", "minLength": 1 },
+        "traceId": { "type": "string", "minLength": 1 },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "stage": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
