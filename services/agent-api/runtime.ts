@@ -40,6 +40,8 @@ import { DeepSeekAnswerProvider } from "./deepSeekAnswerProvider";
 import { isDeepSeekModel, type DeepSeekModel } from "./deepSeekChatCompletionsClient";
 import { AuthorizationAwareCitationValidator, AuthorizedGraphRetriever } from "../../packages/agent-security/src/index";
 import { createAgentApiSecurity } from "./security";
+import { validateAgentDeploymentConfiguration } from "./deploymentConfig";
+import { runtimeDataPath } from "../runtimePaths";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
@@ -76,9 +78,10 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
 }
 
 export async function createConfiguredAgentApiRuntime(environment: NodeJS.ProcessEnv = process.env): Promise<ConfiguredAgentApiRuntime> {
+  const deployment = await validateAgentDeploymentConfiguration(environment);
   const mode = parseRepositoryMode(environment.MKG_AGENT_KNOWLEDGE_MODE);
   const clock = new SystemAgentClock();
-  const telemetry = telemetryFromEnvironment(environment);
+  const telemetry = telemetryFromEnvironment(environment, deployment.dataDirectory);
   const security = createAgentApiSecurity(environment);
   const semantic = semanticParserFromEnvironment(environment, telemetry);
   const answer = answerComposerFromEnvironment(environment, telemetry);
@@ -107,7 +110,7 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   }
   const persistenceMode = environment.MKG_AGENT_STORE_MODE === "memory" ? "in-memory" : "file";
   const persistentStore = persistenceMode === "file"
-    ? new FileAgentStore(resolve(environment.MKG_AGENT_STORE_PATH ?? ".data/agent-store.json"))
+    ? new FileAgentStore(runtimeDataPath(environment, "agent-store.json", environment.MKG_AGENT_STORE_PATH))
     : undefined;
   await persistentStore?.initialize();
   const sessions = persistentStore ? new FileAgentSessionStore(persistentStore) : undefined;
@@ -140,6 +143,13 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
     answerComposerMode: answer.mode,
     documentEvidenceMode: documentMode,
     llmProviderType: semantic.providerType ?? answer.providerType,
+    readiness: {
+      dataDirectoryWritable: deployment.status.dataDirectoryWritable,
+      neo4jReachable: mode === "neo4j",
+      documentsVerified: documentMode === "governed",
+      authenticationConfigured: deployment.status.authenticationConfigured,
+      runtimePackagesAvailable: true,
+    },
     security,
     close: () => repository instanceof Neo4jKnowledgeRepository ? repository.close() : Promise.resolve(),
   };
@@ -198,9 +208,9 @@ function deepSeekModel(value: string): DeepSeekModel {
   return value;
 }
 
-function telemetryFromEnvironment(environment: NodeJS.ProcessEnv): AgentTelemetrySink {
+function telemetryFromEnvironment(environment: NodeJS.ProcessEnv, dataDirectory: string): AgentTelemetrySink {
   if (environment.MKG_AGENT_TELEMETRY_MODE === "off") return { record() {} };
-  return new RedactingAgentTelemetrySink(new LocalJsonlAgentTelemetrySink(resolve(environment.MKG_AGENT_TELEMETRY_PATH ?? ".data/agent-telemetry.jsonl")));
+  return new RedactingAgentTelemetrySink(new LocalJsonlAgentTelemetrySink(resolve(environment.MKG_AGENT_TELEMETRY_PATH ?? resolve(dataDirectory, "agent-telemetry.jsonl"))));
 }
 
 export function neo4jOptionsFromEnvironment(environment: NodeJS.ProcessEnv = process.env): Neo4jKnowledgeRepositoryOptions {

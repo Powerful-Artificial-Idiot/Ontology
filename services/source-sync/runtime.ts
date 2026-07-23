@@ -19,6 +19,7 @@ import {
   type ConnectorRunResult,
   type SourceSyncTelemetryEvent,
 } from "../../packages/source-sync/src/index";
+import { runtimeDataDirectory } from "../runtimePaths";
 
 const root = resolve(process.cwd());
 const profilePath = resolve(root, "packages/demo-data/source-sync/connector-profiles.v1.json");
@@ -31,8 +32,8 @@ const paths = {
 export type SourceSyncRuntime = Awaited<ReturnType<typeof createSourceSyncRuntime>>;
 
 export async function createSourceSyncRuntime(options: { dataDirectory?: string; profiles?: ConnectorProfile[]; environment?: NodeJS.ProcessEnv } = {}) {
-  const dataDirectory = resolve(options.dataDirectory ?? ".data/source-sync");
   const environment = options.environment ?? process.env;
+  const dataDirectory = resolve(options.dataDirectory ?? resolve(runtimeDataDirectory(environment), "source-sync"));
   const profiles = options.profiles ?? validateConnectorProfiles(JSON.parse(await readFile(profilePath, "utf8")) as unknown);
   const syncStore = new FileGovernedSyncStore(resolve(dataDirectory, "snapshot.json"));
   const runs = new FileConnectorRunStore(resolve(dataDirectory, "runs.json"));

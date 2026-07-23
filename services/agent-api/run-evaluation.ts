@@ -20,12 +20,13 @@ import { runAgentRuntimeProbes } from "./evaluationRuntimeProbes";
 import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRepository";
 import { Neo4jKnowledgeRepository } from "../../packages/neo4j-repository/src/index";
 import { neo4jOptionsFromEnvironment } from "./runtime";
+import { runtimeDataPath } from "../runtimePaths";
 
 const datasetPath = resolve(process.env.MKG_EVALUATION_DATASET_PATH ?? "packages/demo-data/evaluations/leak-rate-quality-trace.v1.json");
 const policyPath = resolve(process.env.MKG_RELEASE_POLICY_PATH ?? "packages/demo-data/evaluations/release-policy.v1.json");
-const outputPath = resolve(process.env.MKG_EVALUATION_REPORT_PATH ?? ".data/evaluations/latest-report.json");
+const outputPath = runtimeDataPath(process.env, "evaluations/latest-report.json", process.env.MKG_EVALUATION_REPORT_PATH);
 const acceptanceProvider = process.env.MKG_LLM_PROVIDER === "deepseek" ? "deepseek" : "openai";
-const acceptancePath = resolve(process.env.MKG_PROVIDER_ACCEPTANCE_PATH ?? `.data/evaluations/${acceptanceProvider}-provider-acceptance.json`);
+const acceptancePath = runtimeDataPath(process.env, `evaluations/${acceptanceProvider}-provider-acceptance.json`, process.env.MKG_PROVIDER_ACCEPTANCE_PATH);
 
 await main();
 

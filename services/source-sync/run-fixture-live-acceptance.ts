@@ -5,8 +5,9 @@ import { dirname, resolve } from "node:path";
 import type { ConnectorProfile } from "../../packages/knowledge-contracts/src/index";
 import { EnvironmentSourceSecretResolver, FixtureHttpJsonSourceConnector, validateConnectorProfiles } from "../../packages/source-sync/src/index";
 import { createSourceSyncFixtureHandler } from "../source-sync-fixture/app";
+import { runtimeDataPath } from "../runtimePaths";
 
-const outputPath = resolve(".data/source-sync/fixture-live-report.json");
+const outputPath = runtimeDataPath(process.env, "source-sync/fixture-live-report.json");
 const token = randomBytes(32).toString("hex");
 const server = createServer((request, response) => { void createSourceSyncFixtureHandler({ token })(request, response).catch(() => { response.writeHead(500); response.end(); }); });
 await new Promise<void>((done) => server.listen(0, "127.0.0.1", done));

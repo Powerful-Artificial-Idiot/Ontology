@@ -95,6 +95,13 @@ export type AgentApiRuntime = {
   answerComposerMode?: AnswerComposerMode;
   documentEvidenceMode?: "canonical" | "governed";
   llmProviderType?: "openai-responses" | "deepseek-chat-completions";
+  readiness?: {
+    dataDirectoryWritable: boolean;
+    neo4jReachable: boolean;
+    documentsVerified: boolean;
+    authenticationConfigured: boolean;
+    runtimePackagesAvailable: boolean;
+  };
   timeoutMs?: number;
   logger?: AgentApiLogger;
   security?: AgentApiSecurityRuntime;
@@ -158,6 +165,38 @@ async function handleRequest(runtime: AgentApiRuntime, request: IncomingMessage,
   const segments = url.pathname.split("/").filter(Boolean);
   if (segments.shift() !== "api" || segments.shift() !== "agent") {
     throw new AgentApiError(404, "SCENARIO_NOT_FOUND", "Agent API route not found.");
+  }
+
+  if (segments.length === 2 && segments[0] === "health" && segments[1] === "live") {
+    requireMethod(request, "GET");
+    sendJson(response, 200, { status: "ok", service: "deterministic-agent-api" }, traceId);
+    return;
+  }
+
+  if (segments.length === 2 && segments[0] === "health" && segments[1] === "ready") {
+    requireMethod(request, "GET");
+    const checks = runtime.readiness ?? {
+      dataDirectoryWritable: true,
+      neo4jReachable: runtime.knowledgeRepositoryType === "neo4j",
+      documentsVerified: true,
+      authenticationConfigured: runtime.security?.profile !== "production",
+      runtimePackagesAvailable: true,
+    };
+    const ready = checks.dataDirectoryWritable
+      && checks.documentsVerified
+      && checks.runtimePackagesAvailable
+      && (runtime.knowledgeRepositoryType !== "neo4j" || checks.neo4jReachable)
+      && (runtime.security?.profile !== "production" || checks.authenticationConfigured);
+    sendJson(response, ready ? 200 : 503, {
+      status: ready ? "ready" : "not-ready",
+      deepseek: { configured: runtime.llmProviderType === "deepseek-chat-completions" },
+      neo4j: { reachable: checks.neo4jReachable },
+      documents: { verified: checks.documentsVerified },
+      dataDirectory: { writable: checks.dataDirectoryWritable },
+      authentication: { configured: checks.authenticationConfigured },
+      runtime: { packagesAvailable: checks.runtimePackagesAvailable },
+    }, traceId);
+    return;
   }
 
   if (segments.length === 1 && segments[0] === "health") {

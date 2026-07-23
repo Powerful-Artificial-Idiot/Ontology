@@ -23,6 +23,7 @@ import { MockKnowledgeRepository } from "../../src/repositories/MockKnowledgeRep
 import { DeterministicEvaluationCaseExecutor } from "./evaluationExecutor";
 import { runAgentRuntimeProbes } from "./evaluationRuntimeProbes";
 import { neo4jOptionsFromEnvironment } from "./runtime";
+import { runtimeDataPath } from "../runtimePaths";
 
 const datasetPaths = [
   "packages/demo-data/evaluations/leak-rate-quality-trace.v1.json",
@@ -31,8 +32,8 @@ const datasetPaths = [
   "packages/demo-data/evaluations/phase5b-cross-domain.v1.json",
 ].map((path) => resolve(path));
 const policyPath = resolve(process.env.MKG_RELEASE_POLICY_PATH ?? "packages/demo-data/evaluations/release-policy.phase5b.v1.json");
-const acceptancePath = resolve(process.env.MKG_PROVIDER_ACCEPTANCE_PATH ?? ".data/evaluations/deepseek-provider-acceptance.json");
-const outputPath = resolve(process.env.MKG_PHASE5B_ACCEPTANCE_REPORT_PATH ?? ".data/evaluations/phase5b-formal-acceptance.json");
+const acceptancePath = runtimeDataPath(process.env, "evaluations/deepseek-provider-acceptance.json", process.env.MKG_PROVIDER_ACCEPTANCE_PATH);
+const outputPath = runtimeDataPath(process.env, "evaluations/phase5b-formal-acceptance.json", process.env.MKG_PHASE5B_ACCEPTANCE_REPORT_PATH);
 
 await main();
 

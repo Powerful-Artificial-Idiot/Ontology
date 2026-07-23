@@ -1,14 +1,15 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import { StrictCitationValidator } from "../../packages/agent-core/src/index";
 import { AuthorizationAwareCitationValidator, DefaultAgentAuthorizer } from "../../packages/agent-security/src/index";
 import { leakRateQualityIssueTraceBaseline } from "../../packages/demo-data/src/index";
 import type { AgentAuthorizationContext } from "../../packages/knowledge-contracts/src/index";
 import { createAgentApiSecurity } from "./security";
+import { runtimeDataPath } from "../runtimePaths";
 
 type SecurityCheck = { id: string; status: "passed" | "failed"; detail: string };
 
-const reportPath = resolve(process.env.MKG_SECURITY_ACCEPTANCE_PATH ?? ".data/evaluations/phase5c-security-acceptance.json");
+const reportPath = runtimeDataPath(process.env, "evaluations/phase5c-security-acceptance.json", process.env.MKG_SECURITY_ACCEPTANCE_PATH);
 const authorizer = new DefaultAgentAuthorizer();
 const user = context("security-user", ["agent-user", "agent-evidence-reader"], ["quality"], ["operation.op30"]);
 const resource = { type: "session" as const, id: "session.security", tenantId: "tenant-security", ownerPrincipalId: "security-user", domainIds: ["quality"] };

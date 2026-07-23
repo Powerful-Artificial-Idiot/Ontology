@@ -3,6 +3,7 @@ node_modules/
 
 # build outputs
 dist/
+dist-agent-api/
 build/
 .vite/
 vite.config.js
@@ -13,9 +14,14 @@ vite.config.d.ts
 
 # env files
 .env
+.env.*
+*.env
 .env.local
 .env.*.local
 .env.production
+secrets/
+!.env.example
+!*.env.example
 
 # logs
 npm-debug.log*

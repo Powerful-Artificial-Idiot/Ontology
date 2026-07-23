@@ -14,7 +14,9 @@ Phase 4C governed document retrieval is enabled by default. It validates a local
 
 Primary endpoints:
 
-- `GET /health`
+- `GET /health` (backward-compatible detailed health)
+- `GET /health/live` (process liveness; never calls an LLM)
+- `GET /health/ready` (sanitized runtime readiness; reports only whether DeepSeek is configured)
 - `GET /scenarios`
 - `POST /sessions`
 - `GET /sessions/:sessionId`
@@ -78,7 +80,7 @@ Phase 5A adds local-first observability and a deterministic release gate:
 npm run agent:evaluate
 ```
 
-The configured API writes redacted run, stage, and provider metadata to `.data/agent-telemetry.jsonl` by default. Prompts, raw provider output, credentials, and chain-of-thought are not recorded. Set `MKG_AGENT_TELEMETRY_MODE=off` to disable the local sink or `MKG_AGENT_TELEMETRY_PATH` to select another server-side path.
+Local development writes redacted run, stage, and provider metadata below `.data`. Production requires an absolute `MKG_DATA_DIR` outside the repository and resolves telemetry and persistent Agent state beneath it unless an explicit server-side path is configured. Prompts, raw provider output, credentials, and chain-of-thought are not recorded.
 
 Real provider acceptance is separate from mocked provider tests:
 

@@ -9,11 +9,12 @@ import {
   loadGovernedSyncMapping,
   type SourceSyncAuditSink,
 } from "../../packages/source-sync/src/index";
+import { runtimeDataPath } from "../runtimePaths";
 
 type AcceptanceCheck = { id: string; status: "passed" | "failed"; detail: string };
 
-const snapshotPath = resolve(process.env.MKG_SOURCE_SYNC_STORE_PATH ?? ".data/source-sync/phase5d-acceptance-snapshot.v2.json");
-const reportPath = resolve(process.env.MKG_SOURCE_SYNC_ACCEPTANCE_PATH ?? ".data/evaluations/phase5d-source-sync-acceptance.json");
+const snapshotPath = runtimeDataPath(process.env, "source-sync/phase5d-acceptance-snapshot.v2.json", process.env.MKG_SOURCE_SYNC_STORE_PATH);
+const reportPath = runtimeDataPath(process.env, "evaluations/phase5d-source-sync-acceptance.json", process.env.MKG_SOURCE_SYNC_ACCEPTANCE_PATH);
 const fixtures = [
   { sourceSystem: "MES" as const, domainId: "production", manifest: "packages/demo-data/source-extracts/mes/manifest.json", mapping: "mappings/mes/operation-mapping.json" },
   { sourceSystem: "QMS" as const, domainId: "quality", manifest: "packages/demo-data/source-extracts/qms/manifest.json", mapping: "mappings/qms/quality-mapping.json" },

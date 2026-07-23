@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, KeyRound, RotateCcw } from "lucide-react";
 import { Header } from "../../components/Header";
 import type { AppPage } from "../../types";
 import type { AgentClient, AgentRunEvent } from "./agentClient";
@@ -12,10 +12,18 @@ import { AgentWorkspaceHeader } from "./components/AgentWorkspaceHeader";
 import { createAgentClient } from "./agentClientFactory";
 import { mockKnowledgeValidationReport } from "../../data/mockKnowledgeRegistry/runtimeValidation";
 
-const defaultAgentClient = createAgentClient();
 const defaultScenarioId = "quality-issue-trace";
+const accessTokenStorageKey = "mkg-live-agent-access";
 
-export function AgentDemoPage({ activePage, onPageChange, client = defaultAgentClient }: { activePage: AppPage; onPageChange: (page: AppPage) => void; client?: AgentClient }) {
+export function AgentDemoPage({ activePage, onPageChange, client: providedClient }: { activePage: AppPage; onPageChange: (page: AppPage) => void; client?: AgentClient }) {
+  const configuredMode = providedClient?.runtimeMode ?? (import.meta.env.VITE_AGENT_MODE === "api" ? "api" : "scripted");
+  const [runtimeMode, setRuntimeMode] = useState(configuredMode);
+  const [accessToken, setAccessToken] = useState(() => configuredMode === "api" && !providedClient ? readSessionToken() : undefined);
+  const [accessTokenDraft, setAccessTokenDraft] = useState("");
+  const client = useMemo(
+    () => providedClient ?? createAgentClient({ mode: runtimeMode, bearerToken: accessToken }),
+    [accessToken, providedClient, runtimeMode],
+  );
   const [scenarios, setScenarios] = useState<AgentScenario[]>([]);
   const [selectedScenarioId, setSelectedScenarioId] = useState(defaultScenarioId);
   const [session, setSession] = useState<AgentConversationSession | null>(null);
@@ -36,6 +44,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = defaultAgentC
   }, []);
 
   useEffect(() => {
+    if (runtimeMode === "api" && !providedClient && !accessToken) return;
     let mounted = true;
     const initialize = async () => {
       try {
@@ -58,7 +67,7 @@ export function AgentDemoPage({ activePage, onPageChange, client = defaultAgentC
       mounted = false;
       cancelRun();
     };
-  }, [cancelRun, client]);
+  }, [accessToken, cancelRun, client, providedClient, runtimeMode]);
 
   useEffect(() => {
     window.localStorage.setItem("agent-question-language", conversationLanguage);
@@ -246,6 +255,39 @@ export function AgentDemoPage({ activePage, onPageChange, client = defaultAgentC
 
   const sharedContext = session?.sharedContext ?? emptyContext;
 
+  if (runtimeMode === "api" && !providedClient && !accessToken) {
+    return (
+      <div className="flex h-screen flex-col bg-slate-100">
+        <Header activePage={activePage} searchKeyword="" searchSummary="" showSearch={false} onPageChange={onPageChange} onSearchChange={() => undefined} />
+        <main className="flex flex-1 items-center justify-center px-6">
+          <form
+            aria-label="Live Agent controlled access"
+            className="w-full max-w-md rounded-md border border-slate-200 bg-white p-6 shadow-sm"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const token = accessTokenDraft.trim();
+              if (!token) return;
+              window.sessionStorage.setItem(accessTokenStorageKey, token);
+              setAccessToken(token);
+              setAccessTokenDraft("");
+              setError(undefined);
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-white"><KeyRound className="h-5 w-5" /></div>
+              <div><h1 className="text-base font-bold text-slate-950">Live Agent Access</h1><p className="text-[11px] font-medium text-slate-500">Controlled demonstration access. Enterprise OIDC/JWKS remains pending.</p></div>
+            </div>
+            <label htmlFor="agent-access-token" className="mt-5 block text-[10px] font-bold uppercase tracking-wide text-slate-500">Access token</label>
+            <input id="agent-access-token" type="password" autoComplete="off" value={accessTokenDraft} onChange={(event) => setAccessTokenDraft(event.target.value)} className="mt-2 h-10 w-full rounded-md border border-slate-300 px-3 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
+            <p className="mt-2 text-[10px] leading-relaxed text-slate-500">Stored only for this browser tab and sent only to the same-origin Agent API.</p>
+            <button type="submit" disabled={!accessTokenDraft.trim()} className="mt-4 h-10 w-full rounded-md bg-slate-950 text-xs font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40">Connect</button>
+            <button type="button" onClick={() => setRuntimeMode("scripted")} className="mt-2 h-10 w-full rounded-md border border-slate-300 bg-white text-xs font-bold text-slate-700 transition hover:bg-slate-50">Continue with Scripted Demo</button>
+          </form>
+        </main>
+      </div>
+    );
+  }
+
   if (!session && !error) {
     return <div className="flex h-screen flex-col bg-slate-100"><Header activePage={activePage} searchKeyword="" searchSummary="" showSearch={false} onPageChange={onPageChange} onSearchChange={() => undefined} /><main className="flex flex-1 items-center justify-center text-xs font-semibold text-slate-500">Initializing traceable agent workspace...</main></div>;
   }
@@ -253,7 +295,18 @@ export function AgentDemoPage({ activePage, onPageChange, client = defaultAgentC
   return (
     <div className="flex h-screen min-w-[1280px] flex-col overflow-hidden bg-slate-100">
       <Header activePage={activePage} searchKeyword="" searchSummary="" showSearch={false} onPageChange={onPageChange} onSearchChange={() => undefined} />
-      <AgentWorkspaceHeader sessionId={session?.id} turnCount={session?.turns.length ?? 0} isRunning={isRunning} runtimeMode={client.runtimeMode} onLoadExample={() => void loadExampleConversation()} onReset={() => void startNewSession(selectedScenarioId)} />
+      <AgentWorkspaceHeader sessionId={session?.id} turnCount={session?.turns.length ?? 0} isRunning={isRunning} runtimeMode={client.runtimeMode} onLoadExample={() => void loadExampleConversation()} onReset={() => void startNewSession(selectedScenarioId)} onClearAccess={configuredMode === "api" && !providedClient ? () => {
+        cancelRun();
+        window.sessionStorage.removeItem(accessTokenStorageKey);
+        setAccessToken(undefined);
+        setSession(null);
+        setError(undefined);
+      } : undefined} onOpenLiveAgent={configuredMode === "api" && runtimeMode === "scripted" && !providedClient ? () => {
+        cancelRun();
+        setSession(null);
+        setError(undefined);
+        setRuntimeMode("api");
+      } : undefined} />
       {error ? <div className="flex shrink-0 items-center gap-2 border-b border-red-200 bg-red-50 px-5 py-2 text-[10px] font-semibold text-red-700"><AlertTriangle className="h-3.5 w-3.5" />Agent workspace error: {error}{selectedTurn?.status === "error" && selectedTurn.runId && client.retryRun ? <button type="button" disabled={isRunning} onClick={() => void retrySelectedTurn()} className="ml-auto inline-flex items-center gap-1 rounded border border-red-300 bg-white px-2 py-1 text-[10px] font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50"><RotateCcw className="h-3 w-3" />Retry turn</button> : null}</div> : null}
       <div className="flex min-h-0 flex-1">
         <AgentContextPanel scenarios={scenarios} selectedScenarioId={selectedScenarioId} selectedTurn={selectedTurn} sharedContext={sharedContext} validationReport={mockKnowledgeValidationReport} isRunning={isRunning} questionLanguage={conversationLanguage} onQuestionLanguageChange={setConversationLanguage} onSelectScenario={handleScenarioChange} onAskQuestion={(question) => void submitQuestion(question)} />
@@ -281,4 +334,9 @@ function upsertStep(steps: AgentConversationTurn["trace"], step: AgentConversati
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Unknown agent workspace error.";
+}
+
+function readSessionToken() {
+  if (typeof window === "undefined") return undefined;
+  return window.sessionStorage.getItem(accessTokenStorageKey) ?? undefined;
 }

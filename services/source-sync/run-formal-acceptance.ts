@@ -4,6 +4,7 @@ import type { AgentAuthorizationContext, GovernedSourceSystem, SourceSyncReport 
 import type { SourceSyncBlockingMetrics, SourceSyncEvaluationDataset, SourceSyncEvaluationObservation, SourceSyncRateMetrics } from "../../packages/source-sync-evaluation/src/index";
 import { evaluateSourceSyncRelease } from "../../packages/source-sync-evaluation/src/index";
 import { ControlledFileSourceConnector, GovernedSourceSynchronizationPipeline, InMemoryGovernedSyncStore, loadGovernedSyncMapping } from "../../packages/source-sync/src/index";
+import { runtimeDataPath } from "../runtimePaths";
 
 const dataset = JSON.parse(await readFile(resolve("packages/demo-data/source-sync/phase5d-evaluation.v1.json"), "utf8")) as SourceSyncEvaluationDataset;
 const fixtures = {
@@ -28,7 +29,7 @@ const observations: SourceSyncEvaluationObservation[] = dataset.cases.map((testC
   return { caseId: testCase.caseId, passed, detail: passed ? `Deterministic probe ${testCase.probeId} passed under controlled fixtures.` : `Prerequisite fixture probe failed for ${testCase.probeId}.`, ...(index === 0 ? { metrics: { ...blocking, ...rates } } : {}) };
 });
 const report = evaluateSourceSyncRelease(dataset, observations);
-const outputPath = resolve(".data/source-sync/phase5d-formal-report.json");
+const outputPath = runtimeDataPath(process.env, "source-sync/phase5d-formal-report.json");
 await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 console.info(`Phase 5D formal release gate: ${report.status} (${report.results.filter((item) => item.passed).length}/${report.results.length})`);
@@ -39,4 +40,4 @@ if (report.status !== "passed") process.exitCode = 1;
 
 function syncRequest(sourceSystem: GovernedSourceSystem, domainId: string) { return { requestId: `formal.${sourceSystem.toLowerCase()}`, mode: "apply" as const, expectedSourceSystem: sourceSystem, expectedMappingVersion: "1.0.0", authorization: authorization(domainId), requestedAt: "2026-07-23T00:00:00Z" }; }
 function authorization(domainId: string): AgentAuthorizationContext { return { principal: { id: "principal.phase5d-formal", tenantId: "tenant.demo-manufacturing", roleIds: ["source-sync-operator"], domainIds: [domainId], objectIds: ["*"], authenticationMethod: "static-bearer" }, authenticatedAt: "2026-07-23T00:00:00Z", requestId: "phase5d-formal" }; }
-async function readFixtureLiveReport(): Promise<boolean> { try { const value = JSON.parse(await readFile(resolve(".data/source-sync/fixture-live-report.json"), "utf8")) as { status?: string; enterpriseEndpointUsed?: boolean; generatedAt?: string; sources?: unknown[] }; const ageMs = Date.now() - Date.parse(value.generatedAt ?? ""); return value.status === "passed" && value.enterpriseEndpointUsed === false && value.sources?.length === 3 && Number.isFinite(ageMs) && ageMs >= 0 && ageMs < 30 * 60_000; } catch { return false; } }
+async function readFixtureLiveReport(): Promise<boolean> { try { const value = JSON.parse(await readFile(runtimeDataPath(process.env, "source-sync/fixture-live-report.json"), "utf8")) as { status?: string; enterpriseEndpointUsed?: boolean; generatedAt?: string; sources?: unknown[] }; const ageMs = Date.now() - Date.parse(value.generatedAt ?? ""); return value.status === "passed" && value.enterpriseEndpointUsed === false && value.sources?.length === 3 && Number.isFinite(ageMs) && ageMs >= 0 && ageMs < 30 * 60_000; } catch { return false; } }

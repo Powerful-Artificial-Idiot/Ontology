@@ -16,6 +16,8 @@ describe("Deterministic Agent API", () => {
   it("persists sessions and turns and exposes trace, evidence, and audit resources", async () => {
     const { baseUrl } = await startApi();
     const health = await fetchJson(`${baseUrl}/health`);
+    const live = await fetchJson(`${baseUrl}/health/live`);
+    const ready = await fetchJson(`${baseUrl}/health/ready`);
     const scenarios = await fetchJson(`${baseUrl}/scenarios`);
     const created = await fetchJson(`${baseUrl}/sessions`, {
       method: "POST",
@@ -36,6 +38,17 @@ describe("Deterministic Agent API", () => {
     ]);
 
     expect(health.payload).toMatchObject({ status: "ok", contractVersion: "1.0.0", pipeline: "deterministic", semanticParser: "deterministic", answerComposer: "template", documentEvidence: "governed", persistence: "in-memory" });
+    expect(live.payload).toEqual({ status: "ok", service: "deterministic-agent-api" });
+    expect(ready.payload).toEqual({
+      status: "ready",
+      deepseek: { configured: false },
+      neo4j: { reachable: false },
+      documents: { verified: true },
+      dataDirectory: { writable: true },
+      authentication: { configured: true },
+      runtime: { packagesAvailable: true },
+    });
+    expect(JSON.stringify([health.payload, live.payload, ready.payload])).not.toMatch(/api.?key|authorization|bearer|password|secret/iu);
     expect(scenarios.payload.scenarios.map((scenario: { id: string }) => scenario.id)).toEqual([
       "quality-issue-trace",
       "engineering-change-impact",
