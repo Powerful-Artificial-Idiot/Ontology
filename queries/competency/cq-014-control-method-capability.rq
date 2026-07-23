@@ -1,0 +1,8 @@
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?system ?measurementMaximum ?productMaximum WHERE {
+  demo:LeakRate qual:measuredBy ?system .
+  ?system qual:numericValue ?measurementMaximum .
+  demo:LeakRateUSL qual:numericValue ?productMaximum .
+  FILTER(?measurementMaximum > ?productMaximum)
+}

@@ -84,3 +84,125 @@ demo:OP30RetestShiftRisk a vs:BottleneckRisk ;
   vs:affectsFlow demo:OP30 ;
   vs:metricValue 0.4 ;
   vs:unit "bounded-score" .
+
+# Synthetic governed rich-demo facts. These values are not production specifications.
+demo:LeakRateSpecificationRevA a qual:Specification ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  core:appliesToProduct demo:BrakeBooster ;
+  core:appliesToOperation demo:OP30 ;
+  core:appliesToCharacteristic demo:LeakRate ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" ;
+  qual:hasSpecificationLimit demo:LeakRateLSL, demo:LeakRateUSL .
+
+demo:LeakRateLSL a qual:SpecificationLimit ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:numericValue 0.00 ;
+  qual:unit "sccm" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:limitType "lower-specification-limit" ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:LeakRateUSL a qual:SpecificationLimit ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:numericValue 0.30 ;
+  qual:unit "sccm" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:limitType "upper-specification-limit" ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:LeakRateWarningLimit a qual:InternalControlLimit ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:numericValue 0.24 ;
+  qual:unit "sccm" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:limitType "warning-limit" ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:LeakRateActionLimit a qual:InternalControlLimit ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:numericValue 0.27 ;
+  qual:unit "sccm" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:limitType "action-limit" ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:LeakRate qual:hasInternalControlLimit demo:LeakRateWarningLimit, demo:LeakRateActionLimit ;
+  qual:measuredBy demo:M220MeasurementSystem ;
+  qual:controlledBy demo:AirDecayControlMethod ;
+  qual:triggersReactionPlan demo:OP30ReactionPlan ;
+  qual:hasMetricSeries demo:LeakRateWeeklySeries .
+
+demo:AirDecayControlMethod a qual:ControlMethod ;
+  qual:usesMeasurementSystem demo:M220MeasurementSystem ;
+  qual:numericValue 0.50 ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:unit "sccm" .
+
+demo:M220MeasurementSystem a qual:MeasurementSystem ;
+  qual:unit "sccm" ;
+  qual:numericValue 0.50 ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:calibratedBy demo:M220Calibration202607 ;
+  qual:hasMsaStudy demo:M220MsaRevA .
+
+demo:M220Calibration202607 a qual:CalibrationRecord ;
+  core:versionIdentifier "2026-07" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:M220MsaRevA a qual:MeasurementSystemAnalysis ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:numericValue 8.2 ;
+  qual:unit "percent-of-tolerance" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" .
+
+demo:LeakRateWeeklySeries a qual:MetricSeries ;
+  qual:hasObservation demo:LeakRateW29 .
+
+demo:LeakRateW29 a qual:MetricObservation ;
+  qual:numericValue 0.22 ;
+  qual:unit "sccm" ;
+  qual:aggregationType "weekly-mean" ;
+  qual:observedPeriod "2026-W29" ;
+  qual:measuresCharacteristic demo:LeakRate ;
+  qual:observedAtOperation demo:OP30 ;
+  qual:observedOnMachine demo:M220 .
+
+demo:OP30ReactionPlan a qual:ReactionPlan ;
+  core:versionIdentifier "Rev.A" ;
+  core:validFrom "2026-07-01"^^xsd:date ;
+  qual:approvalState "approved" ;
+  qual:effectiveState "current" ;
+  qual:hasAction demo:HoldLot, demo:VerifyMasterLeak, demo:QualityReleaseApproval .
+
+demo:HoldLot a qual:ContainmentAction .
+demo:VerifyMasterLeak a qual:CorrectiveAction .
+demo:QualityReleaseApproval a qual:CorrectiveAction .
+
+demo:LeakTestProgramV34 a mfg:ProcessParameter ;
+  core:versionIdentifier "V3.4" ;
+  core:validFrom "2026-01-01"^^xsd:date .
+
+demo:LeakTestProgramV35 a mfg:ProcessParameter ;
+  core:versionIdentifier "V3.5" ;
+  core:validFrom "2026-07-22"^^xsd:date .
+
+demo:ProgramChangeV35 eng:affects demo:LeakTestProgramV35 ;
+  eng:requiresValidation demo:ProgramValidationV35 ;
+  eng:changeStatus "proposed" .
+
+demo:ProgramValidationV35 eng:releaseDecision "pending" .

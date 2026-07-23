@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 2 / Seal Inspection",
+      "heading": "Fixture Seal Inspection",
+      "text": "Inspect FX-002 seals for damage, contamination and incorrect seating after action-limit exceedance."
+    },
+    {
+      "locator": "Section 3 / Verification",
+      "heading": "Post-maintenance Verification",
+      "text": "Complete master-leak and golden-sample verification after seal maintenance."
+    },
+    {
+      "locator": "Section 4 / Evidence",
+      "heading": "Maintenance Evidence",
+      "text": "Record technician, timestamp, replaced parts and verification result before return to service."
+    }
+  ]
+}

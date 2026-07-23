@@ -207,10 +207,20 @@ function buildProviderInput(request: AgentTurnRequest, baseline: CanonicalKnowle
     },
     ontologyVersion: baseline.ontologyVersion,
     candidates,
-    allowedIntents: unique([baseline.scenario.intent, "clarification_required"]),
+    allowedIntents: unique([...(baseline.scenario.supportedIntents ?? [baseline.scenario.intent]), "clarification_required"]),
     allowedRelationTypes: [...baseline.queryPlan.relationTypes],
     allowedFacets: ["production", "quality", "engineering", "valueStream", "governance"],
-    allowedConstraintKeys: unique(baseline.queryPlan.constraints.map((constraint) => constraint.key)),
+    allowedConstraintKeys: unique([
+      ...baseline.queryPlan.constraints.map((constraint) => constraint.key),
+      "referenceValue",
+      "referenceMetricId",
+      "referencePolicy",
+      "percentageChange",
+      "unit",
+      "timePeriod",
+      "specificationRevision",
+      "programVersion",
+    ]),
   };
 }
 

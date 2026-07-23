@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Record / Calibration Result",
+      "heading": "Calibration Result",
+      "text": "M220 calibration state is valid. Last calibration was 2026-07-01 and next due date is 2026-10-01."
+    },
+    {
+      "locator": "Record / Reference",
+      "heading": "Master Leak Reference",
+      "text": "Master Leak ML-050 has a synthetic certified value of 0.05 sccm and valid certification."
+    },
+    {
+      "locator": "Record / Scope",
+      "heading": "Calibration Scope",
+      "text": "Calibration covers the 0.00–0.50 sccm measurement range and 0.01 sccm resolution."
+    }
+  ]
+}

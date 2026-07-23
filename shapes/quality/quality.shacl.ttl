@@ -1,4 +1,5 @@
 @prefix qual: <https://example.com/mkg/quality#> .
+@prefix core: <https://example.com/mkg/core#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,3 +29,50 @@ qual:ControlPlanVersionShape a sh:NodeShape ;
     sh:minCount 1 ;
     sh:class qual:QualityCharacteristic ;
   ] .
+
+qual:SpecificationLimitShape a sh:NodeShape ;
+  sh:targetClass qual:SpecificationLimit ;
+  sh:property [ sh:path qual:numericValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ] ;
+  sh:property [ sh:path qual:unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "A specification limit must declare the canonical unit." ] ;
+  sh:property [ sh:path qual:limitType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:approvalState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:effectiveState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:SpecificationShape a sh:NodeShape ;
+  sh:targetClass qual:Specification ;
+  sh:property [ sh:path core:appliesToProduct ; sh:minCount 1 ] ;
+  sh:property [ sh:path core:appliesToOperation ; sh:minCount 1 ] ;
+  sh:property [ sh:path core:appliesToCharacteristic ; sh:minCount 1 ] ;
+  sh:property [ sh:path qual:hasSpecificationLimit ; sh:minCount 2 ; sh:class qual:SpecificationLimit ] ;
+  sh:property [ sh:path qual:approvalState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:effectiveState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:InternalControlLimitShape a sh:NodeShape ;
+  sh:targetClass qual:InternalControlLimit ;
+  sh:property [ sh:path qual:numericValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:decimal ] ;
+  sh:property [ sh:path qual:unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:limitType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:approvalState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:effectiveState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:MetricObservationShape a sh:NodeShape ;
+  sh:targetClass qual:MetricObservation ;
+  sh:property [ sh:path qual:numericValue ; sh:minCount 1 ; sh:datatype xsd:decimal ] ;
+  sh:property [ sh:path qual:unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:aggregationType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:observedPeriod ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:ControlMethodShape a sh:NodeShape ;
+  sh:targetClass qual:ControlMethod ;
+  sh:property [ sh:path qual:usesMeasurementSystem ; sh:minCount 1 ; sh:class qual:MeasurementSystem ] ;
+  sh:property [ sh:path qual:unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:MeasurementSystemShape a sh:NodeShape ;
+  sh:targetClass qual:MeasurementSystem ;
+  sh:property [ sh:path qual:calibratedBy ; sh:minCount 1 ; sh:class qual:CalibrationRecord ] ;
+  sh:property [ sh:path qual:unit ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .
+
+qual:ReactionPlanShape a sh:NodeShape ;
+  sh:targetClass qual:ReactionPlan ;
+  sh:property [ sh:path qual:approvalState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path qual:effectiveState ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] .

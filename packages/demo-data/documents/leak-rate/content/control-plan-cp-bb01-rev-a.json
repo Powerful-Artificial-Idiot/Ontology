@@ -4,7 +4,17 @@
     {
       "locator": "Sheet Process Control / Row OP30-Leak Rate",
       "heading": "OP30 Leak Rate Control",
-      "text": "Leak Rate is inspected automatically at 100% frequency. Abnormal results require immediate containment, verification of M220 and FX-002, and confirmation of the released leak-test program before production resumes."
+      "text": "Automated air-decay inspection is performed at 100%. The internal center is 0.20 sccm, warning limit 0.24 sccm and action limit 0.27 sccm."
+    },
+    {
+      "locator": "Sheet Process Control / Sampling",
+      "heading": "Sampling Frequency",
+      "text": "Production units receive 100% inspection; master leak verification occurs once per shift; golden sample verification follows program or fixture changes; layered audit uses 5 pieces."
+    },
+    {
+      "locator": "Sheet Process Control / Reaction",
+      "heading": "Reaction Link",
+      "text": "Values above 0.27 sccm invoke Reaction Plan RP-OP30-LR Rev.A. Values above product USL 0.30 sccm are nonconforming."
     }
   ]
 }

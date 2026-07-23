@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 1 / Proposed Change",
+      "heading": "Proposed Change",
+      "text": "V3.5 proposes reducing stabilization time from 3.0 seconds to 2.5 seconds. The program remains not effective for production."
+    },
+    {
+      "locator": "Section 2 / Potential Impact",
+      "heading": "Potential Impact",
+      "text": "Potential impacts are measurement bias, false-pass risk, false-fail risk and cycle-time reduction. No improvement is confirmed."
+    },
+    {
+      "locator": "Section 3 / Required Validation",
+      "heading": "Validation Requirements",
+      "text": "Pending evidence includes MSA confirmation, master-leak verification, a 30-piece correlation study, capability confirmation and Quality approval."
+    }
+  ]
+}

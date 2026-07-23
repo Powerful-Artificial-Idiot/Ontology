@@ -42,6 +42,96 @@
       "https://example.com/mkg/core#EnterpriseEntity"
     ],
     "inverseOf": [],
+    "iri": "https://example.com/mkg/core#appliesToCharacteristic",
+    "label": "applies to characteristic",
+    "module": "core",
+    "name": "appliesToCharacteristic",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/core#appliesToOperation",
+    "label": "applies to operation",
+    "module": "core",
+    "name": "appliesToOperation",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/core#appliesToProduct",
+    "label": "applies to product",
+    "module": "core",
+    "name": "appliesToProduct",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/core#derivedFromSource",
+    "label": "derived from source",
+    "module": "core",
+    "name": "derivedFromSource",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/core#governedBy",
+    "label": "governed by",
+    "module": "core",
+    "name": "governedBy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#Document"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
     "iri": "https://example.com/mkg/core#hasSource",
     "label": "has source",
     "module": "core",
@@ -129,6 +219,24 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/core#supportedByEvidence",
+    "label": "supported by evidence",
+    "module": "core",
+    "name": "supportedByEvidence",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#Document"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/core#VersionedEntity"
     ],
     "inverseOf": [],
@@ -183,6 +291,24 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#affectedByChange",
+    "label": "affected by change",
+    "module": "engineering",
+    "name": "affectedByChange",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/engineering#EngineeringChange"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/engineering#EngineeringChange"
     ],
     "inverseOf": [],
@@ -219,6 +345,42 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#currentVersionOf",
+    "label": "current version of",
+    "module": "engineering",
+    "name": "currentVersionOf",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#proposedVersionOf",
+    "label": "proposed version of",
+    "module": "engineering",
+    "name": "proposedVersionOf",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/engineering#ValidationRecord"
     ],
     "inverseOf": [],
@@ -244,6 +406,24 @@
     "label": "requires validation",
     "module": "engineering",
     "name": "requiresValidation",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/engineering#ValidationRecord"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/engineering#validatedBy",
+    "label": "validated by",
+    "module": "engineering",
+    "name": "validatedBy",
     "parentProperties": [],
     "propertyType": "object",
     "range": [
@@ -2208,6 +2388,24 @@
       "https://example.com/mkg/manufacturing#Operation"
     ],
     "inverseOf": [],
+    "iri": "https://example.com/mkg/manufacturing#requiresResource",
+    "label": "requires resource",
+    "module": "manufacturing",
+    "name": "requiresResource",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/manufacturing#ManufacturingResource"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "inverseOf": [],
     "iri": "https://example.com/mkg/manufacturing#usesParameter",
     "label": "uses parameter",
     "module": "manufacturing",
@@ -2216,6 +2414,42 @@
     "propertyType": "object",
     "range": [
       "https://example.com/mkg/manufacturing#ProcessParameter"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#aggregationType",
+    "label": "aggregation type",
+    "module": "quality",
+    "name": "aggregationType",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#approvalState",
+    "label": "approval state",
+    "module": "quality",
+    "name": "approvalState",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
     ],
     "replacements": []
   },
@@ -2241,6 +2475,42 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#calibratedBy",
+    "label": "calibrated by",
+    "module": "quality",
+    "name": "calibratedBy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#CalibrationRecord"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#controlledBy",
+    "label": "controlled by",
+    "module": "quality",
+    "name": "controlledBy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#ControlMethod"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/core#EnterpriseEntity"
     ],
     "inverseOf": [],
@@ -2259,6 +2529,24 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#effectiveState",
+    "label": "effective state",
+    "module": "quality",
+    "name": "effectiveState",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/quality#QualityCharacteristic"
     ],
     "inverseOf": [],
@@ -2270,6 +2558,42 @@
     "propertyType": "object",
     "range": [
       "https://example.com/mkg/core#Document"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#ReactionPlan"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasAction",
+    "label": "has action",
+    "module": "quality",
+    "name": "hasAction",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#CorrectiveAction"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasCapabilityStudy",
+    "label": "has capability study",
+    "module": "quality",
+    "name": "hasCapabilityStudy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#CapabilityStudy"
     ],
     "replacements": []
   },
@@ -2297,6 +2621,168 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasFailureMode",
+    "label": "has failure mode",
+    "module": "quality",
+    "name": "hasFailureMode",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#FailureMode"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasInternalControlLimit",
+    "label": "has internal control limit",
+    "module": "quality",
+    "name": "hasInternalControlLimit",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#InternalControlLimit"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasMetricSeries",
+    "label": "has metric series",
+    "module": "quality",
+    "name": "hasMetricSeries",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MetricSeries"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasMsaStudy",
+    "label": "has MSA study",
+    "module": "quality",
+    "name": "hasMsaStudy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MeasurementSystemAnalysis"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#MetricSeries"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasObservation",
+    "label": "has observation",
+    "module": "quality",
+    "name": "hasObservation",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasSamplingPlan",
+    "label": "has sampling plan",
+    "module": "quality",
+    "name": "hasSamplingPlan",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#SamplingPlan"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#Specification"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#hasSpecificationLimit",
+    "label": "has specification limit",
+    "module": "quality",
+    "name": "hasSpecificationLimit",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#SpecificationLimit"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#implementsControlMethod",
+    "label": "implements control method",
+    "module": "quality",
+    "name": "implementsControlMethod",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#ControlMethod"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#limitType",
+    "label": "limit type",
+    "module": "quality",
+    "name": "limitType",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/quality#FailureMode"
     ],
     "inverseOf": [],
@@ -2308,6 +2794,24 @@
     "propertyType": "object",
     "range": [
       "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#measuredBy",
+    "label": "measured by",
+    "module": "quality",
+    "name": "measuredBy",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MeasurementSystem"
     ],
     "replacements": []
   },
@@ -2351,6 +2855,114 @@
     "deprecated": false,
     "description": null,
     "domain": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#observedAtOperation",
+    "label": "observed at operation",
+    "module": "quality",
+    "name": "observedAtOperation",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#observedOnMachine",
+    "label": "observed on machine",
+    "module": "quality",
+    "name": "observedOnMachine",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#observedPeriod",
+    "label": "observed period",
+    "module": "quality",
+    "name": "observedPeriod",
+    "parentProperties": [],
+    "propertyType": "datatype",
+    "range": [
+      "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityIssue"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#requiresContainment",
+    "label": "requires containment",
+    "module": "quality",
+    "name": "requiresContainment",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#ContainmentAction"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#requiresVerification",
+    "label": "requires verification",
+    "module": "quality",
+    "name": "requiresVerification",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#triggersReactionPlan",
+    "label": "triggers reaction plan",
+    "module": "quality",
+    "name": "triggersReactionPlan",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#ReactionPlan"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
       "https://example.com/mkg/quality#MeasurementResult"
     ],
     "inverseOf": [],
@@ -2362,6 +2974,42 @@
     "propertyType": "datatype",
     "range": [
       "http://www.w3.org/2001/XMLSchema#string"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#ControlMethod"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#usesMeasurementSystem",
+    "label": "uses measurement system",
+    "module": "quality",
+    "name": "usesMeasurementSystem",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ],
+    "replacements": []
+  },
+  {
+    "deprecated": false,
+    "description": null,
+    "domain": [
+      "https://example.com/mkg/quality#CalibrationRecord"
+    ],
+    "inverseOf": [],
+    "iri": "https://example.com/mkg/quality#usesReference",
+    "label": "uses reference",
+    "module": "quality",
+    "name": "usesReference",
+    "parentProperties": [],
+    "propertyType": "object",
+    "range": [
+      "https://example.com/mkg/quality#MeasurementReference"
     ],
     "replacements": []
   },

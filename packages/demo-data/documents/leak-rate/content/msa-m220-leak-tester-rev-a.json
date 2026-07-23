@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 3 / GRR",
+      "heading": "Measurement-System Capability",
+      "text": "Synthetic demo GRR is 8.2% of tolerance. The study is approved and current for the demo measurement system."
+    },
+    {
+      "locator": "Section 4 / Bias",
+      "heading": "Bias Study",
+      "text": "Synthetic demo bias is 0.004 sccm against the governed master leak."
+    },
+    {
+      "locator": "Section 5 / Applicability",
+      "heading": "Study Applicability",
+      "text": "The study applies to M220 automated air-decay measurement within 0.00–0.50 sccm. It does not define product acceptance."
+    }
+  ]
+}

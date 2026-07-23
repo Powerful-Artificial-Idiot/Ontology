@@ -38,13 +38,29 @@ const metadata = (): ContractMetadata => ({
 });
 
 const connectedOntology = connectOntologyViewToArtifact(ontologyObjectTypes, ontologyLinkTypes);
+const qualityRichTemplateIds = new Set([
+  "GET_CHARACTERISTIC_SPECIFICATION",
+  "GET_CHARACTERISTIC_CONTROL_LIMITS",
+  "GET_CONTROL_METHOD",
+  "GET_MEASUREMENT_SYSTEM",
+  "GET_LATEST_VALID_METRIC",
+  "GET_METRIC_HISTORY",
+  "GET_CAPABILITY_STUDY",
+  "GET_REACTION_PLAN",
+  "GET_GOVERNING_DOCUMENTS",
+  "GET_PROGRAM_VERSION_STATUS",
+  "GET_CHANGE_IMPACT",
+  "GET_CROSS_DOMAIN_EVIDENCE",
+]);
 
 export class MockKnowledgeRepository implements KnowledgeRepository {
   async traverseGraph(request: GraphTraversalRequest): Promise<GraphTraversalResult> {
     if (!request.readOnly || request.maxDepth < 0 || request.maxDepth > 3 || request.resultLimit < 1 || request.resultLimit > 200) {
       throw new Error("Mock graph traversal rejected an unsafe request.");
     }
-    const baseline = canonicalKnowledgeBaselines.find((candidate) => candidate.graphQueryPlan.templateId === request.templateId);
+    const baseline = qualityRichTemplateIds.has(request.templateId)
+      ? canonicalKnowledgeBaselines.find((candidate) => candidate.scenario.id === "quality-issue-trace")
+      : canonicalKnowledgeBaselines.find((candidate) => candidate.graphQueryPlan.templateId === request.templateId);
     if (!baseline) throw new Error(`Mock graph traversal template is not registered: ${request.templateId}`);
     const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
     request.seedEntityIds.forEach((id) => {

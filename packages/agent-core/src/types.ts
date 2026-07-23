@@ -14,6 +14,7 @@ import type {
   GraphQueryPlan,
   KnowledgeEntity,
   KnowledgeRelation,
+  QuantitativeAssessmentEnvelope,
   SemanticQueryPlan,
   ValidatedQueryPlan,
 } from "../../knowledge-contracts/src/index";
@@ -54,6 +55,7 @@ export interface GraphQueryCompiler {
 
 export type GraphRetrievalResult = {
   graphPlanId: string;
+  templateId?: string;
   repositoryType: string;
   entities: KnowledgeEntity[];
   relations: KnowledgeRelation[];
@@ -73,14 +75,39 @@ export interface DocumentEvidenceRetriever {
   retrieve(graph: GraphRetrievalResult, baseline: CanonicalKnowledgeBaseline, authorization?: AgentAuthorizationContext): Promise<DocumentRetrievalResult>;
 }
 
+export interface QuantitativeQualityAssessor {
+  readonly toolName?: string;
+  supports(plan: SemanticQueryPlan): boolean;
+  assess(
+    plan: SemanticQueryPlan,
+    graph: GraphRetrievalResult,
+    baseline: CanonicalKnowledgeBaseline,
+  ): Promise<QuantitativeAssessmentEnvelope>;
+}
+
 export interface EvidencePackBuilder {
   readonly toolName?: string;
-  build(plan: SemanticQueryPlan, graph: GraphRetrievalResult, documents: DocumentRetrievalResult, baseline: CanonicalKnowledgeBaseline, generatedAt: string): Promise<EvidencePack>;
+  build(
+    plan: SemanticQueryPlan,
+    graph: GraphRetrievalResult,
+    documents: DocumentRetrievalResult,
+    baseline: CanonicalKnowledgeBaseline,
+    generatedAt: string,
+    quantitativeAssessment?: QuantitativeAssessmentEnvelope,
+  ): Promise<EvidencePack>;
 }
 
 export interface AnswerComposer {
   readonly toolName?: string;
-  compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, signal?: AbortSignal, baseline?: CanonicalKnowledgeBaseline): Promise<AgentAnswer>;
+  compose(
+    request: AgentTurnRequest,
+    graph: GraphRetrievalResult,
+    evidencePack: EvidencePack,
+    signal?: AbortSignal,
+    baseline?: CanonicalKnowledgeBaseline,
+    plan?: SemanticQueryPlan,
+    quantitativeAssessment?: QuantitativeAssessmentEnvelope,
+  ): Promise<AgentAnswer>;
 }
 
 export interface CitationValidator {
@@ -135,6 +162,7 @@ export type AgentPipelineDependencies = {
   graphCompiler: GraphQueryCompiler;
   graphRetriever: GraphRetriever;
   documentRetriever: DocumentEvidenceRetriever;
+  quantitativeAssessor?: QuantitativeQualityAssessor;
   evidencePackBuilder: EvidencePackBuilder;
   answerComposer: AnswerComposer;
   citationValidator: CitationValidator;

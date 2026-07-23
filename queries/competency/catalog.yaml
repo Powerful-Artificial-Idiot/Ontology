@@ -55,3 +55,43 @@ questions:
     query_file: cq-011-quality-bottleneck-shift.rq
     demo_scenario: bottleneck-analysis
     frontend_route: /agent-demo
+  - id: CQ-012
+    question: What is the currently effective Leak Rate acceptance limit for Brake Booster at OP30?
+    query_file: cq-012-leak-rate-specification.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-013
+    question: Does a 50% increase from the latest governed Leak Rate mean exceed the effective specification?
+    query_file: cq-013-leak-rate-quantitative-projection.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-014
+    question: Can the current M220 measurement system measure the projected Leak Rate, and is the product still acceptable?
+    query_file: cq-014-control-method-capability.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-015
+    question: Which governed reaction steps are required when Leak Rate exceeds the action limit?
+    query_file: cq-015-reaction-plan.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-016
+    question: Is the measurement-system evidence current and valid?
+    query_file: cq-016-measurement-system-validity.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-017
+    question: Is program v3.5 approved and effective, and what validations remain?
+    query_file: cq-017-program-change-validation.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-018
+    question: How does the product specification differ from the measurement-system range?
+    query_file: cq-018-specification-measurement-boundary.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo
+  - id: CQ-019
+    question: Is there governed evidence that the OP20 bottleneck caused the OP30 Leak Rate increase?
+    query_file: cq-019-cross-domain-causal-evidence.rq
+    demo_scenario: quality-investigation
+    frontend_route: /agent-demo

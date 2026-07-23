@@ -32,7 +32,7 @@
         "required": ["id", "kind", "title", "excerpt", "source", "linkedEntityIds", "supportsClaimIds"],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
-          "kind": { "enum": ["semantic", "ontology", "graph", "document", "system-record"] },
+          "kind": { "enum": ["semantic", "ontology", "graph", "document", "system-record", "derived"] },
           "title": { "type": "string", "minLength": 1 },
           "excerpt": { "type": "string", "minLength": 1 },
           "source": {

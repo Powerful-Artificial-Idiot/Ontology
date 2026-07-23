@@ -1,15 +1,31 @@
 export const QUALITY_TRACE_TEMPLATE_ID = "quality-issue-trace.direct-neighborhood.v1";
 export const ENGINEERING_CHANGE_TEMPLATE_ID = "engineering-change-impact.dependency-scope.v1";
 export const BOTTLENECK_ANALYSIS_TEMPLATE_ID = "bottleneck-analysis.flow-metrics.v1";
+export const QUALITY_RICH_TEMPLATE_IDS = [
+  "GET_CHARACTERISTIC_SPECIFICATION",
+  "GET_CHARACTERISTIC_CONTROL_LIMITS",
+  "GET_CONTROL_METHOD",
+  "GET_MEASUREMENT_SYSTEM",
+  "GET_LATEST_VALID_METRIC",
+  "GET_METRIC_HISTORY",
+  "GET_CAPABILITY_STUDY",
+  "GET_REACTION_PLAN",
+  "GET_GOVERNING_DOCUMENTS",
+  "GET_PROGRAM_VERSION_STATUS",
+  "GET_CHANGE_IMPACT",
+  "GET_CROSS_DOMAIN_EVIDENCE",
+] as const;
 export const NEO4J_ALLOWLISTED_TEMPLATE_IDS = new Set([
   QUALITY_TRACE_TEMPLATE_ID,
   ENGINEERING_CHANGE_TEMPLATE_ID,
   BOTTLENECK_ANALYSIS_TEMPLATE_ID,
+  ...QUALITY_RICH_TEMPLATE_IDS,
 ]);
 export const NEO4J_SCENARIO_BY_TEMPLATE_ID: Record<string, string> = {
   [QUALITY_TRACE_TEMPLATE_ID]: "quality-issue-trace",
   [ENGINEERING_CHANGE_TEMPLATE_ID]: "engineering-change-impact",
   [BOTTLENECK_ANALYSIS_TEMPLATE_ID]: "bottleneck-analysis",
+  ...Object.fromEntries(QUALITY_RICH_TEMPLATE_IDS.map((templateId) => [templateId, "quality-issue-trace"])),
 };
 
 const CANONICAL_TRAVERSAL_QUERY = `

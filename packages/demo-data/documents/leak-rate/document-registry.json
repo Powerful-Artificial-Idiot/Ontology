@@ -2,6 +2,42 @@
   "registryVersion": "1.0.0",
   "documents": [
     {
+      "documentId": "document.specification.bb-leak-rate.rev-a",
+      "logicalDocumentId": "document.specification.bb-leak-rate",
+      "title": "Product Leak Rate Specification Rev.A",
+      "documentType": "product-specification",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "PS-BB-LR",
+      "contentFile": "content/specification-bb-leak-rate-rev-a.json",
+      "contentChecksum": "sha256:6fbe718c542f2afe9198edef30fef0dce780cd5b5c74f897f1c7abf9831dd5eb",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "specification.brake-booster.leak-rate.rev-a",
+        "product.brake-booster",
+        "quality-characteristic.leak-rate"
+      ],
+      "supportsClaimIds": [
+        "claim.specification"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
       "documentId": "document.control-plan.cp-bb01.rev-a",
       "logicalDocumentId": "document.control-plan.cp-bb01",
       "title": "Control Plan CP-BB01 Rev.A",
@@ -9,44 +45,35 @@
       "version": "Rev.A",
       "approvalStatus": "approved",
       "lifecycleStatus": "effective",
-      "effectiveFrom": "2026-06-17T00:00:00.000Z",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
       "owner": "Quality Engineering",
-      "sourceSystem": "QMS",
+      "sourceSystem": "DMS Demo",
       "sourceId": "CP-BB01",
       "contentFile": "content/control-plan-cp-bb01-rev-a.json",
-      "contentChecksum": "sha256:5a8b1e02b1eb40bfc376e01699aa49e6abb3853d38b7077abfb612fba4fee87d",
+      "contentChecksum": "sha256:3965168dddda8de286f13ad8431f4e3e7b984774b0027ea5fade506fb75e21d3",
       "parserId": "controlled-json",
       "parserVersion": "1.0.0",
-      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "control-method.automatic-leak-test"],
-      "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"],
+      "linkedEntityIds": [
+        "operation.op30",
+        "quality-characteristic.leak-rate",
+        "control-method.automatic-leak-test",
+        "sampling-plan.op30-leak-rate.rev-a"
+      ],
+      "supportsClaimIds": [
+        "claim.quality-risk",
+        "claim.governed-documents",
+        "claim.control-thresholds"
+      ],
       "access": {
         "classification": "internal",
-        "allowedRoleIds": ["agent-evidence-reader"],
-        "allowedDomainIds": ["quality", "manufacturing"]
-      }
-    },
-    {
-      "documentId": "document.pfmea.pf-bb01.rev-b",
-      "logicalDocumentId": "document.pfmea.pf-bb01",
-      "title": "PFMEA PF-BB01 Rev.B",
-      "documentType": "pfmea",
-      "version": "Rev.B",
-      "approvalStatus": "approved",
-      "lifecycleStatus": "effective",
-      "effectiveFrom": "2026-06-17T00:00:00.000Z",
-      "owner": "Quality Engineering",
-      "sourceSystem": "QMS",
-      "sourceId": "PF-BB01",
-      "contentFile": "content/pfmea-pf-bb01-rev-b.json",
-      "contentChecksum": "sha256:fc53370c0a712f9fbed14819b7b97ffd3b529135e587185d13176960e8a7eb4c",
-      "parserId": "controlled-json",
-      "parserVersion": "1.0.0",
-      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "failure-mode.internal-leakage"],
-      "supportsClaimIds": ["claim.quality-risk", "claim.governed-documents"],
-      "access": {
-        "classification": "internal",
-        "allowedRoleIds": ["agent-evidence-reader"],
-        "allowedDomainIds": ["quality", "manufacturing"]
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
       }
     },
     {
@@ -57,44 +84,446 @@
       "version": "Rev.3",
       "approvalStatus": "approved",
       "lifecycleStatus": "effective",
-      "effectiveFrom": "2026-06-03T00:00:00.000Z",
-      "owner": "Process Documentation",
-      "sourceSystem": "DMS",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
       "sourceId": "SOP-OP30",
-      "contentFile": "content/sop-op30-leak-test-rev-3.json",
-      "contentChecksum": "sha256:5f95e5265c6082aad57ede8b41d3188e66ffeb483240ca829265331ed72e5152",
+      "contentFile": "content/sop-op30-leak-test.json",
+      "contentChecksum": "sha256:4b7135a8a5c0b424980b322735a7d72c25aea9351765befdc785448aa08ee349",
       "parserId": "controlled-json",
       "parserVersion": "1.0.0",
-      "linkedEntityIds": ["operation.op30", "machine.m220", "fixture.fx-002", "program.leak-test.v3-4"],
-      "supportsClaimIds": ["claim.affected-equipment", "claim.governed-documents"],
+      "linkedEntityIds": [
+        "operation.op30",
+        "machine.m220",
+        "fixture.fx-002",
+        "program.leak-test.v3-4",
+        "control-method.automatic-leak-test"
+      ],
+      "supportsClaimIds": [
+        "claim.affected-equipment",
+        "claim.governed-documents",
+        "claim.measurement-capability"
+      ],
       "access": {
         "classification": "internal",
-        "allowedRoleIds": ["agent-evidence-reader"],
-        "allowedDomainIds": ["engineering", "manufacturing", "quality"]
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.pfmea.pf-bb01.rev-b",
+      "logicalDocumentId": "document.pfmea.pf-bb01",
+      "title": "PFMEA PF-BB01 Rev.B",
+      "documentType": "pfmea",
+      "version": "Rev.B",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "PF-BB01",
+      "contentFile": "content/pfmea-pf-bb01-rev-b.json",
+      "contentChecksum": "sha256:55fe3218d7bae590b929389278a09586acaf080c525b6338d0453fc465619d99",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "operation.op30",
+        "quality-characteristic.leak-rate",
+        "failure-mode.internal-leakage"
+      ],
+      "supportsClaimIds": [
+        "claim.quality-risk",
+        "claim.governed-documents",
+        "claim.causal-boundary"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.reaction-plan.op30-leak-rate.rev-a",
+      "logicalDocumentId": "document.reaction-plan.op30-leak-rate",
+      "title": "OP30 Reaction Plan Rev.A",
+      "documentType": "reaction-plan",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "RP-OP30-LR",
+      "contentFile": "content/reaction-plan-op30-leak-rate-rev-a.json",
+      "contentChecksum": "sha256:004fbb66403d0bfb33bb48c10508335a1164bb60af6a01673a131111101de445",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "reaction-plan.op30-leak-rate.rev-a",
+        "reaction-action.op30.hold-current-lot",
+        "reaction-action.op30.identify-last-known-good",
+        "reaction-action.op30.verify-master-leak",
+        "reaction-action.op30.inspect-fixture-seals",
+        "reaction-action.op30.verify-program-version",
+        "reaction-action.op30.repeat-golden-sample",
+        "reaction-action.op30.rescreen-when-required",
+        "reaction-action.op30.create-deviation",
+        "reaction-action.op30.notify-quality-engineer",
+        "reaction-action.op30.release-after-approval"
+      ],
+      "supportsClaimIds": [
+        "claim.reaction-plan",
+        "claim.percentage-projection"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.msa.m220-leak-tester.rev-a",
+      "logicalDocumentId": "document.msa.m220-leak-tester",
+      "title": "M220 MSA / GRR Study Rev.A",
+      "documentType": "msa-study",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "MSA-M220-LR",
+      "contentFile": "content/msa-m220-leak-tester-rev-a.json",
+      "contentChecksum": "sha256:c59d99e0161ee7f8d9187890b8163b6c5341b08c414835ffcf14f866bd1a34fa",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "measurement-system.m220-leak-tester",
+        "msa-study.m220-leak-tester.rev-a"
+      ],
+      "supportsClaimIds": [
+        "claim.measurement-system",
+        "claim.measurement-capability"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.calibration.m220.2026-07",
+      "logicalDocumentId": "document.calibration.m220",
+      "title": "M220 Calibration Record 2026-07",
+      "documentType": "calibration-record",
+      "version": "2026-07",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "CAL-M220-202607",
+      "contentFile": "content/calibration-m220-2026-07.json",
+      "contentChecksum": "sha256:6e78cea525a52ab900b94021911e8e203ba397278c136b82abf72803eac2d947",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "measurement-system.m220-leak-tester",
+        "calibration-record.m220.2026-07",
+        "master-leak.ml-050"
+      ],
+      "supportsClaimIds": [
+        "claim.measurement-system",
+        "claim.measurement-capability"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.validation-report.program-v3-4.rev-a",
+      "logicalDocumentId": "document.validation-report.program-v3-4",
+      "title": "Program V3.4 Validation Report Rev.A",
+      "documentType": "validation-record",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Engineering Governance",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "VAL-V34",
+      "contentFile": "content/validation-report-program-v3-4-rev-a.json",
+      "contentChecksum": "sha256:d8c6bc6aa0ecfb34609273306c911f297dbc876b06bb9250af816d6ff95cc0b0",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "program.leak-test.v3-4",
+        "validation-record.program-v3-4.rev-a"
+      ],
+      "supportsClaimIds": [
+        "claim.version-status"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.validation-plan.program-v3-5.rev-a",
+      "logicalDocumentId": "document.validation-plan.program-v3-5",
+      "title": "Program V3.5 Proposed Validation Plan Rev.A",
+      "documentType": "validation-plan",
+      "version": "Rev.A",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Engineering Governance",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "VALPLAN-V35",
+      "contentFile": "content/validation-plan-program-v3-5-rev-a.json",
+      "contentChecksum": "sha256:e8dbd3847d9a98b3408458ce50e30b05a02c8fff95f09a35e0783bc3a52d731a",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "program.leak-test.v3-5",
+        "engineering-change.m220-program-v3-5",
+        "validation-plan.m220-program-v3-5"
+      ],
+      "supportsClaimIds": [
+        "claim.version-status",
+        "claim.change-validation"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.capability-study.op30.2026-w29",
+      "logicalDocumentId": "document.capability-study.op30",
+      "title": "OP30 Capability Study 2026-W29",
+      "documentType": "capability-study",
+      "version": "2026-W29",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "CAP-OP30-W29",
+      "contentFile": "content/capability-study-op30-2026-w29.json",
+      "contentChecksum": "sha256:3a316f5f5e19b6b01356106e8c9fef1419ca3a9cc5f60ba109eab03f5d3db3fe",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "capability-study.op30-leak-rate.2026-w29",
+        "metric-observation.leak-rate.2026-w29"
+      ],
+      "supportsClaimIds": [
+        "claim.latest-metric",
+        "claim.percentage-projection"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.deviation.op30-leak-rate.demo-001",
+      "logicalDocumentId": "document.deviation.op30-leak-rate",
+      "title": "OP30 Quality Deviation Demo-001",
+      "documentType": "deviation-record",
+      "version": "Demo-001",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "DEV-OP30-001",
+      "contentFile": "content/deviation-op30-leak-rate-demo-001.json",
+      "contentChecksum": "sha256:081896de6bbfe7b6166ee5d43ffa51e54715348173d1949953d062f768dc9c4d",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "deviation.op30-leak-rate.demo-001",
+        "quality-issue.op30-leak-rate.demo-001"
+      ],
+      "supportsClaimIds": [
+        "claim.signal-limitation",
+        "claim.reaction-plan"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "document.fixture-maintenance.fx-002.rev-b",
+      "logicalDocumentId": "document.fixture-maintenance.fx-002",
+      "title": "FX-002 Fixture Maintenance Instruction Rev.B",
+      "documentType": "maintenance-instruction",
+      "version": "Rev.B",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "DMS Demo",
+      "sourceId": "MI-FX002",
+      "contentFile": "content/fixture-maintenance-fx-002-rev-b.json",
+      "contentChecksum": "sha256:c2081aaff97860ba67fa41c36489e44bddf386f1578d66cd8b6d8df814724919",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "fixture.fx-002",
+        "reaction-action.op30.inspect-fixture-seals"
+      ],
+      "supportsClaimIds": [
+        "claim.reaction-plan",
+        "claim.affected-equipment"
+      ],
+      "access": {
+        "classification": "internal",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "documentId": "record.qms.leak-rate.2026-w29-demo",
+      "logicalDocumentId": "record.qms.leak-rate",
+      "title": "OP30 Leak Rate Weekly Record 2026-W29",
+      "documentType": "qms-record",
+      "version": "2026-W29",
+      "approvalStatus": "approved",
+      "lifecycleStatus": "effective",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "QMS Demo",
+      "sourceId": "QMS-LR-W29",
+      "contentFile": "content/qms-leak-rate-2026-w29-demo.json",
+      "contentChecksum": "sha256:fb64b55abcbacf680d7e1b0203cfeebc7b8829bc5f05357380ea5f4a79d2b524",
+      "parserId": "controlled-json",
+      "parserVersion": "1.0.0",
+      "linkedEntityIds": [
+        "metric-series.op30-leak-rate.weekly",
+        "metric-observation.leak-rate.2026-w29",
+        "operation.op30",
+        "machine.m220"
+      ],
+      "supportsClaimIds": [
+        "claim.latest-metric",
+        "claim.signal-limitation"
+      ],
+      "access": {
+        "classification": "restricted",
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
       }
     },
     {
       "documentId": "record.qms.leak-rate.2026-07-demo",
-      "logicalDocumentId": "record.qms.leak-rate",
+      "logicalDocumentId": "record.qms.leak-rate.legacy",
       "title": "Recent Leak Rate Results",
       "documentType": "qms-record",
       "version": "2026-07 Demo",
       "approvalStatus": "approved",
       "lifecycleStatus": "effective",
-      "effectiveFrom": "2026-07-16T00:00:00.000Z",
-      "owner": "Quality Systems",
-      "sourceSystem": "QMS Mock",
+      "effectiveFrom": "2026-07-01T00:00:00.000Z",
+      "owner": "Quality Engineering",
+      "sourceSystem": "QMS Demo",
       "sourceId": "QMS-DEMO-LEAK-RATE",
       "contentFile": "content/qms-leak-rate-2026-07-demo.json",
-      "contentChecksum": "sha256:6c8fb8ea0093219d60a704a21e0abd6352f04e4e9354ac95c3863ae31b3684b3",
+      "contentChecksum": "sha256:a7d290d23ecca4b128ce59f161eca2acf61d674245a346ac6abf2c9440aad4cb",
       "parserId": "controlled-json",
       "parserVersion": "1.0.0",
-      "linkedEntityIds": ["operation.op30", "quality-characteristic.leak-rate", "machine.m220"],
-      "supportsClaimIds": ["claim.signal-limitation"],
+      "linkedEntityIds": [
+        "operation.op30",
+        "quality-characteristic.leak-rate",
+        "machine.m220"
+      ],
+      "supportsClaimIds": [
+        "claim.signal-limitation"
+      ],
       "access": {
         "classification": "restricted",
-        "allowedRoleIds": ["agent-evidence-reader"],
-        "allowedDomainIds": ["quality"]
+        "allowedRoleIds": [
+          "agent-evidence-reader"
+        ],
+        "allowedDomainIds": [
+          "quality",
+          "engineering",
+          "manufacturing"
+        ]
       }
     }
   ]

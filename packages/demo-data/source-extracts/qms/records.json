@@ -14,11 +14,30 @@
       "characteristic_id": "CTQ-OP30-LEAK-RATE",
       "characteristic_name": "Leak Rate",
       "is_ctq": true,
-      "latest_value": 1.8,
+      "latest_value": 0.22,
+      "latest_maximum": 0.28,
+      "latest_p95": 0.27,
+      "cpk": 1.08,
+      "sample_count": 2400,
+      "observed_period": "2026-W29",
+      "baseline_mean": 0.2,
+      "warning_limit": 0.24,
+      "action_limit": 0.27,
+      "product_usl": 0.3,
+      "measurement_range_upper": 0.5,
+      "measurement_resolution": 0.01,
       "unit": "sccm",
+      "specification_revision": "Rev.A",
+      "control_plan_revision": "Rev.A",
+      "reaction_plan_revision": "Rev.A",
+      "msa_revision": "Rev.A",
+      "calibration_state": "valid",
+      "source_version": "QMS-DEMO-2026.07",
+      "validity_state": "valid",
+      "effective_state": "current",
       "inspection_time": "2026-07-22T08:10:00.000Z",
       "operation_id": "OP-030"
     },
-    "recordChecksum": "sha256:650a8a10fbfd7228abf3b07d61af0838fa01f1a11a6e6bbb4fdfc4b898c0b744"
+    "recordChecksum": "sha256:963a0bc8ffd6b996b3e4b0b8cf9253086bf4203c1b9d8d15f851d3b1dd2d6045"
   }
 ]

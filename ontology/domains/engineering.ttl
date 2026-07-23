@@ -13,8 +13,14 @@
 eng:EngineeringChange a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Engineering Change" .
 eng:EngineeringChangeRecord a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Engineering Change Record" .
 eng:ValidationRecord a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Validation Record" .
+eng:ValidationPlan a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Validation Plan" .
+eng:ValidationRequirement a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Validation Requirement" .
 
 eng:affects a owl:ObjectProperty ; rdfs:domain eng:EngineeringChange ; rdfs:range core:EnterpriseEntity ; rdfs:label "affects" .
 eng:requiresValidation a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range eng:ValidationRecord ; rdfs:label "requires validation" .
+eng:affectedByChange a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range eng:EngineeringChange ; rdfs:label "affected by change" .
+eng:validatedBy a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range eng:ValidationRecord ; rdfs:label "validated by" .
+eng:currentVersionOf a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "current version of" .
+eng:proposedVersionOf a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "proposed version of" .
 eng:changeStatus a owl:DatatypeProperty ; rdfs:domain eng:EngineeringChange ; rdfs:range xsd:string ; rdfs:label "change status" .
 eng:releaseDecision a owl:DatatypeProperty ; rdfs:domain eng:ValidationRecord ; rdfs:range xsd:string ; rdfs:label "release decision" .

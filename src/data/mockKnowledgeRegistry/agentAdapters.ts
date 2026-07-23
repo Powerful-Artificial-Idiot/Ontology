@@ -42,7 +42,19 @@ function agentObjectType(type: MockKnowledgeObject["type"]): AgentRelatedObject[
   if (type === "SystemField") return "System Field";
   if (type === "ValueStreamMetric") return "Value Stream Metric";
   if (type === "OntologyRelationshipType") return "Ontology Relationship";
-  if (type === "OntologyObjectType" || type === "Product" || type === "Program" || type === "Fixture" || type === "WIPBuffer") return "Ontology Object";
+  if (
+    type === "OntologyObjectType"
+    || type === "Product"
+    || type === "Program"
+    || type === "Fixture"
+    || type === "WIPBuffer"
+    || type === "Specification"
+    || type === "ControlLimit"
+    || type === "MeasurementSystem"
+    || type === "MetricObservation"
+    || type === "ReactionPlan"
+    || type === "SamplingPlan"
+  ) return "Ontology Object";
   if (type === "FailureMode" || type === "ControlMethod" || type === "Document") return "Document";
   if (type === "Part") return "Ontology Object";
   return type;

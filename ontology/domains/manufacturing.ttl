@@ -24,6 +24,7 @@ mfg:ProductionOrder a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:l
 mfg:requiresOperation a owl:ObjectProperty ; rdfs:domain mfg:Product ; rdfs:range mfg:Operation ; rdfs:label "requires operation" .
 mfg:executedBy a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range mfg:Machine ; rdfs:label "executed by" .
 mfg:usesParameter a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range mfg:ProcessParameter ; rdfs:label "uses parameter" .
+mfg:requiresResource a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range mfg:ManufacturingResource ; rdfs:label "requires resource" .
 mfg:produces a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range core:Asset ; rdfs:label "produces" .
 mfg:flowsTo a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "flows to" .
 mfg:executesDefinition a owl:ObjectProperty ; rdfs:domain mfg:OperationExecution ; rdfs:range mfg:OperationDefinition ; rdfs:label "executes definition" .

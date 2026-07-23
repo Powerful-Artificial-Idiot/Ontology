@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 4.1 / Acceptance Criteria",
+      "heading": "Acceptance Criteria",
+      "text": "Synthetic demo acceptance values for Brake Booster at OP30 are target 0.18 sccm, LSL 0.00 sccm and USL 0.30 sccm. These values are demo-only and are not a production specification."
+    },
+    {
+      "locator": "Section 4.2 / Applicability",
+      "heading": "Applicability",
+      "text": "Rev.A applies to product.brake-booster, operation.op30 and quality-characteristic.leak-rate from 2026-07-01."
+    },
+    {
+      "locator": "Section 4.3 / Governance",
+      "heading": "Version Governance",
+      "text": "Revision Rev.A is approved, effective and current. Internal warning/action limits and equipment measurement range do not replace this product acceptance criterion."
+    }
+  ]
+}

@@ -1,31 +1,31 @@
 {
   "artifactFormatVersion": "1.0.0",
   "counts": {
-    "classes": 46,
+    "classes": 66,
     "modules": 8,
-    "properties": 164,
-    "relations": 23
+    "properties": 200,
+    "relations": 54
   },
   "files": [
     {
-      "bytes": 16470,
+      "bytes": 24917,
       "path": "classes.json",
-      "sha256": "a85f09aea25996b1dddeb1fb36ed01194f849a06967ae1d9d5fc56795733bdb9"
+      "sha256": "518f4fde2c6bd70bb704efd3ee6569df3fa598d3c0e3d1419ad0604b42457e29"
     },
     {
       "bytes": 2481,
       "path": "modules.json",
-      "sha256": "3fb7722e7af1e4aa33613fcaa0f0cc6637f81025ad5e3fa611366ee865d874a5"
+      "sha256": "0051d1923794bb767d276929a5759abb243afe37030df52a3d041b7f60ec45bb"
     },
     {
-      "bytes": 61747,
+      "bytes": 78733,
       "path": "properties.json",
-      "sha256": "f2a4e98f31523a641119b5f656fc49896eeaf530c3ccec55a0405ba1ffe500d9"
+      "sha256": "bb319487642faa9820b4ba6c106dd229e4a7e60d5885c423c43d53dc662cd413"
     },
     {
-      "bytes": 9769,
+      "bytes": 22969,
       "path": "relations.json",
-      "sha256": "fa83e2f8e6b7f706ccfb0157d0cd6a28cc33ff98d38b517f6499d2ba03244b0e"
+      "sha256": "0a3e6c0247f9e4fe0d2099cb672fecc0dd1b257d5c0b23c5bdfeba2b132b0195"
     },
     {
       "bytes": 123,

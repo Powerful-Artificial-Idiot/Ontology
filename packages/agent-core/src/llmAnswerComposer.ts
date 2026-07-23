@@ -5,6 +5,8 @@ import type {
   AgentTurnRequest,
   EvidenceClaimPolicy,
   EvidencePack,
+  QuantitativeAssessmentEnvelope,
+  SemanticQueryPlan,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError, assertPipeline } from "./errors";
 import type { AnswerComposer, GraphRetrievalResult } from "./types";
@@ -84,16 +86,18 @@ export interface LlmAnswerComposerProvider {
 }
 
 export class EvidenceContextProjector {
-  constructor(private readonly maximumItems = 50, private readonly maximumExcerptCharacters = 2_000, private readonly maximumTotalCharacters = 40_000) {}
+  constructor(private readonly maximumItems = 80, private readonly maximumExcerptCharacters = 2_000, private readonly maximumTotalCharacters = 60_000) {}
 
   project(evidencePack: EvidencePack): EvidenceContextProjection {
     assertPipeline(evidencePack.items.length > 0, "EVIDENCE_INSUFFICIENT", "LLM answer composition requires at least one evidence item.", "answer-composition");
-    assertPipeline(evidencePack.items.length <= this.maximumItems, "EVIDENCE_INSUFFICIENT", "Evidence Pack exceeds the bounded LLM projection item limit.", "answer-composition", { itemCount: evidencePack.items.length, maximumItems: this.maximumItems });
     assertPipeline(Boolean(evidencePack.claimPolicies?.length), "EVIDENCE_INSUFFICIENT", "LLM answer composition requires governed claim policies.", "answer-composition");
+    assertPipeline(evidencePack.items.length <= this.maximumItems, "EVIDENCE_INSUFFICIENT", "Evidence Pack exceeds the bounded LLM projection item limit.", "answer-composition", { itemCount: evidencePack.items.length, maximumItems: this.maximumItems });
     const evidenceIds = new Set(evidencePack.items.map((item) => item.id));
     const supportedClaimIds = new Set(evidencePack.items.flatMap((item) => item.supportsClaimIds));
     const claimPolicies = evidencePack.claimPolicies ?? [];
-    claimPolicies.forEach((policy) => assertPipeline(supportedClaimIds.has(policy.claimId), "EVIDENCE_INSUFFICIENT", `No evidence supports governed claim ${policy.claimId}.`, "answer-composition", { claimId: policy.claimId }));
+    claimPolicies
+      .filter((policy) => policy.required)
+      .forEach((policy) => assertPipeline(supportedClaimIds.has(policy.claimId), "EVIDENCE_INSUFFICIENT", `No evidence supports governed claim ${policy.claimId}.`, "answer-composition", { claimId: policy.claimId }));
     evidencePack.items.forEach((item) => {
       assertPipeline(item.excerpt.length <= this.maximumExcerptCharacters, "EVIDENCE_INSUFFICIENT", `Evidence excerpt exceeds the bounded projection limit: ${item.id}`, "answer-composition", { evidenceId: item.id, excerptCharacters: item.excerpt.length });
       assertPipeline(evidenceIds.has(item.id), "EVIDENCE_INSUFFICIENT", "Evidence projection contains an invalid ID.", "answer-composition");
@@ -197,8 +201,16 @@ export class HybridEvidenceAnswerComposer implements AnswerComposer {
 
   constructor(private readonly template: AnswerComposer, private readonly llm: LlmEvidenceAnswerComposer) {}
 
-  async compose(request: AgentTurnRequest, graph: GraphRetrievalResult, evidencePack: EvidencePack, signal?: AbortSignal): Promise<AgentAnswer> {
-    const guidance = await this.template.compose(request, graph, evidencePack, signal);
+  async compose(
+    request: AgentTurnRequest,
+    graph: GraphRetrievalResult,
+    evidencePack: EvidencePack,
+    signal?: AbortSignal,
+    baseline?: import("../../knowledge-contracts/src/index").CanonicalKnowledgeBaseline,
+    plan?: SemanticQueryPlan,
+    quantitativeAssessment?: QuantitativeAssessmentEnvelope,
+  ): Promise<AgentAnswer> {
+    const guidance = await this.template.compose(request, graph, evidencePack, signal, baseline, plan, quantitativeAssessment);
     return this.llm.composeWithGuidance(request, evidencePack, guidance, signal);
   }
 }

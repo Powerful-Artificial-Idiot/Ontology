@@ -15,8 +15,8 @@ describe("Agent Demo multi-turn scripted boundary", () => {
     agentDemoScenarios.forEach((scenario) => {
       expect(scenario.suggestedQuestions?.length).toBeGreaterThan(0);
       expect(scenario.exampleQuestions).toHaveLength(3);
-      expect(scenario.suggestedQuestions).toHaveLength(4);
-      expect(scenario.suggestedQuestionOptions).toHaveLength(4);
+      expect(scenario.suggestedQuestions?.length).toBeGreaterThanOrEqual(4);
+      expect(scenario.suggestedQuestionOptions).toHaveLength(scenario.suggestedQuestions?.length ?? 0);
       expect(scenario.suggestedQuestionOptions?.every((question) => question.zh.length > 0 && question.en.length > 0)).toBe(true);
       expect(scenario.references.length).toBeGreaterThanOrEqual(5);
       const referenceIds = new Set(scenario.references.map((reference) => reference.id));

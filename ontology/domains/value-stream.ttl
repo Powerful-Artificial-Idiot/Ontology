@@ -13,6 +13,7 @@
 vs:ValueStreamMetric a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Value Stream Metric" .
 vs:WIPBuffer a owl:Class ; rdfs:subClassOf core:Asset ; rdfs:label "WIP Buffer" .
 vs:BottleneckRisk a owl:Class ; rdfs:subClassOf vs:ValueStreamMetric ; rdfs:label "Bottleneck Risk" .
+vs:BottleneckAssessment a owl:Class ; rdfs:subClassOf vs:ValueStreamMetric ; rdfs:label "Bottleneck Assessment" .
 
 vs:contributesTo a owl:ObjectProperty ; rdfs:domain vs:ValueStreamMetric ; rdfs:range core:EnterpriseEntity ; rdfs:label "contributes to" .
 vs:affectsFlow a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "affects flow" .

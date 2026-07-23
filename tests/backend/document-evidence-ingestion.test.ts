@@ -24,10 +24,10 @@ describe("Phase 4C governed document evidence ingestion", () => {
     const first = await pipeline.ingest(registry, asOf);
     const second = await pipeline.ingest(registry, asOf);
 
-    expect(first.acceptedDocumentIds).toHaveLength(4);
+    expect(first.acceptedDocumentIds).toHaveLength(14);
     expect(first.rejectedDocumentIds).toEqual([]);
     expect(first.issues).toEqual([]);
-    expect(first.chunks).toHaveLength(4);
+    expect(first.chunks).toHaveLength(42);
     expect(first.chunks.map((chunk) => chunk.id)).toEqual(second.chunks.map((chunk) => chunk.id));
     expect(first.chunks.map((chunk) => chunk.chunkChecksum)).toEqual(second.chunks.map((chunk) => chunk.chunkChecksum));
     expect(first.chunks.every((chunk) => chunk.id.startsWith("evidence-chunk."))).toBe(true);
@@ -87,11 +87,12 @@ describe("Phase 4C governed document evidence ingestion", () => {
     const denied = store.retrieve({ ...query(), access: { principalId: "unauthorized", roleIds: ["viewer"], domainIds: ["production"] } });
     const sopOnly = store.retrieve({ ...query(), documentTypes: ["sop"], searchTerms: ["M220", "golden part"] });
 
-    expect(allowed.items).toHaveLength(4);
+    expect(allowed.items).toHaveLength(12);
     expect(allowed.items.every((item) => item.governance?.accessDecision === "allowed")).toBe(true);
     expect(denied.items).toEqual([]);
-    expect(denied.excludedByAccess).toBe(4);
-    expect(sopOnly.items.map((item) => item.governance?.documentId)).toEqual(["document.sop.op30-leak-test"]);
+    expect(denied.excludedByAccess).toBe(42);
+    expect(sopOnly.items).toHaveLength(2);
+    expect(new Set(sopOnly.items.map((item) => item.governance?.documentId))).toEqual(new Set(["document.sop.op30-leak-test"]));
     expect(sopOnly.items[0]?.source.locator).toContain("Page 4");
   });
 });

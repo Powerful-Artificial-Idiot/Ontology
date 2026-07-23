@@ -36,6 +36,14 @@ function validateDefinition(value: unknown, index: number): GovernedDocumentDefi
     "value-stream-map",
     "standard-work",
     "mes-record",
+    "product-specification",
+    "reaction-plan",
+    "msa-study",
+    "calibration-record",
+    "validation-plan",
+    "capability-study",
+    "deviation-record",
+    "maintenance-instruction",
   ])) throw new Error(`documents[${index}].documentType is unsupported.`);
   const version = text(value.version, `documents[${index}].version`);
   if (!isOneOf(value.approvalStatus, ["approved", "draft", "rejected"])) throw new Error(`documents[${index}].approvalStatus is unsupported.`);

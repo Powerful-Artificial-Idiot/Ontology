@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 1 / Release Status",
+      "heading": "Released Baseline",
+      "text": "LeakTestProgram V3.4 is approved, effective and current for the synthetic demo route."
+    },
+    {
+      "locator": "Section 2 / Parameters",
+      "heading": "Validated Parameters",
+      "text": "Validated settings are 500 ± 5 kPa, 3.0 second stabilization and 5.0 second measurement."
+    },
+    {
+      "locator": "Section 3 / Approval",
+      "heading": "Quality Approval",
+      "text": "The governed validation record is complete and supports current release status."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Record / Scope",
+      "heading": "Deviation Scope",
+      "text": "This synthetic deviation is open for demonstration and does not identify real products, lots or serial numbers."
+    },
+    {
+      "locator": "Record / Containment",
+      "heading": "Containment Status",
+      "text": "Release remains blocked until the governed reaction evidence is approved."
+    },
+    {
+      "locator": "Record / Causality",
+      "heading": "Causal Status",
+      "text": "No causal source has been confirmed. Bottleneck correlation is insufficient evidence."
+    }
+  ]
+}

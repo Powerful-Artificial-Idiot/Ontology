@@ -10,7 +10,15 @@ export type DocumentType =
   | "line-balance-study"
   | "value-stream-map"
   | "standard-work"
-  | "mes-record";
+  | "mes-record"
+  | "product-specification"
+  | "reaction-plan"
+  | "msa-study"
+  | "calibration-record"
+  | "validation-plan"
+  | "capability-study"
+  | "deviation-record"
+  | "maintenance-instruction";
 export type DocumentApprovalStatus = "approved" | "draft" | "rejected";
 export type DocumentLifecycleStatus = "effective" | "superseded" | "withdrawn";
 export type DocumentAccessClassification = "public" | "internal" | "restricted";

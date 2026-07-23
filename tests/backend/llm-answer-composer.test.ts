@@ -24,7 +24,7 @@ describe("Phase 4B evidence-grounded LLM Answer Composer", () => {
     expect(provider.inputs[0]).not.toHaveProperty("graph");
     expect(provider.inputs[0]?.templateGuidance).toBeUndefined();
     expect(response.answer.summary).toContain("Leak Rate abnormality");
-    expect(response.answer.limitations).toHaveLength(1);
+    expect(response.answer.limitations).toHaveLength(leakRateQualityIssueTraceBaseline.evidencePack.limitations.length);
     expect(response.answer.claims).toHaveLength(5);
     expect(response.citationValidation.status).toBe("passed");
     expect(response.trace.stages.find((stage) => stage.stage === "answer-composition")).toMatchObject({ tool: "llm-evidence-answer-composer.capturing-answer-provider.v1", status: "completed" });
@@ -141,12 +141,12 @@ function validDraft() {
       { text: "Control Plan, PFMEA, and SOP are the governed investigation documents.", claimIds: ["claim.governed-documents"] },
     ],
     recommendedActions: [
-      { text: "Start containment under the released Control Plan.", evidenceIds: [evidenceIdForDocument("document.control-plan.cp-bb01.rev-a")] },
-      { text: "Verify M220, FX-002, the released program, and golden-part results.", evidenceIds: [evidenceIdForDocument("document.sop.op30-leak-test")] },
+      { text: "Start containment under the released Control Plan.", evidenceIds: ["evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate"] },
+      { text: "Verify M220, FX-002, the released program, and golden-part results.", evidenceIds: ["evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification"] },
     ],
     risks: [{ text: "The actual affected batch population remains unknown without live QMS and MES genealogy.", claimIds: ["claim.signal-limitation"] }],
     assumptions: ["The abnormal signal is the local QMS fixture signal supplied by this pilot."],
-    limitations: ["No live QMS time-series, batch genealogy or equipment telemetry is connected in Phase 1."],
+    limitations: [...leakRateQualityIssueTraceBaseline.evidencePack.limitations],
     claims: leakRateQualityIssueTraceBaseline.expectedResponse.answer.claims.map((claim) => ({
       id: claim.id,
       text: claim.text,
@@ -155,12 +155,6 @@ function validDraft() {
     })),
     confidence: "high",
   };
-}
-
-function evidenceIdForDocument(documentId: string): string {
-  const item = leakRateQualityIssueTraceBaseline.evidencePack.items.find((evidence) => evidence.governance?.documentId === documentId);
-  if (!item) throw new Error(`Missing canonical evidence chunk for ${documentId}`);
-  return item.id;
 }
 
 function request(requestId: string): AgentTurnRequest {

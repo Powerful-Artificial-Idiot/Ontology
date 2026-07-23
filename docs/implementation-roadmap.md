@@ -1,5 +1,18 @@
 # Implementation Roadmap
 
+## Rich Agent Demo Knowledge Expansion
+
+- [x] Expanded the OP30 Leak Rate baseline to 84 entities and 217 governed relations while preserving canonical and canvas IDs.
+- [x] Added 14 governed documents, 42 stable chunks, 20 metric observations, MSA/calibration, sampling, reaction and program-validation objects.
+- [x] Added deterministic percentage assessment with explicit/ambiguous baseline policy and derived evidence.
+- [x] Added Quality intents, 53 aliases, 12 allowlisted query templates, CQ-012 through CQ-019, and a 30-case evaluation dataset.
+- [x] Added live Mock/Neo4j parity coverage for all 12 rich Quality query templates.
+- [x] Kept specification, internal process limits, measurement capability, and program release state as separate governed concepts.
+- [x] Added tenant-scoped, idempotent, dry-run-first rich demo seed tooling.
+- [ ] Rerun DeepSeek live provider acceptance in the deployment environment after this prompt/parser/composer delta.
+
+This expansion is synthetic demo-only data and is not a production manufacturing specification.
+
 ## Phase 5D - Formal Closure Delta
 
 Implemented on top of the Phase 5D implementation baseline:

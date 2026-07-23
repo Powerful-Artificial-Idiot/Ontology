@@ -14,8 +14,15 @@
       "part_number": "FP-001",
       "part_name": "Brake Booster Assembly",
       "revision": "Rev.C",
-      "lifecycle_status": "released"
+      "lifecycle_status": "released",
+      "leak_specification_id": "specification.brake-booster.leak-rate.rev-a",
+      "leak_specification_revision": "Rev.A",
+      "current_program_id": "program.leak-test.v3-4",
+      "proposed_program_id": "program.leak-test.v3-5",
+      "engineering_change_id": "engineering-change.m220-program-v3-5",
+      "change_approval_state": "pending-validation",
+      "validation_state": "incomplete"
     },
-    "recordChecksum": "sha256:b0c2c072268ceb2b68ff045ef97f722e2ef25dbf9f840795c96b34a160cfb487"
+    "recordChecksum": "sha256:da97e7ef95b6519388511ed5cea5d8f00ba543ecbeb6759a883e1fe243dfc443"
   }
 ]

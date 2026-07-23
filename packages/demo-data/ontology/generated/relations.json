@@ -28,6 +28,76 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/core#appliesToCharacteristic",
+    "inverseOf": [],
+    "label": "applies to characteristic",
+    "module": "core",
+    "name": "appliesToCharacteristic",
+    "predicate": "https://example.com/mkg/core#appliesToCharacteristic",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#appliesToOperation",
+    "inverseOf": [],
+    "label": "applies to operation",
+    "module": "core",
+    "name": "appliesToOperation",
+    "predicate": "https://example.com/mkg/core#appliesToOperation",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#appliesToProduct",
+    "inverseOf": [],
+    "label": "applies to product",
+    "module": "core",
+    "name": "appliesToProduct",
+    "predicate": "https://example.com/mkg/core#appliesToProduct",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#derivedFromSource",
+    "inverseOf": [],
+    "label": "derived from source",
+    "module": "core",
+    "name": "derivedFromSource",
+    "predicate": "https://example.com/mkg/core#derivedFromSource",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/core#governedBy",
+    "inverseOf": [],
+    "label": "governed by",
+    "module": "core",
+    "name": "governedBy",
+    "predicate": "https://example.com/mkg/core#governedBy",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#Document"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/core#hasSource",
     "inverseOf": [],
     "label": "has source",
@@ -70,6 +140,34 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/core#supportedByEvidence",
+    "inverseOf": [],
+    "label": "supported by evidence",
+    "module": "core",
+    "name": "supportedByEvidence",
+    "predicate": "https://example.com/mkg/core#supportedByEvidence",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#Document"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/engineering#affectedByChange",
+    "inverseOf": [],
+    "label": "affected by change",
+    "module": "engineering",
+    "name": "affectedByChange",
+    "predicate": "https://example.com/mkg/engineering#affectedByChange",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/engineering#EngineeringChange"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/engineering#affects",
     "inverseOf": [],
     "label": "affects",
@@ -84,12 +182,54 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/engineering#currentVersionOf",
+    "inverseOf": [],
+    "label": "current version of",
+    "module": "engineering",
+    "name": "currentVersionOf",
+    "predicate": "https://example.com/mkg/engineering#currentVersionOf",
+    "sourceClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/engineering#proposedVersionOf",
+    "inverseOf": [],
+    "label": "proposed version of",
+    "module": "engineering",
+    "name": "proposedVersionOf",
+    "predicate": "https://example.com/mkg/engineering#proposedVersionOf",
+    "sourceClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/engineering#requiresValidation",
     "inverseOf": [],
     "label": "requires validation",
     "module": "engineering",
     "name": "requiresValidation",
     "predicate": "https://example.com/mkg/engineering#requiresValidation",
+    "sourceClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/engineering#ValidationRecord"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/engineering#validatedBy",
+    "inverseOf": [],
+    "label": "validated by",
+    "module": "engineering",
+    "name": "validatedBy",
+    "predicate": "https://example.com/mkg/engineering#validatedBy",
     "sourceClasses": [
       "https://example.com/mkg/core#VersionedEntity"
     ],
@@ -196,6 +336,20 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/manufacturing#requiresResource",
+    "inverseOf": [],
+    "label": "requires resource",
+    "module": "manufacturing",
+    "name": "requiresResource",
+    "predicate": "https://example.com/mkg/manufacturing#requiresResource",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#ManufacturingResource"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/manufacturing#usesParameter",
     "inverseOf": [],
     "label": "uses parameter",
@@ -221,6 +375,34 @@
     ],
     "targetClasses": [
       "https://example.com/mkg/quality#FailureMode"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#calibratedBy",
+    "inverseOf": [],
+    "label": "calibrated by",
+    "module": "quality",
+    "name": "calibratedBy",
+    "predicate": "https://example.com/mkg/quality#calibratedBy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#CalibrationRecord"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#controlledBy",
+    "inverseOf": [],
+    "label": "controlled by",
+    "module": "quality",
+    "name": "controlledBy",
+    "predicate": "https://example.com/mkg/quality#controlledBy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#ControlMethod"
     ]
   },
   {
@@ -252,6 +434,34 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/quality#hasAction",
+    "inverseOf": [],
+    "label": "has action",
+    "module": "quality",
+    "name": "hasAction",
+    "predicate": "https://example.com/mkg/quality#hasAction",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#ReactionPlan"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#CorrectiveAction"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasCapabilityStudy",
+    "inverseOf": [],
+    "label": "has capability study",
+    "module": "quality",
+    "name": "hasCapabilityStudy",
+    "predicate": "https://example.com/mkg/quality#hasCapabilityStudy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#CapabilityStudy"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/quality#hasControlPlanVersion",
     "inverseOf": [],
     "label": "has control plan version",
@@ -263,6 +473,118 @@
     ],
     "targetClasses": [
       "https://example.com/mkg/quality#ControlPlanVersion"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasFailureMode",
+    "inverseOf": [],
+    "label": "has failure mode",
+    "module": "quality",
+    "name": "hasFailureMode",
+    "predicate": "https://example.com/mkg/quality#hasFailureMode",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#FailureMode"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasInternalControlLimit",
+    "inverseOf": [],
+    "label": "has internal control limit",
+    "module": "quality",
+    "name": "hasInternalControlLimit",
+    "predicate": "https://example.com/mkg/quality#hasInternalControlLimit",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#InternalControlLimit"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasMetricSeries",
+    "inverseOf": [],
+    "label": "has metric series",
+    "module": "quality",
+    "name": "hasMetricSeries",
+    "predicate": "https://example.com/mkg/quality#hasMetricSeries",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MetricSeries"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasMsaStudy",
+    "inverseOf": [],
+    "label": "has MSA study",
+    "module": "quality",
+    "name": "hasMsaStudy",
+    "predicate": "https://example.com/mkg/quality#hasMsaStudy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MeasurementSystemAnalysis"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasObservation",
+    "inverseOf": [],
+    "label": "has observation",
+    "module": "quality",
+    "name": "hasObservation",
+    "predicate": "https://example.com/mkg/quality#hasObservation",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MetricSeries"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasSamplingPlan",
+    "inverseOf": [],
+    "label": "has sampling plan",
+    "module": "quality",
+    "name": "hasSamplingPlan",
+    "predicate": "https://example.com/mkg/quality#hasSamplingPlan",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#SamplingPlan"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#hasSpecificationLimit",
+    "inverseOf": [],
+    "label": "has specification limit",
+    "module": "quality",
+    "name": "hasSpecificationLimit",
+    "predicate": "https://example.com/mkg/quality#hasSpecificationLimit",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#Specification"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#SpecificationLimit"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#implementsControlMethod",
+    "inverseOf": [],
+    "label": "implements control method",
+    "module": "quality",
+    "name": "implementsControlMethod",
+    "predicate": "https://example.com/mkg/quality#implementsControlMethod",
+    "sourceClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#ControlMethod"
     ]
   },
   {
@@ -280,6 +602,20 @@
     ]
   },
   {
+    "id": "https://example.com/mkg/quality#measuredBy",
+    "inverseOf": [],
+    "label": "measured by",
+    "module": "quality",
+    "name": "measuredBy",
+    "predicate": "https://example.com/mkg/quality#measuredBy",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ]
+  },
+  {
     "id": "https://example.com/mkg/quality#measuresCharacteristic",
     "inverseOf": [],
     "label": "measures characteristic",
@@ -291,6 +627,104 @@
     ],
     "targetClasses": [
       "https://example.com/mkg/quality#QualityCharacteristic"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#observedAtOperation",
+    "inverseOf": [],
+    "label": "observed at operation",
+    "module": "quality",
+    "name": "observedAtOperation",
+    "predicate": "https://example.com/mkg/quality#observedAtOperation",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#Operation"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#observedOnMachine",
+    "inverseOf": [],
+    "label": "observed on machine",
+    "module": "quality",
+    "name": "observedOnMachine",
+    "predicate": "https://example.com/mkg/quality#observedOnMachine",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#MetricObservation"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/manufacturing#Machine"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#requiresContainment",
+    "inverseOf": [],
+    "label": "requires containment",
+    "module": "quality",
+    "name": "requiresContainment",
+    "predicate": "https://example.com/mkg/quality#requiresContainment",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityIssue"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#ContainmentAction"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#requiresVerification",
+    "inverseOf": [],
+    "label": "requires verification",
+    "module": "quality",
+    "name": "requiresVerification",
+    "predicate": "https://example.com/mkg/quality#requiresVerification",
+    "sourceClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#triggersReactionPlan",
+    "inverseOf": [],
+    "label": "triggers reaction plan",
+    "module": "quality",
+    "name": "triggersReactionPlan",
+    "predicate": "https://example.com/mkg/quality#triggersReactionPlan",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#QualityCharacteristic"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#ReactionPlan"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#usesMeasurementSystem",
+    "inverseOf": [],
+    "label": "uses measurement system",
+    "module": "quality",
+    "name": "usesMeasurementSystem",
+    "predicate": "https://example.com/mkg/quality#usesMeasurementSystem",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#ControlMethod"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MeasurementSystem"
+    ]
+  },
+  {
+    "id": "https://example.com/mkg/quality#usesReference",
+    "inverseOf": [],
+    "label": "uses reference",
+    "module": "quality",
+    "name": "usesReference",
+    "predicate": "https://example.com/mkg/quality#usesReference",
+    "sourceClasses": [
+      "https://example.com/mkg/quality#CalibrationRecord"
+    ],
+    "targetClasses": [
+      "https://example.com/mkg/quality#MeasurementReference"
     ]
   },
   {

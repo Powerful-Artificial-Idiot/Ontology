@@ -1,5 +1,6 @@
 import type { KnowledgeEntity, KnowledgeRelation, ProvenanceReference } from "./index";
 import type { AgentAuthorizationContext, AgentSessionSecurityContext } from "./security";
+import type { QuantitativeAssessmentEnvelope } from "./quantitativeQuality";
 
 export const AGENT_CONTRACT_VERSION = "1.0.0" as const;
 
@@ -45,6 +46,15 @@ export type AgentTurnRequest = {
 
 export type AgentQueryIntent =
   | "quality_issue_trace"
+  | "quality_specification"
+  | "quality_control_threshold"
+  | "control_method_capability"
+  | "latest_quality_metric"
+  | "percentage_change_assessment"
+  | "value_limit_comparison"
+  | "reaction_plan"
+  | "measurement_system_capability"
+  | "program_change_status"
   | "engineering_change_impact"
   | "bottleneck_analysis"
   | "evidence_lookup"
@@ -139,7 +149,7 @@ export type AgentError = {
   details: Record<string, string | number | boolean>;
 };
 
-export type EvidenceKind = "semantic" | "ontology" | "graph" | "document" | "system-record";
+export type EvidenceKind = "semantic" | "ontology" | "graph" | "document" | "system-record" | "derived";
 
 export type EvidenceGovernanceMetadata = {
   documentId: string;
@@ -229,6 +239,7 @@ export type AgentTraceStageName =
   | "query-compilation"
   | "graph-retrieval"
   | "document-retrieval"
+  | "quantitative-assessment"
   | "evidence-pack"
   | "answer-composition"
   | "citation-validation";
@@ -303,6 +314,7 @@ export type AgentTurnResponse = {
   status: "completed" | "clarification-required" | "failed";
   queryPlan: SemanticQueryPlan;
   graphQueryPlan?: GraphQueryPlan;
+  quantitativeAssessment?: QuantitativeAssessmentEnvelope;
   evidencePack: EvidencePack;
   answer: AgentAnswer;
   citationValidation: CitationValidationResult;
@@ -471,6 +483,7 @@ export type CanonicalKnowledgeBaseline = {
     title: string;
     question: string;
     intent: AgentQueryIntent;
+    supportedIntents?: AgentQueryIntent[];
     seedEntityIds: string[];
   };
   ids: Record<string, unknown>;

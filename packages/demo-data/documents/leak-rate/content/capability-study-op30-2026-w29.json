@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Study / Summary",
+      "heading": "Capability Summary",
+      "text": "For 2026-W29, mean is 0.22 sccm, maximum 0.28 sccm, P95 0.27 sccm and Cpk 1.08."
+    },
+    {
+      "locator": "Study / Population",
+      "heading": "Observed Population",
+      "text": "The governed weekly aggregation contains 2400 synthetic demo measurements from OP30 on M220."
+    },
+    {
+      "locator": "Study / Baseline",
+      "heading": "Comparison Baseline",
+      "text": "The governed process center baseline is 0.20 sccm. This is an internal process baseline, not the product target or USL."
+    }
+  ]
+}

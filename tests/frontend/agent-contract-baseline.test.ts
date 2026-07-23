@@ -70,7 +70,7 @@ describe("Phase 1 shared Agent contract and canonical knowledge baseline", () =>
     const baseline = leakRateQualityIssueTraceBaseline;
     const entityIds = new Set(baseline.entities.map((entity) => entity.id));
     const evidenceIds = new Set(baseline.evidencePack.items.map((item) => item.id));
-    const claimIds = new Set(baseline.expectedResponse.answer.claims.map((claim) => claim.id));
+    const claimIds = new Set(baseline.evidencePack.claimPolicies?.map((policy) => policy.claimId) ?? []);
 
     expect(baseline.expectedResponse.queryPlan).toEqual(baseline.queryPlan);
     expect(baseline.expectedResponse.evidencePack).toEqual(baseline.evidencePack);

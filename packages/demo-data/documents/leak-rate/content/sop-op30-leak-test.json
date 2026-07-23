@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Page 4 / Section 3.2 Setup and Golden-Part Verification",
+      "heading": "Leak Test Setup",
+      "text": "Use M220, fixture FX-002 and released LeakTestProgram V3.4. Verify the master leak and golden sample before production."
+    },
+    {
+      "locator": "Page 5 / Section 4.1 Test Parameters",
+      "heading": "Control Method and Equipment",
+      "text": "Apply 500 ± 5 kPa test pressure, stabilize for 3.0 seconds and measure for 5.0 seconds. The method range is 0.00–0.50 sccm with 0.01 sccm resolution."
+    },
+    {
+      "locator": "Page 6 / Section 5 Reaction",
+      "heading": "Abnormal Result Handling",
+      "text": "A result can be measurable but nonconforming. Product acceptance uses the effective product specification; abnormal results use the reaction plan."
+    }
+  ]
+}

@@ -107,12 +107,20 @@
     "name": "EnterpriseEntity",
     "parentClasses": [],
     "properties": [
+      "https://example.com/mkg/core#appliesToCharacteristic",
+      "https://example.com/mkg/core#appliesToOperation",
+      "https://example.com/mkg/core#appliesToProduct",
+      "https://example.com/mkg/core#derivedFromSource",
+      "https://example.com/mkg/core#governedBy",
       "https://example.com/mkg/core#hasSource",
       "https://example.com/mkg/core#hasVersion",
       "https://example.com/mkg/core#recordedAt",
       "https://example.com/mkg/core#sourceSystemId",
+      "https://example.com/mkg/core#supportedByEvidence",
+      "https://example.com/mkg/engineering#affectedByChange",
       "https://example.com/mkg/manufacturing#flowsTo",
       "https://example.com/mkg/quality#controlsCharacteristic",
+      "https://example.com/mkg/quality#requiresVerification",
       "https://example.com/mkg/value-stream#affectsFlow"
     ],
     "version": "1.2.0"
@@ -155,6 +163,18 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/core#Unit",
+    "label": "Unit of Measure",
+    "module": "core",
+    "name": "Unit",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/core#VersionedEntity",
     "label": "Versioned Entity",
     "module": "core",
@@ -167,7 +187,13 @@
       "https://example.com/mkg/core#validFrom",
       "https://example.com/mkg/core#validTo",
       "https://example.com/mkg/core#versionIdentifier",
-      "https://example.com/mkg/engineering#requiresValidation"
+      "https://example.com/mkg/engineering#currentVersionOf",
+      "https://example.com/mkg/engineering#proposedVersionOf",
+      "https://example.com/mkg/engineering#requiresValidation",
+      "https://example.com/mkg/engineering#validatedBy",
+      "https://example.com/mkg/quality#approvalState",
+      "https://example.com/mkg/quality#effectiveState",
+      "https://example.com/mkg/quality#limitType"
     ],
     "version": "1.2.0"
   },
@@ -200,6 +226,18 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/engineering#ValidationPlan",
+    "label": "Validation Plan",
+    "module": "engineering",
+    "name": "ValidationPlan",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/engineering#ValidationRecord",
     "label": "Validation Record",
     "module": "engineering",
@@ -210,6 +248,18 @@
     "properties": [
       "https://example.com/mkg/engineering#releaseDecision"
     ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/engineering#ValidationRequirement",
+    "label": "Validation Requirement",
+    "module": "engineering",
+    "name": "ValidationRequirement",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [],
     "version": "1.2.0"
   },
   {
@@ -337,7 +387,10 @@
       "https://example.com/mkg/manufacturing#cycleTimeSeconds",
       "https://example.com/mkg/manufacturing#executedBy",
       "https://example.com/mkg/manufacturing#produces",
-      "https://example.com/mkg/manufacturing#usesParameter"
+      "https://example.com/mkg/manufacturing#requiresResource",
+      "https://example.com/mkg/manufacturing#usesParameter",
+      "https://example.com/mkg/quality#hasSamplingPlan",
+      "https://example.com/mkg/quality#implementsControlMethod"
     ],
     "version": "1.2.0"
   },
@@ -432,6 +485,58 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/quality#CalibrationRecord",
+    "label": "Calibration Record",
+    "module": "quality",
+    "name": "CalibrationRecord",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#usesReference"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#CapabilityStudy",
+    "label": "Capability Study",
+    "module": "quality",
+    "name": "CapabilityStudy",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#ContainmentAction",
+    "label": "Containment Action",
+    "module": "quality",
+    "name": "ContainmentAction",
+    "parentClasses": [
+      "https://example.com/mkg/quality#CorrectiveAction"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#ControlMethod",
+    "label": "Control Method",
+    "module": "quality",
+    "name": "ControlMethod",
+    "parentClasses": [
+      "https://example.com/mkg/quality#InspectionMethod"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#usesMeasurementSystem"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/quality#ControlPlan",
     "label": "Control Plan",
     "module": "quality",
@@ -494,6 +599,18 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/quality#Deviation",
+    "label": "Deviation",
+    "module": "quality",
+    "name": "Deviation",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/quality#FailureMode",
     "label": "Failure Mode",
     "module": "quality",
@@ -520,10 +637,34 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/quality#InternalControlLimit",
+    "label": "Internal Control Limit",
+    "module": "quality",
+    "name": "InternalControlLimit",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/quality#MeasurementInstrument",
     "label": "Measurement Instrument",
     "module": "quality",
     "name": "MeasurementInstrument",
+    "parentClasses": [
+      "https://example.com/mkg/core#Asset"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MeasurementReference",
+    "label": "Measurement Reference",
+    "module": "quality",
+    "name": "MeasurementReference",
     "parentClasses": [
       "https://example.com/mkg/core#Asset"
     ],
@@ -548,6 +689,64 @@
   },
   {
     "description": null,
+    "iri": "https://example.com/mkg/quality#MeasurementSystem",
+    "label": "Measurement System",
+    "module": "quality",
+    "name": "MeasurementSystem",
+    "parentClasses": [
+      "https://example.com/mkg/quality#MeasurementInstrument"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#calibratedBy",
+      "https://example.com/mkg/quality#hasMsaStudy"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MeasurementSystemAnalysis",
+    "label": "Measurement System Analysis",
+    "module": "quality",
+    "name": "MeasurementSystemAnalysis",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MetricObservation",
+    "label": "Metric Observation",
+    "module": "quality",
+    "name": "MetricObservation",
+    "parentClasses": [
+      "https://example.com/mkg/quality#MeasurementResult"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#aggregationType",
+      "https://example.com/mkg/quality#observedAtOperation",
+      "https://example.com/mkg/quality#observedOnMachine",
+      "https://example.com/mkg/quality#observedPeriod"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#MetricSeries",
+    "label": "Metric Series",
+    "module": "quality",
+    "name": "MetricSeries",
+    "parentClasses": [
+      "https://example.com/mkg/core#EnterpriseEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#hasObservation"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
     "iri": "https://example.com/mkg/quality#QualityCharacteristic",
     "label": "Quality Characteristic",
     "module": "quality",
@@ -556,8 +755,93 @@
       "https://example.com/mkg/core#EnterpriseEntity"
     ],
     "properties": [
-      "https://example.com/mkg/quality#governedBy"
+      "https://example.com/mkg/quality#controlledBy",
+      "https://example.com/mkg/quality#governedBy",
+      "https://example.com/mkg/quality#hasCapabilityStudy",
+      "https://example.com/mkg/quality#hasFailureMode",
+      "https://example.com/mkg/quality#hasInternalControlLimit",
+      "https://example.com/mkg/quality#hasMetricSeries",
+      "https://example.com/mkg/quality#measuredBy",
+      "https://example.com/mkg/quality#triggersReactionPlan"
     ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#QualityIssue",
+    "label": "Quality Issue",
+    "module": "quality",
+    "name": "QualityIssue",
+    "parentClasses": [
+      "https://example.com/mkg/core#Event"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#requiresContainment"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#ReactionPlan",
+    "label": "Reaction Plan",
+    "module": "quality",
+    "name": "ReactionPlan",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#hasAction"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#SamplingPlan",
+    "label": "Sampling Plan",
+    "module": "quality",
+    "name": "SamplingPlan",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#Specification",
+    "label": "Specification",
+    "module": "quality",
+    "name": "Specification",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [
+      "https://example.com/mkg/quality#hasSpecificationLimit"
+    ],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/quality#SpecificationLimit",
+    "label": "Specification Limit",
+    "module": "quality",
+    "name": "SpecificationLimit",
+    "parentClasses": [
+      "https://example.com/mkg/core#VersionedEntity"
+    ],
+    "properties": [],
+    "version": "1.2.0"
+  },
+  {
+    "description": null,
+    "iri": "https://example.com/mkg/value-stream#BottleneckAssessment",
+    "label": "Bottleneck Assessment",
+    "module": "value-stream",
+    "name": "BottleneckAssessment",
+    "parentClasses": [
+      "https://example.com/mkg/value-stream#ValueStreamMetric"
+    ],
+    "properties": [],
     "version": "1.2.0"
   },
   {

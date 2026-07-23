@@ -4,6 +4,7 @@ export type MockKnowledgeSourceView = "Production View" | "Quality View" | "Engi
 export type MockKnowledgeObjectType =
   | "Product" | "Part" | "Operation" | "Machine" | "Fixture" | "Program"
   | "QualityCharacteristic" | "CTQ" | "FailureMode" | "ControlMethod"
+  | "Specification" | "ControlLimit" | "MeasurementSystem" | "MetricObservation" | "ReactionPlan" | "SamplingPlan"
   | "Document" | "SystemField" | "ValueStreamMetric" | "SemanticTerm"
   | "OntologyObjectType" | "OntologyRelationshipType" | "WIPBuffer";
 

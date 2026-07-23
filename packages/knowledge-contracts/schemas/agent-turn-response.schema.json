@@ -12,6 +12,77 @@
     "status": { "enum": ["completed", "clarification-required", "failed"] },
     "queryPlan": { "$ref": "https://example.com/mkg/contracts/semantic-query-plan.schema.json" },
     "graphQueryPlan": { "$ref": "https://example.com/mkg/contracts/graph-query-plan.schema.json" },
+    "quantitativeAssessment": {
+      "type": "object",
+      "required": ["request", "assessments", "baselineDisclosureRequired"],
+      "properties": {
+        "request": {
+          "type": "object",
+          "required": ["characteristicId", "referencePolicy", "percentageChange"],
+          "properties": {
+            "characteristicId": { "type": "string", "minLength": 1 },
+            "operationId": { "type": "string", "minLength": 1 },
+            "productId": { "type": "string", "minLength": 1 },
+            "referenceValue": { "type": "number" },
+            "referenceMetricId": { "type": "string", "minLength": 1 },
+            "referencePolicy": { "enum": ["explicit", "latest-governed-observation", "control-center-line", "compare-all-governed-baselines"] },
+            "percentageChange": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "assessments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assessmentId", "characteristicId", "referencePolicy", "referenceValue", "referenceUnit", "referenceSourceId", "referenceEvidenceIds", "percentageChange", "formula", "roundingPolicy", "projectedValue", "warningLimitStatus", "actionLimitStatus", "specificationStatus", "measurementCapabilityStatus", "productStatus", "comparisons", "requiredReactionPlanIds", "evidenceIds", "limitations"],
+            "properties": {
+              "assessmentId": { "type": "string", "minLength": 1 },
+              "characteristicId": { "type": "string", "minLength": 1 },
+              "operationId": { "type": "string", "minLength": 1 },
+              "productId": { "type": "string", "minLength": 1 },
+              "referencePolicy": { "enum": ["explicit", "latest-governed-observation", "control-center-line", "compare-all-governed-baselines"] },
+              "referenceValue": { "type": "number" },
+              "referenceUnit": { "type": "string", "minLength": 1 },
+              "referenceSourceId": { "type": "string", "minLength": 1 },
+              "referenceEvidenceIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+              "percentageChange": { "type": "number" },
+              "formula": { "type": "string", "minLength": 1 },
+              "roundingPolicy": { "type": "string", "minLength": 1 },
+              "projectedValue": { "type": "number" },
+              "warningLimitStatus": { "enum": ["within", "exceeded", "unknown"] },
+              "actionLimitStatus": { "enum": ["within", "exceeded", "unknown"] },
+              "specificationStatus": { "enum": ["within", "at-limit", "exceeded", "unknown"] },
+              "measurementCapabilityStatus": { "enum": ["measurable", "outside-range", "unknown"] },
+              "productStatus": { "enum": ["conforming", "at-specification-limit", "nonconforming", "unknown"] },
+              "comparisons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["boundaryId", "boundaryType", "value", "unit", "status", "evidenceIds"],
+                  "properties": {
+                    "boundaryId": { "type": "string", "minLength": 1 },
+                    "boundaryType": { "enum": ["warning-limit", "action-limit", "specification-upper-limit", "measurement-range-upper"] },
+                    "value": { "type": "number" },
+                    "unit": { "type": "string", "minLength": 1 },
+                    "status": { "enum": ["within", "at-limit", "exceeded", "unknown"] },
+                    "exceedance": { "type": "number" },
+                    "relativeExceedancePercent": { "type": "number" },
+                    "evidenceIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "requiredReactionPlanIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+              "evidenceIds": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+              "limitations": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "baselineDisclosureRequired": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
     "evidencePack": { "$ref": "https://example.com/mkg/contracts/evidence-pack.schema.json" },
     "answer": {
       "type": "object",
@@ -84,7 +155,7 @@
             "required": ["id", "stage", "status", "startedAt", "completedAt", "durationMs", "inputRefs", "outputRefs", "summary"],
             "properties": {
               "id": { "type": "string" },
-              "stage": { "enum": ["semantic-parsing", "query-plan-validation", "ontology-validation", "query-compilation", "graph-retrieval", "document-retrieval", "evidence-pack", "answer-composition", "citation-validation"] },
+              "stage": { "enum": ["semantic-parsing", "query-plan-validation", "ontology-validation", "query-compilation", "graph-retrieval", "document-retrieval", "quantitative-assessment", "evidence-pack", "answer-composition", "citation-validation"] },
               "status": { "enum": ["completed", "skipped", "failed"] },
               "startedAt": { "type": "string", "format": "date-time" },
               "completedAt": { "type": "string", "format": "date-time" },

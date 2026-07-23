@@ -4,7 +4,7 @@
     "imports": [],
     "namespace": "https://example.com/mkg/core#",
     "sourceFile": "ontology/core/core.ttl",
-    "sourceSha256": "72b0d9c138fc6a31432906a920c85601137423668d1970467367701e57c8bcc6"
+    "sourceSha256": "6c95b57fb54bf9cec053a3c811bc96a49c58972b29f85b48bc36034b7fa294a0"
   },
   {
     "id": "manufacturing",
@@ -13,7 +13,7 @@
     ],
     "namespace": "https://example.com/mkg/manufacturing#",
     "sourceFile": "ontology/domains/manufacturing.ttl",
-    "sourceSha256": "046f720d7ebb6d616c212200a03a25b03cb1ef70f761a12564ea1e603c7f77fc"
+    "sourceSha256": "3d4d44b371c65358c9b65fd8602a4ae4c2cafa12f50f2b688379dde61d186fe9"
   },
   {
     "id": "quality",
@@ -23,7 +23,7 @@
     ],
     "namespace": "https://example.com/mkg/quality#",
     "sourceFile": "ontology/domains/quality.ttl",
-    "sourceSha256": "a44da155d45d34fb6ebdf5570493a25cf9e8a2686b22f3b49ec2f5e9fa7bded3"
+    "sourceSha256": "53163ea4871f73395c4575ea4ae9b035f618f4a96cb31a2d4b0b8556a73826e3"
   },
   {
     "id": "equipment",
@@ -43,7 +43,7 @@
     ],
     "namespace": "https://example.com/mkg/engineering#",
     "sourceFile": "ontology/domains/engineering.ttl",
-    "sourceSha256": "d96bd4ae8cc2ff3f2224ac06db5d4b6d7b76a8af100a8915f73450f1fd29a490"
+    "sourceSha256": "9d7fb2c2ae3151b6e65c31a1364bfdfea49f94fc18ded21271a46777b484c325"
   },
   {
     "id": "value-stream",
@@ -53,7 +53,7 @@
     ],
     "namespace": "https://example.com/mkg/value-stream#",
     "sourceFile": "ontology/domains/value-stream.ttl",
-    "sourceSha256": "4922ec9d99a177db201263669cc5362a5d53ca0d8c67c3349a055dc68a6cca20"
+    "sourceSha256": "5d398e27ec9f73cc0fccb84bb98638268fee7eaecc6b14dc5241a96e72ae4581"
   },
   {
     "id": "application",

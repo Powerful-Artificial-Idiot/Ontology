@@ -17,6 +17,7 @@ core:Document a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "
 core:Agent a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Agent" .
 core:VersionedEntity a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Versioned Entity" .
 core:SourceSystem a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Source System" .
+core:Unit a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Unit of Measure" .
 
 core:hasSource a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:SourceSystem ; rdfs:label "has source" .
 core:supersedes a owl:ObjectProperty ; rdfs:domain core:VersionedEntity ; rdfs:range core:VersionedEntity ; rdfs:label "supersedes" .
@@ -26,3 +27,9 @@ core:validFrom a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:
 core:validTo a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:date ; rdfs:label "valid to" .
 core:recordedAt a owl:DatatypeProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range xsd:dateTime ; rdfs:label "recorded at" .
 core:versionIdentifier a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:string ; rdfs:label "version identifier" .
+core:appliesToProduct a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "applies to product" .
+core:appliesToOperation a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "applies to operation" .
+core:appliesToCharacteristic a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "applies to characteristic" .
+core:governedBy a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:Document ; rdfs:label "governed by" .
+core:supportedByEvidence a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:Document ; rdfs:label "supported by evidence" .
+core:derivedFromSource a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "derived from source" .

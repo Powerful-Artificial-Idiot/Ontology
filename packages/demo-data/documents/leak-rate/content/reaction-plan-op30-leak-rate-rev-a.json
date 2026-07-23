@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "sections": [
+    {
+      "locator": "Section 2 / Trigger",
+      "heading": "Reaction Trigger",
+      "text": "Values above 0.27 sccm trigger the plan. Values above 0.30 sccm are product nonconforming. Measurement range remains a separate concept."
+    },
+    {
+      "locator": "Section 3 / Containment",
+      "heading": "Containment Sequence",
+      "text": "Hold the current lot, identify the last known good verification, verify the master leak, inspect fixture seals and verify the released program version."
+    },
+    {
+      "locator": "Section 4 / Verification and Release",
+      "heading": "Verification and Release",
+      "text": "Repeat the golden sample, perform 100% re-screening when required, create a deviation, notify Quality Engineering and release only after evidence approval."
+    }
+  ]
+}

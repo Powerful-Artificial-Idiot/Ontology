@@ -3,6 +3,30 @@ import type { AgentSuggestedQuestion } from "./agentDemoTypes";
 export const agentSuggestedQuestionsByScenario: Record<string, AgentSuggestedQuestion[]> = {
   "quality-issue-trace": [
     {
+      zh: "OP30 的 Leak Rate 容许范围是多少？",
+      en: "What is the allowable Leak Rate range at OP30?",
+    },
+    {
+      zh: "OP30 的 Leak Rate 提升 50% 是否超标？",
+      en: "Would a 50% increase in OP30 Leak Rate exceed the governed limits?",
+    },
+    {
+      zh: "OP30 当前 Leak Rate 水平、最大值和 Cpk 是多少？",
+      en: "What are the current OP30 Leak Rate mean, maximum and Cpk?",
+    },
+    {
+      zh: "超过 0.27 sccm 后需要执行哪些措施？ OP30 Leak Rate",
+      en: "Which governed actions are required after OP30 Leak Rate exceeds 0.27 sccm?",
+    },
+    {
+      zh: "M220 程序 v3.5 是否已经可以用于正式生产？ OP30 Leak Rate",
+      en: "Is M220 program V3.5 approved and effective for production at OP30?",
+    },
+    {
+      zh: "OP20 是瓶颈，是否证明它导致了 OP30 Leak Rate 上升？",
+      en: "Does the OP20 bottleneck prove that it caused the OP30 Leak Rate increase?",
+    },
+    {
       zh: "OP30 的 Leak Rate 最近异常，可能影响哪些产品、设备、质量风险、工程文件和价值流指标？",
       en: "Which products, equipment, quality risks, engineering documents, and value-stream metrics could be affected by the recent Leak Rate abnormality at OP30?",
     },

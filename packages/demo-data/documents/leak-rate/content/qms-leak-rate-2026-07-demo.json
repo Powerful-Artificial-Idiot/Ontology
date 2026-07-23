@@ -4,7 +4,17 @@
     {
       "locator": "Record QMS-LR-2026-0716 / Signal Summary",
       "heading": "Recent Leak Rate Signal",
-      "text": "The governed demo record contains a recent abnormal Leak Rate signal at OP30 on M220. No live QMS time-series, affected batch genealogy, or equipment telemetry is connected, so the actual affected population remains unknown."
+      "text": "Compatibility chunk retained for the governed scripted quality trace. The data is synthetic and does not identify a real affected population."
+    },
+    {
+      "locator": "Record QMS-LR-2026-0716 / Governance",
+      "heading": "Governance",
+      "text": "This compatibility record is approved and effective only for the synthetic demonstration tenant."
+    },
+    {
+      "locator": "Record QMS-LR-2026-0716 / Limitation",
+      "heading": "Limitation",
+      "text": "No live QMS genealogy or real equipment telemetry is connected."
     }
   ]
 }

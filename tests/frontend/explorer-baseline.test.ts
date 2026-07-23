@@ -19,7 +19,7 @@ describe("Explorer regression baseline", () => {
 
   it("preserves the approved Semantic Explorer catalog counts", () => {
     expect(semanticLaneDefinitions).toHaveLength(5);
-    expect(semanticConceptBundles).toHaveLength(11);
+    expect(semanticConceptBundles).toHaveLength(16);
   });
 
   it("initializes the application repository through the shared entry point", () => {

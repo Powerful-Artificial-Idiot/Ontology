@@ -43,7 +43,7 @@ export async function createSourceSyncRuntime(options: { dataDirectory?: string;
   const documentPublication = new FileDocumentPublicationStore(resolve(dataDirectory, "document-registry.json"));
   await Promise.all([syncStore.initialize(), runs.initialize(), quarantine.initialize(), lineage.initialize(), journal.initialize(), documentPublication.initialize()]);
   await runs.recoverInterrupted();
-  const graphPublication = new MockCanonicalPublicationStore({ maximumWriteCount: 1_000, allowedTypes: ["mfg:Operation", "prod:Product", "qual:QualityCharacteristic"], allowedPredicates: ["mfg:executedBy", "qual:controlsCharacteristic"] });
+  const graphPublication = new MockCanonicalPublicationStore({ maximumWriteCount: 1_000, allowedTypes: ["mfg:Operation", "prod:Product", "qual:QualityCharacteristic"], allowedPredicates: ["mfg:executedBy", "mfg:usesParameter", "qual:controlsCharacteristic"] });
   const reconciliationService = new DeterministicConnectorReconciliationService(graphPublication, lineage);
   const audit = new MemorySourceSyncAuditSink();
   const telemetry = new MemorySourceSyncTelemetrySink();

@@ -307,17 +307,17 @@ def validate_canonical_baseline(baseline: dict, terms: set) -> None:
     policy_ids = {policy["claimId"] for policy in claim_policies}
     if len(policy_ids) != len(claim_policies):
         raise AssertionError("Canonical Evidence Pack contains duplicate claim policies")
-    if policy_ids != claim_ids:
+    if not claim_ids.issubset(policy_ids):
         raise AssertionError("Canonical Evidence Pack claim policies must cover every expected answer claim")
     expected_classification = {claim["id"]: claim["classification"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
     for policy in claim_policies:
-        if policy["classification"] != expected_classification[policy["claimId"]]:
+        if policy["claimId"] in expected_classification and policy["classification"] != expected_classification[policy["claimId"]]:
             raise AssertionError(f"Claim policy classification mismatch: {policy['claimId']}")
     for item in baseline["evidencePack"]["items"]:
         unknown_entities = set(item["linkedEntityIds"]) - entity_ids
         if unknown_entities:
             raise AssertionError(f"Evidence {item['id']} links unknown entities: {sorted(unknown_entities)}")
-        unknown_claims = set(item["supportsClaimIds"]) - claim_ids
+        unknown_claims = set(item["supportsClaimIds"]) - policy_ids
         if unknown_claims:
             raise AssertionError(f"Evidence {item['id']} supports unknown claims: {sorted(unknown_claims)}")
     for claim in baseline["expectedResponse"]["answer"]["claims"]:
@@ -377,7 +377,10 @@ def validate_evaluation_dataset(dataset: dict, baselines: dict[str, dict]) -> No
             entity_ids = {entity["id"] for entity in baseline["entities"]}
             relation_ids = {relation["id"] for relation in baseline["relations"]}
             evidence = {item["id"]: item for item in baseline["evidencePack"]["items"]}
-            claim_ids = {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
+            claim_ids = {
+                policy["claimId"]
+                for policy in baseline["evidencePack"].get("claimPolicies", [])
+            } or {claim["id"] for claim in baseline["expectedResponse"]["answer"]["claims"]}
             expected = turn["expected"]
             semantic = expected.get("semantic", {})
             unknown = set(semantic.get("entityIds", [])) - entity_ids

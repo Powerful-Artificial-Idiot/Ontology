@@ -7,4 +7,5 @@ export * from "./llmSemanticParser";
 export * from "./pipeline";
 export * from "./repositoryGraphRetriever";
 export * from "./structuredOutput";
+export * from "./quantitativeQualityAssessment";
 export * from "./types";

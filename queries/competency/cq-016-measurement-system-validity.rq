@@ -1,0 +1,9 @@
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?system ?calibration ?msa WHERE {
+  demo:LeakRate qual:measuredBy ?system .
+  ?system qual:calibratedBy ?calibration ;
+    qual:hasMsaStudy ?msa .
+  ?calibration qual:approvalState "approved" ; qual:effectiveState "current" .
+  ?msa qual:approvalState "approved" ; qual:effectiveState "current" .
+}

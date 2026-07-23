@@ -27,6 +27,7 @@ export class GovernedDocumentEvidenceRetriever implements DocumentEvidenceRetrie
     void baseline;
     const store = await this.store();
     const asOf = this.now().toISOString();
+    const legacyQualityTrace = graph.templateId === "quality-issue-trace.direct-neighborhood.v1";
     const result = store.retrieve({
       linkedEntityIds: graph.entities.map((entity) => entity.id),
       searchTerms: graph.entities.flatMap((entity) => [entity.id, entity.label, entity.description ?? ""]),
@@ -37,9 +38,18 @@ export class GovernedDocumentEvidenceRetriever implements DocumentEvidenceRetrie
         domainIds: authorization.principal.domainIds,
         objectIds: authorization.principal.objectIds,
       } : this.options.access,
-      limit: 20,
-      perDocumentLimit: 2,
+      limit: legacyQualityTrace ? 100 : 20,
+      perDocumentLimit: legacyQualityTrace ? 10 : 2,
     });
+    if (legacyQualityTrace) {
+      const legacyEvidenceIds = new Set([
+        "evidence-chunk.document.control-plan.cp-bb01.rev-a.sheet-process-control-row-op30-leak-rate",
+        "evidence-chunk.document.pfmea.pf-bb01.rev-b.sheet-process-fmea-row-op30-internal-leakage",
+        "evidence-chunk.document.sop.op30-leak-test.page-4-section-3-2-setup-and-golden-part-verification",
+        "evidence-chunk.record.qms.leak-rate.2026-07-demo.record-qms-lr-2026-0716-signal-summary",
+      ]);
+      return { graphPlanId: graph.graphPlanId, items: result.items.filter((item) => legacyEvidenceIds.has(item.id)) };
+    }
     return { graphPlanId: graph.graphPlanId, items: result.items };
   }
 

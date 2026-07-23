@@ -15,9 +15,15 @@
       "operation_name": "OP30 Leak Test",
       "actual_cycle_time": 42,
       "machine_id": "EQ-M220",
+      "program_id": "LEAKTEST-V3.4",
+      "leak_rate_mean": 0.22,
+      "leak_rate_unit": "sccm",
+      "wip_quantity": 20,
+      "process_period": "2026-W29",
+      "source_version": "MES-DEMO-2026.07.23",
       "event_time": "2026-07-22T08:05:00.000Z",
       "status": "active"
     },
-    "recordChecksum": "sha256:4680088a9d910a72d6fdd4cad9e269220bcce85b84cbb999eed5fbea7268bc42"
+    "recordChecksum": "sha256:7b15b60d4416666469e1ec19b44b6c2ef01f6aef8f9c1002fbfa8da9a6b5c7eb"
   }
 ]

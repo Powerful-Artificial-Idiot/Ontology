@@ -21,3 +21,12 @@ eng:ValidationRecordShape a sh:NodeShape ;
     sh:datatype xsd:string ;
     sh:message "A validation record must state a release decision." ;
   ] .
+
+eng:ValidationPlanShape a sh:NodeShape ;
+  sh:targetClass eng:ValidationPlan ;
+  sh:property [
+    sh:path eng:releaseDecision ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A proposed validation plan cannot imply an effective production release." ;
+  ] .

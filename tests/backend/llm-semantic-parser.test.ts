@@ -72,7 +72,7 @@ describe("Phase 4A LLM Semantic Parser", () => {
     expect(deterministic.entities.map((entity) => entity.id)).toEqual(["operation.op30", "quality-characteristic.leak-rate"]);
     expect(provider.inputs).toHaveLength(0);
 
-    const llm = await hybrid.parse(request("hybrid-fallback", "OP30 气密性最近异常，需要追溯影响。"), leakRateQualityIssueTraceBaseline);
+    const llm = await hybrid.parse(request("hybrid-fallback", "OP30 漏气量最近异常，需要追溯影响。"), leakRateQualityIssueTraceBaseline);
     expect(llm.entities.map((entity) => entity.id)).toEqual(["operation.op30", "quality-characteristic.leak-rate"]);
     expect(provider.inputs).toHaveLength(1);
   });

@@ -17,14 +17,20 @@
       "canonicalIdMap": { "OP-030": "operation.op30" },
       "labelSourceField": "operation_name",
       "domain": "production",
-      "allowedSourceFields": ["operation_id", "operation_name", "actual_cycle_time", "machine_id", "event_time", "status"],
+      "allowedSourceFields": ["operation_id", "operation_name", "actual_cycle_time", "machine_id", "program_id", "leak_rate_mean", "leak_rate_unit", "wip_quantity", "process_period", "source_version", "event_time", "status"],
       "propertyMappings": [
         { "sourceField": "actual_cycle_time", "targetProperty": "cycleTime", "transform": "number", "unit": "s" },
+        { "sourceField": "leak_rate_mean", "targetProperty": "leakRateMean", "transform": "number", "unit": "sccm" },
+        { "sourceField": "leak_rate_unit", "targetProperty": "leakRateUnit", "transform": "string" },
+        { "sourceField": "wip_quantity", "targetProperty": "wipQuantity", "transform": "number", "unit": "pcs" },
+        { "sourceField": "process_period", "targetProperty": "processPeriod", "transform": "string" },
+        { "sourceField": "source_version", "targetProperty": "sourceVersion", "transform": "string" },
         { "sourceField": "event_time", "targetProperty": "eventTime", "transform": "datetime" },
         { "sourceField": "status", "targetProperty": "sourceStatus", "transform": "string" }
       ],
       "relationMappings": [
-        { "sourceField": "machine_id", "predicate": "mfg:executedBy", "label": "executedBy", "targetCanonicalIdMap": { "EQ-M220": "machine.m220" } }
+        { "sourceField": "machine_id", "predicate": "mfg:executedBy", "label": "executedBy", "targetCanonicalIdMap": { "EQ-M220": "machine.m220" } },
+        { "sourceField": "program_id", "predicate": "mfg:usesParameter", "label": "usesProgram", "targetCanonicalIdMap": { "LEAKTEST-V3.4": "program.leak-test.v3-4" } }
       ]
     }
   ]

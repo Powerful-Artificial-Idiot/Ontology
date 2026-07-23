@@ -97,13 +97,31 @@ export class DeterministicAgentPipeline {
       execute: () => this.dependencies.documentRetriever.retrieve(graph, baseline, authorization),
     });
 
+    const quantitativeAssessment = this.dependencies.quantitativeAssessor?.supports(semanticPlan)
+      ? await runStage({
+          name: "quantitative-assessment",
+          tool: this.dependencies.quantitativeAssessor.toolName ?? "quantitative-quality-assessor.v1",
+          inputRefs: [semanticPlan.planId, ...graph.entities.map((entity) => entity.id)],
+          outputRefs: (output) => output.assessments.map((assessment) => assessment.assessmentId),
+          summary: (output) => `Calculated ${output.assessments.length} governed percentage-change assessment${output.assessments.length === 1 ? "" : "s"} with disclosed baselines.`,
+          execute: () => this.dependencies.quantitativeAssessor!.assess(semanticPlan, graph, baseline),
+        })
+      : undefined;
+
     const evidencePack = await runStage({
       name: "evidence-pack",
       tool: this.dependencies.evidencePackBuilder.toolName ?? "evidence-pack-builder.v1",
       inputRefs: [semanticPlan.planId, graph.graphPlanId, ...documents.items.map((item) => item.id)],
       outputRefs: (output) => [output.id],
       summary: (output) => `Built Evidence Pack with ${output.items.length} items and ${output.limitations.length} explicit limitations.`,
-      execute: () => this.dependencies.evidencePackBuilder.build(semanticPlan, graph, documents, baseline, this.dependencies.clock.now().toISOString()),
+      execute: () => this.dependencies.evidencePackBuilder.build(
+        semanticPlan,
+        graph,
+        documents,
+        baseline,
+        this.dependencies.clock.now().toISOString(),
+        quantitativeAssessment,
+      ),
     });
 
     const answer = await runStage({
@@ -112,7 +130,7 @@ export class DeterministicAgentPipeline {
       inputRefs: [evidencePack.id],
       outputRefs: (output) => output.claims.map((claim) => claim.id),
       summary: (output) => `Composed ${output.claims.length} structured claims from the Evidence Pack.`,
-      execute: () => this.dependencies.answerComposer.compose(request, graph, evidencePack, signal, baseline),
+      execute: () => this.dependencies.answerComposer.compose(request, graph, evidencePack, signal, baseline, semanticPlan, quantitativeAssessment),
     });
 
     const citationValidation = await runStage({
@@ -136,6 +154,7 @@ export class DeterministicAgentPipeline {
       status: "completed",
       queryPlan: semanticPlan,
       graphQueryPlan: graphPlan,
+      quantitativeAssessment,
       evidencePack,
       answer,
       citationValidation,

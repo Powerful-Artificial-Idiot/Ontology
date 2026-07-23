@@ -1,0 +1,10 @@
+PREFIX eng: <https://example.com/mkg/engineering#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?change ?status ?validation ?releaseDecision WHERE {
+  ?change a eng:EngineeringChange ;
+    eng:changeStatus ?status ;
+    eng:affects demo:LeakTestProgramV35 ;
+    eng:requiresValidation ?validation .
+  ?validation eng:releaseDecision ?releaseDecision .
+  FILTER(?status = "proposed" && ?releaseDecision = "pending")
+}

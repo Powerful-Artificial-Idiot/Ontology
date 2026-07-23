@@ -1,0 +1,13 @@
+PREFIX mfg: <https://example.com/mkg/manufacturing#>
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX vs: <https://example.com/mkg/value-stream#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?bottleneck ?upstream ?downstream ?characteristic WHERE {
+  ?bottleneck a vs:BottleneckRisk ;
+    vs:affectsFlow ?upstream .
+  ?upstream a mfg:Operation .
+  ?downstream a mfg:Operation ;
+    qual:controlsCharacteristic ?characteristic .
+  FILTER(?upstream = demo:OP20 && ?downstream = demo:OP30 && ?characteristic = demo:LeakRate)
+  FILTER NOT EXISTS { ?bottleneck qual:mayAffect ?characteristic }
+}

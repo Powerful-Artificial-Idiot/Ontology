@@ -7,7 +7,7 @@
   "properties": {
     "planId": { "type": "string", "minLength": 1 },
     "planVersion": { "const": "1.0.0" },
-    "intent": { "enum": ["quality_issue_trace", "engineering_change_impact", "bottleneck_analysis", "evidence_lookup", "clarification_required"] },
+    "intent": { "enum": ["quality_issue_trace", "quality_specification", "quality_control_threshold", "control_method_capability", "latest_quality_metric", "percentage_change_assessment", "value_limit_comparison", "reaction_plan", "measurement_system_capability", "program_change_status", "engineering_change_impact", "bottleneck_analysis", "evidence_lookup", "clarification_required"] },
     "originalQuestion": { "type": "string", "minLength": 1 },
     "entities": {
       "type": "array",

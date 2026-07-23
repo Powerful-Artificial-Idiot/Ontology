@@ -11,6 +11,12 @@ demo_type_mappings:
   Quality Characteristic: qual:QualityCharacteristic
   Inspection Method: qual:InspectionMethod
   Control Method: qual:InspectionMethod
+  Specification: qual:Specification
+  Control Limit: qual:InternalControlLimit
+  Measurement System: qual:MeasurementSystem
+  Metric Observation: qual:MetricObservation
+  Reaction Plan: qual:ReactionPlan
+  Governed Document: core:Document
   PFMEA Risk: app:QualityRisk
   PFMEA: app:QualityRisk
   Bottleneck Marker: app:QualityRisk
@@ -49,6 +55,12 @@ ontology_explorer_type_mappings:
   Quality Characteristic: qual:QualityCharacteristic
   Inspection Method: qual:InspectionMethod
   Control Method: qual:InspectionMethod
+  Specification: qual:Specification
+  Control Limit: qual:InternalControlLimit
+  Measurement System: qual:MeasurementSystem
+  Metric Observation: qual:MetricObservation
+  Reaction Plan: qual:ReactionPlan
+  Governed Document: core:Document
   PFMEA Risk: app:QualityRisk
   Control Plan Item: qual:ControlPlanVersion
   Supplier: core:Agent

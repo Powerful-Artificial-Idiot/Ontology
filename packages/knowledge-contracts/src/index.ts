@@ -242,3 +242,4 @@ export interface KnowledgeRepository {
 export * from "./security";
 export * from "./sourceSync";
 export * from "./agent";
+export * from "./quantitativeQuality";

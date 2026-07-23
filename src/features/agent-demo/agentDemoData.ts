@@ -77,7 +77,7 @@ export const agentDemoScenarios: AgentScenario[] = scenarioDefinitions.map((defi
     userQuestion: definition.questions[0].zh,
     suggestedQuestions: definition.questions.map((question) => question.zh),
     suggestedQuestionOptions: definition.questions,
-    exampleQuestions: definition.questions.slice(0, 3).map((question) => question.zh),
+    exampleQuestions: (scriptedTurnsByScenario[definition.id] ?? []).slice(0, 3).map((turn) => turn.question),
     businessGoal: definition.businessGoal,
     expectedOutcome: definition.expectedOutcome,
     steps: firstTurn.trace,

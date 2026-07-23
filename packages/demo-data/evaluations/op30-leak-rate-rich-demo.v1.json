@@ -1,0 +1,1187 @@
+{
+  "datasetId": "evaluation.op30-leak-rate-rich-demo",
+  "version": "1.0.0",
+  "domain": "manufacturing-quality",
+  "description": "Synthetic governed rich-demo evaluation for OP30 Leak Rate quantitative reasoning, control-method distinction, engineering version state and cross-domain causal boundaries.",
+  "cases": [
+    {
+      "caseId": "rich.specification.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich specification zh",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 的 Leak Rate 容许范围是多少？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.specification",
+                "claim.control-thresholds",
+                "claim.measurement-capability"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.specification.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich specification en",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What is the OP30 Leak Rate acceptance specification and USL?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.specification",
+                "claim.control-thresholds",
+                "claim.measurement-capability"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.warning-limit",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich warning-limit",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate 的预警限是多少？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.control-thresholds",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.action-limit",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich action-limit",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What is the OP30 Leak Rate action limit?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.control-thresholds",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.latest.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich latest zh",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 当前 Leak Rate 水平、最大值和 Cpk 是多少？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.latest-metric"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.latest.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich latest en",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What is the latest OP30 Leak Rate mean, maximum and Cpk?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.latest-metric"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.ambiguous.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent ambiguous zh",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 的 Leak Rate 提升 50% 是否超标？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.ambiguous.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent ambiguous en",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Does a 50 percent increase in OP30 Leak Rate exceed the limit?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.latest",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent latest",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "If OP30 Leak Rate increases 50 percent from the latest mean, is it nonconforming?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.center",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent center",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate 从 control center 0.20 sccm 提升 50% 是否超标？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.explicit-022",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent explicit-022",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "If OP30 Leak Rate increases 50 percent from 0.22 sccm, what is the result?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.percent.explicit-025",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich percent explicit-025",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "If OP30 Leak Rate increases 20 percent from 0.25 sccm, is it acceptable?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.boundary.usl",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich boundary usl",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP30 Leak Rate 0.30 sccm acceptable?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.boundary.measurement-max",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich boundary measurement-max",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP30 Leak Rate 0.50 sccm conforming and measurable?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.boundary.outside-range",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich boundary outside-range",
+      "severity": "blocker",
+      "tags": [
+        "quality-quantitative",
+        "deterministic-arithmetic",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Is OP30 Leak Rate 0.51 sccm acceptable and within the equipment range?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.percentage-projection",
+                "claim.control-thresholds",
+                "claim.specification",
+                "claim.measurement-capability",
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.control-method.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich control-method zh",
+      "severity": "critical",
+      "tags": [
+        "control-method-msa",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate 的检测设备量程和控制方法是什么？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.measurement-capability",
+                "claim.specification"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.control-method.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich control-method en",
+      "severity": "critical",
+      "tags": [
+        "control-method-msa",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What is the OP30 Leak Rate control method and measurement range?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.measurement-capability",
+                "claim.specification"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.measurement-system",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich measurement-system",
+      "severity": "critical",
+      "tags": [
+        "control-method-msa",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "What do M220 MSA, GRR and calibration evidence say for OP30 Leak Rate?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.measurement-system"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.calibration.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich calibration zh",
+      "severity": "critical",
+      "tags": [
+        "control-method-msa",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate 的 M220 测量系统校准是否有效？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.measurement-system"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.program-v34-current",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich program-v34-current",
+      "severity": "critical",
+      "tags": [
+        "engineering-change",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For OP30 Leak Rate, is v3.5 effective or does V3.4 remain current?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.version-status",
+                "claim.change-validation"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.program-v35-proposed",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich program-v35-proposed",
+      "severity": "critical",
+      "tags": [
+        "engineering-change",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "M220 程序 v3.5 是否已经可以用于正式生产？ OP30 Leak Rate",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.version-status",
+                "claim.change-validation"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.program-validation",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich program-validation",
+      "severity": "critical",
+      "tags": [
+        "engineering-change",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Which validation evidence remains for OP30 Leak Rate program v3.5?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.version-status",
+                "claim.change-validation"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.program-impact-boundary",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich program-impact-boundary",
+      "severity": "critical",
+      "tags": [
+        "engineering-change",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Does proposed OP30 Leak Rate program v3.5 prove an improvement?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.version-status",
+                "claim.change-validation"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.reaction.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich reaction zh",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "reaction-plan",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "超过 0.27 sccm 后需要执行哪些措施？ OP30 Leak Rate",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.reaction.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich reaction en",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "reaction-plan",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Which reaction plan actions apply when OP30 Leak Rate exceeds 0.27 sccm?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.reaction-plan"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.causal.zh",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich causal zh",
+      "severity": "critical",
+      "tags": [
+        "cross-domain",
+        "causal-boundary",
+        "chinese",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP20 是瓶颈，是否证明它导致了 OP30 Leak Rate 上升？",
+            "language": "zh",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.causal-boundary"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.causal.en",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich causal en",
+      "severity": "critical",
+      "tags": [
+        "cross-domain",
+        "causal-boundary",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Does the OP20 bottleneck prove that it caused the OP30 Leak Rate increase?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.causal-boundary"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.cross.quality-engineering",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich cross quality-engineering",
+      "severity": "critical",
+      "tags": [
+        "cross-domain",
+        "engineering-change",
+        "domain-switch",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "For OP30 Leak Rate, switch to engineering context: is program v3.5 effective?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.version-status",
+                "claim.change-validation"
+              ],
+              "minimumLimitations": 0,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.cross.bottleneck-quality",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich cross bottleneck-quality",
+      "severity": "critical",
+      "tags": [
+        "cross-domain",
+        "causal-boundary",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "Can the OP20 bottleneck be treated as causal proof for the OP30 Leak Rate change?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.causal-boundary"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "rich.document-evidence",
+      "scenarioId": "quality-issue-trace",
+      "title": "rich document-evidence",
+      "severity": "critical",
+      "tags": [
+        "quality-quantitative",
+        "english",
+        "citation"
+      ],
+      "turns": [
+        {
+          "turnId": "turn-1",
+          "input": {
+            "message": "OP30 Leak Rate is abnormal. Which products, equipment, risks and documents are involved?",
+            "language": "en",
+            "scenarioId": "quality-issue-trace"
+          },
+          "expected": {
+            "answer": {
+              "requiredClaimIds": [
+                "claim.affected-product",
+                "claim.affected-equipment",
+                "claim.quality-risk",
+                "claim.governed-documents",
+                "claim.signal-limitation"
+              ],
+              "minimumLimitations": 1,
+              "minimumCitationCoverage": 1,
+              "forbiddenTerms": [
+                "production specification value from a real factory"
+              ]
+            },
+            "runtime": {
+              "maxLatencyMs": 5000,
+              "expectedPipelineStages": 9
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

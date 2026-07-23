@@ -29,6 +29,7 @@ export class RepositoryGraphRetriever implements GraphRetriever {
       assertPipeline(result.relations.every((relation) => allowedRelations.has(relation.label ?? relation.predicate)), "QUERY_PLAN_INVALID", "Repository returned a relationship outside the allowlist.", "graph-retrieval");
       return {
         graphPlanId: result.graphPlanId,
+        templateId: result.templateId,
         repositoryType: result.repositoryType,
         entities: result.entities,
         relations: result.relations,

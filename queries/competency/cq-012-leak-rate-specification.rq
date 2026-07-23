@@ -1,0 +1,15 @@
+PREFIX core: <https://example.com/mkg/core#>
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?specification ?limit ?value ?unit WHERE {
+  ?specification a qual:Specification ;
+    core:appliesToProduct demo:BrakeBooster ;
+    core:appliesToOperation demo:OP30 ;
+    core:appliesToCharacteristic demo:LeakRate ;
+    qual:approvalState "approved" ;
+    qual:effectiveState "current" ;
+    qual:hasSpecificationLimit ?limit .
+  ?limit qual:limitType "upper-specification-limit" ;
+    qual:numericValue ?value ;
+    qual:unit ?unit .
+}

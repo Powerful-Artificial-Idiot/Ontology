@@ -1,5 +1,18 @@
 # Domain Evaluation Cases
 
+## Rich OP30 Leak Rate Expansion - 30 Cases
+
+`packages/demo-data/evaluations/op30-leak-rate-rich-demo.v1.json` adds 30 deterministic cases:
+
+| Category | Count | Coverage |
+| --- | ---: | --- |
+| Quality quantitative | 18 | specification, limits, latest metric, percentage math, units, revisions, stale-data blockers |
+| Control Method / MSA | 4 | measurable-vs-conforming, range, calibration, GRR evidence |
+| Engineering Change | 5 | V3.4 current, V3.5 proposed, missing validation, potential-vs-confirmed impact |
+| Cross-domain | 4 | causal boundary, domain switch, governed documents, stale context |
+
+Release metrics require 100% numeric accuracy, unit consistency, citation coverage, specification lookup, latest-metric selection, baseline disclosure, reaction-plan accuracy, version-state accuracy, and measurement/specification distinction. Blocking counts for invented/uncited/unitless/stale/wrong-revision/proposed-as-effective/unsupported-causal/hidden-baseline/LLM-arithmetic/unknown-ID output must remain zero.
+
 Phase 5B contains 38 unique, active cases with effective assertions. No duplicate, skipped, or empty-assertion case contributes to release coverage.
 
 The assertion column names the principal contract surfaces; each successful answer assertion also requires valid factual citations unless the case expects a governed rejection.

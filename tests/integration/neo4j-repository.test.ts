@@ -51,10 +51,27 @@ function fakeDriver(calls: Array<{ query: string; parameters: Record<string, unk
     run: vi.fn(async (query: string, parameters: Record<string, unknown>) => {
       calls.push({ query, parameters });
       if (query === NEO4J_READ_QUERIES.traverseQualityIssueNodes) {
-        return { records: leakRateQualityIssueTraceBaseline.entities.map((entity) => record({ entity: entityNode(entity) })) };
+        const resultLimit = neo4j.isInt(parameters.resultLimit)
+          ? parameters.resultLimit.toNumber()
+          : Number(parameters.resultLimit);
+        const seedIds = new Set(parameters.seedEntityIds as string[]);
+        const ordered = [
+          ...leakRateQualityIssueTraceBaseline.entities.filter((entity) => seedIds.has(entity.id)),
+          ...leakRateQualityIssueTraceBaseline.entities.filter((entity) => !seedIds.has(entity.id)),
+        ];
+        return { records: ordered.slice(0, resultLimit).map((entity) => record({ entity: entityNode(entity) })) };
       }
       if (query === NEO4J_READ_QUERIES.relationsForEntities) {
-        return { records: leakRateQualityIssueTraceBaseline.relations.map((relation) => record({ sourceId: relation.sourceId, relation: relationRecord(relation), targetId: relation.targetId })) };
+        const entityIds = new Set(parameters.entityIds as string[]);
+        const allowedRelationTypes = new Set(parameters.allowedRelationTypes as string[]);
+        return {
+          records: leakRateQualityIssueTraceBaseline.relations
+            .filter((relation) =>
+              entityIds.has(relation.sourceId)
+              && entityIds.has(relation.targetId)
+              && allowedRelationTypes.has(relation.label ?? relation.predicate))
+            .map((relation) => record({ sourceId: relation.sourceId, relation: relationRecord(relation), targetId: relation.targetId })),
+        };
       }
       throw new Error("Unexpected query in fake Neo4j driver.");
     }),

@@ -71,7 +71,7 @@ describe("Phase 5D governed source synchronization", () => {
     const pipeline = await fixturePipeline("MES", mesManifest, "mappings/mes/operation-mapping.json", store);
     const dryRun = await pipeline.synchronize(request("MES", "dry-run", "production"));
 
-    expect(dryRun).toMatchObject({ status: "completed", counts: { received: 1, accepted: 1, inserted: 2, quarantined: 0, rejected: 0 } });
+    expect(dryRun).toMatchObject({ status: "completed", counts: { received: 1, accepted: 1, inserted: 3, quarantined: 0, rejected: 0 } });
     expect((await store.getSnapshot()).entities).toEqual([]);
 
     const applied = await pipeline.synchronize(request("MES", "apply", "production"));
@@ -81,7 +81,7 @@ describe("Phase 5D governed source synchronization", () => {
 
     expect(applied.checkpoint).toMatchObject({ sourceSystem: "MES", cursor: 100 });
     expect(firstSnapshot.entities.map((entity) => entity.id)).toEqual(["operation.op30"]);
-    expect(firstSnapshot.relations).toHaveLength(1);
+    expect(firstSnapshot.relations).toHaveLength(2);
     expect(replayed.counts).toMatchObject({ unchanged: 1, rejected: 0, quarantined: 0 });
     expect(secondSnapshot).toEqual(firstSnapshot);
   });
@@ -135,7 +135,7 @@ describe("Phase 5D governed source synchronization", () => {
     const result = await pipeline.synchronize(request("MES", "apply", "production"));
     const snapshot = await store.getSnapshot();
 
-    expect(result.counts.tombstoned).toBe(2);
+    expect(result.counts.tombstoned).toBe(3);
     expect(snapshot.entities[0]?.status).toBe("tombstoned");
     expect(snapshot.relations).toEqual([]);
   });
@@ -187,7 +187,7 @@ describe("Phase 5D governed source synchronization", () => {
 
     const duplicateBatch = { manifest: { ...initial.manifest, extractId: "source-extract.mes.duplicate", cursor: 102, recordCount: 2 }, records: [original, structuredClone(original)] };
     const duplicate = await new GovernedSourceSynchronizationPipeline({ connector: new MutableConnector(duplicateBatch), mapping, store: new InMemoryGovernedSyncStore(), now: fixedNow }).synchronize(request("MES", "dry-run", "production"));
-    expect(duplicate.changes).toHaveLength(2);
+    expect(duplicate.changes).toHaveLength(3);
     expect(duplicate.decisions.filter((item) => item.code === "duplicate-record")).toHaveLength(1);
 
     const conflicting = signedRecord({ ...original, id: "source-record.mes.operation.op30.conflicting", payload: { ...original.payload, actual_cycle_time: 99 } });

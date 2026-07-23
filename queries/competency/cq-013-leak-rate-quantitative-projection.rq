@@ -1,0 +1,8 @@
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?reference ?projected ?usl WHERE {
+  demo:LeakRateW29 qual:numericValue ?reference .
+  demo:LeakRateUSL qual:numericValue ?usl .
+  BIND(?reference * 1.5 AS ?projected)
+  FILTER(?projected > ?usl)
+}

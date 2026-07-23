@@ -1,0 +1,7 @@
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?specificationMaximum ?measurementMaximum WHERE {
+  demo:LeakRateUSL qual:numericValue ?specificationMaximum .
+  demo:M220MeasurementSystem qual:numericValue ?measurementMaximum .
+  FILTER(?specificationMaximum != ?measurementMaximum)
+}

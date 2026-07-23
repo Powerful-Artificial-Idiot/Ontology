@@ -1,0 +1,11 @@
+PREFIX core: <https://example.com/mkg/core#>
+PREFIX qual: <https://example.com/mkg/quality#>
+PREFIX demo: <https://example.com/mkg/demo#>
+SELECT ?plan ?action WHERE {
+  demo:LeakRate qual:triggersReactionPlan ?plan .
+  ?plan a qual:ReactionPlan ;
+    qual:approvalState "approved" ;
+    qual:effectiveState "current" ;
+    core:versionIdentifier "Rev.A" ;
+    qual:hasAction ?action .
+}

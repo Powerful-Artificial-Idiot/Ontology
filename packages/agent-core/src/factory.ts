@@ -14,6 +14,7 @@ import {
 } from "./deterministicComponents";
 import { DeterministicAgentClient, InMemoryAgentAuditSink, InMemoryAgentSessionStore, InMemoryAgentTurnStore } from "./client";
 import { DeterministicAgentPipeline } from "./pipeline";
+import { DeterministicQuantitativeQualityAssessor } from "./quantitativeQualityAssessment";
 import type { AgentAuditStore, AgentClock, AgentPipelineDependencies, AgentSessionStore, AgentTurnStore } from "./types";
 
 export function createDeterministicAgentPipeline(overrides: Partial<AgentPipelineDependencies> = {}): DeterministicAgentPipeline {
@@ -27,6 +28,7 @@ export function createDeterministicAgentPipeline(overrides: Partial<AgentPipelin
     graphCompiler: new AllowlistedGraphQueryCompiler(),
     graphRetriever: new InMemoryCanonicalGraphRetriever(),
     documentRetriever: new InMemoryCanonicalDocumentRetriever(),
+    quantitativeAssessor: new DeterministicQuantitativeQualityAssessor(),
     evidencePackBuilder: new CanonicalEvidencePackBuilder(),
     answerComposer: new DeterministicEvidenceAnswerComposer(),
     citationValidator: new StrictCitationValidator(),

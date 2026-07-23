@@ -20,6 +20,22 @@ qual:FailureMode a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:labe
 qual:ControlPlan a owl:Class ; rdfs:subClassOf core:Document ; rdfs:label "Control Plan" .
 qual:ControlPlanVersion a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Control Plan Version" .
 qual:CorrectiveAction a owl:Class ; rdfs:subClassOf core:Process ; rdfs:label "Corrective Action" .
+qual:Specification a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Specification" .
+qual:SpecificationLimit a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Specification Limit" .
+qual:InternalControlLimit a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Internal Control Limit" .
+qual:ControlMethod a owl:Class ; rdfs:subClassOf qual:InspectionMethod ; rdfs:label "Control Method" .
+qual:MeasurementSystem a owl:Class ; rdfs:subClassOf qual:MeasurementInstrument ; rdfs:label "Measurement System" .
+qual:SamplingPlan a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Sampling Plan" .
+qual:ReactionPlan a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Reaction Plan" .
+qual:MetricSeries a owl:Class ; rdfs:subClassOf core:EnterpriseEntity ; rdfs:label "Metric Series" .
+qual:MetricObservation a owl:Class ; rdfs:subClassOf qual:MeasurementResult ; rdfs:label "Metric Observation" .
+qual:CapabilityStudy a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Capability Study" .
+qual:MeasurementSystemAnalysis a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Measurement System Analysis" .
+qual:CalibrationRecord a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Calibration Record" .
+qual:MeasurementReference a owl:Class ; rdfs:subClassOf core:Asset ; rdfs:label "Measurement Reference" .
+qual:QualityIssue a owl:Class ; rdfs:subClassOf core:Event ; rdfs:label "Quality Issue" .
+qual:Deviation a owl:Class ; rdfs:subClassOf core:VersionedEntity ; rdfs:label "Deviation" .
+qual:ContainmentAction a owl:Class ; rdfs:subClassOf qual:CorrectiveAction ; rdfs:label "Containment Action" .
 
 qual:controlsCharacteristic a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range qual:QualityCharacteristic ; rdfs:label "controls characteristic" .
 qual:hasControlPlanVersion a owl:ObjectProperty ; rdfs:domain qual:ControlPlan ; rdfs:range qual:ControlPlanVersion ; rdfs:subPropertyOf core:hasVersion ; rdfs:label "has control plan version" .
@@ -27,5 +43,30 @@ qual:measuresCharacteristic a owl:ObjectProperty ; rdfs:domain qual:MeasurementR
 qual:associatedFailureMode a owl:ObjectProperty ; rdfs:domain mfg:Machine ; rdfs:range qual:FailureMode ; rdfs:label "associated failure mode" .
 qual:mayAffect a owl:ObjectProperty ; rdfs:domain qual:FailureMode ; rdfs:range qual:QualityCharacteristic ; rdfs:label "may affect" .
 qual:governedBy a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range core:Document ; rdfs:label "governed by" .
+qual:hasSpecificationLimit a owl:ObjectProperty ; rdfs:domain qual:Specification ; rdfs:range qual:SpecificationLimit ; rdfs:label "has specification limit" .
+qual:hasInternalControlLimit a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:InternalControlLimit ; rdfs:label "has internal control limit" .
+qual:measuredBy a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:MeasurementSystem ; rdfs:label "measured by" .
+qual:implementsControlMethod a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range qual:ControlMethod ; rdfs:label "implements control method" .
+qual:usesMeasurementSystem a owl:ObjectProperty ; rdfs:domain qual:ControlMethod ; rdfs:range qual:MeasurementSystem ; rdfs:label "uses measurement system" .
+qual:hasSamplingPlan a owl:ObjectProperty ; rdfs:domain mfg:Operation ; rdfs:range qual:SamplingPlan ; rdfs:label "has sampling plan" .
+qual:triggersReactionPlan a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:ReactionPlan ; rdfs:label "triggers reaction plan" .
+qual:hasMetricSeries a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:MetricSeries ; rdfs:label "has metric series" .
+qual:hasObservation a owl:ObjectProperty ; rdfs:domain qual:MetricSeries ; rdfs:range qual:MetricObservation ; rdfs:label "has observation" .
+qual:observedAtOperation a owl:ObjectProperty ; rdfs:domain qual:MetricObservation ; rdfs:range mfg:Operation ; rdfs:label "observed at operation" .
+qual:observedOnMachine a owl:ObjectProperty ; rdfs:domain qual:MetricObservation ; rdfs:range mfg:Machine ; rdfs:label "observed on machine" .
+qual:hasFailureMode a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:FailureMode ; rdfs:label "has failure mode" .
+qual:requiresContainment a owl:ObjectProperty ; rdfs:domain qual:QualityIssue ; rdfs:range qual:ContainmentAction ; rdfs:label "requires containment" .
+qual:requiresVerification a owl:ObjectProperty ; rdfs:domain core:EnterpriseEntity ; rdfs:range core:EnterpriseEntity ; rdfs:label "requires verification" .
+qual:hasCapabilityStudy a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:CapabilityStudy ; rdfs:label "has capability study" .
+qual:hasMsaStudy a owl:ObjectProperty ; rdfs:domain qual:MeasurementSystem ; rdfs:range qual:MeasurementSystemAnalysis ; rdfs:label "has MSA study" .
+qual:calibratedBy a owl:ObjectProperty ; rdfs:domain qual:MeasurementSystem ; rdfs:range qual:CalibrationRecord ; rdfs:label "calibrated by" .
+qual:controlledBy a owl:ObjectProperty ; rdfs:domain qual:QualityCharacteristic ; rdfs:range qual:ControlMethod ; rdfs:label "controlled by" .
+qual:hasAction a owl:ObjectProperty ; rdfs:domain qual:ReactionPlan ; rdfs:range qual:CorrectiveAction ; rdfs:label "has action" .
+qual:usesReference a owl:ObjectProperty ; rdfs:domain qual:CalibrationRecord ; rdfs:range qual:MeasurementReference ; rdfs:label "uses reference" .
 qual:unit a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:string ; rdfs:label "unit" .
 qual:numericValue a owl:DatatypeProperty ; rdfs:domain qual:MeasurementResult ; rdfs:range xsd:decimal ; rdfs:label "numeric value" .
+qual:limitType a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:string ; rdfs:label "limit type" .
+qual:aggregationType a owl:DatatypeProperty ; rdfs:domain qual:MetricObservation ; rdfs:range xsd:string ; rdfs:label "aggregation type" .
+qual:observedPeriod a owl:DatatypeProperty ; rdfs:domain qual:MetricObservation ; rdfs:range xsd:string ; rdfs:label "observed period" .
+qual:approvalState a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:string ; rdfs:label "approval state" .
+qual:effectiveState a owl:DatatypeProperty ; rdfs:domain core:VersionedEntity ; rdfs:range xsd:string ; rdfs:label "effective state" .

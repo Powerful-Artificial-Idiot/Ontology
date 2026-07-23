@@ -38,7 +38,7 @@ describe("Mock Knowledge API", () => {
     expect(Array.isArray(relations.payload)).toBe(true);
     expect(graph.payload.nodes).toHaveLength(9);
     expect(ontology.payload.classes).toHaveLength(29);
-    expect(catalog.payload.concepts).toHaveLength(11);
+    expect(catalog.payload.concepts).toHaveLength(16);
   });
 
   it("serves semantic search through POST", async () => {
