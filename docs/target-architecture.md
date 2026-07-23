@@ -48,6 +48,10 @@ Knowledge Services
   Semantic Catalog | Ontology Registry | Knowledge Graph
   Document Evidence Store | Source/Version/Governance Metadata
 
+Source Integration
+  Controlled Extracts -> Governed Connector -> Mapping/Validation
+  -> Checkpointed Sync Snapshot -> KnowledgeRepository decorator
+
 Infrastructure
   Neo4j Pilot | LLM Provider | Session Store
   OpenTelemetry | Optional Langfuse | Docker Compose
@@ -93,6 +97,7 @@ packages/
   knowledge-contracts/     # Shared transport contracts and JSON Schemas
   agent-core/              # Provider-neutral deterministic pipeline
   agent-security/          # Authorization policy and retrieval/publication guards
+  source-sync/             # Governed source connectors, mappings, checkpoints and snapshots
   demo-data/               # Canonical governed demo facts and generated fixtures
   ontology-client/         # Existing Knowledge API client
 
@@ -119,6 +124,7 @@ infrastructure/
 | Instance/demo facts | canonical records in `packages/demo-data` | graph views, Agent fixtures, Neo4j seed |
 | Semantic mappings | governed semantic catalog and `mappings/` | search index, AI context |
 | Evidence documents | evidence manifest + immutable content/checksum | chunks, Evidence Pack |
+| Source-system facts | approved source extract + mapping version + checkpoint | governed synchronized snapshot, repository overlay |
 | View layout | frontend view config | React Flow nodes/edges |
 | Rules | `rules/rule-catalog.yaml` + rule files | derived assertions with rule provenance |
 | API shape | `packages/knowledge-contracts` | clients, services, fixtures |
@@ -137,6 +143,8 @@ infrastructure/
 - 每个调用记录 request ID、session ID、turn ID、trace ID、actor、scope、版本、模板和 evidence IDs。
 
 Phase 5C 已实现共享 Principal/Authorization Context、可替换 authentication adapter、Session ownership、tenant/role/domain/object policy、请求主体文档过滤、citation publication control 和结构化安全审计。当前 `static-bearer` 只用于受控验收；OIDC issuer/audience/JWKS 验证和企业组映射仍是 production gap，不能将当前状态表述为企业 IAM 已完成。
+
+Phase 5D 已实现受控本地 MES/QMS/PLM extract 的 checksum、版本化 mapping、canonical allowlist、authorization、change planning、checkpoint、idempotency、tombstone 和原子文件快照。它不包含企业端点认证、CDC、分布式事务或 source writeback，因此仍是 governed integration pilot。
 
 ### Explicit prohibitions
 

@@ -171,8 +171,11 @@ Exit gate：当前 authorization baseline 通过；企业 IAM acceptance 保持 
 ### P9 - Governed Source Integration Pilot
 
 - [ ] 选择一个产品族、一个路线、5-10 台设备、3-5 个 CTQ。
-- [ ] 接入受控 MES/QMS/PLM/DMS extracts，不直接连接生产写接口。
-- [ ] 定义 source precedence、identifier mapping、business validity 和 recording time。
+- [x] 建立受控 MES/QMS/PLM local extracts，不连接生产写接口。
+- [x] 建立 exact identifier mapping、business/recording time、provenance、checkpoint 和 tombstone 语义。
+- [x] 建立 tenant/domain/role authorization、stale record 与 source authority conflict 的 fail-closed gate。
+- [x] 将 checksum、mapping、canonical ID 与 ontology relation validation 接入 CI 和 deterministic acceptance。
+- [ ] 接入企业 source endpoints、credential rotation、CDC/scheduler 和可配置 source precedence。
 - [ ] SHACL、mapping、provenance、version 和 competency queries 作为发布门禁。
 - [ ] 经 domain owner 审核后再扩大范围。
 

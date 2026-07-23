@@ -1,0 +1,24 @@
+[
+  {
+    "id": "source-record.qms.quality-characteristic.leak-rate.20260722",
+    "sourceSystem": "QMS",
+    "sourceType": "quality-characteristic",
+    "sourceId": "CTQ-OP30-LEAK-RATE",
+    "operation": "upsert",
+    "tenantId": "tenant.demo-manufacturing",
+    "domainId": "quality",
+    "version": "2026.07.22.1",
+    "recordedAt": "2026-07-22T08:10:00.000Z",
+    "validFrom": "2026-07-22T08:10:00.000Z",
+    "payload": {
+      "characteristic_id": "CTQ-OP30-LEAK-RATE",
+      "characteristic_name": "Leak Rate",
+      "is_ctq": true,
+      "latest_value": 1.8,
+      "unit": "sccm",
+      "inspection_time": "2026-07-22T08:10:00.000Z",
+      "operation_id": "OP-030"
+    },
+    "recordChecksum": "sha256:650a8a10fbfd7228abf3b07d61af0838fa01f1a11a6e6bbb4fdfc4b898c0b744"
+  }
+]

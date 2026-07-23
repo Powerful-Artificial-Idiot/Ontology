@@ -9,5 +9,25 @@
     { "sourceField": "QMS.inspection_result.leak_rate", "ontologyTerm": "qual:numericValue", "mappingType": "datatypeProperty", "transform": "decimal(value)", "unit": "sccm" },
     { "sourceField": "QMS.inspection_result.unit", "ontologyTerm": "qual:unit", "mappingType": "datatypeProperty", "transform": "string(value)" },
     { "sourceField": "QMS.control_plan.characteristic_id", "ontologyTerm": "qual:controlsCharacteristic", "mappingType": "objectProperty", "transform": "iri_from('quality-characteristic', value)" }
+  ],
+  "syncProfiles": [
+    {
+      "sourceType": "quality-characteristic",
+      "canonicalType": "qual:QualityCharacteristic",
+      "idSourceField": "characteristic_id",
+      "canonicalIdMap": { "CTQ-OP30-LEAK-RATE": "quality-characteristic.leak-rate" },
+      "labelSourceField": "characteristic_name",
+      "domain": "quality",
+      "allowedSourceFields": ["characteristic_id", "characteristic_name", "is_ctq", "latest_value", "unit", "inspection_time", "operation_id"],
+      "propertyMappings": [
+        { "sourceField": "is_ctq", "targetProperty": "isCtq", "transform": "boolean" },
+        { "sourceField": "latest_value", "targetProperty": "latestValue", "transform": "number", "unit": "sccm" },
+        { "sourceField": "unit", "targetProperty": "sourceUnit", "transform": "string" },
+        { "sourceField": "inspection_time", "targetProperty": "inspectionTime", "transform": "datetime" }
+      ],
+      "relationMappings": [
+        { "sourceField": "operation_id", "predicate": "qual:controlsCharacteristic", "label": "controls", "direction": "target-to-source", "targetCanonicalIdMap": { "OP-030": "operation.op30" } }
+      ]
+    }
   ]
 }

@@ -223,7 +223,21 @@ Trace schema 不允许 raw chain-of-thought 字段。
 
 Audit records 不复制完整敏感文档或 raw prompt，必要时只保存 hash/reference。
 
-## 5. Canonical Identity And Provenance
+## 5. Source Synchronization Contracts
+
+Phase 5D 在 `packages/knowledge-contracts/src/sourceSync.ts` 增加以下跨 package 契约：
+
+- `SourceRecordEnvelope`：source identity、tenant/domain、version、recorded/valid time、operation、payload 和 stable checksum；
+- `SourceExtractManifest`：approval/effective state、mapping/schema version、cursor、records file checksum 和 count；
+- `SourceSyncRequest`：dry-run/apply、预期 source/mapping version 和 server-derived authorization context；
+- `SourceSyncRecordDecision` 与 `SourceSyncChange`：逐记录接受、隔离、拒绝及 insert/update/unchanged/tombstone 计划；
+- `SourceSyncCheckpoint`：每个 tenant/source 的单调 cursor 与 applied extract；
+- `SourceSyncReport`：脱敏的执行状态、counts、decisions、changes 和 checkpoint；
+- `GovernedSyncSnapshot`：已映射 canonical facts、relations、checkpoints 和 applied extract IDs。
+
+对应 JSON Schemas 为 `source-record.schema.json`、`source-extract-manifest.schema.json` 和 `source-sync-report.schema.json`。原始 source payload 只存在于 connector 到 mapping 的瞬时边界，不进入 snapshot、Agent trace 或 audit event。
+
+## 6. Canonical Identity And Provenance
 
 - canonical ID 在 Route、Ontology、Semantic、Agent 和 Evidence 中保持一致。
 - source identity 使用 `sourceSystem + sourceId`，不能替代 canonical ID。
@@ -231,7 +245,7 @@ Audit records 不复制完整敏感文档或 raw prompt，必要时只保存 has
 - inferred relation 必须保留 rule ID、input evidence IDs 和 execution time。
 - alias/synonym 只参与 semantic resolution，不创建重复业务对象。
 
-## 6. Data Consistency Migration
+## 7. Data Consistency Migration
 
 当前重复事实主要存在于：
 
@@ -252,7 +266,7 @@ Audit records 不复制完整敏感文档或 raw prompt，必要时只保存 has
 6. 增加 golden ID/value checks，逐消费者迁移；
 7. 所有消费者迁移后再删除 legacy fixtures。
 
-## 7. Schemas To Add
+## 8. Schemas To Add
 
 建议按以下顺序增加：
 
@@ -267,7 +281,7 @@ Audit records 不复制完整敏感文档或 raw prompt，必要时只保存 has
 
 每个 schema 必须配 valid、invalid、version mismatch 和 unknown-field fixtures。
 
-## 8. Contract Release Gate
+## 9. Contract Release Gate
 
 Agent contract 发布前必须满足：
 

@@ -10,7 +10,9 @@ const roleActions: Record<string, AgentSecurityAction[]> = {
   "agent-user": ["session:create", "session:read", "turn:execute", "run:read", "trace:read", "evidence:read"],
   "agent-operator": ["session:create", "session:read", "turn:execute", "run:read", "run:control", "trace:read", "evidence:read"],
   "agent-auditor": ["session:read", "run:read", "trace:read", "evidence:read", "audit:read"],
-  "agent-admin": ["session:create", "session:read", "turn:execute", "run:read", "run:control", "trace:read", "evidence:read", "audit:read"],
+  "source-sync-reader": ["source-sync:read"],
+  "source-sync-operator": ["source-sync:read", "source-sync:apply"],
+  "agent-admin": ["session:create", "session:read", "turn:execute", "run:read", "run:control", "trace:read", "evidence:read", "audit:read", "source-sync:read", "source-sync:apply"],
 };
 
 const domainAliases: Record<string, string> = {
@@ -30,7 +32,7 @@ export class DefaultAgentAuthorizer {
     if (!isAdmin && resource.tenantId && resource.tenantId !== principal.tenantId) {
       return decision(context, action, resource, "tenant-mismatch");
     }
-    if (!isAdmin && !isAuditor && resource.ownerPrincipalId === undefined && resource.type !== "scenario") {
+    if (!isAdmin && !isAuditor && resource.ownerPrincipalId === undefined && resource.type !== "scenario" && resource.type !== "source-extract") {
       return decision(context, action, resource, "legacy-resource-unowned");
     }
     if (!isAdmin && !isAuditor && resource.ownerPrincipalId && resource.ownerPrincipalId !== principal.id) {

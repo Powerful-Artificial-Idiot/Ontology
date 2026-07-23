@@ -7,5 +7,21 @@
     { "sourceField": "PLM.part.part_number", "ontologyTerm": "mfg:Product", "mappingType": "class", "transform": "iri_from('product', value)" },
     { "sourceField": "PLM.part.source_id", "ontologyTerm": "core:sourceSystemId", "mappingType": "datatypeProperty", "transform": "string(value)" },
     { "sourceField": "PLM.part.revision", "ontologyTerm": "core:versionIdentifier", "mappingType": "datatypeProperty", "transform": "string(value)" }
+  ],
+  "syncProfiles": [
+    {
+      "sourceType": "product",
+      "canonicalType": "mfg:Product",
+      "idSourceField": "part_number",
+      "canonicalIdMap": { "FP-001": "product.brake-booster" },
+      "labelSourceField": "part_name",
+      "domain": "production",
+      "allowedSourceFields": ["part_number", "part_name", "revision", "lifecycle_status"],
+      "propertyMappings": [
+        { "sourceField": "revision", "targetProperty": "revision", "transform": "string" },
+        { "sourceField": "lifecycle_status", "targetProperty": "lifecycleStatus", "transform": "string" }
+      ],
+      "relationMappings": []
+    }
   ]
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "source-record.mes.operation.op30.20260722",
+    "sourceSystem": "MES",
+    "sourceType": "operation",
+    "sourceId": "OP-030",
+    "operation": "upsert",
+    "tenantId": "tenant.demo-manufacturing",
+    "domainId": "production",
+    "version": "2026.07.22.1",
+    "recordedAt": "2026-07-22T08:05:00.000Z",
+    "validFrom": "2026-07-22T08:05:00.000Z",
+    "payload": {
+      "operation_id": "OP-030",
+      "operation_name": "OP30 Leak Test",
+      "actual_cycle_time": 42,
+      "machine_id": "EQ-M220",
+      "event_time": "2026-07-22T08:05:00.000Z",
+      "status": "active"
+    },
+    "recordChecksum": "sha256:4680088a9d910a72d6fdd4cad9e269220bcce85b84cbb999eed5fbea7268bc42"
+  }
+]

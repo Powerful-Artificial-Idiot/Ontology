@@ -4,7 +4,7 @@ PIP ?= .venv/bin/pip
 .PHONY: install python-install demo-install demo-dev demo-dev-local demo-dev-http demo-lint demo-test demo-build mock-api-dev mock-api-test \
 	ontology-validate shapes-validate mappings-validate contracts-validate competency-test \
 	alignment-audit ontology-artifacts ontology-artifacts-check semantic-scenarios semantic-scenarios-check \
-	agent-evaluate validate test build release clean
+	agent-evaluate source-sync-acceptance validate test build release clean
 
 install: demo-install python-install
 
@@ -73,6 +73,9 @@ competency-test:
 
 agent-evaluate:
 	npm run agent:evaluate
+
+source-sync-acceptance:
+	npm run source-sync:acceptance
 
 validate: ontology-validate shapes-validate mappings-validate contracts-validate competency-test ontology-artifacts-check semantic-scenarios-check
 

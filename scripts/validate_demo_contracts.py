@@ -50,6 +50,9 @@ def main() -> int:
         "agent-turn-run.schema.json",
         "agent-run-event.schema.json",
         "canonical-knowledge-baseline.schema.json",
+        "source-record.schema.json",
+        "source-extract-manifest.schema.json",
+        "source-sync-report.schema.json",
     )]
     registry = schema_registry(schemas)
     by_title = {schema["title"]: schema for schema in schemas}
@@ -99,6 +102,18 @@ def main() -> int:
         if scenario_id in canonicals:
             raise AssertionError(f"Duplicate canonical scenario ID: {scenario_id}")
         canonicals[scenario_id] = canonical
+
+    canonical_entity_ids = {
+        entity["id"]
+        for canonical in canonicals.values()
+        for entity in canonical["entities"]
+    }
+    source_extract_count = validate_source_extracts(
+        by_title,
+        registry,
+        canonical_entity_ids,
+        terms,
+    )
 
     evaluation_schema_path = ROOT / "packages" / "agent-evaluation" / "schemas" / "evaluation-dataset.schema.json"
     evaluation_schema = json.loads(evaluation_schema_path.read_text())
@@ -160,8 +175,77 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, {len(canonical_files)} canonical Agent baselines, {len(document_registry_files)} governed document registries, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, {len(canonical_files)} canonical Agent baselines, {len(document_registry_files)} governed document registries, {source_extract_count} governed source extracts, legacy mappings, and ontology alignment.")
     return 0
+
+
+def validate_source_extracts(by_title: dict, registry: Registry, canonical_entity_ids: set[str], terms: set) -> int:
+    mapping_files = sorted(path for path in (ROOT / "mappings").rglob("*.json") if path.name != "mapping-schema.json")
+    mappings = {}
+    for path in mapping_files:
+        mapping = json.loads(path.read_text())
+        key = (mapping["sourceSystem"], mapping["mappingId"], mapping["version"])
+        if key in mappings:
+            raise AssertionError(f"Duplicate governed mapping identity: {key}")
+        mappings[key] = mapping
+
+    extract_directories = sorted(path.parent for path in (ROOT / "packages" / "demo-data" / "source-extracts").glob("*/manifest.json"))
+    extract_ids = set()
+    for root in extract_directories:
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        validate_json(manifest, by_title["SourceExtractManifest"], registry, str(manifest_path))
+        if manifest["extractId"] in extract_ids:
+            raise AssertionError(f"Duplicate governed source extract ID: {manifest['extractId']}")
+        extract_ids.add(manifest["extractId"])
+        records_path = (root / manifest["recordsFile"]).resolve()
+        if root.resolve() not in records_path.parents:
+            raise AssertionError(f"Source extract records file escapes controlled directory: {manifest['extractId']}")
+        raw_records = records_path.read_bytes()
+        actual_file_checksum = "sha256:" + hashlib.sha256(raw_records).hexdigest()
+        if actual_file_checksum != manifest["recordsChecksum"]:
+            raise AssertionError(f"Source extract file checksum mismatch: {manifest['extractId']}")
+        records = json.loads(raw_records)
+        if len(records) != manifest["recordCount"]:
+            raise AssertionError(f"Source extract record count mismatch: {manifest['extractId']}")
+        mapping_key = (manifest["sourceSystem"], manifest["mappingId"], manifest["mappingVersion"])
+        mapping = mappings.get(mapping_key)
+        if not mapping:
+            raise AssertionError(f"Source extract has no exact governed mapping: {manifest['extractId']}")
+        profiles = {profile["sourceType"]: profile for profile in mapping.get("syncProfiles", [])}
+        for record in records:
+            validate_json(record, by_title["SourceRecordEnvelope"], registry, f"{records_path}:{record.get('id', '<unknown>')}")
+            content = {key: value for key, value in record.items() if key != "recordChecksum"}
+            serialized = json.dumps(content, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+            actual_record_checksum = "sha256:" + hashlib.sha256(serialized).hexdigest()
+            if actual_record_checksum != record["recordChecksum"]:
+                raise AssertionError(f"Source record checksum mismatch: {record['id']}")
+            for field in ("sourceSystem", "tenantId", "domainId"):
+                manifest_field = manifest[field]
+                if record[field] != manifest_field:
+                    raise AssertionError(f"Source record {field} differs from manifest: {record['id']}")
+            profile = profiles.get(record["sourceType"])
+            if not profile:
+                raise AssertionError(f"Source record has no governed sync profile: {record['id']}")
+            unknown_fields = set(record["payload"]) - set(profile["allowedSourceFields"])
+            if unknown_fields:
+                raise AssertionError(f"Source record has unmapped fields: {record['id']} -> {sorted(unknown_fields)}")
+            source_identifier = record["payload"].get(profile["idSourceField"])
+            canonical_id = profile["canonicalIdMap"].get(source_identifier)
+            if canonical_id not in canonical_entity_ids:
+                raise AssertionError(f"Source record maps to unknown canonical ID: {record['id']} -> {canonical_id}")
+            if expand_curie(profile["canonicalType"]) not in terms:
+                raise AssertionError(f"Source sync profile uses unknown canonical type: {profile['canonicalType']}")
+            for relation in profile["relationMappings"]:
+                if expand_curie(relation["predicate"]) not in terms:
+                    raise AssertionError(f"Source sync relation uses unknown predicate: {relation['predicate']}")
+                source_value = record["payload"].get(relation["sourceField"])
+                if source_value is None:
+                    continue
+                target_id = relation["targetCanonicalIdMap"].get(source_value)
+                if target_id not in canonical_entity_ids:
+                    raise AssertionError(f"Source sync relation maps to unknown canonical ID: {record['id']} -> {target_id}")
+    return len(extract_directories)
 
 
 def validate_canonical_baseline(baseline: dict, terms: set) -> None:

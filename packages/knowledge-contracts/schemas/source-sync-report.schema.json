@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/source-sync-report.schema.json",
+  "title": "SourceSyncReport",
+  "type": "object",
+  "required": ["reportVersion", "requestId", "extractId", "sourceSystem", "mode", "status", "generatedAt", "decisions", "changes", "counts"],
+  "properties": {
+    "reportVersion": { "const": "1.0.0" },
+    "requestId": { "type": "string", "minLength": 1 },
+    "extractId": { "type": "string", "minLength": 1 },
+    "sourceSystem": { "enum": ["MES", "QMS", "PLM"] },
+    "mode": { "enum": ["dry-run", "apply"] },
+    "status": { "enum": ["completed", "blocked", "failed"] },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourceRecordId", "status", "code", "message"],
+        "properties": {
+          "sourceRecordId": { "type": "string" },
+          "canonicalId": { "type": "string" },
+          "status": { "enum": ["accepted", "quarantined", "rejected"] },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "resourceType", "changeType", "canonicalId", "sourceRecordId"],
+        "properties": {
+          "id": { "type": "string" },
+          "resourceType": { "enum": ["entity", "relation"] },
+          "changeType": { "enum": ["insert", "update", "unchanged", "tombstone"] },
+          "canonicalId": { "type": "string" },
+          "sourceRecordId": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": ["sourceSystem", "tenantId", "cursor", "extractId", "appliedAt"],
+      "properties": {
+        "sourceSystem": { "enum": ["MES", "QMS", "PLM"] },
+        "tenantId": { "type": "string" },
+        "cursor": { "type": "integer", "minimum": 0 },
+        "extractId": { "type": "string" },
+        "appliedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "required": ["received", "accepted", "quarantined", "rejected", "inserted", "updated", "unchanged", "tombstoned"],
+      "properties": {
+        "received": { "type": "integer", "minimum": 0 },
+        "accepted": { "type": "integer", "minimum": 0 },
+        "quarantined": { "type": "integer", "minimum": 0 },
+        "rejected": { "type": "integer", "minimum": 0 },
+        "inserted": { "type": "integer", "minimum": 0 },
+        "updated": { "type": "integer", "minimum": 0 },
+        "unchanged": { "type": "integer", "minimum": 0 },
+        "tombstoned": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

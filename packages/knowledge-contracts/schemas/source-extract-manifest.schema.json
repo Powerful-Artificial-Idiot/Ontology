@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/source-extract-manifest.schema.json",
+  "title": "SourceExtractManifest",
+  "type": "object",
+  "required": ["manifestVersion", "extractId", "sourceSystem", "schemaVersion", "mappingId", "mappingVersion", "tenantId", "domainId", "generatedAt", "approvalStatus", "lifecycleStatus", "cursor", "recordsFile", "recordsChecksum", "recordCount"],
+  "properties": {
+    "manifestVersion": { "const": "1.0.0" },
+    "extractId": { "type": "string", "minLength": 1 },
+    "sourceSystem": { "enum": ["MES", "QMS", "PLM"] },
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "mappingId": { "type": "string", "minLength": 1 },
+    "mappingVersion": { "type": "string", "minLength": 1 },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "domainId": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "approvalStatus": { "enum": ["approved", "draft", "rejected"] },
+    "lifecycleStatus": { "enum": ["effective", "superseded", "withdrawn"] },
+    "cursor": { "type": "integer", "minimum": 0 },
+    "recordsFile": { "type": "string", "minLength": 1 },
+    "recordsChecksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "recordCount": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

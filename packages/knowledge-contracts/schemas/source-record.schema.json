@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/source-record.schema.json",
+  "title": "SourceRecordEnvelope",
+  "type": "object",
+  "required": ["id", "sourceSystem", "sourceType", "sourceId", "operation", "tenantId", "domainId", "version", "recordedAt", "payload", "recordChecksum"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "sourceSystem": { "enum": ["MES", "QMS", "PLM"] },
+    "sourceType": { "type": "string", "minLength": 1 },
+    "sourceId": { "type": "string", "minLength": 1 },
+    "operation": { "enum": ["upsert", "tombstone"] },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "domainId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "validFrom": { "type": "string", "format": "date-time" },
+    "payload": { "type": "object" },
+    "recordChecksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

@@ -30,10 +30,12 @@ export type AgentSecurityAction =
   | "run:control"
   | "trace:read"
   | "evidence:read"
-  | "audit:read";
+  | "audit:read"
+  | "source-sync:read"
+  | "source-sync:apply";
 
 export type AgentSecurityResource = {
-  type: "scenario" | "session" | "turn" | "run" | "trace" | "evidence" | "audit";
+  type: "scenario" | "session" | "turn" | "run" | "trace" | "evidence" | "audit" | "source-extract";
   id: string;
   sessionId?: string;
   turnId?: string;

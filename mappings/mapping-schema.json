@@ -24,6 +24,52 @@
         },
         "additionalProperties": false
       }
+    },
+    "syncProfiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourceType", "canonicalType", "idSourceField", "canonicalIdMap", "labelSourceField", "domain", "allowedSourceFields", "propertyMappings", "relationMappings"],
+        "properties": {
+          "sourceType": { "type": "string", "minLength": 1 },
+          "canonicalType": { "type": "string", "minLength": 1 },
+          "idSourceField": { "type": "string", "minLength": 1 },
+          "canonicalIdMap": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "string", "minLength": 1 } },
+          "labelSourceField": { "type": "string", "minLength": 1 },
+          "domain": { "type": "string", "minLength": 1 },
+          "allowedSourceFields": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "propertyMappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["sourceField", "targetProperty", "transform"],
+              "properties": {
+                "sourceField": { "type": "string" },
+                "targetProperty": { "type": "string" },
+                "transform": { "enum": ["string", "number", "boolean", "datetime"] },
+                "unit": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "relationMappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["sourceField", "predicate", "label", "targetCanonicalIdMap"],
+              "properties": {
+                "sourceField": { "type": "string" },
+                "predicate": { "type": "string" },
+                "label": { "type": "string" },
+                "direction": { "enum": ["source-to-target", "target-to-source"] },
+                "targetCanonicalIdMap": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "string", "minLength": 1 } }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false

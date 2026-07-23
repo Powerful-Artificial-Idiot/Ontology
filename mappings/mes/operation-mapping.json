@@ -8,5 +8,24 @@
     { "sourceField": "MES.operation.actual_cycle_time", "ontologyTerm": "mfg:cycleTimeSeconds", "mappingType": "datatypeProperty", "transform": "decimal(value)", "unit": "s" },
     { "sourceField": "MES.operation.machine_id", "ontologyTerm": "mfg:executedBy", "mappingType": "objectProperty", "transform": "iri_from('machine', value)" },
     { "sourceField": "MES.operation.event_time", "ontologyTerm": "mfg:eventTime", "mappingType": "datatypeProperty", "transform": "datetime(value)" }
+  ],
+  "syncProfiles": [
+    {
+      "sourceType": "operation",
+      "canonicalType": "mfg:Operation",
+      "idSourceField": "operation_id",
+      "canonicalIdMap": { "OP-030": "operation.op30" },
+      "labelSourceField": "operation_name",
+      "domain": "production",
+      "allowedSourceFields": ["operation_id", "operation_name", "actual_cycle_time", "machine_id", "event_time", "status"],
+      "propertyMappings": [
+        { "sourceField": "actual_cycle_time", "targetProperty": "cycleTime", "transform": "number", "unit": "s" },
+        { "sourceField": "event_time", "targetProperty": "eventTime", "transform": "datetime" },
+        { "sourceField": "status", "targetProperty": "sourceStatus", "transform": "string" }
+      ],
+      "relationMappings": [
+        { "sourceField": "machine_id", "predicate": "mfg:executedBy", "label": "executedBy", "targetCanonicalIdMap": { "EQ-M220": "machine.m220" } }
+      ]
+    }
   ]
 }

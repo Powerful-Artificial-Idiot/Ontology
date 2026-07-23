@@ -12,7 +12,7 @@ The repository demonstrates how manufacturing knowledge can be defined, validate
 > Git 管理企业如何定义、解释和展示知识；
 > 运行时知识图谱和源系统管理现实世界中的事实及其有效时间。
 
-The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. The deterministic pilot now includes optional Neo4j graph retrieval, governed local document ingestion/retrieval, persisted Agent sessions/audit, SSE run streaming, and a server-derived authorization baseline. Enterprise OIDC acceptance, enterprise ingestion, vector retrieval, OpenAI live acceptance, and production-grade multi-process persistence remain outside the present scope.
+The current Demo remains the **Management & Validation Experience Layer** and **Product Interaction Reference**. The deterministic pilot now includes optional Neo4j graph retrieval, governed local document ingestion/retrieval, persisted Agent sessions/audit, SSE run streaming, a server-derived authorization baseline, and governed synchronization of controlled local MES/QMS/PLM extracts. Enterprise OIDC acceptance, live enterprise source connectivity, vector retrieval, OpenAI live acceptance, and production-grade multi-process persistence remain outside the present scope.
 
 ## Implemented Pages
 
@@ -70,6 +70,7 @@ packages/agent-core/              Deterministic provider-neutral Agent pipeline
 packages/document-evidence/       Governed deterministic document ingestion and retrieval
 packages/agent-evaluation/        Versioned evaluation, observability, regression, and release gates
 packages/neo4j-repository/        Server-only Neo4j KnowledgeRepository pilot adapter
+packages/source-sync/             Governed source connector, mapping, checkpoint, and sync boundary
 ontology/                         Core, domain, and application OWL/Turtle modules
 shapes/                           SHACL constraints
 mappings/                         MES, QMS, PLM, and Demo alignment mappings
@@ -147,6 +148,7 @@ npm run agent-api:test
 npm run documents:verify
 npm run agent:evaluate
 npm run security:acceptance
+npm run source-sync:acceptance
 npm run openai:acceptance
 npm run deepseek:acceptance
 ```
@@ -154,6 +156,8 @@ npm run deepseek:acceptance
 Phase 5A evaluation is documented in [Agent Evaluation, Observability and Release Gates](docs/phase-5a-agent-evaluation-observability.md). The deterministic local gate is independent of real provider smoke acceptance. DeepSeek Semantic, Answer, and full-pipeline acceptance passed independently with `fallbackUsed: false`; OpenAI acceptance remains pending.
 
 Phase 5C security controls are documented in [Production Security and Authorization](docs/phase-5c-production-security-authorization.md). Static Bearer authentication is a controlled acceptance adapter; enterprise OIDC/JWKS and IAM mapping remain explicitly pending.
+
+Phase 5D governed source synchronization is documented in [Source-system Connectors and Governed Data Synchronization](docs/phase-5d-source-connectors-governed-sync.md). The validated adapters read controlled local extracts with exact mappings and checkpoints; live enterprise endpoints and credentials remain pending.
 
 SHACL valid fixtures must pass and files under `examples/invalid` must fail. Frontend payloads are separately checked against JSON Schema; neither validation replaces the other.
 

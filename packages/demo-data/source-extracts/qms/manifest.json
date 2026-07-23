@@ -1,0 +1,17 @@
+{
+  "manifestVersion": "1.0.0",
+  "extractId": "source-extract.qms.quality.20260722.200",
+  "sourceSystem": "QMS",
+  "schemaVersion": "1.0.0",
+  "mappingId": "QMS-QUALITY-1",
+  "mappingVersion": "1.0.0",
+  "tenantId": "tenant.demo-manufacturing",
+  "domainId": "quality",
+  "generatedAt": "2026-07-22T08:11:00.000Z",
+  "approvalStatus": "approved",
+  "lifecycleStatus": "effective",
+  "cursor": 200,
+  "recordsFile": "records.json",
+  "recordsChecksum": "sha256:3bcaae0ca7b41d954902a79080071bf591aeca79b0a22414a2c8eb0094f6492e",
+  "recordCount": 1
+}

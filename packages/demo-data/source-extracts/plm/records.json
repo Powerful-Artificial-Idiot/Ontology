@@ -1,0 +1,21 @@
+[
+  {
+    "id": "source-record.plm.product.brake-booster.20260722",
+    "sourceSystem": "PLM",
+    "sourceType": "product",
+    "sourceId": "FP-001",
+    "operation": "upsert",
+    "tenantId": "tenant.demo-manufacturing",
+    "domainId": "production",
+    "version": "Rev.C",
+    "recordedAt": "2026-07-22T08:15:00.000Z",
+    "validFrom": "2026-07-22T08:15:00.000Z",
+    "payload": {
+      "part_number": "FP-001",
+      "part_name": "Brake Booster Assembly",
+      "revision": "Rev.C",
+      "lifecycle_status": "released"
+    },
+    "recordChecksum": "sha256:b0c2c072268ceb2b68ff045ef97f722e2ef25dbf9f840795c96b34a160cfb487"
+  }
+]

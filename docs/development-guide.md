@@ -10,6 +10,7 @@
 - `packages/agent-security`：provider-neutral role/tenant/owner/domain/object authorization policy 与 publication guards；
 - `packages/demo-data`：contract-aligned fixtures、generated ontology artifacts 和 scenarios；
 - `packages/document-evidence`：受治理文档注册、确定性解析、chunk、索引和检索；
+- `packages/source-sync`：受治理 source connector、mapping、change planning、checkpoint 和 snapshot persistence；
 - `packages/ontology-client`：HTTP `KnowledgeRepository` client。
 
 当前服务包括 `services/mock-knowledge-api` 和 `services/agent-api`。Agent API 已支持 Mock/Neo4j repository、异步 Turn Run、SSE 事件续传、单进程文件持久化、Phase 5C authorization context，以及可选的 OpenAI/DeepSeek structured-output adapters。DeepSeek 已完成 Quality、Engineering Change、Bottleneck 与跨域真实 provider acceptance；OpenAI 和企业 OIDC acceptance 仍为 pending，外部向量数据库未接入。
@@ -75,11 +76,19 @@ npm run agent-api:dev
 npm run dev:agent
 ```
 
-`VITE_AGENT_MODE=scripted|api` 只决定 frontend client adapter。API 模式当前只开放 `quality-issue-trace`。默认文件存储位于 `.data/agent-store.json`，服务重启后会恢复 Session、Turn、Trace、Evidence、Audit、Run 和可续传事件；设置 `MKG_AGENT_STORE_MODE=memory` 可使用临时内存模式。配置式 Agent API 默认将脱敏后的本地 telemetry 写入 `.data/agent-telemetry.jsonl`；设置 `MKG_AGENT_TELEMETRY_MODE=off` 可关闭。
+`VITE_AGENT_MODE=scripted|api` 只决定 frontend client adapter。API 模式开放 Quality Issue、Engineering Change 和 Bottleneck 三个受治理场景。默认文件存储位于 `.data/agent-store.json`，服务重启后会恢复 Session、Turn、Trace、Evidence、Audit、Run 和可续传事件；设置 `MKG_AGENT_STORE_MODE=memory` 可使用临时内存模式。配置式 Agent API 默认将脱敏后的本地 telemetry 写入 `.data/agent-telemetry.jsonl`；设置 `MKG_AGENT_TELEMETRY_MODE=off` 可关闭。
 
 创建 Turn 后 API 立即返回 run ID，浏览器再通过 SSE 接收阶段状态。事件流使用序列号和 `Last-Event-ID` 续传；失败或中断的 run 必须由用户显式 Retry。
 
 Phase 5C 的本地默认仍为 `MKG_AGENT_AUTH_MODE=disabled`，用于保持 scripted/demo 和开发回归。受控安全验收使用 `static-bearer`；`MKG_AGENT_SECURITY_PROFILE=production` 会拒绝 disabled authentication。Session ownership、tenant、role、domain、object、evidence 和 citation publication 均由服务端校验。该 adapter 不等同于企业 IAM，完整限制见 [Phase 5C](phase-5c-production-security-authorization.md)。
+
+Phase 5D 通过受控本地 MES/QMS/PLM extract 验证同步边界：
+
+```bash
+npm run source-sync:acceptance
+```
+
+该命令验证 manifest/record checksum、mapping/canonical ID、authorization、dry-run/apply、checkpoint、idempotency、持久化恢复与脱敏审计。快照和报告写入 `.data/`，不会进入 Git。完整边界见 [Phase 5D](phase-5d-source-connectors-governed-sync.md)；该模式不代表已连接企业生产端点。
 
 Phase 4A 默认继续使用 deterministic semantic parser。启用受约束 LLM parser：
 
@@ -217,6 +226,7 @@ Frontend pages -> Repository/Client interfaces
 HTTP clients -> Shared contracts
 Services -> Shared contracts + core packages
 Adapters -> external provider/driver
+Source extracts -> SourceSystemConnector -> GovernedSyncStore -> optional Repository decorator
 Generated fixtures -> canonical data/ontology sources
 ```
 

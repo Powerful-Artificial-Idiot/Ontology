@@ -1,0 +1,17 @@
+{
+  "manifestVersion": "1.0.0",
+  "extractId": "source-extract.plm.products.20260722.300",
+  "sourceSystem": "PLM",
+  "schemaVersion": "1.0.0",
+  "mappingId": "PLM-PRODUCT-1",
+  "mappingVersion": "1.0.0",
+  "tenantId": "tenant.demo-manufacturing",
+  "domainId": "production",
+  "generatedAt": "2026-07-22T08:16:00.000Z",
+  "approvalStatus": "approved",
+  "lifecycleStatus": "effective",
+  "cursor": 300,
+  "recordsFile": "records.json",
+  "recordsChecksum": "sha256:4f74d4481b6ebf608a8719b6a55de13e337b9e8038cc75dd92454ec217e72a67",
+  "recordCount": 1
+}

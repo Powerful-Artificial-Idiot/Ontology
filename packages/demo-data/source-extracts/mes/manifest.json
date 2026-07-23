@@ -1,0 +1,17 @@
+{
+  "manifestVersion": "1.0.0",
+  "extractId": "source-extract.mes.operations.20260722.100",
+  "sourceSystem": "MES",
+  "schemaVersion": "1.0.0",
+  "mappingId": "MES-OPERATION-1",
+  "mappingVersion": "1.0.0",
+  "tenantId": "tenant.demo-manufacturing",
+  "domainId": "production",
+  "generatedAt": "2026-07-22T08:06:00.000Z",
+  "approvalStatus": "approved",
+  "lifecycleStatus": "effective",
+  "cursor": 100,
+  "recordsFile": "records.json",
+  "recordsChecksum": "sha256:285a8b4d18a177bc134a2888b5e2ff854bc7a0e6e191152208357413d9f34255",
+  "recordCount": 1
+}
