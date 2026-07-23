@@ -25,6 +25,22 @@ describe("ApiAgentClient", () => {
     await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   });
 
+  it("binds browser fetch implementations to the global receiver", async () => {
+    let receiver: unknown;
+    const receiverCheckingFetch = async function (this: typeof globalThis) {
+      receiver = this;
+      return new Response(JSON.stringify({ scenarios: [] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } as typeof fetch;
+    const receiverClient = new ApiAgentClient("http://agent.example.test/api/agent", 12_000, receiverCheckingFetch);
+
+    await receiverClient.listScenarios();
+
+    expect(receiver).toBe(globalThis);
+  });
+
   it("maps the deterministic API response to the existing frontend Turn Bundle", async () => {
     const scenarios = await client.listScenarios();
     const session = await client.startSession("quality-issue-trace", "en");

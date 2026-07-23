@@ -41,15 +41,17 @@ type FetchImplementation = typeof fetch;
 export class ApiAgentClient implements AgentClient {
   readonly runtimeMode = "api" as const;
   private readonly baseUrl: string;
+  private readonly fetchImpl: FetchImplementation;
   private scenarios: AgentScenario[] = [];
 
   constructor(
     baseUrl: string,
     private readonly timeoutMs = 12_000,
-    private readonly fetchImpl: FetchImplementation = fetch,
+    fetchImpl: FetchImplementation = globalThis.fetch,
     private readonly bearerToken?: string,
   ) {
     this.baseUrl = baseUrl.replace(/\/$/u, "");
+    this.fetchImpl = fetchImpl.bind(globalThis);
   }
 
   async listScenarios(): Promise<AgentScenario[]> {
