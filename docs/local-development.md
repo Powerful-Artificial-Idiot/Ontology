@@ -1,5 +1,25 @@
 # Local Development
 
+## Governed Source Synchronization
+
+List and inspect configured demo connectors:
+
+```bash
+npm run source-sync:list
+npm run source-sync:inspect -- --connector connector.mes.controlled-file
+```
+
+Run controlled modes with an explicit connector and mode:
+
+```bash
+npm run source-sync:run -- --connector connector.mes.controlled-file --mode dry-run
+npm run source-sync:run -- --connector connector.mes.controlled-file --mode snapshot
+```
+
+Start the localhost fixture and protected management API in separate terminals with `npm run source-sync:fixture` and `npm run source-sync:api`. HTTP fixture profiles require a runtime `MKG_SOURCE_SECRET_FIXTURE_TOKEN`; do not place it in source files or committed environment files.
+
+Formal local checks are `npm run source-sync:release-gate`. Neo4j publication acceptance additionally requires the local Compose service and `npm run neo4j:publication-test` with the locally configured development credential.
+
 ## Prerequisites
 
 - Node.js 20 LTS or 22+.

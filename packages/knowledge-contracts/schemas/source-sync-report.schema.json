@@ -44,8 +44,9 @@
     },
     "checkpoint": {
       "type": "object",
-      "required": ["sourceSystem", "tenantId", "cursor", "extractId", "appliedAt"],
+      "required": ["checkpointVersion", "sourceSystem", "tenantId", "cursor", "extractId", "appliedAt"],
       "properties": {
+        "checkpointVersion": { "const": "1.0.0" },
         "sourceSystem": { "enum": ["MES", "QMS", "PLM"] },
         "tenantId": { "type": "string" },
         "cursor": { "type": "integer", "minimum": 0 },

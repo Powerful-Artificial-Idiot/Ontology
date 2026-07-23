@@ -30,6 +30,14 @@ jobs:
           path: .data/evaluations/latest-report.json
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-sync-release-report-${{ github.ref_name }}
+          path: |
+            .data/source-sync/fixture-live-report.json
+            .data/source-sync/phase5d-formal-report.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
         with:
           name: enterprise-knowledge-release-${{ github.ref_name }}
           path: dist/

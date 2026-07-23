@@ -26,6 +26,9 @@ jobs:
       - run: npm run agent:evaluate
       - run: npm run security:acceptance
       - run: npm run source-sync:acceptance
+      - run: npm run source-sync:formal-tests
+      - run: npm run source-sync:fixture-live
+      - run: npm run source-sync:formal
       - run: make validate PYTHON=python
       - run: npm run build
       - uses: actions/upload-artifact@v4
@@ -34,3 +37,34 @@ jobs:
           name: agent-evaluation-report
           path: .data/evaluations/latest-report.json
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-sync-sanitized-acceptance
+          path: |
+            .data/source-sync/fixture-live-report.json
+            .data/source-sync/phase5d-formal-report.json
+          if-no-files-found: error
+
+  source-sync-neo4j-live:
+    runs-on: ubuntu-latest
+    services:
+      neo4j:
+        image: neo4j:5
+        env:
+          NEO4J_AUTH: none
+        ports:
+          - 7687:7687
+        options: >-
+          --health-cmd "cypher-shell --non-interactive 'RETURN 1' || exit 1"
+          --health-interval 10s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run neo4j:publication-test
+        env:
+          MKG_NEO4J_AUTH_DISABLED: "true"

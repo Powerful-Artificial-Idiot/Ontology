@@ -2,7 +2,7 @@
 
 ## Status
 
-Phase 5D establishes a provider-neutral synchronization boundary and validates controlled local MES, QMS, and PLM extracts. It does not claim live enterprise connectivity.
+Phase 5D establishes a provider-neutral synchronization boundary and validates controlled local MES, QMS, and PLM extracts plus a localhost HTTP fixture adapter. It does not claim live enterprise connectivity.
 
 Validated scope:
 
@@ -15,8 +15,15 @@ Validated scope:
 - sanitized synchronization audit events;
 - an optional read-only `SynchronizedKnowledgeRepository` decorator;
 - controlled fixtures for MES `OP30/M220`, QMS `Leak Rate`, and PLM `Brake Booster`.
+- governed connector profiles, runtime-only source authentication and a connector service principal;
+- endpoint/path allowlists, redirect denial, SSRF checks and bounded HTTP extraction;
+- persistent run, quarantine, journal and lineage stores;
+- separate graph and document publication ports, including a static-query Neo4j publisher;
+- reconciliation, CLI, protected management API and a 40-case formal release gate.
 
 Live MES, QMS, and PLM endpoints, credentials, CDC, enterprise scheduling, owner approval workflow, and source writeback remain pending.
+
+Formal controlled-fixture closure is evaluated separately from enterprise readiness. A passing fixture report does not imply that an enterprise endpoint, enterprise identity provider, or source credential has been accepted.
 
 ## Architecture
 
@@ -69,6 +76,17 @@ The reference file store writes an atomic JSON snapshot through temporary-file r
 Audit events contain source, tenant, outcome, and aggregate counts. They exclude credentials, authorization headers, record checksums, and raw payloads.
 
 The file store is a deterministic pilot implementation, not a production distributed transaction system. Multi-process locking, database transactions, retention, backup, disaster recovery, and centralized audit export remain future work.
+
+## Formal Closure Commands
+
+```bash
+npm run source-sync:formal-tests
+npm run source-sync:fixture-live
+npm run source-sync:formal
+npm run neo4j:publication-test
+```
+
+`fixture-live` binds localhost only and generates a process-local token. Sanitized reports are written below `.data/source-sync/`, which is ignored by Git. The Neo4j live command is conditional and must be reported independently from regular Vitest.
 
 ## Validation
 

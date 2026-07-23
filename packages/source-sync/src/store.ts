@@ -4,7 +4,11 @@ import type { GovernedSyncSnapshot } from "../../knowledge-contracts/src/index";
 import type { GovernedSyncStore, SyncCommit } from "./types";
 
 export class InMemoryGovernedSyncStore implements GovernedSyncStore {
-  protected snapshot: GovernedSyncSnapshot = emptySnapshot();
+  protected snapshot: GovernedSyncSnapshot;
+
+  constructor(initialSnapshot: GovernedSyncSnapshot = emptySnapshot()) {
+    this.snapshot = clone(initialSnapshot);
+  }
 
   async getSnapshot(): Promise<GovernedSyncSnapshot> {
     return clone(this.snapshot);
@@ -28,27 +32,31 @@ export class FileGovernedSyncStore extends InMemoryGovernedSyncStore {
       this.snapshot = parseSnapshot(JSON.parse(await readFile(this.filePath, "utf8")) as unknown);
     } catch (error) {
       if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error;
-      await this.persist();
+      await this.writeSnapshot(this.snapshot);
     }
   }
 
   override async commit(commit: SyncCommit): Promise<void> {
-    this.snapshot = applyCommit(this.snapshot, commit);
-    await this.persist();
+    this.queue = this.queue.then(async () => {
+      const next = applyCommit(this.snapshot, commit);
+      await this.writeSnapshot(next);
+      this.snapshot = next;
+    });
+    await this.queue;
   }
 
-  private persist(): Promise<void> {
-    this.queue = this.queue.then(async () => {
-      const temporary = `${this.filePath}.tmp`;
-      await writeFile(temporary, `${JSON.stringify(this.snapshot, null, 2)}\n`, "utf8");
-      await rename(temporary, this.filePath);
-    });
-    return this.queue;
+  private async writeSnapshot(snapshot: GovernedSyncSnapshot): Promise<void> {
+    const temporary = `${this.filePath}.tmp`;
+    await writeFile(temporary, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+    await rename(temporary, this.filePath);
   }
 }
 
 function applyCommit(current: GovernedSyncSnapshot, commit: SyncCommit): GovernedSyncSnapshot {
   if (current.appliedExtractIds.includes(commit.extractId)) return clone(current);
+  if (commit.checkpoint.checkpointVersion !== "1.0.0") throw new Error("Unsupported checkpoint schema version.");
+  const previousCheckpoint = current.checkpoints.find((item) => item.sourceSystem === commit.checkpoint.sourceSystem && item.tenantId === commit.checkpoint.tenantId);
+  if (previousCheckpoint && commit.checkpoint.cursor <= previousCheckpoint.cursor) throw new Error("Checkpoint cursor must advance monotonically.");
   const entities = new Map(current.entities.map((item) => [item.id, item]));
   const relations = new Map(current.relations.map((item) => [item.id, item]));
   commit.entities.forEach((item) => entities.set(item.id, clone(item)));
@@ -71,6 +79,7 @@ function parseSnapshot(value: unknown): GovernedSyncSnapshot {
   if (snapshot.snapshotVersion !== "1.0.0" || !Array.isArray(snapshot.entities) || !Array.isArray(snapshot.relations) || !Array.isArray(snapshot.checkpoints) || !Array.isArray(snapshot.appliedExtractIds)) {
     throw new Error("Governed sync snapshot has an unsupported or invalid format.");
   }
+  if (snapshot.checkpoints.some((checkpoint) => checkpoint.checkpointVersion !== "1.0.0")) throw new Error("Governed sync snapshot contains an unsupported checkpoint schema version.");
   return clone(snapshot as GovernedSyncSnapshot);
 }
 

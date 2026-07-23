@@ -45,7 +45,14 @@ export class GovernedSourceSynchronizationPipeline implements SourceSynchronizat
 
     const candidates: Candidate[] = [];
     const decisions: SourceSyncRecordDecision[] = [];
+    const sourceFingerprints = new Set<string>();
     for (const record of batch.records) {
+      const fingerprint = `${record.sourceSystem}|${record.sourceId}|${record.version}|${record.recordChecksum}`;
+      if (sourceFingerprints.has(fingerprint)) {
+        decisions.push({ sourceRecordId: record.id, canonicalId: mappedCanonicalId(record, this.options.mapping), status: "accepted", code: "duplicate-record", message: "The duplicate source record was accepted without creating another mutation." });
+        continue;
+      }
+      sourceFingerprints.add(fingerprint);
       const mapped = mapRecord(record, batch.manifest, this.options.mapping, now.toISOString());
       if ("decision" in mapped) decisions.push(mapped.decision);
       else {
@@ -55,11 +62,13 @@ export class GovernedSourceSynchronizationPipeline implements SourceSynchronizat
     }
     const planned = planChanges(candidates, snapshot);
     const staleIds = new Set(planned.staleRecordIds);
+    const hashConflictIds = new Set(planned.sameVersionHashConflictRecordIds);
     const authorityConflictIds = new Set(planned.authorityConflictRecordIds);
     const missingTombstones = new Set(planned.missingTombstoneRecordIds);
-    const acceptedCandidates = candidates.filter((item) => !staleIds.has(item.record.id) && !authorityConflictIds.has(item.record.id) && !missingTombstones.has(item.record.id));
+    const acceptedCandidates = candidates.filter((item) => !staleIds.has(item.record.id) && !hashConflictIds.has(item.record.id) && !authorityConflictIds.has(item.record.id) && !missingTombstones.has(item.record.id));
     for (const decision of decisions) {
       if (staleIds.has(decision.sourceRecordId)) Object.assign(decision, { status: "quarantined", code: "stale-record", message: "A newer source version is already synchronized." });
+      if (hashConflictIds.has(decision.sourceRecordId)) Object.assign(decision, { status: "quarantined", code: "same-version-hash-conflict", message: "The same source version was received with different content." });
       if (authorityConflictIds.has(decision.sourceRecordId)) Object.assign(decision, { status: "quarantined", code: "source-authority-conflict", message: "A different governed source owns the canonical object." });
       if (missingTombstones.has(decision.sourceRecordId)) Object.assign(decision, { status: "quarantined", code: "tombstone-target-missing", message: "Tombstone target does not exist in the governed snapshot." });
     }
@@ -68,6 +77,7 @@ export class GovernedSourceSynchronizationPipeline implements SourceSynchronizat
     const changedRelationIds = new Set(changes.filter((item) => item.resourceType === "relation" && item.changeType !== "unchanged" && item.changeType !== "tombstone").map((item) => item.canonicalId));
     const removedRelationIds = changes.filter((item) => item.resourceType === "relation" && item.changeType === "tombstone").map((item) => item.canonicalId);
     const checkpointAfter = {
+      checkpointVersion: "1.0.0",
       sourceSystem: batch.manifest.sourceSystem,
       tenantId: batch.manifest.tenantId,
       cursor: batch.manifest.cursor,
@@ -251,14 +261,24 @@ function transform(value: unknown, mapping: SyncMappingProfile["propertyMappings
   return value;
 }
 
-function planChanges(candidates: Candidate[], snapshot: GovernedSyncSnapshot): { changes: SourceSyncChange[]; staleRecordIds: string[]; authorityConflictRecordIds: string[]; missingTombstoneRecordIds: string[] } {
+function planChanges(candidates: Candidate[], snapshot: GovernedSyncSnapshot): { changes: SourceSyncChange[]; staleRecordIds: string[]; sameVersionHashConflictRecordIds: string[]; authorityConflictRecordIds: string[]; missingTombstoneRecordIds: string[] } {
   const entities = new Map(snapshot.entities.map((item) => [item.id, item]));
   const relations = new Map(snapshot.relations.map((item) => [item.id, item]));
   const changes: SourceSyncChange[] = [];
   const staleRecordIds: string[] = [];
+  const sameVersionHashConflictRecordIds: string[] = [];
   const authorityConflictRecordIds: string[] = [];
   const missingTombstoneRecordIds: string[] = [];
+  const candidateGroups = groupBy(candidates, (candidate) => candidate.entity.id);
+  for (const group of candidateGroups.values()) {
+    const byVersion = groupBy(group, (candidate) => candidate.record.version);
+    for (const versionGroup of byVersion.values()) if (new Set(versionGroup.map((candidate) => candidate.record.recordChecksum)).size > 1) sameVersionHashConflictRecordIds.push(...versionGroup.map((candidate) => candidate.record.id));
+    const eligible = group.filter((candidate) => !sameVersionHashConflictRecordIds.includes(candidate.record.id));
+    const latestTimestamp = Math.max(...eligible.map((candidate) => Date.parse(candidate.record.recordedAt)));
+    staleRecordIds.push(...eligible.filter((candidate) => Date.parse(candidate.record.recordedAt) < latestTimestamp).map((candidate) => candidate.record.id));
+  }
   for (const candidate of candidates) {
+    if (sameVersionHashConflictRecordIds.includes(candidate.record.id) || staleRecordIds.includes(candidate.record.id)) continue;
     const existing = entities.get(candidate.entity.id);
     if (existing && existing.sync.sourceSystem !== candidate.entity.sync.sourceSystem) {
       authorityConflictRecordIds.push(candidate.record.id);
@@ -266,6 +286,10 @@ function planChanges(candidates: Candidate[], snapshot: GovernedSyncSnapshot): {
     }
     if (existing && Date.parse(existing.source?.[0]?.recordedAt ?? "") > Date.parse(candidate.record.recordedAt)) {
       staleRecordIds.push(candidate.record.id);
+      continue;
+    }
+    if (existing && existing.sync.sourceRecordVersion === candidate.entity.sync.sourceRecordVersion && existing.sync.sourceRecordChecksum !== candidate.entity.sync.sourceRecordChecksum) {
+      sameVersionHashConflictRecordIds.push(candidate.record.id);
       continue;
     }
     if (candidate.record.operation === "tombstone" && !existing) {
@@ -290,7 +314,7 @@ function planChanges(candidates: Candidate[], snapshot: GovernedSyncSnapshot): {
       changes.push(change(candidate.record, relation.id, "relation", !existingRelation ? "insert" : existingRelation.sync.sourceRecordChecksum === relation.sync.sourceRecordChecksum ? "unchanged" : "update"));
     }
   }
-  return { changes, staleRecordIds, authorityConflictRecordIds, missingTombstoneRecordIds };
+  return { changes, staleRecordIds, sameVersionHashConflictRecordIds, authorityConflictRecordIds, missingTombstoneRecordIds };
 }
 
 function change(record: SourceRecordEnvelope, canonicalId: string, resourceType: SourceSyncChange["resourceType"], changeType: SourceSyncChange["changeType"]): SourceSyncChange {
@@ -309,4 +333,15 @@ function mappedCanonicalId(record: SourceRecordEnvelope, mapping: GovernedSyncMa
 
 function slug(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/gu, "-").replace(/^-|-$/gu, "");
+}
+
+function groupBy<T>(values: T[], keyFor: (value: T) => string): Map<string, T[]> {
+  const groups = new Map<string, T[]>();
+  for (const value of values) {
+    const key = keyFor(value);
+    const group = groups.get(key) ?? [];
+    group.push(value);
+    groups.set(key, group);
+  }
+  return groups;
 }

@@ -20,7 +20,7 @@ export class ControlledFileSourceConnector implements SourceSystemConnector {
 
   async readBatch(signal?: AbortSignal): Promise<SourceRecordBatch> {
     abortIfNeeded(signal);
-    const manifest = parseManifest(JSON.parse(await readFile(this.manifestPath, "utf8")) as unknown);
+    const manifest = parseSourceExtractManifest(JSON.parse(await readFile(this.manifestPath, "utf8")) as unknown);
     if (manifest.sourceSystem !== this.sourceSystem) throw new SourceConnectorError("manifest-invalid", "Connector and manifest source systems do not match.");
     const root = dirname(resolve(this.manifestPath));
     const recordsPath = resolve(root, manifest.recordsFile);
@@ -31,7 +31,7 @@ export class ControlledFileSourceConnector implements SourceSystemConnector {
     if (sha256(raw) !== manifest.recordsChecksum) throw new SourceConnectorError("checksum-mismatch", "Source extract file checksum does not match its manifest.");
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) throw new SourceConnectorError("records-invalid", "Source extract records must be an array.");
-    const records = parsed.map((item, index) => parseRecord(item, index));
+    const records = parsed.map((item, index) => parseSourceRecord(item, index));
     if (records.length !== manifest.recordCount) throw new SourceConnectorError("records-invalid", "Source extract record count does not match its manifest.");
     for (const record of records) {
       const content = Object.fromEntries(Object.entries(record).filter(([key]) => key !== "recordChecksum"));
@@ -41,7 +41,7 @@ export class ControlledFileSourceConnector implements SourceSystemConnector {
   }
 }
 
-function parseManifest(value: unknown): SourceExtractManifest {
+export function parseSourceExtractManifest(value: unknown): SourceExtractManifest {
   const item = object(value, "manifest");
   const sourceSystem = string(item.sourceSystem, "sourceSystem") as GovernedSourceSystem;
   if (!(["MES", "QMS", "PLM"] as string[]).includes(sourceSystem)) throw new SourceConnectorError("manifest-invalid", `Unsupported source system: ${sourceSystem}`);
@@ -65,7 +65,7 @@ function parseManifest(value: unknown): SourceExtractManifest {
   return manifest;
 }
 
-function parseRecord(value: unknown, index: number): SourceRecordEnvelope {
+export function parseSourceRecord(value: unknown, index: number): SourceRecordEnvelope {
   const item = object(value, `records[${index}]`);
   return {
     id: string(item.id, "id"),

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "connector.mes.controlled-file",
+    "version": "1.0.0",
+    "sourceSystem": "mes",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["production"],
+    "adapterType": "controlled-file",
+    "authentication": { "type": "fixture-none" },
+    "synchronization": { "mode": "snapshot", "pagination": "none", "maximumPages": 1, "maximumRecords": 100 },
+    "mappingProfileId": "MES-OPERATION-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  },
+  {
+    "id": "connector.mes.fixture-http",
+    "version": "1.0.0",
+    "sourceSystem": "mes",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["production"],
+    "adapterType": "fixture-http-json",
+    "endpoint": { "baseUrl": "http://127.0.0.1:4176", "allowedPaths": ["/fixture/mes/records"], "allowLocalhostHttp": true },
+    "authentication": { "type": "static-bearer", "secretReference": "MKG_SOURCE_SECRET_FIXTURE_TOKEN" },
+    "synchronization": { "mode": "incremental", "pagination": "page", "pageSize": 1, "maximumPages": 10, "maximumRecords": 100 },
+    "mappingProfileId": "MES-OPERATION-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  },
+  {
+    "id": "connector.plm.controlled-file",
+    "version": "1.0.0",
+    "sourceSystem": "plm",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["production"],
+    "adapterType": "controlled-file",
+    "authentication": { "type": "fixture-none" },
+    "synchronization": { "mode": "snapshot", "pagination": "none", "maximumPages": 1, "maximumRecords": 100 },
+    "mappingProfileId": "PLM-PRODUCT-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  },
+  {
+    "id": "connector.plm.fixture-http",
+    "version": "1.0.0",
+    "sourceSystem": "plm",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["production"],
+    "adapterType": "fixture-http-json",
+    "endpoint": { "baseUrl": "http://127.0.0.1:4176", "allowedPaths": ["/fixture/plm/records"], "allowLocalhostHttp": true },
+    "authentication": { "type": "static-bearer", "secretReference": "MKG_SOURCE_SECRET_FIXTURE_TOKEN" },
+    "synchronization": { "mode": "incremental", "pagination": "cursor", "pageSize": 1, "maximumPages": 10, "maximumRecords": 100 },
+    "mappingProfileId": "PLM-PRODUCT-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  },
+  {
+    "id": "connector.qms.controlled-file",
+    "version": "1.0.0",
+    "sourceSystem": "qms",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["quality"],
+    "adapterType": "controlled-file",
+    "authentication": { "type": "fixture-none" },
+    "synchronization": { "mode": "snapshot", "pagination": "none", "maximumPages": 1, "maximumRecords": 100 },
+    "mappingProfileId": "QMS-QUALITY-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  },
+  {
+    "id": "connector.qms.fixture-http",
+    "version": "1.0.0",
+    "sourceSystem": "qms",
+    "tenantId": "tenant.demo-manufacturing",
+    "allowedDomains": ["quality"],
+    "adapterType": "fixture-http-json",
+    "endpoint": { "baseUrl": "http://127.0.0.1:4176", "allowedPaths": ["/fixture/qms/records"], "allowLocalhostHttp": true },
+    "authentication": { "type": "static-bearer", "secretReference": "MKG_SOURCE_SECRET_FIXTURE_TOKEN" },
+    "synchronization": { "mode": "incremental", "pagination": "watermark", "pageSize": 1, "maximumPages": 10, "maximumRecords": 100 },
+    "mappingProfileId": "QMS-QUALITY-1",
+    "publicationPolicyId": "publication.demo-governed-v1",
+    "enabled": true
+  }
+]

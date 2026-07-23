@@ -1,5 +1,18 @@
 # Implementation Roadmap
 
+## Phase 5D - Formal Closure Delta
+
+Implemented on top of the Phase 5D implementation baseline:
+
+- governed HTTP fixture connector, source authentication and connector principal;
+- run state, cancellation/recovery detection, quarantine/replay and checkpoint hardening;
+- separate Mock/Neo4j graph and document publication ports;
+- cross-store journal, lineage and reconciliation;
+- CLI, protected API, health, telemetry and audit;
+- 40-case deterministic evaluation and blocking release gate.
+
+Pending enterprise work: real MES/PLM/QMS endpoints, enterprise source OAuth, enterprise OIDC/JWKS and revocation, CDC, Kafka, distributed transaction coordination, bidirectional writeback and centralized SIEM.
+
 ## 1. Objective
 
 将当前 contract-backed frontend Demo 渐进式推进为 **Ontology-grounded, evidence-backed manufacturing agent platform**，同时保持以下能力始终可用：

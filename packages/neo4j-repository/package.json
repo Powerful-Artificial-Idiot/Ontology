@@ -7,6 +7,7 @@
   "dependencies": {
     "@mkg/demo-data": "0.5.0",
     "@mkg/knowledge-contracts": "1.1.0",
+    "@mkg/source-sync": "0.1.0",
     "neo4j-driver": "^5.28.1"
   }
 }

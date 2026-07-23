@@ -53,6 +53,7 @@ def main() -> int:
         "source-record.schema.json",
         "source-extract-manifest.schema.json",
         "source-sync-report.schema.json",
+        "connector-profile.schema.json",
     )]
     registry = schema_registry(schemas)
     by_title = {schema["title"]: schema for schema in schemas}
@@ -114,6 +115,24 @@ def main() -> int:
         canonical_entity_ids,
         terms,
     )
+    connector_profiles = json.loads((ROOT / "packages" / "demo-data" / "source-sync" / "connector-profiles.v1.json").read_text())
+    validate_json(connector_profiles, by_title["ConnectorProfileRegistry"], registry, "Phase 5D connector profiles")
+    if len({profile["id"] for profile in connector_profiles}) != len(connector_profiles):
+        raise AssertionError("Phase 5D connector profile IDs must be unique")
+
+    source_sync_evaluation_schema = json.loads((ROOT / "packages" / "source-sync-evaluation" / "schemas" / "source-sync-evaluation-dataset.schema.json").read_text())
+    Draft202012Validator.check_schema(source_sync_evaluation_schema)
+    source_sync_evaluation = json.loads((ROOT / "packages" / "demo-data" / "source-sync" / "phase5d-evaluation.v1.json").read_text())
+    validate_json(source_sync_evaluation, source_sync_evaluation_schema, Registry(), "Phase 5D source synchronization evaluation")
+    source_sync_case_ids = [case["caseId"] for case in source_sync_evaluation["cases"] if not case.get("skip")]
+    if len(source_sync_case_ids) != len(set(source_sync_case_ids)):
+        raise AssertionError("Phase 5D source synchronization evaluation case IDs must be unique")
+    source_sync_domain_counts = {
+        domain: sum(1 for case in source_sync_evaluation["cases"] if case["domain"] == domain and not case.get("skip"))
+        for domain in ("mes", "plm", "qms", "cross-source-recovery")
+    }
+    if any(count < 8 for count in source_sync_domain_counts.values()) or len(source_sync_case_ids) < 32:
+        raise AssertionError(f"Phase 5D source synchronization evaluation coverage is insufficient: {source_sync_domain_counts}")
 
     evaluation_schema_path = ROOT / "packages" / "agent-evaluation" / "schemas" / "evaluation-dataset.schema.json"
     evaluation_schema = json.loads(evaluation_schema_path.read_text())
@@ -175,7 +194,7 @@ def main() -> int:
         if f'id: "{concept["id"]}"' not in semantic_source:
             raise AssertionError(f"Semantic concept is not present in the Demo: {concept['id']}")
 
-    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, {len(canonical_files)} canonical Agent baselines, {len(document_registry_files)} governed document registries, {source_extract_count} governed source extracts, legacy mappings, and ontology alignment.")
+    print(f"Contract validation passed: {len(graph_files)} graph views, {len(evaluation_files)} Agent evaluation dataset(s), semantic fixtures, {len(canonical_files)} canonical Agent baselines, {len(document_registry_files)} governed document registries, {source_extract_count} governed source extracts, {len(connector_profiles)} connector profiles, {len(source_sync_case_ids)} Phase 5D evaluation cases, legacy mappings, and ontology alignment.")
     return 0
 
 

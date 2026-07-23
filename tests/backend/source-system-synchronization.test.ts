@@ -173,6 +173,30 @@ describe("Phase 5D governed source synchronization", () => {
     expect((await staleStore.getSnapshot()).entities[0]?.sync.sourceRecordVersion).toBe("2026.07.22.1");
   });
 
+  it("plans duplicate, out-of-order, and same-version conflict records deterministically within one batch", async () => {
+    const initial = await new ControlledFileSourceConnector(mesManifest, "MES").readBatch();
+    const mapping = await loadGovernedSyncMapping(resolve("mappings/mes/operation-mapping.json"));
+    const original = initial.records[0]!;
+    const newer = signedRecord({ ...original, id: "source-record.mes.operation.op30.newer", version: "2026.07.22.2", recordedAt: "2026-07-22T08:10:00.000Z", payload: { ...original.payload, actual_cycle_time: 43 } });
+    const outOfOrderBatch = { manifest: { ...initial.manifest, extractId: "source-extract.mes.out-of-order", cursor: 101, recordCount: 2 }, records: [newer, original] };
+    const reversedBatch = { ...outOfOrderBatch, records: [...outOfOrderBatch.records].reverse() };
+    const first = await new GovernedSourceSynchronizationPipeline({ connector: new MutableConnector(outOfOrderBatch), mapping, store: new InMemoryGovernedSyncStore(), now: fixedNow }).synchronize(request("MES", "dry-run", "production"));
+    const second = await new GovernedSourceSynchronizationPipeline({ connector: new MutableConnector(reversedBatch), mapping, store: new InMemoryGovernedSyncStore(), now: fixedNow }).synchronize(request("MES", "dry-run", "production"));
+    expect(first.changes.map((item) => [item.canonicalId, item.changeType])).toEqual(second.changes.map((item) => [item.canonicalId, item.changeType]));
+    expect(first.decisions.some((item) => item.code === "stale-record")).toBe(true);
+
+    const duplicateBatch = { manifest: { ...initial.manifest, extractId: "source-extract.mes.duplicate", cursor: 102, recordCount: 2 }, records: [original, structuredClone(original)] };
+    const duplicate = await new GovernedSourceSynchronizationPipeline({ connector: new MutableConnector(duplicateBatch), mapping, store: new InMemoryGovernedSyncStore(), now: fixedNow }).synchronize(request("MES", "dry-run", "production"));
+    expect(duplicate.changes).toHaveLength(2);
+    expect(duplicate.decisions.filter((item) => item.code === "duplicate-record")).toHaveLength(1);
+
+    const conflicting = signedRecord({ ...original, id: "source-record.mes.operation.op30.conflicting", payload: { ...original.payload, actual_cycle_time: 99 } });
+    const conflictBatch = { manifest: { ...initial.manifest, extractId: "source-extract.mes.conflict", cursor: 103, recordCount: 2 }, records: [original, conflicting] };
+    const conflict = await new GovernedSourceSynchronizationPipeline({ connector: new MutableConnector(conflictBatch), mapping, store: new InMemoryGovernedSyncStore(), now: fixedNow }).synchronize(request("MES", "dry-run", "production"));
+    expect(conflict.changes).toEqual([]);
+    expect(conflict.decisions.every((item) => item.code === "same-version-hash-conflict" && item.status === "quarantined")).toBe(true);
+  });
+
   it("overlays governed synchronized facts without changing the repository contract", async () => {
     const store = new InMemoryGovernedSyncStore();
     const pipeline = await fixturePipeline("MES", mesManifest, "mappings/mes/operation-mapping.json", store);

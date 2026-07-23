@@ -12,7 +12,7 @@ import {
 
 type AcceptanceCheck = { id: string; status: "passed" | "failed"; detail: string };
 
-const snapshotPath = resolve(process.env.MKG_SOURCE_SYNC_STORE_PATH ?? ".data/source-sync/phase5d-acceptance-snapshot.json");
+const snapshotPath = resolve(process.env.MKG_SOURCE_SYNC_STORE_PATH ?? ".data/source-sync/phase5d-acceptance-snapshot.v2.json");
 const reportPath = resolve(process.env.MKG_SOURCE_SYNC_ACCEPTANCE_PATH ?? ".data/evaluations/phase5d-source-sync-acceptance.json");
 const fixtures = [
   { sourceSystem: "MES" as const, domainId: "production", manifest: "packages/demo-data/source-extracts/mes/manifest.json", mapping: "mappings/mes/operation-mapping.json" },
