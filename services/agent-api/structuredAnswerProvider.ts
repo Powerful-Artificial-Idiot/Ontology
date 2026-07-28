@@ -19,7 +19,7 @@ export class StructuredAnswerProvider implements LlmAnswerComposerProvider {
       instructions: answerComposerInstructions(input.language),
       input,
       schemaName: "evidence_grounded_answer_draft",
-      schema: answerDraftSchema(input),
+      schema: answerDraftSchema(input, !this.provider.capabilities.supportsServerSideJsonSchema),
       stage: "answer-composition",
       operationLabel: "answer composition",
       maxOutputTokens: 3500,
@@ -37,13 +37,14 @@ function answerComposerInstructions(language: LlmAnswerComposeInput["language"])
     "Compose an answer only from the supplied Evidence Context Projection.",
     "Every summary, finding, and risk must reference governed claim IDs; every recommended action must reference evidence IDs.",
     "Use only claim IDs, classifications, and evidence IDs allowed by the schema.",
+    "Every claim classified as fact must include at least one citation whose active evidence item supports that exact claim ID; never return a factual claim with an empty citations array.",
     "Keep assumptions and limitations explicit and do not present them as facts.",
     "Do not search, generate Cypher, create facts, create references, call tools, decide publication, or include reasoning.",
     languageRule,
   ].join(" ");
 }
 
-function answerDraftSchema(input: LlmAnswerComposeInput): Record<string, unknown> {
+function answerDraftSchema(input: LlmAnswerComposeInput, includePromptOnlyConstraints: boolean): Record<string, unknown> {
   const claimIds = input.evidence.claimPolicies.map((policy) => policy.claimId);
   const activeEvidence = input.evidence.items.filter((item) => !item.status || item.status === "active");
   const evidenceIds = activeEvidence.map((item) => item.id);
@@ -79,14 +80,24 @@ function answerDraftSchema(input: LlmAnswerComposeInput): Record<string, unknown
       limitations: { type: "array", items: { type: "string" } },
       claims: {
         type: "array",
-        items: { anyOf: input.evidence.claimPolicies.map((policy) => claimSchema(policy.claimId, policy.classification, activeEvidence.filter((item) => item.supportsClaimIds.includes(policy.claimId)).map((item) => item.id))) },
+        items: { anyOf: input.evidence.claimPolicies.map((policy) => claimSchema(
+          policy.claimId,
+          policy.classification,
+          activeEvidence.filter((item) => item.supportsClaimIds.includes(policy.claimId)).map((item) => item.id),
+          includePromptOnlyConstraints,
+        )) },
       },
       confidence: { type: "string", enum: ["low", "medium", "high"] },
     },
   };
 }
 
-function claimSchema(claimId: string, classification: string, evidenceIds: string[]): Record<string, unknown> {
+function claimSchema(
+  claimId: string,
+  classification: string,
+  evidenceIds: string[],
+  includePromptOnlyConstraints: boolean,
+): Record<string, unknown> {
   return {
     type: "object",
     additionalProperties: false,
@@ -97,6 +108,7 @@ function claimSchema(claimId: string, classification: string, evidenceIds: strin
       classification: { type: "string", enum: [classification] },
       citations: {
         type: "array",
+        ...(includePromptOnlyConstraints && classification === "fact" ? { minItems: 1 } : {}),
         items: {
           type: "object",
           additionalProperties: false,
