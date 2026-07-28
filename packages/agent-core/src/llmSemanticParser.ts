@@ -8,6 +8,7 @@ import type {
   SemanticQueryPlan,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError, assertPipeline } from "./errors";
+import { deriveQuantitativeConstraints, mergeDeterministicConstraints } from "./semanticQuantitativeConstraints";
 import type { SemanticParser } from "./types";
 
 export type SemanticParserMode = "deterministic" | "llm" | "hybrid";
@@ -67,22 +68,27 @@ export class CanonicalEntityCandidateResolver implements EntityCandidateResolver
   resolve(message: string, baseline: CanonicalKnowledgeBaseline): SemanticEntityCandidate[] {
     const normalizedMessage = normalizeText(message);
     const candidates = baseline.entities.map((entity) => {
-      const terms = unique<string | undefined>([
+      const primaryTerms = unique<string | undefined>([
         entity.id,
         entity.label,
+        ...(baseline.semanticAliases?.[entity.id] ?? []),
+      ]).filter((term): term is string => typeof term === "string" && term.length >= 2);
+      const contextTerms = unique<string | undefined>([
         entity.description,
         ...Object.values(entity.properties).filter((value): value is string => typeof value === "string"),
         ...(entity.source ?? []).flatMap((source) => [source.sourceId, source.documentName].filter((value): value is string => Boolean(value))),
-        ...(baseline.semanticAliases?.[entity.id] ?? []),
       ]).filter((term): term is string => typeof term === "string" && term.length >= 2);
-      const matchedTerms = terms.filter((term) => normalizedMessage.includes(normalizeText(term)));
+      const primaryMatches = primaryTerms.filter((term) => normalizedMessage.includes(normalizeText(term)));
+      const contextMatches = contextTerms.filter((term) => normalizedMessage.includes(normalizeText(term)));
+      const matchedTerms = unique([...primaryMatches, ...contextMatches]);
       return {
         id: entity.id,
         label: entity.label,
         type: entity.type,
         domain: entity.domain ?? "governance",
         matchedTerms,
-        matchScore: matchedTerms.reduce((score, term) => score + Math.min(20, normalizeText(term).length), 0),
+        matchScore: primaryMatches.reduce((score, term) => score + Math.min(20, normalizeText(term).length) * 4, 0)
+          + contextMatches.reduce((score, term) => score + Math.min(20, normalizeText(term).length), 0),
       };
     });
     return candidates
@@ -173,7 +179,10 @@ export class LlmSemanticParser implements SemanticParser {
       entities,
       relationTypes: [...draft.relationTypes],
       requestedFacets: [...draft.requestedFacets],
-      constraints: draft.constraints.map(cloneConstraint),
+      constraints: mergeDeterministicConstraints(
+        draft.constraints,
+        deriveQuantitativeConstraints(request.message, draft.intent),
+      ),
       assumptions: request.language === "en"
         ? ["The recent abnormality is a local QMS fixture signal; no live time series is connected."]
         : [...baseline.queryPlan.assumptions],
@@ -264,10 +273,6 @@ function isConstraintOperator(value: unknown): value is QueryPlanConstraint["ope
 
 function isConstraintValue(value: unknown): value is QueryPlanConstraint["value"] {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean" || (Array.isArray(value) && value.every((item) => typeof item === "string"));
-}
-
-function cloneConstraint(constraint: QueryPlanConstraint): QueryPlanConstraint {
-  return { ...constraint, value: Array.isArray(constraint.value) ? [...constraint.value] : constraint.value };
 }
 
 function normalizeText(value: string): string {

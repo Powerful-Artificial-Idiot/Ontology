@@ -19,6 +19,7 @@ import {
   type ValidatedQueryPlan,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError, assertPipeline } from "./errors";
+import { deriveQuantitativeConstraints } from "./semanticQuantitativeConstraints";
 import type {
   AgentClock,
   AgentIdFactory,
@@ -150,25 +151,8 @@ export class DeterministicScenarioSemanticParser implements SemanticParser {
       ...constraint,
       value: Array.isArray(constraint.value) ? [...constraint.value] : constraint.value,
     }));
-    if (intent === "percentage_change_assessment" || intent === "value_limit_comparison") {
-      const percentageChange = extractPercentage(normalized);
-      const referenceValue = extractReferenceValue(normalized);
-      if (percentageChange !== undefined || intent === "value_limit_comparison") {
-        constraints.push({ key: "percentageChange", operator: "eq", value: percentageChange ?? 0 });
-      }
-      if (referenceValue !== undefined) constraints.push({ key: "referenceValue", operator: "eq", value: referenceValue });
-      constraints.push({
-        key: "referencePolicy",
-        operator: "eq",
-        value: referenceValue !== undefined
-          ? "explicit"
-          : /control center|center line|中心线|中心值/u.test(normalized)
-            ? "control-center-line"
-            : /latest|current mean|最新|当前均值/u.test(normalized)
-              ? "latest-governed-observation"
-              : "compare-all-governed-baselines",
-      });
-    }
+    const deterministicQuantitativeConstraints = deriveQuantitativeConstraints(request.message, intent);
+    constraints.push(...deterministicQuantitativeConstraints);
     return {
       ...baseline.queryPlan,
       planId: `query-plan.${request.requestId}`,
@@ -178,7 +162,7 @@ export class DeterministicScenarioSemanticParser implements SemanticParser {
       relationTypes: [...baseline.queryPlan.relationTypes],
       requestedFacets: [...baseline.queryPlan.requestedFacets],
       constraints,
-      assumptions: intent === "percentage_change_assessment" && extractReferenceValue(normalized) === undefined
+      assumptions: intent === "percentage_change_assessment" && !deterministicQuantitativeConstraints.some((constraint) => constraint.key === "referenceValue")
         ? [...baseline.queryPlan.assumptions, "The percentage increase has no explicit baseline; compare all governed baselines."]
         : [...baseline.queryPlan.assumptions],
     };
@@ -751,18 +735,6 @@ function inferQualityIntent(normalized: string): SemanticQueryPlan["intent"] {
 
 function formatCompact(value: number): string {
   return Number.isInteger(value) ? String(value) : String(Number(value.toFixed(3)));
-}
-
-function extractPercentage(normalized: string): number | undefined {
-  const match = normalized.match(/(-?\d+(?:\.\d+)?)\s*(?:%|percent|百分)/u);
-  return match ? Number(match[1]) : undefined;
-}
-
-function extractReferenceValue(normalized: string): number | undefined {
-  const explicit = normalized.match(/(?:from|reference|baseline|从|基准(?:为|是)?)\s*(\d+(?:\.\d+)?)\s*(?:sccm)?/u);
-  if (explicit) return Number(explicit[1]);
-  const values = [...normalized.matchAll(/(\d+(?:\.\d+)?)\s*sccm/gu)].map((match) => Number(match[1]));
-  return values.length === 1 ? values[0] : undefined;
 }
 
 function cloneEvidenceItem(item: EvidenceItem): EvidenceItem {

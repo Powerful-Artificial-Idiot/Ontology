@@ -90,6 +90,43 @@ describe("Phase 4A LLM Semantic Parser", () => {
       detail: { code: "LLM_PROVIDER_UNAVAILABLE", details: { provider: "unavailable-test-provider" } },
     });
   });
+
+  it("preserves deterministic quantitative constraints when the LLM omits them", async () => {
+    const parser = new LlmSemanticParser(new CapturingProvider({
+      ...validDraft(),
+      intent: "percentage_change_assessment",
+      constraints: [{ key: "percentageChange", operator: "eq", value: 25 }],
+    }));
+
+    const ambiguous = await parser.parse(
+      request("llm-quantitative-ambiguous", "OP30 的 Leak Rate 提升 50% 是否超标？"),
+      leakRateQualityIssueTraceBaseline,
+    );
+    expect(ambiguous.constraints).toEqual(expect.arrayContaining([
+      { key: "percentageChange", operator: "eq", value: 50 },
+      { key: "referencePolicy", operator: "eq", value: "compare-all-governed-baselines" },
+    ]));
+    expect(ambiguous.constraints).not.toContainEqual({ key: "percentageChange", operator: "eq", value: 25 });
+
+    const explicitCandidates = new CanonicalEntityCandidateResolver().resolve(
+      "If OP30 Leak Rate increases 50 percent from 0.22 sccm, what is the result?",
+      leakRateQualityIssueTraceBaseline,
+    );
+    expect(explicitCandidates.map((candidate) => candidate.id)).toEqual(expect.arrayContaining([
+      "operation.op30",
+      "quality-characteristic.leak-rate",
+    ]));
+
+    const explicit = await parser.parse(
+      request("llm-quantitative-explicit", "If OP30 Leak Rate increases 50 percent from 0.22 sccm, what is the result?"),
+      leakRateQualityIssueTraceBaseline,
+    );
+    expect(explicit.constraints).toEqual(expect.arrayContaining([
+      { key: "percentageChange", operator: "eq", value: 50 },
+      { key: "referenceValue", operator: "eq", value: 0.22 },
+      { key: "referencePolicy", operator: "eq", value: "explicit" },
+    ]));
+  });
 });
 
 class CapturingProvider implements LlmSemanticParserProvider {
