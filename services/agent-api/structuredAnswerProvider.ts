@@ -22,7 +22,7 @@ export class StructuredAnswerProvider implements LlmAnswerComposerProvider {
       schema: answerDraftSchema(input, !this.provider.capabilities.supportsServerSideJsonSchema),
       stage: "answer-composition",
       operationLabel: "answer composition",
-      maxOutputTokens: 3500,
+      maxOutputTokens: 6000,
     }, signal);
     return result.value;
   }
@@ -37,6 +37,7 @@ function answerComposerInstructions(language: LlmAnswerComposeInput["language"])
     "Compose an answer only from the supplied Evidence Context Projection.",
     "Every summary, finding, and risk must reference governed claim IDs; every recommended action must reference evidence IDs.",
     "Use only claim IDs, classifications, and evidence IDs allowed by the schema.",
+    "Return every claim whose policy has required=true, and omit optional claims unless they are necessary to answer the question.",
     "Every claim classified as fact must include at least one citation whose active evidence item supports that exact claim ID; never return a factual claim with an empty citations array.",
     "Keep assumptions and limitations explicit and do not present them as facts.",
     "Do not search, generate Cypher, create facts, create references, call tools, decide publication, or include reasoning.",

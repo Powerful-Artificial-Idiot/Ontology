@@ -81,11 +81,13 @@ describe("DeepSeek Chat Completions provider adapters", () => {
     await expect(provider.compose(answerInput())).resolves.toEqual(draft);
     const body = JSON.parse(String(fetchImpl.mock.calls[0]?.[1]?.body));
     expect(body.model).toBe("deepseek-v4-pro");
+    expect(body.max_tokens).toBe(6000);
     expect(body.messages[0].content).toContain("evidence_grounded_answer_draft");
     expect(body.messages[0].content).toContain("evidence-chunk.document.sop.op30-leak-test");
     expect(body.messages[0].content).toContain("Write every user-facing string in English only");
     expect(body.messages[0].content).toContain("no user-facing string contains Chinese characters");
     expect(body.messages[0].content).toContain("never return a factual claim with an empty citations array");
+    expect(body.messages[0].content).toContain("omit optional claims unless they are necessary");
     expect(body.messages[0].content).toContain('"minItems":1');
     expect(body.messages[1].content).toContain("claimPolicies");
   });
