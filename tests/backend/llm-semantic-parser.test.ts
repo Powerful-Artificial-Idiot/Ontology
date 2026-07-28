@@ -94,7 +94,7 @@ describe("Phase 4A LLM Semantic Parser", () => {
   it("preserves deterministic quantitative constraints when the LLM omits them", async () => {
     const parser = new LlmSemanticParser(new CapturingProvider({
       ...validDraft(),
-      intent: "percentage_change_assessment",
+      intent: "quality_issue_trace",
       constraints: [{ key: "percentageChange", operator: "eq", value: 25 }],
     }));
 
@@ -106,6 +106,7 @@ describe("Phase 4A LLM Semantic Parser", () => {
       { key: "percentageChange", operator: "eq", value: 50 },
       { key: "referencePolicy", operator: "eq", value: "compare-all-governed-baselines" },
     ]));
+    expect(ambiguous.intent).toBe("percentage_change_assessment");
     expect(ambiguous.constraints).not.toContainEqual({ key: "percentageChange", operator: "eq", value: 25 });
 
     const explicitCandidates = new CanonicalEntityCandidateResolver().resolve(

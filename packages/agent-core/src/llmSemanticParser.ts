@@ -8,7 +8,11 @@ import type {
   SemanticQueryPlan,
 } from "../../knowledge-contracts/src/index";
 import { AgentPipelineError, assertPipeline } from "./errors";
-import { deriveQuantitativeConstraints, mergeDeterministicConstraints } from "./semanticQuantitativeConstraints";
+import {
+  deriveQuantitativeConstraints,
+  mergeDeterministicConstraints,
+  resolveQuantitativeIntent,
+} from "./semanticQuantitativeConstraints";
 import type { SemanticParser } from "./types";
 
 export type SemanticParserMode = "deterministic" | "llm" | "hybrid";
@@ -165,6 +169,7 @@ export class LlmSemanticParser implements SemanticParser {
         { ambiguityCount: draft.ambiguityNotes.length },
       );
     }
+    const intent = resolveQuantitativeIntent(request.message, draft.intent, input.allowedIntents);
     const entityById = new Map(baseline.entities.map((entity) => [entity.id, entity]));
     const entities = draft.entities.map((selection) => {
       const entity = entityById.get(selection.candidateId);
@@ -174,14 +179,14 @@ export class LlmSemanticParser implements SemanticParser {
     return {
       planId: `query-plan.${request.requestId}`,
       planVersion: "1.0.0",
-      intent: draft.intent,
+      intent,
       originalQuestion: request.message,
       entities,
       relationTypes: [...draft.relationTypes],
       requestedFacets: [...draft.requestedFacets],
       constraints: mergeDeterministicConstraints(
         draft.constraints,
-        deriveQuantitativeConstraints(request.message, draft.intent),
+        deriveQuantitativeConstraints(request.message, intent),
       ),
       assumptions: request.language === "en"
         ? ["The recent abnormality is a local QMS fixture signal; no live time series is connected."]

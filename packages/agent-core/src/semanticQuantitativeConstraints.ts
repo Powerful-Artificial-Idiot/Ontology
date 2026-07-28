@@ -29,6 +29,18 @@ export function deriveQuantitativeConstraints(
   return constraints;
 }
 
+export function resolveQuantitativeIntent(
+  message: string,
+  proposedIntent: AgentQueryIntent,
+  allowedIntents: AgentQueryIntent[],
+): AgentQueryIntent {
+  const normalized = message.normalize("NFKC").toLowerCase();
+  if (extractPercentage(normalized) !== undefined && allowedIntents.includes("percentage_change_assessment")) {
+    return "percentage_change_assessment";
+  }
+  return proposedIntent;
+}
+
 export function mergeDeterministicConstraints(
   modelConstraints: QueryPlanConstraint[],
   deterministicConstraints: QueryPlanConstraint[],
