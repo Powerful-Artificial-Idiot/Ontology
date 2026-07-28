@@ -40,6 +40,6 @@ npm run demo-data:rich:seed
 
 `demo-data:rich:seed` is dry-run by default. Applying the seed requires `-- --apply` and `MKG_DEMO_TENANT_ID=tenant.demo-manufacturing`. It uses tenant-scoped idempotent `MERGE` operations, never clears the graph, and does not print secrets.
 
-After changing parser/composer prompts or provider inputs, deterministic and injected-provider regression must be rerun. DeepSeek live acceptance is then **deployment rerun required**; this local phase does not claim a new real-provider acceptance.
+After changing parser/composer prompts or provider inputs, deterministic and injected-provider regression must be rerun. The protected deployment acceptance was rerun on 2026-07-28 for release `cc126e6`: the real DeepSeek path returned `percentage_change_assessment`, disclosed both governed baselines, produced the deterministic `0.22 -> 0.33 sccm` and `0.20 -> 0.30 sccm` assessments, and passed evidence/citation validation without fallback. No API key, prompt, raw provider response, or reasoning content is stored in this repository.
 
 The optional Neo4j live acceptance seeds the canonical baselines and compares sorted entity and relation IDs for all 12 rich Quality query templates against `MockKnowledgeRepository`. It also verifies the result limit, governed relation allowlist, and relation endpoints. The current local container acceptance passes 12/12 template parity checks.

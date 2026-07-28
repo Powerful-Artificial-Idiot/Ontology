@@ -9,7 +9,7 @@
 - [x] Added live Mock/Neo4j parity coverage for all 12 rich Quality query templates.
 - [x] Kept specification, internal process limits, measurement capability, and program release state as separate governed concepts.
 - [x] Added tenant-scoped, idempotent, dry-run-first rich demo seed tooling.
-- [ ] Rerun DeepSeek live provider acceptance in the deployment environment after this prompt/parser/composer delta.
+- [x] Reran protected DeepSeek live provider acceptance on release `cc126e6`: quantitative intent, both governed baselines, 27 evidence items, citation validation, and no-fallback execution passed.
 
 This expansion is synthetic demo-only data and is not a production manufacturing specification.
 
