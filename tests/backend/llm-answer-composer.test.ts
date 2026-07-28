@@ -64,7 +64,11 @@ describe("Phase 4B evidence-grounded LLM Answer Composer", () => {
     const omittedOptionalClaim = validDraft();
     omittedOptionalClaim.claims = omittedOptionalClaim.claims.filter((claim) => claim.id !== "claim.affected-product");
     const composer = new LlmEvidenceAnswerComposer(new CapturingAnswerProvider(omittedOptionalClaim));
-    await expect(composer.compose(request("omitted-optional-claim"), emptyGraph(), optionalClaimPack)).rejects.toThrow("absent from the returned claim set");
+    await expect(composer.compose(request("omitted-optional-claim"), emptyGraph(), optionalClaimPack)).rejects.toThrow("not grounded in governed claim IDs");
+
+    const projected = new EvidenceContextProjector().project(optionalClaimPack);
+    expect(projected.claimPolicies.map((policy) => policy.claimId)).not.toContain("claim.affected-product");
+    expect(projected.items.flatMap((item) => item.supportsClaimIds)).not.toContain("claim.affected-product");
 
     const inactiveEvidencePack = structuredClone(leakRateQualityIssueTraceBaseline.evidencePack);
     inactiveEvidencePack.items.push({ ...inactiveEvidencePack.items[0]!, id: "evidence.inactive-action", status: "superseded" });

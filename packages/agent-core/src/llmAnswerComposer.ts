@@ -95,9 +95,11 @@ export class EvidenceContextProjector {
     const evidenceIds = new Set(evidencePack.items.map((item) => item.id));
     const supportedClaimIds = new Set(evidencePack.items.flatMap((item) => item.supportsClaimIds));
     const claimPolicies = evidencePack.claimPolicies ?? [];
-    claimPolicies
-      .filter((policy) => policy.required)
+    const requiredClaimPolicies = claimPolicies.filter((policy) => policy.required);
+    assertPipeline(requiredClaimPolicies.length > 0, "EVIDENCE_INSUFFICIENT", "LLM answer composition requires at least one required governed claim policy.", "answer-composition");
+    requiredClaimPolicies
       .forEach((policy) => assertPipeline(supportedClaimIds.has(policy.claimId), "EVIDENCE_INSUFFICIENT", `No evidence supports governed claim ${policy.claimId}.`, "answer-composition", { claimId: policy.claimId }));
+    const projectedClaimIds = new Set(requiredClaimPolicies.map((policy) => policy.claimId));
     evidencePack.items.forEach((item) => {
       assertPipeline(item.excerpt.length <= this.maximumExcerptCharacters, "EVIDENCE_INSUFFICIENT", `Evidence excerpt exceeds the bounded projection limit: ${item.id}`, "answer-composition", { evidenceId: item.id, excerptCharacters: item.excerpt.length });
       assertPipeline(evidenceIds.has(item.id), "EVIDENCE_INSUFFICIENT", "Evidence projection contains an invalid ID.", "answer-composition");
@@ -124,9 +126,9 @@ export class EvidenceContextProjector {
           accessDecision: item.governance.accessDecision,
         } : undefined,
         linkedEntityIds: [...item.linkedEntityIds],
-        supportsClaimIds: [...item.supportsClaimIds],
+        supportsClaimIds: item.supportsClaimIds.filter((claimId) => projectedClaimIds.has(claimId)),
       })),
-      claimPolicies: claimPolicies.map((policy) => ({ ...policy })),
+      claimPolicies: requiredClaimPolicies.map((policy) => ({ ...policy })),
       limitations: [...evidencePack.limitations],
     };
     const size = JSON.stringify(projected).length;
