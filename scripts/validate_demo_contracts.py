@@ -54,6 +54,7 @@ def main() -> int:
         "source-extract-manifest.schema.json",
         "source-sync-report.schema.json",
         "connector-profile.schema.json",
+        "knowledge-change-set.schema.json",
     )]
     registry = schema_registry(schemas)
     by_title = {schema["title"]: schema for schema in schemas}
@@ -133,6 +134,18 @@ def main() -> int:
     }
     if any(count < 8 for count in source_sync_domain_counts.values()) or len(source_sync_case_ids) < 32:
         raise AssertionError(f"Phase 5D source synchronization evaluation coverage is insufficient: {source_sync_domain_counts}")
+
+    authoring_evaluation_schema = json.loads((ROOT / "packages" / "knowledge-authoring" / "schemas" / "knowledge-authoring-evaluation.schema.json").read_text())
+    Draft202012Validator.check_schema(authoring_evaluation_schema)
+    authoring_evaluation = json.loads((ROOT / "packages" / "demo-data" / "authoring" / "phase5e-evaluation.v1.json").read_text())
+    validate_json(authoring_evaluation, authoring_evaluation_schema, Registry(), "Phase 5E governed authoring evaluation")
+    authoring_case_ids = [case["caseId"] for case in authoring_evaluation["cases"]]
+    if len(authoring_case_ids) != len(set(authoring_case_ids)):
+        raise AssertionError("Phase 5E authoring evaluation case IDs must be unique")
+    authoring_minimums = {"workflow": 8, "entity-relation": 8, "authorization-governance": 8, "integration-ui": 6}
+    authoring_counts = {category: sum(1 for case in authoring_evaluation["cases"] if case["category"] == category) for category in authoring_minimums}
+    if any(authoring_counts[category] < minimum for category, minimum in authoring_minimums.items()) or len(authoring_case_ids) < 30:
+        raise AssertionError(f"Phase 5E authoring evaluation coverage is insufficient: {authoring_counts}")
 
     evaluation_schema_path = ROOT / "packages" / "agent-evaluation" / "schemas" / "evaluation-dataset.schema.json"
     evaluation_schema = json.loads(evaluation_schema_path.read_text())

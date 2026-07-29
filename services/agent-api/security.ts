@@ -28,7 +28,7 @@ export class DisabledAgentAuthenticator implements AgentAuthenticator {
   private readonly principal: AgentPrincipal = {
     id: "demo-user",
     tenantId: "local-demo",
-    roleIds: ["agent-admin", "agent-evidence-reader"],
+    roleIds: ["agent-admin", "agent-evidence-reader", "demo-knowledge-admin"],
     domainIds: ["*"],
     objectIds: ["*"],
     authenticationMethod: "none",

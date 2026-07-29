@@ -224,6 +224,18 @@ P0 Documentation
 
 P5 与 P6 可以在 P4 后并行，但 P7 不应早于 Evidence Pack 与 Citation Validator。
 
+## Phase 5E - Governed Knowledge Authoring
+
+- [x] Shared Change Set, mutation, validation, diff, approval, publication, audit, and provenance contracts.
+- [x] Atomic JSON Change Set store with corruption detection and idempotency records.
+- [x] Central Draft -> Submitted -> Approved -> Published workflow without bypass APIs.
+- [x] Source-owned field, canonical ID, version, reference, ontology relation, tenant, domain, and permission validation.
+- [x] Mock and static-parameterized Neo4j publication boundaries with post-publication verification.
+- [x] Published-only repository projection for Explorer and Agent isolation.
+- [x] Route Explorer Authoring Mode with schema-driven form, validation, diff, workflow, and audit display.
+- [x] Versioned 36-case deterministic evaluation and CI release gate.
+- [ ] Enterprise workflow, multi-approver signing, notifications, bulk import, source writeback, and LLM-assisted authoring.
+
 ## 6. First Implementation Increment
 
 下一次代码迭代建议严格限制为 P1：

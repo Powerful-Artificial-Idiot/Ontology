@@ -10,6 +10,8 @@ interface HeaderProps {
   onPageChange: (page: AppPage) => void;
   onViewModeChange?: (viewMode: ViewMode) => void;
   onSearchChange: (keyword: string) => void;
+  authoringMode?: boolean;
+  onAuthoringModeChange?: (enabled: boolean) => void;
 }
 
 const viewOptions: Array<{ value: ViewMode; label: string }> = [
@@ -29,6 +31,8 @@ export function Header({
   onPageChange,
   onViewModeChange,
   onSearchChange,
+  authoringMode = false,
+  onAuthoringModeChange,
 }: HeaderProps) {
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-4">
@@ -96,6 +100,22 @@ export function Header({
         <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">
           {activePage === "semantic" ? "Semantic Layer" : activePage === "agent" ? "Agent Runtime" : "Schema Layer"}
         </span>
+      )}
+
+      {activePage === "route" && onAuthoringModeChange && (
+        <button
+          type="button"
+          aria-pressed={authoringMode}
+          onClick={() => onAuthoringModeChange(!authoringMode)}
+          className={[
+            "whitespace-nowrap rounded-md border px-3 py-2 text-xs font-bold transition",
+            authoringMode
+              ? "border-emerald-700 bg-emerald-700 text-white"
+              : "border-slate-200 bg-white text-slate-600 hover:border-emerald-500 hover:text-emerald-700",
+          ].join(" ")}
+        >
+          Authoring
+        </button>
       )}
 
       <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">

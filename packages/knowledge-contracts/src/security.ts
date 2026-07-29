@@ -32,10 +32,17 @@ export type AgentSecurityAction =
   | "evidence:read"
   | "audit:read"
   | "source-sync:read"
-  | "source-sync:apply";
+  | "source-sync:apply"
+  | "knowledge-authoring:read"
+  | "knowledge-authoring:edit"
+  | "knowledge-authoring:submit"
+  | "knowledge-authoring:review"
+  | "knowledge-authoring:approve"
+  | "knowledge-authoring:publish"
+  | "knowledge-authoring:admin";
 
 export type AgentSecurityResource = {
-  type: "scenario" | "session" | "turn" | "run" | "trace" | "evidence" | "audit" | "source-extract";
+  type: "scenario" | "session" | "turn" | "run" | "trace" | "evidence" | "audit" | "source-extract" | "knowledge-change-set" | "knowledge-object";
   id: string;
   sessionId?: string;
   turnId?: string;

@@ -16,6 +16,7 @@ import { DetailPanel } from "../components/DetailPanel";
 import { Header } from "../components/Header";
 import { LeftSidebar } from "../components/LeftSidebar";
 import { StackNode as StackNodeComponent } from "../components/StackNode";
+import { AuthoringPanel } from "../features/authoring/AuthoringPanel";
 import { buildRouteGraphFromResponse, type RouteGraphViewModel } from "../features/route/routeRepositoryAdapter";
 import { knowledgeRepository, type KnowledgeRepository } from "../repositories";
 import type { ExplorerRoute } from "../router/explorerRouter";
@@ -30,6 +31,7 @@ import {
   selectStackObject,
 } from "../lib/graphUtils";
 import type { AppPage, StackNode, StackNodeRenderData, StackObjectType, ViewMode } from "../types";
+import type { PublicKnowledgeChangeSet } from "../features/authoring/knowledgeAuthoringClient";
 
 type RouteLaneId = "source" | "process" | "output";
 
@@ -153,8 +155,25 @@ function GraphExplorerCanvas({
   const [activeCategory, setActiveCategory] = useState<StackObjectType>("Machine");
   const [activeRouteLane, setActiveRouteLane] = useState<RouteLaneId | null>(null);
   const [sidebarScrollRequest, setSidebarScrollRequest] = useState(0);
+  const [authoringMode, setAuthoringMode] = useState(false);
+  const [publishedNotice, setPublishedNotice] = useState<string>();
+  const [authoredNodes, setAuthoredNodes] = useState<StackNode[]>([]);
+  const [authoringChangeSets, setAuthoringChangeSets] = useState<PublicKnowledgeChangeSet[]>([]);
 
-  const viewVisibleNodes = routeGraphs[viewMode].nodes;
+  const baseViewVisibleNodes = routeGraphs[viewMode].nodes;
+  const draftOverlayNodes = useMemo(
+    () => authoringChangeSets
+      .filter((changeSet) => ["draft", "submitted", "changes-requested", "approved"].includes(changeSet.status))
+      .flatMap((changeSet, index) => {
+        const node = toDraftPresentationNode(changeSet, baseViewVisibleNodes.find((candidate) => candidate.id === selectedNodeId), index, viewMode);
+        return node ? [node] : [];
+      }),
+    [authoringChangeSets, baseViewVisibleNodes, selectedNodeId, viewMode],
+  );
+  const viewVisibleNodes = useMemo(
+    () => [...baseViewVisibleNodes, ...authoredNodes.filter((node) => !node.visibleInViews || node.visibleInViews.includes(viewMode)), ...draftOverlayNodes.filter((node) => !node.visibleInViews || node.visibleInViews.includes(viewMode))],
+    [authoredNodes, baseViewVisibleNodes, draftOverlayNodes, viewMode],
+  );
   const viewVisibleEdges = routeGraphs[viewMode].edges;
   const focusedElements = useMemo(
     () =>
@@ -184,6 +203,17 @@ function GraphExplorerCanvas({
   const selectedObject = selectedObjectId ? selectStackObject(viewVisibleNodes, selectedObjectId)?.object : undefined;
   const expandedNode = expandedNodeId ? viewVisibleNodes.find((node) => node.id === expandedNodeId) : undefined;
   const expandedTopObject = expandedNode ? getTopObject(expandedNode, viewMode) : undefined;
+  const authoringStateByCanonicalId = useMemo(() => {
+    const entries = new Map<string, { status: StackNodeRenderData["authoringStatus"]; changeType: StackNodeRenderData["authoringChangeType"] }>();
+    authoringChangeSets.forEach((changeSet) => {
+      if (!["draft", "submitted", "changes-requested", "approved", "rejected", "withdrawn"].includes(changeSet.status)) return;
+      changeSet.entityMutations.forEach((mutation) => entries.set(mutation.canonicalId, {
+        status: changeSet.status as StackNodeRenderData["authoringStatus"],
+        changeType: mutation.operation === "create" ? "created" : mutation.operation === "update" ? "updated" : "deactivated",
+      }));
+    });
+    return entries;
+  }, [authoringChangeSets]);
 
   useEffect(() => {
     const nextView = route.viewMode ?? "production";
@@ -361,6 +391,7 @@ function GraphExplorerCanvas({
           : selectedNodeId
             ? !isNeighborhoodNode
             : false;
+      const authoringState = node.stackObjects.map((object) => authoringStateByCanonicalId.get(object.id)).find(Boolean);
 
       return {
         id: node.id,
@@ -372,6 +403,8 @@ function GraphExplorerCanvas({
         data: {
           stackNode: node,
           viewMode,
+          authoringStatus: authoringState?.status,
+          authoringChangeType: authoringState?.changeType,
           expanded: focusMode && expandedNodeId === node.id,
           selected: selectedNodeId === node.id,
           highlighted,
@@ -384,6 +417,7 @@ function GraphExplorerCanvas({
     [
       expandedNodeId,
       activeRouteLane,
+      authoringStateByCanonicalId,
       focusMode,
       handleSelectStackObject,
       handleToggleExpandNode,
@@ -485,6 +519,8 @@ function GraphExplorerCanvas({
           onRouteChange({ page: "route", viewMode: nextView, selectedEntityId: nextSelectedNode?.id });
         }}
         onSearchChange={handleSearchChange}
+        authoringMode={authoringMode}
+        onAuthoringModeChange={setAuthoringMode}
       />
 
       <div className="flex min-h-0 flex-1">
@@ -499,6 +535,11 @@ function GraphExplorerCanvas({
         />
 
         <main className="relative min-w-0 flex-1">
+          {publishedNotice && (
+            <div className="absolute bottom-5 left-1/2 z-30 -translate-x-1/2 rounded-full border border-emerald-200 bg-white px-4 py-2 text-xs font-bold text-emerald-800 shadow-graph">
+              Published: {publishedNotice}
+            </div>
+          )}
           <div className="absolute left-5 top-4 z-10 flex gap-2">
             {viewMode === "valueStream" ? (
               <>
@@ -552,18 +593,87 @@ function GraphExplorerCanvas({
           </ReactFlow>
         </main>
 
-        <DetailPanel
-          nodes={detailScopeNodes}
-          edges={graphVisibleEdges}
-          selectedNode={selectedNode}
-          selectedObject={selectedObject}
-          viewMode={viewMode}
-          focusMode={focusMode}
-          onSelectObject={handleSelectObjectById}
-        />
+        {authoringMode ? (
+          <AuthoringPanel
+            selectedObject={selectedObject}
+            onChangeSetsChange={setAuthoringChangeSets}
+            onPublished={(changeSet) => {
+              setPublishedNotice(changeSet.title);
+              const nextNode = toPublishedPresentationNode(changeSet, selectedNode, authoredNodes.length, viewMode);
+              if (nextNode && !getNodeByObjectId([...viewVisibleNodes, ...authoredNodes], nextNode.stackObjects[0].id)) {
+                setAuthoredNodes((nodes) => [...nodes, nextNode]);
+              }
+              window.setTimeout(() => setPublishedNotice(undefined), 4_000);
+            }}
+          />
+        ) : (
+          <DetailPanel
+            nodes={detailScopeNodes}
+            edges={graphVisibleEdges}
+            selectedNode={selectedNode}
+            selectedObject={selectedObject}
+            viewMode={viewMode}
+            focusMode={focusMode}
+            onSelectObject={handleSelectObjectById}
+          />
+        )}
       </div>
     </div>
   );
+}
+
+function toDraftPresentationNode(changeSet: PublicKnowledgeChangeSet, selectedNode: StackNode | undefined, index: number, viewMode: ViewMode): StackNode | undefined {
+  const node = toPublishedPresentationNode(changeSet, selectedNode, index, viewMode);
+  if (!node) return undefined;
+  const object = node.stackObjects[0];
+  return {
+    ...node,
+    id: `DRAFT-${object.id}`,
+    stackObjects: [{
+      ...object,
+      sourceSystem: "Knowledge Authoring Draft",
+      sourceId: changeSet.id,
+      description: `${object.description} This presentation overlay is not published knowledge.`,
+    }],
+  };
+}
+
+function toPublishedPresentationNode(changeSet: PublicKnowledgeChangeSet, selectedNode: StackNode | undefined, index: number, viewMode: ViewMode): StackNode | undefined {
+  const mutation = changeSet.entityMutations.find((candidate) => candidate.operation === "create");
+  if (!mutation || mutation.operation !== "create") return undefined;
+  const stackType = canonicalToStackType(mutation.canonicalType);
+  if (!stackType) return undefined;
+  const label = typeof mutation.properties.label === "string" ? mutation.properties.label : mutation.canonicalId;
+  const basePosition = selectedNode ? getNodePosition(selectedNode, viewMode) : { x: 860, y: 160 };
+  const object = {
+    id: mutation.canonicalId,
+    label,
+    type: stackType,
+    description: typeof mutation.properties.description === "string" ? mutation.properties.description : "Published through governed knowledge authoring.",
+    sourceSystem: "Knowledge Authoring",
+    sourceId: changeSet.id,
+    version: mutation.proposedVersion,
+    owner: typeof mutation.properties.owner === "string" ? mutation.properties.owner : changeSet.createdBy,
+    lastUpdated: changeSet.publishedAt ?? changeSet.updatedAt,
+    attributes: Object.fromEntries(Object.entries(mutation.properties).filter(([key]) => !["label", "description"].includes(key)).map(([key, value]) => [key, String(value)])),
+  };
+  return {
+    id: `AUTH-${mutation.canonicalId}`,
+    position: { x: basePosition.x + 360, y: basePosition.y + index * 140 },
+    stackObjects: [object],
+    topObjectByView: { production: object.id, quality: object.id, engineering: object.id },
+    nodeCategory: canonicalToNodeCategory(mutation.canonicalType),
+    visibleInViews: mutation.canonicalType === "QualityCharacteristic" ? ["quality"] : mutation.canonicalType === "EngineeringChange" ? ["engineering"] : ["production", "engineering"],
+  };
+}
+
+function canonicalToStackType(canonicalType: string): StackObjectType | undefined {
+  return ({ Product: "Product", Operation: "Operation", Machine: "Machine", QualityCharacteristic: "Quality Characteristic", FailureMode: "PFMEA Risk", EngineeringChange: "Engineering Change" } as Record<string, StackObjectType>)[canonicalType];
+}
+
+function canonicalToNodeCategory(canonicalType: string): StackNode["nodeCategory"] {
+  if (canonicalType === "Product") return "finished-product";
+  return "operation";
 }
 
 function buildInitialNode(

@@ -12,7 +12,13 @@ const roleActions: Record<string, AgentSecurityAction[]> = {
   "agent-auditor": ["session:read", "run:read", "trace:read", "evidence:read", "audit:read"],
   "source-sync-reader": ["source-sync:read"],
   "source-sync-operator": ["source-sync:read", "source-sync:apply"],
-  "agent-admin": ["session:create", "session:read", "turn:execute", "run:read", "run:control", "trace:read", "evidence:read", "audit:read", "source-sync:read", "source-sync:apply"],
+  "knowledge-viewer": ["knowledge-authoring:read"],
+  "knowledge-editor": ["knowledge-authoring:read", "knowledge-authoring:edit", "knowledge-authoring:submit"],
+  "knowledge-reviewer": ["knowledge-authoring:read", "knowledge-authoring:review"],
+  "knowledge-approver": ["knowledge-authoring:read", "knowledge-authoring:review", "knowledge-authoring:approve"],
+  "knowledge-publisher": ["knowledge-authoring:read", "knowledge-authoring:publish"],
+  "demo-knowledge-admin": ["knowledge-authoring:read", "knowledge-authoring:edit", "knowledge-authoring:submit", "knowledge-authoring:review", "knowledge-authoring:approve", "knowledge-authoring:publish", "knowledge-authoring:admin"],
+  "agent-admin": ["session:create", "session:read", "turn:execute", "run:read", "run:control", "trace:read", "evidence:read", "audit:read", "source-sync:read", "source-sync:apply", "knowledge-authoring:read", "knowledge-authoring:edit", "knowledge-authoring:submit", "knowledge-authoring:review", "knowledge-authoring:approve", "knowledge-authoring:publish", "knowledge-authoring:admin"],
 };
 
 const domainAliases: Record<string, string> = {
@@ -32,10 +38,16 @@ export class DefaultAgentAuthorizer {
     if (!isAdmin && resource.tenantId && resource.tenantId !== principal.tenantId) {
       return decision(context, action, resource, "tenant-mismatch");
     }
-    if (!isAdmin && !isAuditor && resource.ownerPrincipalId === undefined && resource.type !== "scenario" && resource.type !== "source-extract") {
+    const governedSharedResource = resource.type === "knowledge-change-set" || resource.type === "knowledge-object";
+    if (!isAdmin && !isAuditor && resource.ownerPrincipalId === undefined && resource.type !== "scenario" && resource.type !== "source-extract" && !governedSharedResource) {
       return decision(context, action, resource, "legacy-resource-unowned");
     }
-    if (!isAdmin && !isAuditor && resource.ownerPrincipalId && resource.ownerPrincipalId !== principal.id) {
+    const collaborativeAuthoringAction = action === "knowledge-authoring:read"
+      || action === "knowledge-authoring:review"
+      || action === "knowledge-authoring:approve"
+      || action === "knowledge-authoring:publish"
+      || action === "knowledge-authoring:admin";
+    if (!isAdmin && !isAuditor && !collaborativeAuthoringAction && resource.ownerPrincipalId && resource.ownerPrincipalId !== principal.id) {
       return decision(context, action, resource, "owner-mismatch");
     }
     if (!isAdmin && resource.domainIds?.length && !resource.domainIds.every((domainId) => this.canAccessDomain(context, domainId))) {

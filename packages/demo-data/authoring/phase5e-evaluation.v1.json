@@ -1,0 +1,301 @@
+{
+  "datasetId": "phase5e-governed-knowledge-authoring",
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "groundTruth": [
+    "knowledge-contracts",
+    "ontology",
+    "authorization-policy",
+    "publication-policy"
+  ],
+  "cases": [
+    {
+      "caseId": "workflow.draft-submit",
+      "category": "workflow",
+      "requirement": "Draft transitions to submitted only after validation",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.submit-approve",
+      "category": "workflow",
+      "requirement": "Submitted transitions to approved",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.approve-publish",
+      "category": "workflow",
+      "requirement": "Approved transitions to published",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.direct-publish-blocked",
+      "category": "workflow",
+      "requirement": "Draft direct publication is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.request-changes-resubmit",
+      "category": "workflow",
+      "requirement": "Changes requested can be edited and resubmitted",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.rejected-terminal",
+      "category": "workflow",
+      "requirement": "Rejected change set cannot publish",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.approval-invalidated",
+      "category": "workflow",
+      "requirement": "Editing approved content invalidates approval",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.idempotency-replay",
+      "category": "workflow",
+      "requirement": "Duplicate idempotency key replays first result",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "workflow.demo-admin-audit",
+      "category": "workflow",
+      "requirement": "Demo admin produces separate submit approve publish audit events",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "entity.create-operation",
+      "category": "entity-relation",
+      "requirement": "Operation can be created with governed fields",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "entity.create-machine",
+      "category": "entity-relation",
+      "requirement": "Machine can be created with governed fields",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "entity.create-quality",
+      "category": "entity-relation",
+      "requirement": "Quality Characteristic can be created with governed fields",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "entity.update-versioned",
+      "category": "entity-relation",
+      "requirement": "Published entity update requires expected version",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "entity.duplicate-id-blocked",
+      "category": "entity-relation",
+      "requirement": "Duplicate canonical ID is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "relation.executed-by",
+      "category": "entity-relation",
+      "requirement": "Operation executedBy Machine is allowed",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "relation.controls-characteristic",
+      "category": "entity-relation",
+      "requirement": "Operation controlsCharacteristic QualityCharacteristic is allowed",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "relation.invalid-type-blocked",
+      "category": "entity-relation",
+      "requirement": "Unknown relation type is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "relation.direction-blocked",
+      "category": "entity-relation",
+      "requirement": "Invalid relation direction is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.viewer-no-edit",
+      "category": "authorization-governance",
+      "requirement": "Viewer cannot edit",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.editor-no-approve",
+      "category": "authorization-governance",
+      "requirement": "Editor cannot approve",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.approver-no-publish",
+      "category": "authorization-governance",
+      "requirement": "Approver cannot publish",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.cross-tenant",
+      "category": "authorization-governance",
+      "requirement": "Cross-tenant access is denied",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.domain-denied",
+      "category": "authorization-governance",
+      "requirement": "Unauthorized domain is denied",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.source-owned",
+      "category": "authorization-governance",
+      "requirement": "Source-owned field mutation is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.version-conflict",
+      "category": "authorization-governance",
+      "requirement": "Stale expected version blocks publication",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.unknown-reference",
+      "category": "authorization-governance",
+      "requirement": "Unknown canonical reference is blocked",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.sod",
+      "category": "authorization-governance",
+      "requirement": "Production separation of duties is configurable",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "governance.audit-sanitized",
+      "category": "authorization-governance",
+      "requirement": "Audit excludes credentials and raw authorization",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "deterministic-vitest"
+    },
+    {
+      "caseId": "integration.draft-isolated",
+      "category": "integration-ui",
+      "requirement": "Draft is absent from Agent retrieval",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.submitted-isolated",
+      "category": "integration-ui",
+      "requirement": "Submitted is absent from Agent retrieval",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.approved-isolated",
+      "category": "integration-ui",
+      "requirement": "Approved is absent from Agent retrieval",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.published-visible",
+      "category": "integration-ui",
+      "requirement": "Published entity is visible through repository overlay",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.mock-publication",
+      "category": "integration-ui",
+      "requirement": "Mock publication is atomic and verified",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.neo4j-static",
+      "category": "integration-ui",
+      "requirement": "Neo4j publication uses static parameterized templates",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.viewport-stable",
+      "category": "integration-ui",
+      "requirement": "Authoring mode does not remount React Flow or invoke fitView",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    },
+    {
+      "caseId": "integration.selection-stable",
+      "category": "integration-ui",
+      "requirement": "Authoring mode preserves current selection and focus state",
+      "severity": "blocker",
+      "expected": "enforced",
+      "verifiedBy": "architecture-and-integration-test"
+    }
+  ]
+}

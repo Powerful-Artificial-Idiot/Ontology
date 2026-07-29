@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_AGENT_MODE?: "scripted" | "api";
   readonly VITE_AGENT_API_BASE_URL?: string;
   readonly VITE_AGENT_TIMEOUT_MS?: string;
+  readonly VITE_KNOWLEDGE_AUTHORING_API_BASE_URL?: string;
 }
 
 interface ImportMeta {

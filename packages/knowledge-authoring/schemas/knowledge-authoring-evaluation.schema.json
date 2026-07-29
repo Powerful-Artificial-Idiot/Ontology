@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/knowledge-authoring/evaluation.schema.json",
+  "title": "KnowledgeAuthoringEvaluationDataset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["datasetId", "schemaVersion", "version", "groundTruth", "cases"],
+  "properties": {
+    "datasetId": { "type": "string", "minLength": 1 },
+    "schemaVersion": { "const": "1.0.0" },
+    "version": { "type": "string", "minLength": 1 },
+    "groundTruth": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+    "cases": {
+      "type": "array",
+      "minItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["caseId", "category", "requirement", "severity", "expected", "verifiedBy"],
+        "properties": {
+          "caseId": { "type": "string", "minLength": 1 },
+          "category": { "enum": ["workflow", "entity-relation", "authorization-governance", "integration-ui"] },
+          "requirement": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["blocker", "major"] },
+          "expected": { "const": "enforced" },
+          "verifiedBy": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -82,3 +82,20 @@ make build
 ```
 
 The release under `dist/` contains `frontend-demo/`, `ontology-release/`, `generated/ontology/`, `demo-data/`, `contracts/`, `manifest.json`, and `checksums.txt`.
+
+## Governed Knowledge Authoring
+
+Start the combined Agent and Authoring API, then the frontend:
+
+```bash
+npm run agent-api:dev
+npm run dev:agent
+```
+
+The authoring API is served at `/api/knowledge-authoring` and uses the same optional bearer token as Live Agent. Runtime state defaults to `.data/knowledge-authoring.json`; it is ignored by Git. Run the deterministic gate with:
+
+```bash
+npm run phase5e:release-gate
+```
+
+Authoring Mode does not remount React Flow or call `fitView`. Published nodes are added incrementally to the current presentation state.

@@ -62,6 +62,10 @@ MATCH (source:KnowledgeEntity)-[relation:RELATED_TO]->(target:KnowledgeEntity)
 WHERE source.id = $entityId OR target.id = $entityId
 RETURN source.id AS sourceId, relation, target.id AS targetId
 ORDER BY relation.id`,
+  relationById: `
+MATCH (source:KnowledgeEntity)-[relation:RELATED_TO {id: $relationId}]->(target:KnowledgeEntity)
+RETURN source.id AS sourceId, relation, target.id AS targetId
+LIMIT 1`,
 } as const;
 
 export const NEO4J_SEED_QUERIES = {

@@ -196,6 +196,25 @@ export class MockKnowledgeRepository implements KnowledgeRepository {
     if (canonicalRelations.length) return canonicalRelations;
     return graphEdges.filter((edge) => edge.source === id || edge.target === id).map(toKnowledgeRelation);
   }
+
+  async getRelationById(id: string): Promise<KnowledgeRelation | null> {
+    const baseline = canonicalKnowledgeBaselines.flatMap((item) => item.relations).find((relation) => relation.id === id);
+    if (baseline) return baseline;
+    const ontologyRelation = ontologyRelations.find((relation) => relation.id === id);
+    if (ontologyRelation) {
+      return {
+        id: ontologyRelation.id,
+        sourceId: ontologyRelation.sourceId,
+        targetId: ontologyRelation.targetId,
+        predicate: ontologyRelation.relationType,
+        label: ontologyRelation.label,
+        properties: { description: ontologyRelation.description },
+        assertionType: "asserted",
+      };
+    }
+    const edge = graphEdges.find((candidate) => candidate.id === id);
+    return edge ? toKnowledgeRelation(edge) : null;
+  }
 }
 
 function toKnowledgeEntity(object: (typeof stackNodes)[number]["stackObjects"][number]): KnowledgeEntity {

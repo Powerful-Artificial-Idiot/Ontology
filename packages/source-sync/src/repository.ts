@@ -69,6 +69,11 @@ export class SynchronizedKnowledgeRepository implements KnowledgeRepository {
     const synchronized = snapshot.relations.filter((relation) => (relation.sourceId === id || relation.targetId === id) && !tombstonedIds.has(relation.sourceId) && !tombstonedIds.has(relation.targetId));
     return mergeRelations(base, synchronized);
   }
+
+  async getRelationById(id: string): Promise<KnowledgeRelation | null> {
+    const synchronized = (await this.syncStore.getSnapshot()).relations.find((relation) => relation.id === id);
+    return synchronized ?? await this.delegate.getRelationById?.(id) ?? null;
+  }
 }
 
 function active(entity: { status?: string }): boolean {

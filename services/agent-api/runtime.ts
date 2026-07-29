@@ -42,6 +42,8 @@ import { AuthorizationAwareCitationValidator, AuthorizedGraphRetriever } from ".
 import { createAgentApiSecurity } from "./security";
 import { validateAgentDeploymentConfiguration } from "./deploymentConfig";
 import { runtimeDataPath } from "../runtimePaths";
+import { createKnowledgeAuthoringRuntime } from "../knowledge-authoring-api/runtime";
+import { PublishedKnowledgeOverlayRepository, type InspectableKnowledgeAuthoringPublicationStore } from "../../packages/knowledge-authoring/src/index";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
@@ -55,15 +57,20 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
   const clock = new SystemAgentClock();
   const repository = new MockKnowledgeRepository();
   const security = createAgentApiSecurity({ MKG_AGENT_AUTH_MODE: "disabled" });
+  const authoring = createKnowledgeAuthoringRuntime({ repository, security, persistence: "memory", publicationTarget: "mock" });
+  const readableRepository = new PublishedKnowledgeOverlayRepository(repository, async () => {
+    const publication = (await authoring).publication as InspectableKnowledgeAuthoringPublicationStore;
+    return publication.listPublished();
+  });
   const core = createDeterministicAgentClient(clock, {
-    graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(repository), security.authorizer),
+    graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(readableRepository), security.authorizer),
     documentRetriever: createDefaultGovernedDocumentRetriever(),
     citationValidator: new AuthorizationAwareCitationValidator(new StrictCitationValidator(), security.authorizer),
   });
   const runs = new InMemoryAgentRunStore();
   const runEvents = new InMemoryAgentRunEventStore();
   const telemetry = new RedactingAgentTelemetrySink(new InMemoryAgentTelemetrySink());
-  return {
+  const runtime: AgentApiRuntime = {
     ...core,
     runs,
     runEvents,
@@ -75,6 +82,8 @@ export function createInMemoryAgentApiRuntime(): AgentApiRuntime {
     documentEvidenceMode: "governed",
     security,
   };
+  runtime.authoringHandler = async (request, response, traceId) => (await authoring).handler(request, response, traceId);
+  return runtime;
 }
 
 export async function createConfiguredAgentApiRuntime(environment: NodeJS.ProcessEnv = process.env): Promise<ConfiguredAgentApiRuntime> {
@@ -116,10 +125,14 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   const sessions = persistentStore ? new FileAgentSessionStore(persistentStore) : undefined;
   const turns = persistentStore ? new FileAgentTurnStore(persistentStore) : undefined;
   const audit = persistentStore ? new FileAgentAuditStore(persistentStore) : undefined;
+  const authoring = await createKnowledgeAuthoringRuntime({ repository, security, environment, persistence: persistenceMode === "file" ? "file" : "memory", publicationTarget: mode });
+  const readableRepository = mode === "mock"
+    ? new PublishedKnowledgeOverlayRepository(repository, () => (authoring.publication as InspectableKnowledgeAuthoringPublicationStore).listPublished())
+    : repository;
   const core = createDeterministicAgentClient(
     clock,
     {
-      graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(repository), security.authorizer),
+      graphRetriever: new AuthorizedGraphRetriever(new RepositoryGraphRetriever(readableRepository), security.authorizer),
       documentRetriever,
       semanticParser: semantic.parser,
       answerComposer: answer.composer,
@@ -151,7 +164,11 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
       runtimePackagesAvailable: true,
     },
     security,
-    close: () => repository instanceof Neo4jKnowledgeRepository ? repository.close() : Promise.resolve(),
+    authoringHandler: authoring.handler,
+    close: async () => {
+      await authoring.close();
+      if (repository instanceof Neo4jKnowledgeRepository) await repository.close();
+    },
   };
 }
 

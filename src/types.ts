@@ -180,6 +180,8 @@ export interface SearchResult {
 export interface StackNodeRenderData {
   stackNode: StackNode;
   viewMode: ViewMode;
+  authoringStatus?: "draft" | "submitted" | "changes-requested" | "approved" | "rejected" | "withdrawn";
+  authoringChangeType?: "created" | "updated" | "deactivated";
   expanded: boolean;
   selected: boolean;
   highlighted: boolean;

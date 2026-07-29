@@ -48,6 +48,8 @@ export function StackNode({ data }: NodeProps<StackNodeRenderData>) {
         data.selected ? "ring-4 ring-slate-900/15" : "",
         data.highlighted ? "scale-[1.02]" : "",
         data.dimmed ? "opacity-35" : "opacity-100",
+        data.authoringStatus ? "border-dashed" : "",
+        data.authoringChangeType === "deactivated" ? "opacity-55" : "",
       ].join(" ")}
     >
       <Handle type="target" position={Position.Left} className="!h-3 !w-3 !border-2 !border-white !bg-slate-600" />
@@ -74,6 +76,11 @@ export function StackNode({ data }: NodeProps<StackNodeRenderData>) {
                     {badge}
                   </span>
                 ))}
+              {data.authoringStatus && (
+                <span className={authoringBadgeClassName(data.authoringStatus)}>
+                  {data.authoringChangeType === "created" ? "New " : data.authoringChangeType === "updated" ? "Modified " : data.authoringChangeType === "deactivated" ? "Inactive " : ""}{data.authoringStatus}
+                </span>
+              )}
             </div>
             {data.viewMode === "quality" && qualityObjects.length > 0 && (
               <div className="mt-2 rounded-md border border-orange-200 bg-white/70 px-2 py-1 text-[10px] font-semibold text-orange-800">
@@ -128,6 +135,14 @@ export function StackNode({ data }: NodeProps<StackNodeRenderData>) {
       <Handle type="source" position={Position.Right} className="!h-3 !w-3 !border-2 !border-white !bg-slate-600" />
     </div>
   );
+}
+
+function authoringBadgeClassName(status: NonNullable<StackNodeRenderData["authoringStatus"]>) {
+  if (status === "approved") return "rounded-full border border-emerald-300 bg-emerald-100 px-2 py-0.5 text-[10px] font-bold capitalize text-emerald-800";
+  if (status === "rejected" || status === "withdrawn") return "rounded-full border border-slate-300 bg-slate-100 px-2 py-0.5 text-[10px] font-bold capitalize text-slate-600";
+  if (status === "submitted") return "rounded-full border border-blue-300 bg-blue-100 px-2 py-0.5 text-[10px] font-bold capitalize text-blue-800";
+  if (status === "changes-requested") return "rounded-full border border-amber-300 bg-amber-100 px-2 py-0.5 text-[10px] font-bold capitalize text-amber-800";
+  return "rounded-full border border-violet-300 bg-violet-100 px-2 py-0.5 text-[10px] font-bold capitalize text-violet-800";
 }
 
 function qualityBadgeClassName(badge: string) {

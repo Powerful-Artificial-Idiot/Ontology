@@ -29,6 +29,7 @@ jobs:
       - run: npm run source-sync:formal-tests
       - run: npm run source-sync:fixture-live
       - run: npm run source-sync:formal
+      - run: npm run phase5e:release-gate
       - run: make validate PYTHON=python
       - run: npm run build
       - uses: actions/upload-artifact@v4
@@ -66,5 +67,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run neo4j:publication-test
+      - run: npm run phase5e:neo4j
         env:
           MKG_NEO4J_AUTH_DISABLED: "true"

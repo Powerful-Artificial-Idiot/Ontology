@@ -116,6 +116,14 @@ export class Neo4jKnowledgeRepository implements KnowledgeRepository {
     });
   }
 
+  async getRelationById(id: string): Promise<KnowledgeRelation | null> {
+    return this.withReadSession(async (session) => {
+      const result = await session.run(NEO4J_READ_QUERIES.relationById, { relationId: id });
+      const record = result.records[0];
+      return record ? decodeRelation(record.get("sourceId") as string, record.get("relation") as Relationship, record.get("targetId") as string) : null;
+    });
+  }
+
   async getGraphView(_request: GraphViewRequest): Promise<GraphViewResponse> {
     throw new Neo4jRepositoryCapabilityError("Graph view projection is not part of the Phase 3B Neo4j pilot.");
   }
@@ -197,6 +205,8 @@ function decodeRelation(sourceId: string, relationship: Relationship, targetId: 
     validTo: optionalString(properties.validTo),
     confidence: typeof properties.confidence === "number" ? properties.confidence : undefined,
     evidenceType: optionalString(properties.evidenceType),
+    version: optionalString(properties.version),
+    status: optionalString(properties.status),
     assertionType: properties.assertionType === "asserted" || properties.assertionType === "inferred" ? properties.assertionType : undefined,
   };
 }

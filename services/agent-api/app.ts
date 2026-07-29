@@ -127,6 +127,7 @@ export type AgentApiRuntime = {
   timeoutMs?: number;
   logger?: AgentApiLogger;
   security?: AgentApiSecurityRuntime;
+  authoringHandler?: (request: IncomingMessage, response: ServerResponse, traceId: string) => Promise<void>;
 };
 
 export function createAgentApi(runtime: AgentApiRuntime) {
@@ -136,7 +137,10 @@ export function createAgentApi(runtime: AgentApiRuntime) {
   return (request: IncomingMessage, response: ServerResponse) => {
     const requestTraceId = `api-trace.${randomUUID()}`;
     const startedAt = Date.now();
-    handleRequest(runtime, request, response, requestTraceId, timeoutMs)
+    const execution = request.url?.startsWith("/api/knowledge-authoring") && runtime.authoringHandler
+      ? runtime.authoringHandler(request, response, requestTraceId)
+      : handleRequest(runtime, request, response, requestTraceId, timeoutMs);
+    execution
       .then(() => logger.info("Agent API request completed.", {
         method: request.method ?? "UNKNOWN",
         path: safePath(request.url),

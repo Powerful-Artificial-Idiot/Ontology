@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/mkg/contracts/knowledge-change-set.schema.json",
+  "title": "KnowledgeChangeSet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "schemaVersion", "revision", "tenantId", "domain", "title", "status", "entityMutations", "relationMutations", "expectedVersions", "authorizationSnapshot", "createdBy", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^knowledge-change-set\\.[-a-z0-9.]+$" },
+    "schemaVersion": { "const": "1.0.0" },
+    "revision": { "type": "string", "pattern": "^rev-[1-9][0-9]*$" },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "domain": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "status": { "enum": ["draft", "submitted", "changes-requested", "approved", "rejected", "published", "withdrawn"] },
+    "entityMutations": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/entityMutation" } },
+    "relationMutations": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/relationMutation" } },
+    "expectedVersions": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+    "authorizationSnapshot": { "$ref": "#/$defs/authorizationSnapshot" },
+    "createdBy": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "submittedBy": { "type": "string" }, "submittedAt": { "type": "string", "format": "date-time" },
+    "reviewedBy": { "type": "string" }, "reviewedAt": { "type": "string", "format": "date-time" }, "reviewComment": { "type": "string" },
+    "approvedBy": { "type": "string" }, "approvedAt": { "type": "string", "format": "date-time" }, "approvalComment": { "type": "string" },
+    "publishedBy": { "type": "string" }, "publishedAt": { "type": "string", "format": "date-time" },
+    "approvalRevision": { "type": "string" }, "approvalContentHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "validationResult": { "type": "object" }, "publicationResult": { "type": "object" }
+  },
+  "$defs": {
+    "properties": { "type": "object", "additionalProperties": true },
+    "authorizationSnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["principalId", "tenantId", "roleIds", "domainIds", "authenticationMethod"],
+      "properties": {
+        "principalId": { "type": "string" }, "tenantId": { "type": "string" },
+        "roleIds": { "type": "array", "items": { "type": "string" } },
+        "domainIds": { "type": "array", "items": { "type": "string" } },
+        "objectIds": { "type": "array", "items": { "type": "string" } },
+        "authenticationMethod": { "enum": ["none", "static-bearer", "oidc"] }
+      }
+    },
+    "entityMutation": {
+      "type": "object", "required": ["operation", "canonicalId", "canonicalType", "proposedVersion"],
+      "properties": {
+        "operation": { "enum": ["create", "update", "deactivate"] }, "canonicalId": { "type": "string" },
+        "canonicalType": { "type": "string" }, "proposedVersion": { "type": "string" },
+        "expectedCurrentVersion": { "type": "string" }, "properties": { "$ref": "#/$defs/properties" },
+        "changedProperties": { "$ref": "#/$defs/properties" }, "ownershipMode": { "enum": ["manual", "source-managed", "mixed"] },
+        "fieldOwnership": { "type": "object", "additionalProperties": { "enum": ["manual", "mes", "plm", "qms"] } }, "reason": { "type": "string" }
+      }
+    },
+    "relationMutation": {
+      "type": "object", "required": ["operation", "canonicalId", "relationType", "proposedVersion"],
+      "properties": {
+        "operation": { "enum": ["create", "update", "deactivate"] }, "canonicalId": { "type": "string" },
+        "relationType": { "type": "string" }, "sourceCanonicalId": { "type": "string" }, "targetCanonicalId": { "type": "string" },
+        "proposedVersion": { "type": "string" }, "expectedCurrentVersion": { "type": "string" },
+        "properties": { "$ref": "#/$defs/properties" }, "changedProperties": { "$ref": "#/$defs/properties" }, "reason": { "type": "string" }
+      }
+    }
+  }
+}

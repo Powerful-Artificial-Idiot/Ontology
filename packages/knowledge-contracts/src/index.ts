@@ -35,6 +35,8 @@ export type KnowledgeRelation = {
   confidence?: number;
   evidenceType?: string;
   assertionType?: "asserted" | "inferred";
+  version?: string;
+  status?: string;
 };
 
 export type GraphNode = {
@@ -237,9 +239,11 @@ export interface KnowledgeRepository {
   getSemanticCatalog(): Promise<SemanticCatalogResponse>;
   searchSemantic(request: SemanticSearchRequest): Promise<SemanticSearchResponse>;
   getEntityRelations(id: string): Promise<KnowledgeRelation[]>;
+  getRelationById?(id: string): Promise<KnowledgeRelation | null>;
 }
 
 export * from "./security";
 export * from "./sourceSync";
 export * from "./agent";
 export * from "./quantitativeQuality";
+export * from "./authoring";
