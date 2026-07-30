@@ -32,6 +32,7 @@
     "agent-api:test": "vitest run tests/integration/agent-api.test.ts tests/frontend/api-agent-client.test.ts",
     "agent:evaluate": "vite-node services/agent-api/run-evaluation.ts",
     "personal-knowledge:verify": "vite-node experimental/personal-knowledge/run-feasibility.ts",
+    "personal-knowledge:test": "vitest run tests/backend/personal-knowledge-snapshot-repository.test.ts tests/backend/personal-knowledge-ingestion.test.ts tests/integration/personal-knowledge-api.test.ts",
     "demo-data:rich:build": "node scripts/build_rich_demo_data.mjs && node scripts/build_rich_demo_evaluation.mjs",
     "demo-data:rich:validate": "vite-node services/agent-api/run-rich-demo-acceptance.ts",
     "demo-data:rich:seed": "vite-node services/agent-api/seed-rich-demo.ts",

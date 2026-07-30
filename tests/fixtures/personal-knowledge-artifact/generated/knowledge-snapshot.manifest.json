@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "0.1.0",
+  "schemaSha256": "d6750ab1b22080055542faefc6a02da513bba681b5cf5d0d633965bfa87f246f",
+  "snapshotSha256": "dd141712182e5968703372159469b710d3d58090f4ce481a2a8cddc65158513e",
+  "contentHash": "fbcf45d0fe073e40c08aa2afaa5725474b3573be1d10724ecbdaf865d3354fcb",
+  "objectCount": 28,
+  "relationCount": 50,
+  "warningCount": 0,
+  "errorCount": 0,
+  "sourceRepository": "Powerful-Artificial-Idiot/MyWay",
+  "generatorName": "personal-knowledge-snapshot-builder",
+  "generatorVersion": "0.1.0",
+  "sourceCommit": "31084951cbcfd675842fa4d017121de489e171c4"
+}

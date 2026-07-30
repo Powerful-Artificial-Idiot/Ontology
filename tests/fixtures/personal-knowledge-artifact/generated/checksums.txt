@@ -1,0 +1,3 @@
+dd141712182e5968703372159469b710d3d58090f4ce481a2a8cddc65158513e  generated/knowledge-snapshot.json
+0518b8e0faf2086000f4dc09ba508b70db3be7874d6ec797d8c04356005fb178  generated/knowledge-snapshot.manifest.json
+d6750ab1b22080055542faefc6a02da513bba681b5cf5d0d633965bfa87f246f  schemas/personal-knowledge-snapshot/0.1.0.schema.json

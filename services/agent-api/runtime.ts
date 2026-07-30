@@ -44,6 +44,9 @@ import { validateAgentDeploymentConfiguration } from "./deploymentConfig";
 import { runtimeDataPath } from "../runtimePaths";
 import { createKnowledgeAuthoringRuntime } from "../knowledge-authoring-api/runtime";
 import { PublishedKnowledgeOverlayRepository, type InspectableKnowledgeAuthoringPublicationStore } from "../../packages/knowledge-authoring/src/index";
+import { PersonalKnowledgeSnapshotIngestionService } from "../../packages/snapshot-knowledge-repository/src/ingestion";
+import { PersonalKnowledgeQueryService } from "../../packages/snapshot-knowledge-repository/src/query";
+import { createPersonalKnowledgeApiHandler } from "../personal-knowledge-api/handler";
 
 export type AgentKnowledgeRepositoryMode = "mock" | "neo4j";
 export type AgentDocumentEvidenceMode = "canonical" | "governed";
@@ -142,6 +145,15 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
   );
   const runs = persistentStore ? new FileAgentRunStore(persistentStore) : new InMemoryAgentRunStore();
   const runEvents = persistentStore ? new FileAgentRunEventStore(persistentStore) : new InMemoryAgentRunEventStore();
+  const personalKnowledge = await PersonalKnowledgeSnapshotIngestionService.create({
+    runtimeDirectory: resolve(environment.MKG_PERSONAL_KNOWLEDGE_RUNTIME_DIR ?? resolve(deployment.dataDirectory, "personal-knowledge")),
+    audit: core.audit,
+  });
+  const personalArtifactDirectory = environment.MKG_PERSONAL_KNOWLEDGE_ARTIFACT_DIR;
+  const personalSnapshotPath = environment.MKG_PERSONAL_KNOWLEDGE_SNAPSHOT_PATH;
+  if (personalArtifactDirectory) await personalKnowledge.ingestCandidate({ artifactDirectory: personalArtifactDirectory });
+  else if (personalSnapshotPath) await personalKnowledge.ingestCandidate({ snapshotPath: personalSnapshotPath });
+  const personalQuery = new PersonalKnowledgeQueryService(personalKnowledge, core.audit);
   const usesLlm = semantic.mode !== "deterministic" || answer.mode !== "template";
   const timeoutMs = parsePositiveInteger(environment.MKG_AGENT_RUN_TIMEOUT_MS, usesLlm ? 60_000 : 10_000);
   return {
@@ -165,6 +177,8 @@ export async function createConfiguredAgentApiRuntime(environment: NodeJS.Proces
     },
     security,
     authoringHandler: authoring.handler,
+    personalKnowledge,
+    personalKnowledgeHandler: createPersonalKnowledgeApiHandler({ ingestion: personalKnowledge, query: personalQuery, security, audit: core.audit }),
     close: async () => {
       await authoring.close();
       if (repository instanceof Neo4jKnowledgeRepository) await repository.close();

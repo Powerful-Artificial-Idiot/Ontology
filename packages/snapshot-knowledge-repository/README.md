@@ -1,9 +1,9 @@
 # Snapshot Knowledge Repository
 
-Experimental, database-free bridge for the personal knowledge feasibility study.
-It reads a governed JSON snapshot, maps it to the existing generic knowledge
-contracts, and proves deterministic retrieval through the existing Evidence Pack
-and citation-validation boundary.
+Read-only, database-free consumer for governed Personal Knowledge Snapshot
+artifacts. It validates the complete artifact, atomically promotes verified
+versions, retains rollback candidates, and supports bounded deterministic queries
+through the existing Evidence Pack, trace, audit, and citation boundaries.
 
 This package deliberately does not implement the manufacturing
 `KnowledgeRepository` interface. That interface also owns graph views, ontology
@@ -22,9 +22,28 @@ and fails closed for unsupported majors, missing required fields, schema drift,
 invalid content hashes, governance errors, missing provenance, duplicate IDs,
 and dangling relations.
 
+## Governed runtime boundary
+
+The formal runtime accepts only an artifact directory or explicit snapshot path
+with the companion manifest, checksums, and pinned schema. It rejects checksum,
+schema, version, content hash, diagnostics, canonical identity, relation, and
+provenance failures before repository construction. An immutable version directory
+and atomically replaced `active.json` pointer prevent partially loaded candidates
+from replacing the current repository.
+
+The `personal-knowledge` domain exposes only four allowlisted operations:
+
+- `find-content-about`
+- `find-projects-related-to`
+- `find-documents-related-to`
+- `show-neighbors`
+
+The planner has a maximum result limit of 25 and cannot emit Cypher. Public
+evidence retains canonical ID, type, source URL, relative source path, heading,
+content hash, and source commit. The manufacturing repository remains separate.
+
 ## Non-production experiment
 
-The three deterministic English queries and their planner are feasibility-only.
-The runner lives under `experimental/personal-knowledge` and no production Agent
-API module imports this package. A governed planner must replace those hard-coded
-queries before a live personal Agent integration.
+The original three-query runner remains under `experimental/personal-knowledge`.
+It is not imported by the Agent API. The formal API uses
+`GovernedPersonalKnowledgePlanner` instead.

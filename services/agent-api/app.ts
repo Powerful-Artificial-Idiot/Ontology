@@ -34,6 +34,7 @@ import {
 } from "../../packages/agent-core/src/index";
 import { AgentTurnRunService, isTerminalRun } from "./turnRunService";
 import { AgentAuthenticationError, createAgentApiSecurity, type AgentApiSecurityRuntime } from "./security";
+import type { PersonalKnowledgeSnapshotIngestionService } from "../../packages/snapshot-knowledge-repository/src/ingestion";
 
 const qualityScenario: AgentScenarioDescriptor = {
   id: "quality-issue-trace",
@@ -128,6 +129,8 @@ export type AgentApiRuntime = {
   logger?: AgentApiLogger;
   security?: AgentApiSecurityRuntime;
   authoringHandler?: (request: IncomingMessage, response: ServerResponse, traceId: string) => Promise<void>;
+  personalKnowledge?: PersonalKnowledgeSnapshotIngestionService;
+  personalKnowledgeHandler?: (request: IncomingMessage, response: ServerResponse, traceId: string) => Promise<void>;
 };
 
 export function createAgentApi(runtime: AgentApiRuntime) {
@@ -139,7 +142,9 @@ export function createAgentApi(runtime: AgentApiRuntime) {
     const startedAt = Date.now();
     const execution = request.url?.startsWith("/api/knowledge-authoring") && runtime.authoringHandler
       ? runtime.authoringHandler(request, response, requestTraceId)
-      : handleRequest(runtime, request, response, requestTraceId, timeoutMs);
+      : request.url?.startsWith("/api/personal-knowledge") && runtime.personalKnowledgeHandler
+        ? runtime.personalKnowledgeHandler(request, response, requestTraceId)
+        : handleRequest(runtime, request, response, requestTraceId, timeoutMs);
     execution
       .then(() => logger.info("Agent API request completed.", {
         method: request.method ?? "UNKNOWN",

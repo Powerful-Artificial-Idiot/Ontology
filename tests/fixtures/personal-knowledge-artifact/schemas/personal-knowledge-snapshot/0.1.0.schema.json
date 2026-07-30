@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zhi-yuan.space/schemas/personal-knowledge-snapshot/0.1.0.schema.json",
+  "title": "Personal Knowledge Snapshot",
+  "description": "Versioned, deterministic interchange contract for governed personal knowledge.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generator",
+    "generatedAt",
+    "contentHash",
+    "objects",
+    "relations",
+    "canonicalIdentity",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^0\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "generator": { "$ref": "#/$defs/generator" },
+    "generatedAt": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{7,64}$" },
+    "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "objects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/knowledgeObject" }
+    },
+    "relations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/knowledgeRelation" }
+    },
+    "canonicalIdentity": { "$ref": "#/$defs/canonicalIdentity" },
+    "diagnostics": {
+      "type": "object",
+      "required": ["warnings", "errors"],
+      "properties": {
+        "warnings": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } },
+        "errors": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "pattern": "^(person|concept|question|claim|project|document|reference|tool|domain|relation)\\.[a-z0-9]+(-[a-z0-9]+)*(\\.[a-z0-9]+(-[a-z0-9]+)*)*$"
+    },
+    "generator": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "personal-knowledge-snapshot-builder" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      },
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["contentId", "sourcePath", "contentHash", "visibility"],
+      "properties": {
+        "contentId": { "$ref": "#/$defs/canonicalId" },
+        "sourcePath": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\.\\.)[^\\\\]+$"
+        },
+        "sourceUrl": { "type": "string", "pattern": "^https://" },
+        "headingId": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "sectionTitle": { "type": "string", "minLength": 1 },
+        "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "visibility": { "enum": ["public", "non-public"] },
+        "collection": { "type": "string", "minLength": 1 },
+        "idSource": { "enum": ["explicit", "fallback", "derived"] },
+        "extractedFields": { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "visibility": { "const": "public" } }, "required": ["visibility"] },
+          "then": { "required": ["sourceUrl"] }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "knowledgeObject": {
+      "type": "object",
+      "required": ["id", "type", "title", "provenance"],
+      "properties": {
+        "id": { "$ref": "#/$defs/canonicalId" },
+        "type": {
+          "enum": ["person", "concept", "question", "claim", "project", "document", "reference", "tool", "domain"]
+        },
+        "subtype": { "type": "string" },
+        "title": { "type": "string", "minLength": 1 },
+        "slug": { "type": "string" },
+        "summary": { "type": "string" },
+        "status": { "enum": ["draft", "published", "archived"] },
+        "sourcePath": { "type": "string" },
+        "canonicalUrl": { "type": "string", "pattern": "^https://" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "metadata": { "type": "object" },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "additionalProperties": true
+    },
+    "knowledgeRelation": {
+      "type": "object",
+      "required": ["id", "type", "from", "to", "confidence", "provenance"],
+      "properties": {
+        "id": { "$ref": "#/$defs/canonicalId" },
+        "type": {
+          "enum": [
+            "INTERESTED_IN", "PURSUING", "RESEARCHING", "HOLDS", "BUILDING", "RELATED_TO",
+            "BROADER_THAN", "ABOUT", "SUPPORTED_BY", "CHALLENGED_BY", "DISCUSSES", "CONTAINS",
+            "IMPLEMENTS", "INVESTIGATES", "AUTHORED_BY", "REVISES", "EVOLVED_FROM", "PRODUCED", "SUPERSEDES"
+          ]
+        },
+        "from": { "$ref": "#/$defs/canonicalId" },
+        "to": { "$ref": "#/$defs/canonicalId" },
+        "sourceDocumentId": { "$ref": "#/$defs/canonicalId" },
+        "sourcePath": { "type": "string" },
+        "confidence": { "const": "explicit" },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "additionalProperties": true
+    },
+    "canonicalIdentity": {
+      "type": "object",
+      "required": ["explicitIdCount", "fallbackIdCount", "fallbackIds"],
+      "properties": {
+        "explicitIdCount": { "type": "integer", "minimum": 0 },
+        "fallbackIdCount": { "type": "integer", "minimum": 0 },
+        "fallbackIds": { "type": "array", "items": { "$ref": "#/$defs/canonicalId" } }
+      },
+      "additionalProperties": true
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": { "enum": ["warning", "error"] },
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "path": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

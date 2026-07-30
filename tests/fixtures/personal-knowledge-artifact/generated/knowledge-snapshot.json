@@ -1,0 +1,1945 @@
+{
+  "schemaVersion": "0.1.0",
+  "generator": {
+    "name": "personal-knowledge-snapshot-builder",
+    "version": "0.1.0"
+  },
+  "generatedAt": "2026-07-30T00:00:00.000Z",
+  "sourceCommit": "31084951cbcfd675842fa4d017121de489e171c4",
+  "objects": [
+    {
+      "id": "claim.structured-context-improves-model-usability",
+      "type": "claim",
+      "title": "Structured context improves model usability",
+      "summary": "Explicit topic and context structure makes knowledge more usable to models than an undifferentiated file collection.",
+      "status": "published",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "metadata": {
+        "origin": "controlled-sidecar",
+        "locator": "一个微小的实证"
+      },
+      "provenance": {
+        "contentId": "claim.structured-context-improves-model-usability",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "explicit",
+        "extractedFields": [
+          "controlled-sidecar"
+        ],
+        "sectionTitle": "一个微小的实证"
+      }
+    },
+    {
+      "id": "concept.enterprise-ai",
+      "type": "concept",
+      "title": "Enterprise AI",
+      "slug": "enterprise-ai",
+      "summary": "AI 在真实企业环境中的落地：组织、流程、数据治理与投入产出，而不只是模型能力本身。",
+      "status": "published",
+      "sourcePath": "src/content/topics/enterprise-ai.md",
+      "canonicalUrl": "https://zhi-yuan.space/topics/enterprise-ai",
+      "metadata": {
+        "collection": "topics",
+        "topics": [],
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "concept.enterprise-ai",
+        "sourcePath": "src/content/topics/enterprise-ai.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/enterprise-ai",
+        "contentHash": "9554dd59284c48206026682d86cfc2c6acd3e2ffb7424ae4458443e063b6e6e6",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "order",
+          "title"
+        ]
+      }
+    },
+    {
+      "id": "concept.knowledge-engineering",
+      "type": "concept",
+      "title": "Knowledge Engineering",
+      "slug": "knowledge-engineering",
+      "summary": "如何把分散的信息、经验和判断，沉淀为结构化、可复用、可被机器与人共同使用的知识系统。",
+      "status": "published",
+      "sourcePath": "src/content/topics/knowledge-engineering.md",
+      "canonicalUrl": "https://zhi-yuan.space/topics/knowledge-engineering",
+      "metadata": {
+        "collection": "topics",
+        "topics": [],
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "concept.knowledge-engineering",
+        "sourcePath": "src/content/topics/knowledge-engineering.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/knowledge-engineering",
+        "contentHash": "a74d8cb49e3ad01a7e55614de32c76f4ac0db680a86183fd28ac56a7e2d67fb8",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "order",
+          "title"
+        ]
+      }
+    },
+    {
+      "id": "concept.lean-thinking",
+      "type": "concept",
+      "title": "Lean Thinking",
+      "slug": "lean-thinking",
+      "summary": "精益思想在软件开发与知识工作中的迁移：消除浪费、小批量流动、内建质量。",
+      "status": "published",
+      "sourcePath": "src/content/topics/lean-thinking.md",
+      "canonicalUrl": "https://zhi-yuan.space/topics/lean-thinking",
+      "metadata": {
+        "collection": "topics",
+        "topics": [],
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "concept.lean-thinking",
+        "sourcePath": "src/content/topics/lean-thinking.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/lean-thinking",
+        "contentHash": "61f9e99d8a817364cf6ec6265b8d87e912bf7ad07a92a2b382e8a4acde044c45",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "order",
+          "title"
+        ]
+      }
+    },
+    {
+      "id": "concept.llm-and-cognition",
+      "type": "concept",
+      "title": "LLM and Cognition",
+      "slug": "llm-and-cognition",
+      "summary": "从认知科学视角理解大语言模型：记忆、注意力、外部化思考，以及人机认知分工。",
+      "status": "published",
+      "sourcePath": "src/content/topics/llm-and-cognition.md",
+      "canonicalUrl": "https://zhi-yuan.space/topics/llm-and-cognition",
+      "metadata": {
+        "collection": "topics",
+        "topics": [],
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "concept.llm-and-cognition",
+        "sourcePath": "src/content/topics/llm-and-cognition.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/llm-and-cognition",
+        "contentHash": "92b3833391a1ffe9d9d1ada9547ac65ed886cd0ac40fd7f99add95ab2da46c08",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "order",
+          "title"
+        ]
+      }
+    },
+    {
+      "id": "concept.manufacturing-systems",
+      "type": "concept",
+      "title": "Manufacturing Systems",
+      "slug": "manufacturing-systems",
+      "summary": "制造系统的数字化：MES、工艺知识、设备数据与现场经验如何形成系统能力。",
+      "status": "published",
+      "sourcePath": "src/content/topics/manufacturing-systems.md",
+      "canonicalUrl": "https://zhi-yuan.space/topics/manufacturing-systems",
+      "metadata": {
+        "collection": "topics",
+        "topics": [],
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "concept.manufacturing-systems",
+        "sourcePath": "src/content/topics/manufacturing-systems.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/manufacturing-systems",
+        "contentHash": "b4de827afd7c60d48688fe2a3db976ddd360e4a1df1a2f6e3f86837de836f87c",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "order",
+          "title"
+        ]
+      }
+    },
+    {
+      "id": "document.about",
+      "type": "document",
+      "subtype": "article",
+      "title": "About",
+      "slug": "about",
+      "summary": "关于我：研究兴趣、职业背景与联系方式。",
+      "status": "published",
+      "sourcePath": "src/content/pages/about.md",
+      "canonicalUrl": "https://zhi-yuan.space/about",
+      "updatedAt": "2026-07-29T00:00:00.000Z",
+      "metadata": {
+        "collection": "pages",
+        "topics": [],
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "document.about",
+        "sourcePath": "src/content/pages/about.md",
+        "sourceUrl": "https://zhi-yuan.space/about",
+        "contentHash": "062ccb5f3fbede80051194123b399145b788e58227dda25f9bf816d5a9944149",
+        "visibility": "public",
+        "collection": "pages",
+        "idSource": "fallback",
+        "extractedFields": [
+          "description",
+          "title",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "document.ai-agents-as-research-assistants",
+      "type": "document",
+      "subtype": "research-note",
+      "title": "AI Agent 作为研究助理，而不是代笔",
+      "slug": "ai-agents-as-research-assistants",
+      "summary": "让 Agent 负责检索、核对和整理，人负责提问和判断——目前最可持续的分工。",
+      "status": "published",
+      "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+      "canonicalUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+      "createdAt": "2026-07-12T00:00:00.000Z",
+      "updatedAt": "2026-07-25T00:00:00.000Z",
+      "metadata": {
+        "collection": "notes",
+        "topics": [
+          "llm-and-cognition",
+          "knowledge-engineering"
+        ],
+        "originalStatus": "growing",
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "document.ai-agents-as-research-assistants",
+        "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+        "contentHash": "35076488ae9d0226beea85e37ed68073fe84c5019d3a55b3d810c9c681722422",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "fallback",
+        "extractedFields": [
+          "createdAt",
+          "description",
+          "related",
+          "status",
+          "tags",
+          "title",
+          "topics",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "document.digital-garden-vs-traditional-blog",
+      "type": "document",
+      "subtype": "research-note",
+      "title": "数字花园与传统博客的分界线",
+      "slug": "digital-garden-vs-traditional-blog",
+      "summary": "不是\"完成度\"的区别，而是时间轴和主题轴两种组织方式的区别。",
+      "status": "published",
+      "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+      "canonicalUrl": "https://zhi-yuan.space/notes/digital-garden-vs-traditional-blog",
+      "createdAt": "2026-06-28T00:00:00.000Z",
+      "metadata": {
+        "collection": "notes",
+        "topics": [
+          "knowledge-engineering"
+        ],
+        "originalStatus": "evergreen",
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "document.digital-garden-vs-traditional-blog",
+        "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/digital-garden-vs-traditional-blog",
+        "contentHash": "d883d0713b31812ccb5be1898ebcdfc15617a023413a592cbf3f7457b6d60a9f",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "explicit",
+        "extractedFields": [
+          "createdAt",
+          "description",
+          "related",
+          "status",
+          "tags",
+          "title",
+          "topics"
+        ]
+      }
+    },
+    {
+      "id": "document.lean-thinking-for-ai-teams",
+      "type": "document",
+      "subtype": "essay",
+      "title": "Lean Thinking for AI Teams",
+      "slug": "lean-thinking-for-ai-teams",
+      "summary": "What manufacturing's lean tradition — small batches, built-in quality, respect for flow — can teach teams shipping LLM-powered products.",
+      "status": "published",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "canonicalUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+      "createdAt": "2026-05-30T00:00:00.000Z",
+      "metadata": {
+        "collection": "essays",
+        "topics": [
+          "lean-thinking",
+          "enterprise-ai"
+        ],
+        "originalStatus": "published",
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "explicit",
+        "extractedFields": [
+          "description",
+          "featured",
+          "language",
+          "publishedAt",
+          "references",
+          "related",
+          "status",
+          "tags",
+          "title",
+          "topics"
+        ]
+      }
+    },
+    {
+      "id": "document.llm-era-knowledge-engineering",
+      "type": "document",
+      "subtype": "essay",
+      "title": "LLM 时代的知识工程：从文档管理到可操作的知识系统",
+      "slug": "llm-era-knowledge-engineering",
+      "summary": "当大语言模型成为知识的主要消费者之一，知识工程的对象、方法和评价标准都在变化。本文给出一个面向人机共读的知识系统框架。",
+      "status": "published",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "canonicalUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+      "createdAt": "2026-06-18T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "metadata": {
+        "collection": "essays",
+        "topics": [
+          "knowledge-engineering",
+          "enterprise-ai",
+          "llm-and-cognition"
+        ],
+        "originalStatus": "published",
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "explicit",
+        "extractedFields": [
+          "cover",
+          "description",
+          "featured",
+          "language",
+          "publishedAt",
+          "references",
+          "related",
+          "status",
+          "tags",
+          "title",
+          "topics",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "document.manufacturing-data-silos",
+      "type": "document",
+      "subtype": "research-note",
+      "title": "制造企业的数据孤岛，本质是责任孤岛",
+      "slug": "manufacturing-data-silos",
+      "summary": "数据不通通常不是接口问题，而是\"谁有权定义这条数据\"没有答案。",
+      "status": "draft",
+      "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+      "canonicalUrl": "https://zhi-yuan.space/notes/manufacturing-data-silos",
+      "createdAt": "2026-07-05T00:00:00.000Z",
+      "metadata": {
+        "collection": "notes",
+        "topics": [
+          "manufacturing-systems",
+          "enterprise-ai"
+        ],
+        "originalStatus": "seed",
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "document.manufacturing-data-silos",
+        "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/manufacturing-data-silos",
+        "contentHash": "8b99ccad3f277cd017ba923d8742c9bfa17baa3cf4055e335dff0503f8bf7a9a",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "fallback",
+        "extractedFields": [
+          "createdAt",
+          "description",
+          "draft",
+          "related",
+          "status",
+          "tags",
+          "title",
+          "topics"
+        ]
+      }
+    },
+    {
+      "id": "document.now",
+      "type": "document",
+      "subtype": "article",
+      "title": "Now",
+      "slug": "now",
+      "summary": "我现在正在研究、开发和阅读什么。",
+      "status": "published",
+      "sourcePath": "src/content/pages/now.md",
+      "canonicalUrl": "https://zhi-yuan.space/now",
+      "updatedAt": "2026-07-29T00:00:00.000Z",
+      "metadata": {
+        "collection": "pages",
+        "topics": [],
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "document.now",
+        "sourcePath": "src/content/pages/now.md",
+        "sourceUrl": "https://zhi-yuan.space/now",
+        "contentHash": "cdb25fbb4919eca663fedb00d177239500af9acff05bc99a04133d76b1a1719b",
+        "visibility": "public",
+        "collection": "pages",
+        "idSource": "fallback",
+        "extractedFields": [
+          "description",
+          "title",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "domain.personal-knowledge",
+      "type": "domain",
+      "title": "Personal Knowledge",
+      "summary": "The governed personal knowledge domain represented by this snapshot.",
+      "status": "published",
+      "sourcePath": "src/content/topics/knowledge-engineering.md",
+      "metadata": {
+        "origin": "controlled-sidecar"
+      },
+      "provenance": {
+        "contentId": "domain.personal-knowledge",
+        "sourcePath": "src/content/topics/knowledge-engineering.md",
+        "sourceUrl": "https://zhi-yuan.space/topics/knowledge-engineering",
+        "contentHash": "a74d8cb49e3ad01a7e55614de32c76f4ac0db680a86183fd28ac56a7e2d67fb8",
+        "visibility": "public",
+        "collection": "topics",
+        "idSource": "explicit",
+        "extractedFields": [
+          "controlled-sidecar"
+        ]
+      }
+    },
+    {
+      "id": "person.zhiyuan-zhang",
+      "type": "person",
+      "title": "Zhiyuan Zhang",
+      "status": "published",
+      "sourcePath": "src/content/pages/about.md",
+      "metadata": {
+        "origin": "controlled-sidecar"
+      },
+      "provenance": {
+        "contentId": "person.zhiyuan-zhang",
+        "sourcePath": "src/content/pages/about.md",
+        "sourceUrl": "https://zhi-yuan.space/about",
+        "contentHash": "062ccb5f3fbede80051194123b399145b788e58227dda25f9bf816d5a9944149",
+        "visibility": "public",
+        "collection": "pages",
+        "idSource": "explicit",
+        "extractedFields": [
+          "controlled-sidecar"
+        ]
+      }
+    },
+    {
+      "id": "project.manufacturing-graph-explorer",
+      "type": "project",
+      "title": "Manufacturing Graph Explorer",
+      "slug": "manufacturing-graph-explorer",
+      "summary": "制造系统知识图谱浏览器：把工艺、设备、物料和质量知识组织成可探索的图结构（试验项目）。",
+      "status": "published",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "canonicalUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+      "createdAt": "2026-04-10T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "metadata": {
+        "collection": "projects",
+        "topics": [
+          "manufacturing-systems",
+          "knowledge-engineering"
+        ],
+        "originalStatus": "prototype",
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "explicit",
+        "extractedFields": [
+          "cover",
+          "demoUrl",
+          "description",
+          "draft",
+          "featured",
+          "gallery",
+          "relatedEssays",
+          "relatedNotes",
+          "repositoryUrl",
+          "startedAt",
+          "status",
+          "technologies",
+          "title",
+          "topics",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "project.personal-research-website",
+      "type": "project",
+      "title": "个人研究与知识网站（本站）",
+      "slug": "personal-research-website",
+      "summary": "基于 Astro 的可长期积累的个人知识空间：Markdown 为唯一内容源，Git 管理版本，静态部署。",
+      "status": "published",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "canonicalUrl": "https://zhi-yuan.space/projects/personal-research-website",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-29T00:00:00.000Z",
+      "metadata": {
+        "collection": "projects",
+        "topics": [
+          "knowledge-engineering"
+        ],
+        "originalStatus": "in-progress",
+        "idSource": "explicit"
+      },
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "explicit",
+        "extractedFields": [
+          "cover",
+          "demoUrl",
+          "description",
+          "draft",
+          "featured",
+          "gallery",
+          "relatedEssays",
+          "relatedNotes",
+          "repositoryUrl",
+          "startedAt",
+          "status",
+          "technologies",
+          "title",
+          "topics",
+          "updatedAt"
+        ]
+      }
+    },
+    {
+      "id": "reference.attention-is-all-you-need",
+      "type": "reference",
+      "title": "Attention Is All You Need",
+      "slug": "attention-is-all-you-need",
+      "status": "published",
+      "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+      "canonicalUrl": "https://zhi-yuan.space/reading/attention-is-all-you-need",
+      "updatedAt": "2026-07-08T00:00:00.000Z",
+      "metadata": {
+        "collection": "reading",
+        "topics": [
+          "llm-and-cognition"
+        ],
+        "originalStatus": "reviewed",
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "reference.attention-is-all-you-need",
+        "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/attention-is-all-you-need",
+        "contentHash": "a088d543fddaf326d51c735493f5fc8cd15756ce71b56c48f2dc8792451354c2",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "fallback",
+        "extractedFields": [
+          "authors",
+          "doi",
+          "draft",
+          "publication",
+          "rating",
+          "readAt",
+          "related",
+          "sourceType",
+          "status",
+          "tags",
+          "title",
+          "topics",
+          "url",
+          "year"
+        ]
+      }
+    },
+    {
+      "id": "reference.building-a-second-brain",
+      "type": "reference",
+      "title": "Building a Second Brain",
+      "slug": "building-a-second-brain",
+      "status": "published",
+      "sourcePath": "src/content/reading/building-a-second-brain.md",
+      "canonicalUrl": "https://zhi-yuan.space/reading/building-a-second-brain",
+      "updatedAt": "2026-06-15T00:00:00.000Z",
+      "metadata": {
+        "collection": "reading",
+        "topics": [
+          "knowledge-engineering"
+        ],
+        "originalStatus": "finished",
+        "idSource": "fallback"
+      },
+      "provenance": {
+        "contentId": "reference.building-a-second-brain",
+        "sourcePath": "src/content/reading/building-a-second-brain.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/building-a-second-brain",
+        "contentHash": "4be2a553ee8b52eb790d35b5976cc2cfdf8864c8401b091f25afa76fbddad94a",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "fallback",
+        "extractedFields": [
+          "authors",
+          "draft",
+          "publication",
+          "rating",
+          "readAt",
+          "related",
+          "sourceType",
+          "status",
+          "tags",
+          "title",
+          "topics",
+          "url",
+          "year"
+        ]
+      }
+    },
+    {
+      "id": "reference.the-toyota-way",
+      "type": "reference",
+      "title": "The Toyota Way",
+      "status": "published",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "metadata": {
+        "origin": "explicit-frontmatter-reference"
+      },
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "references"
+        ]
+      }
+    },
+    {
+      "id": "tool.astro",
+      "type": "tool",
+      "title": "Astro",
+      "status": "published",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.keystatic",
+      "type": "tool",
+      "title": "Keystatic",
+      "status": "published",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.neo4j",
+      "type": "tool",
+      "title": "Neo4j",
+      "status": "published",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.pagefind",
+      "type": "tool",
+      "title": "Pagefind",
+      "status": "published",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.react",
+      "type": "tool",
+      "title": "React",
+      "status": "published",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.react-flow",
+      "type": "tool",
+      "title": "React Flow",
+      "status": "published",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.tailwind-css",
+      "type": "tool",
+      "title": "Tailwind CSS",
+      "status": "published",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    },
+    {
+      "id": "tool.typescript",
+      "type": "tool",
+      "title": "TypeScript",
+      "status": "published",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "metadata": {
+        "origin": "explicit-project-technology"
+      },
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "technologies"
+        ]
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "relation.about.document-ai-agents-as-research-assistants.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "document.ai-agents-as-research-assistants",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "document.ai-agents-as-research-assistants",
+      "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.ai-agents-as-research-assistants",
+        "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+        "contentHash": "35076488ae9d0226beea85e37ed68073fe84c5019d3a55b3d810c9c681722422",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-ai-agents-as-research-assistants.concept-llm-and-cognition",
+      "type": "ABOUT",
+      "from": "document.ai-agents-as-research-assistants",
+      "to": "concept.llm-and-cognition",
+      "sourceDocumentId": "document.ai-agents-as-research-assistants",
+      "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.ai-agents-as-research-assistants",
+        "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+        "contentHash": "35076488ae9d0226beea85e37ed68073fe84c5019d3a55b3d810c9c681722422",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-digital-garden-vs-traditional-blog.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "document.digital-garden-vs-traditional-blog",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "document.digital-garden-vs-traditional-blog",
+      "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.digital-garden-vs-traditional-blog",
+        "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/digital-garden-vs-traditional-blog",
+        "contentHash": "d883d0713b31812ccb5be1898ebcdfc15617a023413a592cbf3f7457b6d60a9f",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-lean-thinking-for-ai-teams.concept-enterprise-ai",
+      "type": "ABOUT",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "concept.enterprise-ai",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-lean-thinking-for-ai-teams.concept-lean-thinking",
+      "type": "ABOUT",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "concept.lean-thinking",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-llm-era-knowledge-engineering.concept-enterprise-ai",
+      "type": "ABOUT",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "concept.enterprise-ai",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-llm-era-knowledge-engineering.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-llm-era-knowledge-engineering.concept-llm-and-cognition",
+      "type": "ABOUT",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "concept.llm-and-cognition",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-manufacturing-data-silos.concept-enterprise-ai",
+      "type": "ABOUT",
+      "from": "document.manufacturing-data-silos",
+      "to": "concept.enterprise-ai",
+      "sourceDocumentId": "document.manufacturing-data-silos",
+      "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.manufacturing-data-silos",
+        "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/manufacturing-data-silos",
+        "contentHash": "8b99ccad3f277cd017ba923d8742c9bfa17baa3cf4055e335dff0503f8bf7a9a",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.document-manufacturing-data-silos.concept-manufacturing-systems",
+      "type": "ABOUT",
+      "from": "document.manufacturing-data-silos",
+      "to": "concept.manufacturing-systems",
+      "sourceDocumentId": "document.manufacturing-data-silos",
+      "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.manufacturing-data-silos",
+        "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/manufacturing-data-silos",
+        "contentHash": "8b99ccad3f277cd017ba923d8742c9bfa17baa3cf4055e335dff0503f8bf7a9a",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.project-manufacturing-graph-explorer.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.project-manufacturing-graph-explorer.concept-manufacturing-systems",
+      "type": "ABOUT",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "concept.manufacturing-systems",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.project-personal-research-website.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "project.personal-research-website",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.reference-attention-is-all-you-need.concept-llm-and-cognition",
+      "type": "ABOUT",
+      "from": "reference.attention-is-all-you-need",
+      "to": "concept.llm-and-cognition",
+      "sourceDocumentId": "reference.attention-is-all-you-need",
+      "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "reference.attention-is-all-you-need",
+        "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/attention-is-all-you-need",
+        "contentHash": "a088d543fddaf326d51c735493f5fc8cd15756ce71b56c48f2dc8792451354c2",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.about.reference-building-a-second-brain.concept-knowledge-engineering",
+      "type": "ABOUT",
+      "from": "reference.building-a-second-brain",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "reference.building-a-second-brain",
+      "sourcePath": "src/content/reading/building-a-second-brain.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "reference.building-a-second-brain",
+        "sourcePath": "src/content/reading/building-a-second-brain.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/building-a-second-brain",
+        "contentHash": "4be2a553ee8b52eb790d35b5976cc2cfdf8864c8401b091f25afa76fbddad94a",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "derived",
+        "extractedFields": [
+          "ABOUT"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-about.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.about",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.about",
+      "sourcePath": "src/content/pages/about.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.about",
+        "sourcePath": "src/content/pages/about.md",
+        "sourceUrl": "https://zhi-yuan.space/about",
+        "contentHash": "062ccb5f3fbede80051194123b399145b788e58227dda25f9bf816d5a9944149",
+        "visibility": "public",
+        "collection": "pages",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-ai-agents-as-research-assistants.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.ai-agents-as-research-assistants",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.ai-agents-as-research-assistants",
+      "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.ai-agents-as-research-assistants",
+        "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+        "contentHash": "35076488ae9d0226beea85e37ed68073fe84c5019d3a55b3d810c9c681722422",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-digital-garden-vs-traditional-blog.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.digital-garden-vs-traditional-blog",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.digital-garden-vs-traditional-blog",
+      "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.digital-garden-vs-traditional-blog",
+        "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/digital-garden-vs-traditional-blog",
+        "contentHash": "d883d0713b31812ccb5be1898ebcdfc15617a023413a592cbf3f7457b6d60a9f",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-lean-thinking-for-ai-teams.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-llm-era-knowledge-engineering.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-manufacturing-data-silos.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.manufacturing-data-silos",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.manufacturing-data-silos",
+      "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.manufacturing-data-silos",
+        "sourcePath": "src/content/notes/manufacturing-data-silos.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/manufacturing-data-silos",
+        "contentHash": "8b99ccad3f277cd017ba923d8742c9bfa17baa3cf4055e335dff0503f8bf7a9a",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.document-now.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "document.now",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "document.now",
+      "sourcePath": "src/content/pages/now.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.now",
+        "sourcePath": "src/content/pages/now.md",
+        "sourceUrl": "https://zhi-yuan.space/now",
+        "contentHash": "cdb25fbb4919eca663fedb00d177239500af9acff05bc99a04133d76b1a1719b",
+        "visibility": "public",
+        "collection": "pages",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.project-manufacturing-graph-explorer.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.authored-by.project-personal-research-website.person-zhiyuan-zhang",
+      "type": "AUTHORED_BY",
+      "from": "project.personal-research-website",
+      "to": "person.zhiyuan-zhang",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "AUTHORED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.building.zhiyuan-manufacturing-graph-explorer",
+      "type": "BUILDING",
+      "from": "person.zhiyuan-zhang",
+      "to": "project.manufacturing-graph-explorer",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "BUILDING"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-manufacturing-graph-explorer.tool-neo4j",
+      "type": "IMPLEMENTS",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "tool.neo4j",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-manufacturing-graph-explorer.tool-react",
+      "type": "IMPLEMENTS",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "tool.react",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-manufacturing-graph-explorer.tool-react-flow",
+      "type": "IMPLEMENTS",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "tool.react-flow",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-manufacturing-graph-explorer.tool-typescript",
+      "type": "IMPLEMENTS",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "tool.typescript",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-personal-research-website.tool-astro",
+      "type": "IMPLEMENTS",
+      "from": "project.personal-research-website",
+      "to": "tool.astro",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-personal-research-website.tool-keystatic",
+      "type": "IMPLEMENTS",
+      "from": "project.personal-research-website",
+      "to": "tool.keystatic",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-personal-research-website.tool-pagefind",
+      "type": "IMPLEMENTS",
+      "from": "project.personal-research-website",
+      "to": "tool.pagefind",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-personal-research-website.tool-tailwind-css",
+      "type": "IMPLEMENTS",
+      "from": "project.personal-research-website",
+      "to": "tool.tailwind-css",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.implements.project-personal-research-website.tool-typescript",
+      "type": "IMPLEMENTS",
+      "from": "project.personal-research-website",
+      "to": "tool.typescript",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "IMPLEMENTS"
+        ]
+      }
+    },
+    {
+      "id": "relation.interested-in.zhiyuan-knowledge-engineering",
+      "type": "INTERESTED_IN",
+      "from": "person.zhiyuan-zhang",
+      "to": "concept.knowledge-engineering",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "INTERESTED_IN"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.document-ai-agents-as-research-assistants.document-digital-garden-vs-traditional-blog",
+      "type": "RELATED_TO",
+      "from": "document.ai-agents-as-research-assistants",
+      "to": "document.digital-garden-vs-traditional-blog",
+      "sourceDocumentId": "document.ai-agents-as-research-assistants",
+      "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.ai-agents-as-research-assistants",
+        "sourcePath": "src/content/notes/ai-agents-as-research-assistants.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/ai-agents-as-research-assistants",
+        "contentHash": "35076488ae9d0226beea85e37ed68073fe84c5019d3a55b3d810c9c681722422",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.document-digital-garden-vs-traditional-blog.document-ai-agents-as-research-assistants",
+      "type": "RELATED_TO",
+      "from": "document.digital-garden-vs-traditional-blog",
+      "to": "document.ai-agents-as-research-assistants",
+      "sourceDocumentId": "document.digital-garden-vs-traditional-blog",
+      "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.digital-garden-vs-traditional-blog",
+        "sourcePath": "src/content/notes/digital-garden-vs-traditional-blog.md",
+        "sourceUrl": "https://zhi-yuan.space/notes/digital-garden-vs-traditional-blog",
+        "contentHash": "d883d0713b31812ccb5be1898ebcdfc15617a023413a592cbf3f7457b6d60a9f",
+        "visibility": "public",
+        "collection": "notes",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.document-lean-thinking-for-ai-teams.document-llm-era-knowledge-engineering",
+      "type": "RELATED_TO",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "document.llm-era-knowledge-engineering",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.document-llm-era-knowledge-engineering.document-lean-thinking-for-ai-teams",
+      "type": "RELATED_TO",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "document.lean-thinking-for-ai-teams",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.project-manufacturing-graph-explorer.document-llm-era-knowledge-engineering",
+      "type": "RELATED_TO",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "document.llm-era-knowledge-engineering",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.project-manufacturing-graph-explorer.document-manufacturing-data-silos",
+      "type": "RELATED_TO",
+      "from": "project.manufacturing-graph-explorer",
+      "to": "document.manufacturing-data-silos",
+      "sourceDocumentId": "project.manufacturing-graph-explorer",
+      "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.manufacturing-graph-explorer",
+        "sourcePath": "src/content/projects/manufacturing-graph-explorer.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/manufacturing-graph-explorer",
+        "contentHash": "571db80f56e4f5fe0d7fcb9c5cfc37d6ba58fd64a629521600a47ef0998bc3a5",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.project-personal-research-website.document-digital-garden-vs-traditional-blog",
+      "type": "RELATED_TO",
+      "from": "project.personal-research-website",
+      "to": "document.digital-garden-vs-traditional-blog",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.project-personal-research-website.document-llm-era-knowledge-engineering",
+      "type": "RELATED_TO",
+      "from": "project.personal-research-website",
+      "to": "document.llm-era-knowledge-engineering",
+      "sourceDocumentId": "project.personal-research-website",
+      "sourcePath": "src/content/projects/personal-research-website.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "project.personal-research-website",
+        "sourcePath": "src/content/projects/personal-research-website.md",
+        "sourceUrl": "https://zhi-yuan.space/projects/personal-research-website",
+        "contentHash": "40a4a4486d0c2d730d492d6ebab6431249b1a23fbae7011c1d326eb32f6d4d7d",
+        "visibility": "public",
+        "collection": "projects",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.reference-attention-is-all-you-need.reference-building-a-second-brain",
+      "type": "RELATED_TO",
+      "from": "reference.attention-is-all-you-need",
+      "to": "reference.building-a-second-brain",
+      "sourceDocumentId": "reference.attention-is-all-you-need",
+      "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "reference.attention-is-all-you-need",
+        "sourcePath": "src/content/reading/attention-is-all-you-need.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/attention-is-all-you-need",
+        "contentHash": "a088d543fddaf326d51c735493f5fc8cd15756ce71b56c48f2dc8792451354c2",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.related-to.reference-building-a-second-brain.reference-attention-is-all-you-need",
+      "type": "RELATED_TO",
+      "from": "reference.building-a-second-brain",
+      "to": "reference.attention-is-all-you-need",
+      "sourceDocumentId": "reference.building-a-second-brain",
+      "sourcePath": "src/content/reading/building-a-second-brain.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "reference.building-a-second-brain",
+        "sourcePath": "src/content/reading/building-a-second-brain.md",
+        "sourceUrl": "https://zhi-yuan.space/reading/building-a-second-brain",
+        "contentHash": "4be2a553ee8b52eb790d35b5976cc2cfdf8864c8401b091f25afa76fbddad94a",
+        "visibility": "public",
+        "collection": "reading",
+        "idSource": "derived",
+        "extractedFields": [
+          "RELATED_TO"
+        ]
+      }
+    },
+    {
+      "id": "relation.supported-by.document-lean-thinking-for-ai-teams.reference-building-a-second-brain",
+      "type": "SUPPORTED_BY",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "reference.building-a-second-brain",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "SUPPORTED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.supported-by.document-lean-thinking-for-ai-teams.reference-the-toyota-way",
+      "type": "SUPPORTED_BY",
+      "from": "document.lean-thinking-for-ai-teams",
+      "to": "reference.the-toyota-way",
+      "sourceDocumentId": "document.lean-thinking-for-ai-teams",
+      "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.lean-thinking-for-ai-teams",
+        "sourcePath": "src/content/essays/lean-thinking-for-ai-teams.md",
+        "sourceUrl": "https://zhi-yuan.space/essays/lean-thinking-for-ai-teams",
+        "contentHash": "fdffba49ad6bc0a0e03ee8cd0c4e97548a17719702ba16103714e8eb704ff5ef",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "SUPPORTED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.supported-by.document-llm-era-knowledge-engineering.reference-attention-is-all-you-need",
+      "type": "SUPPORTED_BY",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "reference.attention-is-all-you-need",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "SUPPORTED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.supported-by.document-llm-era-knowledge-engineering.reference-building-a-second-brain",
+      "type": "SUPPORTED_BY",
+      "from": "document.llm-era-knowledge-engineering",
+      "to": "reference.building-a-second-brain",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "SUPPORTED_BY"
+        ]
+      }
+    },
+    {
+      "id": "relation.supported-by.structured-context-essay",
+      "type": "SUPPORTED_BY",
+      "from": "claim.structured-context-improves-model-usability",
+      "to": "document.llm-era-knowledge-engineering",
+      "sourceDocumentId": "document.llm-era-knowledge-engineering",
+      "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+      "confidence": "explicit",
+      "provenance": {
+        "contentId": "document.llm-era-knowledge-engineering",
+        "sourcePath": "src/content/essays/llm-era-knowledge-engineering.mdx",
+        "sourceUrl": "https://zhi-yuan.space/essays/llm-era-knowledge-engineering",
+        "contentHash": "fffe9307642682a40317e68cada3ea0d99b7d39698e6305fe15b6de4ec14c491",
+        "visibility": "public",
+        "collection": "essays",
+        "idSource": "derived",
+        "extractedFields": [
+          "SUPPORTED_BY"
+        ]
+      }
+    }
+  ],
+  "canonicalIdentity": {
+    "explicitIdCount": 10,
+    "fallbackIdCount": 6,
+    "fallbackIds": [
+      "document.about",
+      "document.ai-agents-as-research-assistants",
+      "document.manufacturing-data-silos",
+      "document.now",
+      "reference.attention-is-all-you-need",
+      "reference.building-a-second-brain"
+    ]
+  },
+  "diagnostics": {
+    "warnings": [],
+    "errors": []
+  },
+  "contentHash": "fbcf45d0fe073e40c08aa2afaa5725474b3573be1d10724ecbdaf865d3354fcb"
+}
